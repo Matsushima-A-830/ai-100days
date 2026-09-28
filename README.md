@@ -22,5 +22,11 @@ PRをマージしたあと、PowerShellで以下を実行すると、その日�
 powershell -File tools\sync-to-obsidian.ps1
 ```
 
+WSLのターミナルから実行する場合は同等のbash版を使う(Vaultは `/mnt/c/...` としてアクセスする)。
+
+```bash
+bash tools/sync-to-obsidian.sh
+```
+
 このリポジトリの最新化(`git pull`)もスクリプトが自動で行う。既に取り込み済みの日はスキップされる
-(再取り込みしたい場合は `-Force` を付ける)。
+(再取り込みしたい場合はPowerShell版は `-Force`、bash版は `--force` を付ける)。
