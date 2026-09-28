@@ -27,6 +27,23 @@
   候補メモにその制約を明記する。
 - **PRのマージと公開判断は必ず人間が行う。** Routineはドラフト(`published: false`)までしか作らない。
 
+## Zenn記事のfrontmatter(必須)
+
+`articles/day-NNN.md` は以下のfrontmatterを必ず含めること(Zenn CLIの必須項目)。
+どれか欠けるとZenn側で記事として認識されない。
+
+```yaml
+---
+title: "記事タイトル"
+emoji: "🤖"
+type: "tech"   # tech: 技術記事 / idea: アイデア・考察
+topics: ["ai", "llm"]  # 1〜5個、小文字英数字
+published: false
+---
+```
+
+`published` はRoutineは必ず `false` にする。人間が公開時に `true` へ書き換える。
+
 ## 文体・発信ルール
 
 - 記事は「調べてみた」ではなく「実際に手を動かして試した」トーンで書く。一人称は「筆者」または「私」。
