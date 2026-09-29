@@ -100,3 +100,39 @@
 - 検証難易度: 中〜高(APIキーは不要だが、Apple Silicon Mac(十分なメモリ)かNVIDIA GPUが前提。クラウド実行環境では要件を満たさない可能性が高く、手元にMac/GPUがあるかがボトルネック)。注意: 同一READMEを持つ大量のフォーク/コピーリポジトリ(jasontitus, taussoe, quigles1977, CerebralCoding, vcruz305, machinegenieorg等)がGitHub上に多数存在するため、検証前に公式実体(ashhart/TensorFold、公式サイトtensorfold.dev)を確認すること。
 - 見栄え: 「手元のMacでLLMをどれだけ高速に動かせるか」のBefore/After速度比較は分かりやすいが、対応ハードウェアがないと着手できない点に注意。
 - 状態: 未選択
+
+### [2026-09-29] OpenRig — Claude CodeとCodexを1つのチームとして動かすマルチエージェント・ハーネス(Show HN話題)
+
+- 出典: https://github.com/mvschwarz/openrig (Show HN: https://news.ycombinator.com/item?id=47772935)
+- 概要: Claude CodeとCodexをtmuxベースの「リグ」に同居させ、YAMLで定義したチーム(pod/seat)としてエージェント同士に直接メッセージを送り合わせる、Apache-2.0のマルチエージェント・オーケストレーションCLI/デーモン/MCPサーバー。GitHub Trending(TypeScript)で本日+733starと急伸中。
+- 日本語記事件数: Zenn 0件 / Qiita 0件(Claude Code×Codex連携自体の記事は複数あるが、OpenRig自体の紹介は未検出) / note 0件
+- 検証難易度: 低(追加のAPIキー不要。既存のClaude Code/Codexサブスクリプション認証をそのまま再利用する設計と説明されている。Node.js 22/24とtmuxが必要、GPU不要)
+- 見栄え: 「Claude CodeとCodexが会話しながら共同作業する」様子をターミナルUIで見せられ、本リポジトリのRoutine運用(朝リサーチ→昼実装の分業)との類似性も語れるので技術者に刺さりやすい。
+- 状態: 未選択
+
+### [2026-09-29] Octop — セルフホスト型マルチユーザー・マルチエージェントAIアシスタント(Ollamaでキー不要運用可)
+
+- 出典: https://github.com/TencentCloud/Octop
+- 概要: Web/CLI/IM(Discord・Telegram・Slack系含む)から使えるセルフホスト型のマルチユーザー・マルチエージェントAIアシスタント(MITライセンス)。16種のMBTIペルソナテンプレートや複数エージェントを協調させるAgentTeams機能が特徴。GitHub Trending(Python)で本日+234star。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲で本リポジトリ名での紹介記事は未検出)
+- 検証難易度: 低〜中(LLMプロバイダとしてOllamaのローカルモデルを設定でき、外部APIキーなしで動作可能。Python 3.12+、GPUは任意)
+- 見栄え: 複数のペルソナを持つエージェントがWebダッシュボードやIM経由で応答し分業する様子はデモ映えする。
+- 状態: 未選択
+
+### [2026-09-29] Ouroboros — 「曖昧な要求をインタビューで明確化してから実装する」自己改善型Agent OS
+
+- 出典: https://github.com/Q00/ouroboros
+- 概要: 曖昧な要求をSocratic Interviewで明確化し、評価ゲート(曖昧さスコア閾値)を通過してから実装、さらに多段評価と進化ループで改善し続けるAgent OS(MITライセンス)。Claude Code CLI/Codex CLI/Gemini CLIなど14種のランタイムに対応。GitHub Trendingで6,000star超。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件
+- 検証難易度: 中(Python 3.12+、Git、uvで導入可能でGPU不要。LiteLLM経由の外部LLM API利用が基本だが、ランタイムとしてClaude Code CLIを選べば追加の有料APIキーなしで検証できる可能性がある。要事前確認)
+- 見栄え: 「要件があいまいなまま突っ走らず、質問で明確化してから実装する」プロセスを実演できれば説得力のあるBefore/Afterデモになる。
+- 状態: 未選択
+
+### [2026-09-29] Google、GeminiでgiflibをAI支援でRustに書き換え差分ファジングで検証(企業ブログ)
+
+- 出典: https://bughunters.google.com/blog/scaling-memory-safety (解説記事: https://www.infoq.com/news/2026/09/c-rust-rewrite/)
+- 概要: GoogleがGeminiを使い、giflib(約3,000行のC製GIF画像処理ライブラリ)をABI互換のRust実装にAI支援で書き換え、差分ファジングで検証した事例。移行後、公開前だったヒープ書き込みゼロデイ(CVE-2026-26740)の影響を受けなかったと報告している。
+- 日本語記事件数: Zenn 0件(「C++→Rust移行」など関連テーマの記事はあるが本件そのものの紹介は未検出) / Qiita 0件 / note 0件
+- 検証難易度: 低(GPU・外部APIキー不要。Claude Code自身の機能だけで、小規模なCコード片をAI支援でRustに書き換え→テストで差分検証する縮小版のミニ実験が可能)
+- 見栄え: Before(C)/After(Rust)のコードと検証結果を並べて見せやすく、「AIエージェントによるレガシーコードのメモリ安全化」という切り口はセキュリティ文脈でも刺さる。
+- 状態: 未選択
