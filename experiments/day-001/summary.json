@@ -1,0 +1,205 @@
+{
+  "base_vocab_size": 533,
+  "num_train_samples": 16,
+  "num_heldout_samples": 4,
+  "ngram_sizes": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "max_count_per_sample": 10,
+  "requested_merges": 200,
+  "discovered_merges": 200,
+  "train_results": [
+    {
+      "num_merges": 25,
+      "base_tokens": 2522,
+      "supertoken_tokens": 2285,
+      "reduction_pct": 9.4
+    },
+    {
+      "num_merges": 50,
+      "base_tokens": 2522,
+      "supertoken_tokens": 2153,
+      "reduction_pct": 14.63
+    },
+    {
+      "num_merges": 100,
+      "base_tokens": 2522,
+      "supertoken_tokens": 2013,
+      "reduction_pct": 20.18
+    },
+    {
+      "num_merges": 150,
+      "base_tokens": 2522,
+      "supertoken_tokens": 1935,
+      "reduction_pct": 23.28
+    },
+    {
+      "num_merges": 200,
+      "base_tokens": 2522,
+      "supertoken_tokens": 1835,
+      "reduction_pct": 27.24
+    }
+  ],
+  "heldout_results": [
+    {
+      "num_merges": 25,
+      "base_tokens": 744,
+      "supertoken_tokens": 710,
+      "reduction_pct": 4.57
+    },
+    {
+      "num_merges": 50,
+      "base_tokens": 744,
+      "supertoken_tokens": 699,
+      "reduction_pct": 6.05
+    },
+    {
+      "num_merges": 100,
+      "base_tokens": 744,
+      "supertoken_tokens": 682,
+      "reduction_pct": 8.33
+    },
+    {
+      "num_merges": 150,
+      "base_tokens": 744,
+      "supertoken_tokens": 674,
+      "reduction_pct": 9.41
+    },
+    {
+      "num_merges": 200,
+      "base_tokens": 744,
+      "supertoken_tokens": 664,
+      "reduction_pct": 10.75
+    }
+  ],
+  "example_top_merges": [
+    {
+      "freq": 23,
+      "tok1": "'.'",
+      "tok2": "' So'",
+      "merged": "'. So'"
+    },
+    {
+      "freq": 17,
+      "tok1": "'.'",
+      "tok2": "' Let'",
+      "merged": "'. Let'"
+    },
+    {
+      "freq": 16,
+      "tok1": "'-'",
+      "tok2": "'check'",
+      "merged": "'-check'"
+    },
+    {
+      "freq": 15,
+      "tok1": "' double'",
+      "tok2": "'-check'",
+      "merged": "' double-check'"
+    },
+    {
+      "freq": 14,
+      "tok1": "','",
+      "tok2": "' so'",
+      "merged": "', so'"
+    },
+    {
+      "freq": 14,
+      "tok1": "'. Let'",
+      "tok2": "' me'",
+      "merged": "'. Let me'"
+    },
+    {
+      "freq": 14,
+      "tok1": "' me'",
+      "tok2": "' double-check'",
+      "merged": "' me double-check'"
+    },
+    {
+      "freq": 13,
+      "tok1": "','",
+      "tok2": "'\\n'",
+      "merged": "',\\n'"
+    },
+    {
+      "freq": 12,
+      "tok1": "'^'",
+      "tok2": "'2'",
+      "merged": "'^2'"
+    },
+    {
+      "freq": 12,
+      "tok1": "'. So'",
+      "tok2": "' the'",
+      "merged": "'. So the'"
+    },
+    {
+      "freq": 11,
+      "tok1": "','",
+      "tok2": "' and'",
+      "merged": "', and'"
+    },
+    {
+      "freq": 11,
+      "tok1": "'. Let me'",
+      "tok2": "' double'",
+      "merged": "'. Let me double'"
+    },
+    {
+      "freq": 11,
+      "tok1": "' Let'",
+      "tok2": "' me double-check'",
+      "merged": "' Let me double-check'"
+    },
+    {
+      "freq": 11,
+      "tok1": "'. Let me double'",
+      "tok2": "'-'",
+      "merged": "'. Let me double-'"
+    },
+    {
+      "freq": 11,
+      "tok1": "'.'",
+      "tok2": "' Let me double-check'",
+      "merged": "'. Let me double-check'"
+    },
+    {
+      "freq": 11,
+      "tok1": "'. Let me double-'",
+      "tok2": "'check'",
+      "merged": "'. Let me double-check'"
+    },
+    {
+      "freq": 10,
+      "tok1": "'.'",
+      "tok2": "'\\n'",
+      "merged": "'.\\n'"
+    },
+    {
+      "freq": 10,
+      "tok1": "' 1'",
+      "tok2": "'/'",
+      "merged": "' 1/'"
+    },
+    {
+      "freq": 10,
+      "tok1": "' have'",
+      "tok2": "' the'",
+      "merged": "' have the'"
+    },
+    {
+      "freq": 10,
+      "tok1": "\"'t\"",
+      "tok2": "' have the'",
+      "merged": "\"'t have the\""
+    }
+  ]
+}
