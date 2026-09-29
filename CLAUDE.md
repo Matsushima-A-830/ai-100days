@@ -31,10 +31,18 @@
   有料APIキーが必要な候補は`backlog.md`にはその旨を明記しつつ`today.md`では選ばない。
   この方針を変える場合はCLAUDE.mdを更新してからRoutineに新しい環境変数を登録する。
 
-## Zenn記事のfrontmatter(必須)
+## Zenn記事のファイル名(slug)とfrontmatter(必須)
 
-`articles/day-NNN.md` は以下のfrontmatterを必ず含めること(Zenn CLIの必須項目)。
-どれか欠けるとZenn側で記事として認識されない。
+**ファイル名(拡張子を除く部分)がそのままZennのslugになる。** Zennの要件は
+「半角英数字(a-z0-9)・ハイフン(-)・アンダースコア(_)のみ、12〜50文字」。
+`day-001.md` のような短い名前は**7文字しかなく無効**で、デプロイが「中断」になり
+GitHub連携先のZennダッシュボードにエラーが出る(記事は公開されない)。
+
+**必ず `articles/day-NNN-<内容を表す英語slug>.md` の形式にすること。**
+例: `articles/day-001-shorthand-for-thought.md`(29文字、条件を満たす)。
+日本語・大文字・スペース・記号(`_`と`-`以外)は使わない。
+
+frontmatterは以下を必ず含めること(Zenn CLIの必須項目、どれか欠けても記事として認識されない):
 
 ```yaml
 ---
@@ -63,9 +71,9 @@ ai-100days/
 ├── sources.md           # 巡回する情報源リスト
 ├── backlog.md           # ネタ候補の蓄積(スコア付き)
 ├── today.md             # 今日やるネタ(人間が朝に選ぶ)
-├── experiments/day-NNN/ # 検証コード・実行ログ・README・results.md
-├── articles/            # Zenn記事(Zenn GitHub連携でそのまま公開される)
-└── posts/day-NNN.md     # X投稿案3パターン + note原稿
+├── experiments/day-NNN/       # 検証コード・実行ログ・README・results.md
+├── articles/day-NNN-<slug>.md # Zenn記事(ファイル名がslugになる。命名規則は上記参照)
+└── posts/day-NNN.md           # X投稿案3パターン + note原稿
 ```
 
 ## Routineへの指示で守ってほしいこと
