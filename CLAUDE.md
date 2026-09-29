@@ -6,14 +6,28 @@
 
 ## 全体フロー
 
-1. **朝(リサーチRoutine, 自動)**: 海外の情報源を巡回し、ネタ候補を `backlog.md` に追記する。
-2. **通勤中(人間)**: `today.md` にその日やるネタを1つ書いてコミットする。
+1. **朝(リサーチRoutine, 自動)**: 海外の情報源を巡回し、ネタ候補を `backlog.md` に追記する branch を作り、PRを出す。
+2. **通勤中(人間)**: 朝のPRをマージ(または`today.md`更新用の小さいブランチ+PRを作ってマージ)して、
+   その日やるネタを`today.md`に反映する。
 3. **昼(実装Routine, 自動)**: `today.md` を読み、`experiments/day-NNN/` で実際に検証コードを書いて実行し、
    Zenn記事下書き・X投稿案・note原稿を作り、PRを出す。
 4. **夜(人間, 目安1時間)**: PRを見て自分の手元で再現・検証し、感想を足してマージ。
    Zennは `published: true` にして公開、Xは自分の言葉で投稿。
    最後に `tools/sync-to-obsidian.ps1` を実行し、その日の成果をローカルのObsidian Vaultに蓄積する
    (このリポジトリ自体はクラウド上の履歴で、Obsidianは自分のPC上の恒久的な蓄積場所という役割分担)。
+
+## mainブランチ保護(必須・例外なし)
+
+**`main`への直接pushは何人・何物であっても一切禁止。** これは`today.md`の1行更新のような
+些細な変更、リポジトリ所有者本人の変更、Claude(このアシスタント)による変更、すべてに例外なく適用される。
+
+- すべての変更はブランチを切り、Pull Requestを作成し、**GitHubのマージボタン(またはPRマージAPI)経由でのみ**
+  mainに反映すること。ローカルで `git merge` してから `git push origin main` するような、
+  PRを経由しない直接pushは絶対に行わない。
+- GitHub側でBranch protection rule(Settings > Branches > `main`)を設定し、
+  「Require a pull request before merging」を有効化、「Include administrators」もONにして、
+  リポジトリ所有者自身の直接pushもブロックする。
+- Claudeがこのルールを守れず直接pushしそうになった場合は、必ず一度止まってブランチ+PRに切り替える。
 
 ## 絶対ルール(検証・信頼性)
 
@@ -80,4 +94,5 @@ ai-100days/
 
 - リポジトリのpushやGitHub Actionsの設定変更など、この構想の外側の操作はしない。
 - 新しいAPIキーや秘密情報をファイルに書き込まない。環境変数はRoutine設定側で管理する。
-- 生成物は必ずブランチを切ってPRにする。mainに直接pushしない。
+- 生成物は必ずブランチを切ってPRにする。**mainに直接pushすることは絶対にしない**(上記「mainブランチ保護」参照)。
+  ブランチ保護が有効な場合、直接pushはそもそもGitHub側で拒否される。
