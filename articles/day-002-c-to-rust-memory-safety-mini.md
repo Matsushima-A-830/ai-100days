@@ -3,7 +3,7 @@ title: "GoogleのgiflibのRust書き換えをミニ再現: AIにCの脆弱コー
 emoji: "🦀"
 type: "tech"
 topics: ["rust", "c", "security", "ai", "fuzzing"]
-published: false
+published: true
 ---
 
 ## きっかけ
