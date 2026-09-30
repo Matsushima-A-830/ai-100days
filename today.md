@@ -2,11 +2,12 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 002
-- 選んだ候補(backlog.mdのタイトルかURL): Google、GeminiでgiflibをAI支援でRustに書き換え差分ファジングで検証(企業ブログ) — https://bughunters.google.com/blog/scaling-memory-safety (解説記事: https://www.infoq.com/news/2026/09/c-rust-rewrite/)
-- 補足メモ(あれば): Googleの元事例はgiflib全体(約3,000行)をAI支援でRustに書き換え、ABI互換のドロップイン実装として差分ファジングで検証したというもの。
-  6時間以内に一人で再現するのはフルスコープでは非現実的なため、スコープを縮小し、小規模なC言語コード片(数十〜数百行程度、メモリ安全上の欠陥を意図的に含むもの)を選び、
-  Claude Code自身の機能だけでRustへの書き換えを行い、単体テスト・fuzzing的な入力比較でC版とRust版の挙動差分を検証する、というミニ実験にする。
-  外部APIキー・GPUは不要。ライセンス・出典明記を忘れないこと。
+- Day: 003
+- 選んだ候補(backlog.mdのタイトルかURL): Univer — AIエージェント向け「オフィスハーネス」を謳うOSS Office SDK(スプレッドシート/ドキュメント/スライド) — https://github.com/dream-num/univer
+- 補足メモ(あれば): Apache-2.0、Node.js 18.17+のみでAPIキー・GPU不要。headlessモードでのローカル検証を想定。
+  「AIエージェントに指示してスプレッドシートのダッシュボードを自動生成させる」Before/Afterデモを軸に、
+  Facade API(FUniver)を使ったワークブック生成・編集を実際に動かして検証する。
+  Worktree機能(人間レビュー前の下書き分離)も余裕があれば触れる。
+  日本語記事はQiitaに入門記事が1件あるのみで差別化しやすい。出典・ライセンス明記を忘れないこと。
 
 状態: 設定済み
