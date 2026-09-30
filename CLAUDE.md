@@ -10,9 +10,10 @@
 2. **通勤中(人間)**: 朝のPRをマージ(または`today.md`更新用の小さいブランチ+PRを作ってマージ)して、
    その日やるネタを`today.md`に反映する。
 3. **昼(実装Routine, 自動)**: `today.md` を読み、`experiments/day-NNN/` で実際に検証コードを書いて実行し、
-   Zenn記事下書き・X投稿案・note原稿を作り、PRを出す。
+   Zenn記事下書き・X投稿案・note原稿・X投稿用シェアカード(`posts/day-NNN-card.html`)を作り、PRを出す。
 4. **夜(人間, 目安1時間)**: PRを見て自分の手元で再現・検証し、感想を足してマージ。
-   Zennは `published: true` にして公開、Xは自分の言葉で投稿。
+   Zennは `published: true` にして公開、`posts/day-NNN-card.html` をブラウザで開いてスクリーンショットし、
+   その画像を添えてXに自分の言葉で投稿。
    最後に `tools/sync-to-obsidian.ps1` を実行し、その日の成果をローカルのObsidian Vaultに蓄積する
    (このリポジトリ自体はクラウド上の履歴で、Obsidianは自分のPC上の恒久的な蓄積場所という役割分担)。
 
@@ -77,6 +78,24 @@ published: false
 - note原稿は記事より少し柔らかい語り口にし、週刊まとめ用に再利用できるよう要点を先頭に3行でまとめる。
 - コードブロックには実行コマンドと実行結果を必ずセットで載せる。
 
+## X投稿用シェアカード(posts/day-NNN-card.html, 必須)
+
+X投稿は画像付きの方が反応が良いため、実装Routineは毎回 `posts/day-NNN-card.html` という
+自己完結した1枚のHTMLカードを作る。これはX投稿時にブラウザで開いてスクリーンショットし、
+画像として添付するためのもの。
+
+- **`tools/card-template.html` をコピーして作ること。** ゼロから新しいデザインを考えない。
+  フォント・配色・カードの骨格(eyebrow/heading/stat-row/footer)は100日シリーズを通じて
+  統一するため変更しない。
+- テンプレート内のコメントに従い、その日の結果の形に合わせて
+  「パターンA: 数値推移チャート」または「パターンB: Before/After比較」のどちらか一方を選んで実装する。
+  ターミナル詳細区画・注意書き区画は該当する内容がある場合のみ残す。
+- **中に入れる数値・出典・出力ログは `experiments/day-NNN/results.md` にある実際のものだけを使う。**
+  見栄えのために数値を作ったり丸めすぎたりしない。
+- 完成したらブラウザで開いて崩れていないか確認する(Routineの実行環境にブラウザが無い場合は、
+  HTML/CSS/JSとして構文的に破綻していないか目視で確認する)。
+- ファイルはPRに含めてコミットする。人間が夜にブラウザで開いてスクリーンショットし、X投稿に添付する。
+
 ## ディレクトリ構成
 
 ```
@@ -87,7 +106,10 @@ ai-100days/
 ├── today.md             # 今日やるネタ(人間が朝に選ぶ)
 ├── experiments/day-NNN/       # 検証コード・実行ログ・README・results.md
 ├── articles/day-NNN-<slug>.md # Zenn記事(ファイル名がslugになる。命名規則は上記参照)
-└── posts/day-NNN.md           # X投稿案3パターン + note原稿
+├── posts/day-NNN.md           # X投稿案3パターン + note原稿
+├── posts/day-NNN-card.html    # X投稿用シェアカード(tools/card-template.htmlから複製)
+├── tools/card-template.html   # シェアカードの共通テンプレート(デザインの土台、直接編集しない)
+└── tools/sync-to-obsidian.*   # Obsidian Vaultへの同期スクリプト
 ```
 
 ## Routineへの指示で守ってほしいこと
