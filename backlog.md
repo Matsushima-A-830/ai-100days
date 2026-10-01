@@ -172,3 +172,39 @@
 - 検証難易度: 高(ChatGPT Pro/Business Premium/Enterpriseプラン限定のクローズドな有料機能で、コード・APIは公開されていない。本リポジトリの方針「当面は有料APIキー/有料プラン必須の候補を選ばない」に抵触するため、今回は選定不可)
 - 見栄え: ニュース価値は高いが「動かして検証する」ネタにはできない。取り上げる場合はニュース解説のみの扱いに留める必要あり。
 - 状態: 未選択
+
+### [2026-10-01] context-mode — Claude Code等17プラットフォーム向けのコンテキストウィンドウ最適化MCPプラグイン
+
+- 出典: https://github.com/mksglu/context-mode (GitHub Trending TypeScript, 2026-10-01、+357star/日)
+- 概要: Claude Code/Codex/Cursor/Gemini CLI等17プラットフォームにMCP+hooksで差し込み、ツール出力をサンドボックス化して98%圧縮しつつ、SQLite+FTS5でセッション記憶(ファイル編集・git操作・タスク・エラー・判断)を永続化し、compact後も必要な情報だけをBM25検索で取り戻すプラグイン。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 低(ライセンスはElastic License v2 = ソースは公開されているがマネージドサービスとしての再提供は制限される、いわゆる非OSIライセンス。Node.js 22.5+/Bunのみで`claude mcp add`一発導入、外部APIキー・GPU不要。本リポジトリのRoutine自体に組み込んで「圧縮前後のコンテキスト消費量」を実測できる)
+- 見栄え: 生のツール出力をそのまま食わせた場合と、context-mode経由で圧縮した場合の「コンテキスト消費量」「会話が長持ちする時間」をBefore/Afterのグラフで見せやすく、本チャレンジ自身の運用改善ネタとしても語れる。
+- 状態: 未選択
+
+### [2026-10-01] Corral — AIエージェントが起動した子プロセスを確実に全停止させる軽量セーフティユーティリティ
+
+- 出典: https://github.com/Cardinal44/corral (Show HN: https://news.ycombinator.com/item?id=49886422)
+- 概要: コマンドをプロセスグループごと(cgroup v2)管理し、`tail -f`やデーモン化・二重フォークした子プロセスを含めて、コマンド終了時に起動した全プロセスが確実に死んでいることを保証するAIエージェント向けセーフティツール(MITライセンス)。「AIエージェントが放置したバックグラウンドプロセスが残り続ける」問題への対処を謳う。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 低〜中(MIT。Linux 5.11以降・x86-64/glibc 2.36+が前提でCMake/Ninja/GCCからビルド。APIキー・GPU不要。クラウド実行環境がLinuxであれば6時間以内に検証可能)
+- 見栄え: 「エージェントに`tail -f`やデーモンを起動させ、Corralあり/なしでプロセスが残り続けるか」をps確認付きのBefore/Afterで見せられ、HexStrike AI等で既に触れたエージェント安全性というテーマの続編として語りやすい。
+- 状態: 未選択
+
+### [2026-10-01] Jeff — Qwen3.5/Gemma4をファインチューンした22msの軽量ゼロショット分類モデル
+
+- 出典: https://github.com/firelex/jeff (Release v1.1/v1.2, 2026-09-29。GitHub Trending Pythonで+1,213star/日)
+- 概要: Qwen3.5(0.8B/2B)とGemma4-E2Bをファインチューンし、ユーザーが定義した最大254個の選択肢に対し1回のフォワードパスで較正済み確率を返す「ミリ秒で意思決定する」ゼロショット分類モデル群。RTX PRO 6000で22〜29ms、Apple Silicon(MLX)で28〜60msと主張(コードMIT、重みApache-2.0)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(GIGAZINE等の海外ニュース翻訳記事はあるが、日本語での一次検証記事は未検出)
+- 検証難易度: 低(uvで導入可能。0.8Bモデルは1.7GBでCPU推論も可能(GPUなしでも動作確認でき、速度は劣るが検証は可能)。外部APIキー不要)
+- 見栄え: 自作の簡単な分類タスク(例: 問い合わせ文の振り分け)で、キーワードルールベースの分類とJeffのゼロショット分類を精度・速度の両面でBefore/After比較でき、数値グラフが作りやすい。
+- 状態: 未選択
+
+### [2026-10-01] MicroLLM Lab — WebGPUでブラウザ内完結、7種の小型LLMを体験できる実験ラボ
+
+- 出典: https://github.com/robss2020/microllm-lab (Show HN: https://news.ycombinator.com/item?id=49882781、デモ: https://stateofutopia.com/experiments/microllmlab/)
+- 概要: PetitGPT(124.6M)・SmolLM系・MiniMind2・GPT-2など25M〜360Mパラメータの7種の小型LLMをQ4量子化してWebGPU経由でブラウザ内に直接ロードし、サーバーもPython/CUDA環境も使わずにチャット・ベンチマークできる実験ラボ(ラボ本体はApache-2.0、各重みは由来元のライセンスに従う。GPT-2のみMIT)。重みはIndexedDBにキャッシュされる。
+- 日本語記事件数: Zenn 0件 / Qiita 1件(海外テック動向まとめ記事内で他2トピックと合わせて紹介済み) / note 0件(単体の検証記事はまだ無い)
+- 検証難易度: 低(APIキー・サーバー・CUDA不要。WebGPU対応ブラウザ(Chrome/Edge/Safari)さえあれば動作するため、クラウド実行環境でもブラウザのスクリーンショット確認を含め6時間以内に検証可能)
+- 見栄え: 7種の小型モデルの応答速度(トークン/秒)・出力品質をブラウザ上で横並び比較でき、Before/After表やグラフにまとめやすい。日本語記事がまだ単体では無く差別化しやすい。
+- 状態: 未選択
