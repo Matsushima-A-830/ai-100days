@@ -1,0 +1,20 @@
+{
+  "elapsedMs": 198,
+  "cellsWritten": 20,
+  "headerCellValue": "日付",
+  "headerCellBold": "gL7Ub4",
+  "totalCellRaw": {
+    "f": "=SUM(C2:C6)",
+    "v": 269700,
+    "t": 2
+  },
+  "totalCellValue": 269700,
+  "expectedTotal": 269700,
+  "formulaMatches": true,
+  "snapshotSheetCount": 1,
+  "snapshotCellA1": {
+    "v": "日付",
+    "t": 1,
+    "s": "gL7Ub4"
+  }
+}

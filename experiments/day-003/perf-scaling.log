@@ -1,0 +1,49 @@
+{"rowCount":10,"cellsWritten":24,"elapsedMs":172,"formulaValue":6535,"expectedTotal":6535,"formulaMatches":true}
+{"rowCount":100,"cellsWritten":204,"elapsedMs":85,"formulaValue":583057,"expectedTotal":583057,"formulaMatches":true}
+{"rowCount":500,"cellsWritten":1004,"elapsedMs":197,"formulaValue":2926355,"expectedTotal":2926355,"formulaMatches":true}
+{"rowCount":1000,"cellsWritten":2004,"elapsedMs":341,"formulaValue":5880385,"expectedTotal":5880385,"formulaMatches":true}
+{"rowCount":3000,"cellsWritten":6004,"elapsedMs":562,"formulaValue":17973255,"expectedTotal":17973255,"formulaMatches":true}
+---SUMMARY---
+[
+  {
+    "rowCount": 10,
+    "cellsWritten": 24,
+    "elapsedMs": 172,
+    "formulaValue": 6535,
+    "expectedTotal": 6535,
+    "formulaMatches": true
+  },
+  {
+    "rowCount": 100,
+    "cellsWritten": 204,
+    "elapsedMs": 85,
+    "formulaValue": 583057,
+    "expectedTotal": 583057,
+    "formulaMatches": true
+  },
+  {
+    "rowCount": 500,
+    "cellsWritten": 1004,
+    "elapsedMs": 197,
+    "formulaValue": 2926355,
+    "expectedTotal": 2926355,
+    "formulaMatches": true
+  },
+  {
+    "rowCount": 1000,
+    "cellsWritten": 2004,
+    "elapsedMs": 341,
+    "formulaValue": 5880385,
+    "expectedTotal": 5880385,
+    "formulaMatches": true
+  },
+  {
+    "rowCount": 3000,
+    "cellsWritten": 6004,
+    "elapsedMs": 562,
+    "formulaValue": 17973255,
+    "expectedTotal": 17973255,
+    "formulaMatches": true
+  }
+]
+all formulas matched expected sum: true

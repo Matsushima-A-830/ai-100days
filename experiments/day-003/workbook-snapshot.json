@@ -1,0 +1,201 @@
+{
+  "id": "wgD7Yt",
+  "sheetOrder": [
+    "rti_fAPivmcN92b4CDhWj"
+  ],
+  "name": "day-003-sales-dashboard",
+  "appVersion": "1.0.3",
+  "locale": "zhCN",
+  "styles": {
+    "FdfR4t": {
+      "bl": 1
+    },
+    "S1fIEQ": {
+      "n": {
+        "pattern": "yyyy-mm-dd"
+      }
+    }
+  },
+  "sheets": {
+    "rti_fAPivmcN92b4CDhWj": {
+      "id": "rti_fAPivmcN92b4CDhWj",
+      "name": "Sheet1",
+      "tabColor": "",
+      "hidden": 0,
+      "rowCount": 1000,
+      "columnCount": 20,
+      "zoomRatio": 1,
+      "freeze": {
+        "xSplit": 0,
+        "ySplit": 0,
+        "startRow": -1,
+        "startColumn": -1
+      },
+      "scrollTop": 0,
+      "scrollLeft": 0,
+      "defaultColumnWidth": 88,
+      "defaultRowHeight": 24,
+      "mergeData": [],
+      "cellData": {
+        "0": {
+          "0": {
+            "v": "日付",
+            "t": 1,
+            "s": "FdfR4t"
+          },
+          "1": {
+            "v": "商品",
+            "t": 1,
+            "s": "FdfR4t"
+          },
+          "2": {
+            "v": "売上",
+            "t": 1,
+            "s": "FdfR4t"
+          }
+        },
+        "1": {
+          "0": {
+            "v": 46293,
+            "s": "S1fIEQ",
+            "t": 2
+          },
+          "1": {
+            "v": "ノートPC",
+            "t": 1
+          },
+          "2": {
+            "v": 128000,
+            "t": 2
+          }
+        },
+        "2": {
+          "0": {
+            "v": 46293,
+            "s": "S1fIEQ",
+            "t": 2
+          },
+          "1": {
+            "v": "マウス",
+            "t": 1
+          },
+          "2": {
+            "v": 2400,
+            "t": 2
+          }
+        },
+        "3": {
+          "0": {
+            "v": 46294,
+            "s": "S1fIEQ",
+            "t": 2
+          },
+          "1": {
+            "v": "ノートPC",
+            "t": 1
+          },
+          "2": {
+            "v": 96000,
+            "t": 2
+          }
+        },
+        "4": {
+          "0": {
+            "v": 46294,
+            "s": "S1fIEQ",
+            "t": 2
+          },
+          "1": {
+            "v": "キーボード",
+            "t": 1
+          },
+          "2": {
+            "v": 8800,
+            "t": 2
+          }
+        },
+        "5": {
+          "0": {
+            "v": 46295,
+            "s": "S1fIEQ",
+            "t": 2
+          },
+          "1": {
+            "v": "モニター",
+            "t": 1
+          },
+          "2": {
+            "v": 34500,
+            "t": 2
+          }
+        },
+        "6": {
+          "1": {
+            "v": "合計",
+            "t": 1,
+            "s": "FdfR4t"
+          },
+          "2": {
+            "f": "=SUM(C2:C6)",
+            "v": 269700,
+            "t": 2
+          }
+        }
+      },
+      "rowData": {},
+      "columnData": {},
+      "showGridlines": 1,
+      "rowHeader": {
+        "width": 46,
+        "hidden": 0
+      },
+      "columnHeader": {
+        "height": 20,
+        "hidden": 0
+      },
+      "rightToLeft": 0
+    }
+  },
+  "resources": [
+    {
+      "name": "SHEET_RANGE_PROTECTION_PLUGIN",
+      "data": ""
+    },
+    {
+      "name": "SHEET_AuthzIoMockService_PLUGIN",
+      "data": "{}"
+    },
+    {
+      "name": "SHEET_WORKSHEET_PROTECTION_PLUGIN",
+      "data": "{}"
+    },
+    {
+      "name": "SHEET_WORKSHEET_PROTECTION_POINT_PLUGIN",
+      "data": "{}"
+    },
+    {
+      "name": "SHEET_DRAWING_PLUGIN",
+      "data": "{}"
+    },
+    {
+      "name": "SHEET_UNIVER_THREAD_COMMENT_PLUGIN",
+      "data": "{}"
+    },
+    {
+      "name": "SHEET_DEFINED_NAME_PLUGIN",
+      "data": ""
+    },
+    {
+      "name": "SHEET_RANGE_THEME_MODEL_PLUGIN",
+      "data": "{}"
+    },
+    {
+      "name": "SHEET_DATA_VALIDATION_PLUGIN",
+      "data": "{\"rti_fAPivmcN92b4CDhWj\":[]}"
+    },
+    {
+      "name": "SHEET_FILTER_PLUGIN",
+      "data": "{}"
+    }
+  ]
+}
