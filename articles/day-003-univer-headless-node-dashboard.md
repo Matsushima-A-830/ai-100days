@@ -3,7 +3,7 @@ title: "OSS Office SDK「Univer」のheadless(Node.js)モードでAIエージェ
 emoji: "📊"
 type: "tech"
 topics: ["ai", "nodejs", "opensource", "spreadsheet", "javascript"]
-published: false
+published: true
 ---
 
 ## きっかけ
