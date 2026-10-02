@@ -3,7 +3,7 @@ title: "0.8Bのゼロショット分類モデル「Jeff」でキーワードル�
 emoji: "🧮"
 type: "tech"
 topics: ["ai", "llm", "huggingface", "python", "classification"]
-published: false
+published: true
 ---
 
 ## これは何
