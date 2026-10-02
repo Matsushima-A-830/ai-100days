@@ -1,0 +1,245 @@
+<title>Jeff vs キーワードルール</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+JP:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg: #eff2f6;
+    --surface: #ffffff;
+    --ink: #14181f;
+    --ink-muted: #5b6472;
+    --ink-faint: #8792a2;
+    --border: #dde2e8;
+    --accent: #d15a25;
+    --series-a: #eb6834;
+    --series-b: #2a78d6;
+    --good: #0a7a3d;
+    --good-bg: rgba(10, 122, 61, 0.08);
+    --good-border: #0a7a3d;
+    --bad: #b3261e;
+    --bad-bg: rgba(179, 38, 30, 0.08);
+    --bad-border: #b3261e;
+    --terminal-bg: #12151c;
+    --terminal-ink: #e7ebf1;
+    --terminal-border: #2a3140;
+    --terminal-base: #7c8494;
+    --grid-line: #e3e7ec;
+    --tick-off: #d9dee5;
+    --shadow: 0 1px 2px rgba(20, 24, 31, 0.04), 0 12px 32px -16px rgba(20, 24, 31, 0.18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1218; --surface: #161b24; --ink: #e8ebf0; --ink-muted: #97a1b2;
+      --ink-faint: #626d80; --border: #262e3b; --accent: #e2793f;
+      --series-a: #e2793f; --series-b: #4f93ea;
+      --good: #4cc283; --good-bg: rgba(76, 194, 131, 0.12); --good-border: #4cc283;
+      --bad: #ef6a63; --bad-bg: rgba(239, 106, 99, 0.12); --bad-border: #ef6a63;
+      --terminal-bg: #090b10; --terminal-ink: #dde3ec; --terminal-border: #262e3b;
+      --terminal-base: #6b7484; --grid-line: #232a35; --tick-off: #262e3b;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 20px 40px -20px rgba(0, 0, 0, 0.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1218; --surface: #161b24; --ink: #e8ebf0; --ink-muted: #97a1b2;
+    --ink-faint: #626d80; --border: #262e3b; --accent: #e2793f;
+    --series-a: #e2793f; --series-b: #4f93ea;
+    --good: #4cc283; --good-bg: rgba(76, 194, 131, 0.12); --good-border: #4cc283;
+    --bad: #ef6a63; --bad-bg: rgba(239, 106, 99, 0.12); --bad-border: #ef6a63;
+    --terminal-bg: #090b10; --terminal-ink: #dde3ec; --terminal-border: #262e3b;
+    --terminal-base: #6b7484; --grid-line: #232a35; --tick-off: #262e3b;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 20px 40px -20px rgba(0, 0, 0, 0.6);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--ink); margin: 0;
+    font-family: "IBM Plex Sans JP", "IBM Plex Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+    padding: 40px 20px 56px; display: flex; justify-content: center;
+  }
+  .card {
+    width: 100%; max-width: 660px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow);
+    padding: 36px 40px 32px; display: flex; flex-direction: column; gap: 26px;
+  }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace; font-size: 12.5px; color: var(--ink-faint);
+    letter-spacing: 0.02em; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  }
+  .eyebrow .path { color: var(--accent); }
+  .eyebrow .divider { color: var(--border); }
+
+  .heading h1 {
+    font-family: "Fraunces", serif; font-weight: 500; font-size: 28px; line-height: 1.24;
+    letter-spacing: -0.01em; margin: 0 0 8px; text-wrap: balance; color: var(--ink);
+  }
+  .heading p { margin: 0; font-size: 14.5px; line-height: 1.7; color: var(--ink-muted); max-width: 54ch; }
+  .heading p .src { color: var(--ink); font-weight: 500; }
+
+  .stat-row {
+    display: flex; align-items: flex-end; gap: 22px; padding: 18px 22px;
+    background: linear-gradient(180deg, rgba(235,104,52,0.07), rgba(235,104,52,0));
+    border: 1px solid var(--border); border-radius: 10px;
+  }
+  .stat-number {
+    font-family: "Fraunces", serif; font-weight: 600; font-size: 56px; line-height: 0.9;
+    color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .stat-caption { font-size: 13.5px; line-height: 1.6; color: var(--ink-muted); padding-bottom: 4px; }
+  .stat-caption strong { color: var(--ink); font-weight: 600; }
+
+  section.block { display: flex; flex-direction: column; gap: 12px; }
+  .block-label {
+    font-family: "IBM Plex Mono", monospace; font-size: 11.5px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--ink-faint);
+  }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .compare-panel { border-radius: 10px; padding: 14px 16px; border: 1px solid; display: flex; flex-direction: column; gap: 8px; }
+  .compare-panel.bad { background: var(--bad-bg); border-color: var(--bad-border); }
+  .compare-panel.good { background: var(--good-bg); border-color: var(--good-border); }
+  .compare-title { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; font-weight: 500; }
+  .compare-panel.bad .compare-title { color: var(--bad); }
+  .compare-panel.good .compare-title { color: var(--good); }
+  .compare-output {
+    margin: 0; font-family: "IBM Plex Mono", monospace; font-size: 11px; line-height: 1.6;
+    color: var(--ink-muted); white-space: pre-wrap; word-break: break-word;
+  }
+
+  .terminal {
+    background: var(--terminal-bg); border: 1px solid var(--terminal-border); border-radius: 10px;
+    padding: 16px 18px 14px; font-family: "IBM Plex Mono", monospace; font-size: 12.5px;
+    color: var(--terminal-ink); display: flex; flex-direction: column; gap: 10px;
+  }
+  .term-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .term-tag { font-size: 10.5px; color: var(--terminal-base); letter-spacing: 0.06em; width: 52px; flex: none; }
+  .toks { display: flex; flex-wrap: wrap; gap: 4px; }
+  .term-foot { font-size: 11px; color: var(--terminal-base); border-top: 1px solid var(--terminal-border); padding-top: 9px; }
+  .term-foot b { color: var(--terminal-ink); font-weight: 500; }
+
+  .caveat {
+    display: flex; gap: 10px; padding: 12px 14px; border: 1px dashed var(--border);
+    border-radius: 8px; background: var(--bg);
+  }
+  .caveat .mark { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-faint); flex: none; }
+  .caveat p { margin: 0; font-size: 12.5px; line-height: 1.65; color: var(--ink-muted); }
+
+  footer {
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 16px;
+    border-top: 1px solid var(--border); padding-top: 18px;
+  }
+  .sources { display: flex; flex-direction: column; gap: 5px; }
+  .sources a { font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: var(--ink-muted); text-decoration: none; border-bottom: 1px solid transparent; }
+  .sources a:hover { color: var(--accent); border-color: var(--accent); }
+  .progress { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex: none; }
+  .progress .num { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-faint); letter-spacing: 0.03em; }
+  .progress .num b { color: var(--ink); font-weight: 500; }
+  .grid100 { display: grid; grid-template-columns: repeat(20, 5px); grid-auto-rows: 5px; gap: 2px; }
+  .grid100 i { background: var(--tick-off); border-radius: 1px; display: block; }
+  .grid100 i.on { background: var(--accent); }
+
+  @media (max-width: 480px) {
+    .card { padding: 26px 20px 24px; gap: 20px; }
+    .stat-number { font-size: 46px; }
+    .compare-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; align-items: flex-start; }
+    .progress { align-items: flex-start; }
+  }
+</style>
+
+<div class="card" id="card">
+
+  <div class="eyebrow">
+    <span>$ day-004</span>
+    <span class="divider">/</span>
+    <span class="path">--topic jeff-zero-shot-classification</span>
+    <span class="divider">/</span>
+    <span>海外AIネタ100日チャレンジ</span>
+  </div>
+
+  <div class="heading">
+    <h1>0.8Bのゼロショット分類モデル<br>「Jeff」でルールベースを殴ってみた</h1>
+    <p><span class="src">Jeff</span>(Qwen3.5-0.8Bをファインチューンしたゼロショット分類モデル)と、
+      単純なキーワードルールベース分類器を、自作の問い合わせメール分類タスク18件で比較した。</p>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-number">+50pt</div>
+    <div class="stat-caption">キーワードが紛らわしい意地悪な例(8件)での正解率差:<br>
+      <strong>ルールベース 37.5%</strong> → <strong>Jeff 87.5%</strong></div>
+  </div>
+
+  <section class="block compare">
+    <div class="block-label">同じ問い合わせ文への判定結果</div>
+    <div class="compare-grid">
+      <div class="compare-panel bad">
+        <div class="compare-title">✗ キーワードルールベース</div>
+        <pre class="compare-output">"Please cancel the duplicate charge
+on my card, I never asked for a
+second item."
+
+→ 予測: cancellation(誤り)
+"cancel"という単語だけを見て誤爆。
+本当は請求の取り消しを求めている。</pre>
+      </div>
+      <div class="compare-panel good">
+        <div class="compare-title">✓ Jeff-Qwen3.5-0.8B(ゼロショット)</div>
+        <pre class="compare-output">同じ文を入力
+
+→ 予測: billing(正解)
+確率 billing=99.3%
+ (cancellation=0.3%, technical=0.3%)</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-label">18件全体の精度とレイテンシ(実測)</div>
+    <div class="terminal">
+      <div class="term-row">
+        <span class="term-tag">全体</span>
+        <span class="toks">ルール 72.2%(13/18) ／ Jeff 94.4%(17/18)</span>
+      </div>
+      <div class="term-row">
+        <span class="term-tag">意地悪</span>
+        <span class="toks">ルール 37.5%(3/8) ／ Jeff 87.5%(7/8)</span>
+      </div>
+      <div class="term-row">
+        <span class="term-tag">速度</span>
+        <span class="toks">ルール 0ms/件 ／ Jeff 約1,500ms/件(CPU4コア)</span>
+      </div>
+      <div class="term-foot">Jeffの唯一の誤分類は確率55.7%対42.4%の僅差(confidence 0.409)で、<b>自信なく間違えていた</b>。</div>
+    </div>
+  </section>
+
+  <div class="caveat">
+    <span class="mark">⚠</span>
+    <p>速度はREADME記載のCPU463ms/決定(32スレッド)より遅い実測値。GPUなし・CPU4コアの
+      このクラウド実行環境での結果で、「速い」という謳い文句はそのままは成立しなかった。</p>
+  </div>
+
+  <footer>
+    <div class="sources">
+      <a href="https://github.com/firelex/jeff" target="_blank" rel="noopener">→ github.com/firelex/jeff</a>
+      <a href="https://huggingface.co/mstrasser/Jeff-Qwen3.5-0.8B" target="_blank" rel="noopener">→ huggingface.co/mstrasser/Jeff-Qwen3.5-0.8B</a>
+    </div>
+    <div class="progress">
+      <span class="num"><b>004</b> / 100 days</span>
+      <div class="grid100" id="grid100"></div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var grid = document.getElementById('grid100');
+    var frag = document.createDocumentFragment();
+    var currentDay = 4;
+    for (var i = 1; i <= 100; i++) {
+      var el = document.createElement('i');
+      if (i <= currentDay) el.className = 'on';
+      frag.appendChild(el);
+    }
+    grid.appendChild(frag);
+  })();
+</script>
