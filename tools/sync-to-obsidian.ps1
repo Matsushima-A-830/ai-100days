@@ -90,7 +90,12 @@ foreach ($dir in $dayDirs) {
 
     $readme = Get-FileTextOrEmpty (Join-Path $dir.FullName "README.md")
     $results = Get-FileTextOrEmpty (Join-Path $dir.FullName "results.md")
-    $article = Get-FileTextOrEmpty (Join-Path $RepoPath ("articles\day-{0}.md" -f $n))
+    $articlePath = Get-ChildItem -Path (Join-Path $RepoPath "articles") -Filter ("day-{0}-*.md" -f $n) -File -ErrorAction SilentlyContinue | Select-Object -First 1
+    if (-not $articlePath) {
+        $articlePath = Get-ChildItem -Path (Join-Path $RepoPath "articles") -Filter ("day-{0}.md" -f $n) -File -ErrorAction SilentlyContinue | Select-Object -First 1
+    }
+    $article = if ($articlePath) { Get-FileTextOrEmpty $articlePath.FullName } else { "" }
+    $articleLinkPath = if ($articlePath) { "articles/$($articlePath.Name)" } else { "articles/day-$n.md" }
     $posts = Get-FileTextOrEmpty (Join-Path $RepoPath ("posts\day-{0}.md" -f $n))
 
     $status = "unknown"
@@ -121,7 +126,7 @@ $readme
 
 $results
 
-## Zenn記事下書き (articles/day-$n.md)
+## Zenn記事下書き ($articleLinkPath)
 
 $article
 
@@ -132,7 +137,7 @@ $posts
 ## リンク
 
 - [GitHub: experiments/day-$n](https://github.com/Matsushima-A-830/ai-100days/tree/main/experiments/day-$n)
-- [GitHub: articles/day-$n.md](https://github.com/Matsushima-A-830/ai-100days/blob/main/articles/day-$n.md)
+- [GitHub: $articleLinkPath](https://github.com/Matsushima-A-830/ai-100days/blob/main/$articleLinkPath)
 - [GitHub: posts/day-$n.md](https://github.com/Matsushima-A-830/ai-100days/blob/main/posts/day-$n.md)
 "@
 
