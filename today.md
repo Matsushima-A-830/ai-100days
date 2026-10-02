@@ -2,11 +2,9 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 004
-- 選んだ候補(backlog.mdのタイトルかURL): Jeff — Qwen3.5/Gemma4をファインチューンした22msの軽量ゼロショット分類モデル — https://github.com/firelex/jeff
-- 補足メモ(あれば): コードMIT/重みApache-2.0。CPU推論も可能でAPIキー・GPU不要(GPUがあれば22〜29ms、CPUのみでも動作確認は可能)。
-  「自作の簡単な分類タスク(例: 問い合わせ文の振り分けなど)でキーワードルールベースの分類とJeffのゼロショット分類を精度・速度の両面で比較する」
-  Before/Afterデモを軸に、uvでのセットアップから実際の推論・ベンチマークまで動かして検証する。
-  日本語記事は0/0/0件で差別化しやすい。出典・ライセンス(コードMIT/重みApache-2.0)明記を忘れないこと。
+- Day: 005
+- 選んだ候補(backlog.mdのタイトルかURL): Soup — 単一YAMLでLLMファインチューニングを完結させるCLI(Layer Streamingで4GB GPUでも8Bモデル学習) — https://github.com/MakazhanAlpamys/Soup
+- 補足メモ(あれば): Apache-2.0。「Layer Streaming」で4GB GPUでも8Bモデルを学習可能と主張。
+  日本語記事ほぼ0件で差別化しやすいが、検証にはCUDA GPUが前提(クラウド環境では要代替手段)。
 
 状態: 設定済み
