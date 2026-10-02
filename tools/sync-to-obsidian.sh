@@ -71,7 +71,15 @@ for dir in "${day_dirs[@]}"; do
   results=""
   [[ -f "$dir/results.md" ]] && results="$(cat "$dir/results.md")"
   article=""
-  [[ -f "$REPO_PATH/articles/day-$n.md" ]] && article="$(cat "$REPO_PATH/articles/day-$n.md")"
+  article_link_path="articles/day-$n.md"
+  article_file="$(ls "$REPO_PATH"/articles/day-"$n"-*.md 2>/dev/null | head -1)"
+  if [[ -z "$article_file" && -f "$REPO_PATH/articles/day-$n.md" ]]; then
+    article_file="$REPO_PATH/articles/day-$n.md"
+  fi
+  if [[ -n "$article_file" ]]; then
+    article="$(cat "$article_file")"
+    article_link_path="articles/$(basename "$article_file")"
+  fi
   posts=""
   [[ -f "$REPO_PATH/posts/day-$n.md" ]] && posts="$(cat "$REPO_PATH/posts/day-$n.md")"
 
@@ -103,7 +111,7 @@ $readme
 
 $results
 
-## Zenn記事下書き (articles/day-$n.md)
+## Zenn記事下書き ($article_link_path)
 
 $article
 
@@ -114,7 +122,7 @@ $posts
 ## リンク
 
 - [GitHub: experiments/day-$n](https://github.com/Matsushima-A-830/ai-100days/tree/main/experiments/day-$n)
-- [GitHub: articles/day-$n.md](https://github.com/Matsushima-A-830/ai-100days/blob/main/articles/day-$n.md)
+- [GitHub: $article_link_path](https://github.com/Matsushima-A-830/ai-100days/blob/main/$article_link_path)
 - [GitHub: posts/day-$n.md](https://github.com/Matsushima-A-830/ai-100days/blob/main/posts/day-$n.md)
 EOF
 
