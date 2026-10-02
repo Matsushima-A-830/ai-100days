@@ -1,0 +1,676 @@
+{
+  "rule_based": {
+    "summary": {
+      "name": "Rule-based (keyword matching)",
+      "n": 18,
+      "correct": 13,
+      "accuracy": 0.7222222222222222,
+      "easy_accuracy": 1.0,
+      "adv_accuracy": 0.375,
+      "avg_latency_sec": 3.0106111113228608e-06
+    },
+    "results": [
+      {
+        "text": "My credit card was charged twice for the same order, please refund the extra charge.",
+        "true_label": "billing",
+        "group": "easy",
+        "pred": "billing",
+        "correct": true,
+        "latency_sec": 1.0385999985373928e-05
+      },
+      {
+        "text": "The app crashes every time I open the settings menu.",
+        "true_label": "technical",
+        "group": "easy",
+        "pred": "technical",
+        "correct": true,
+        "latency_sec": 3.4099999766112887e-06
+      },
+      {
+        "text": "I want to cancel my subscription, I no longer need this service.",
+        "true_label": "cancellation",
+        "group": "easy",
+        "pred": "cancellation",
+        "correct": true,
+        "latency_sec": 3.0310000056488207e-06
+      },
+      {
+        "text": "My package has been stuck in transit for two weeks, where is my delivery?",
+        "true_label": "shipping",
+        "group": "easy",
+        "pred": "shipping",
+        "correct": true,
+        "latency_sec": 2.576000042608939e-06
+      },
+      {
+        "text": "Can you explain the charge of $49.99 on my latest invoice?",
+        "true_label": "billing",
+        "group": "easy",
+        "pred": "billing",
+        "correct": true,
+        "latency_sec": 2.2010000293448684e-06
+      },
+      {
+        "text": "The login page keeps giving me a 500 error.",
+        "true_label": "technical",
+        "group": "easy",
+        "pred": "technical",
+        "correct": true,
+        "latency_sec": 2.4050000320130493e-06
+      },
+      {
+        "text": "Please terminate my membership, I will not be renewing it.",
+        "true_label": "cancellation",
+        "group": "easy",
+        "pred": "cancellation",
+        "correct": true,
+        "latency_sec": 2.0259999473637436e-06
+      },
+      {
+        "text": "My tracking number shows delivered but I never received the package.",
+        "true_label": "shipping",
+        "group": "easy",
+        "pred": "shipping",
+        "correct": true,
+        "latency_sec": 2.1559999368037097e-06
+      },
+      {
+        "text": "Why was I billed for a plan with a higher price than what I signed up for?",
+        "true_label": "billing",
+        "group": "easy",
+        "pred": "billing",
+        "correct": true,
+        "latency_sec": 2.688999984457041e-06
+      },
+      {
+        "text": "Why does the mobile app freeze whenever I try to upload a photo?",
+        "true_label": "technical",
+        "group": "easy",
+        "pred": "technical",
+        "correct": true,
+        "latency_sec": 2.5000000505315256e-06
+      },
+      {
+        "text": "Please cancel the duplicate charge on my card, I never asked for a second item.",
+        "true_label": "billing",
+        "group": "adversarial",
+        "pred": "cancellation",
+        "correct": false,
+        "latency_sec": 2.2100000478531e-06
+      },
+      {
+        "text": "I don't want to cancel my account, I just want you to stop double-billing me every month.",
+        "true_label": "billing",
+        "group": "adversarial",
+        "pred": "cancellation",
+        "correct": false,
+        "latency_sec": 3.1660000558986212e-06
+      },
+      {
+        "text": "The checkout page crashes right before I can complete my payment, so I still haven't been charged correctly.",
+        "true_label": "technical",
+        "group": "adversarial",
+        "pred": "technical",
+        "correct": true,
+        "latency_sec": 2.8329999395282357e-06
+      },
+      {
+        "text": "My refund for the broken item hasn't shown up in my account yet.",
+        "true_label": "billing",
+        "group": "adversarial",
+        "pred": "billing",
+        "correct": true,
+        "latency_sec": 1.7950000028577051e-06
+      },
+      {
+        "text": "The delivery was fine, but I was accidentally charged shipping fees twice for one order.",
+        "true_label": "billing",
+        "group": "adversarial",
+        "pred": "shipping",
+        "correct": false,
+        "latency_sec": 2.307000045220775e-06
+      },
+      {
+        "text": "I tried to cancel my order before it shipped, but it looks like the package already left the warehouse.",
+        "true_label": "shipping",
+        "group": "adversarial",
+        "pred": "cancellation",
+        "correct": false,
+        "latency_sec": 3.1900000294626807e-06
+      },
+      {
+        "text": "Great, your app logged me out again right when I was about to pay my bill.",
+        "true_label": "technical",
+        "group": "adversarial",
+        "pred": "technical",
+        "correct": true,
+        "latency_sec": 2.38399991303595e-06
+      },
+      {
+        "text": "This isn't a complaint about the delay, it's about being charged a rush fee I never agreed to.",
+        "true_label": "billing",
+        "group": "adversarial",
+        "pred": "shipping",
+        "correct": false,
+        "latency_sec": 2.9259999791975133e-06
+      }
+    ]
+  },
+  "jeff": {
+    "summary": {
+      "name": "Jeff-Qwen3.5-0.8B (zero-shot)",
+      "n": 18,
+      "correct": 17,
+      "accuracy": 0.9444444444444444,
+      "easy_accuracy": 1.0,
+      "adv_accuracy": 0.875,
+      "avg_latency_sec": 1.5548169292777756
+    },
+    "results": [
+      {
+        "text": "My credit card was charged twice for the same order, please refund the extra charge.",
+        "true_label": "billing",
+        "group": "easy",
+        "pred": "billing",
+        "correct": true,
+        "probability": 0.9963285840231338,
+        "confidence": 0.9951047786975118,
+        "ranked": [
+          [
+            "billing",
+            0.9963285840231338
+          ],
+          [
+            "technical",
+            0.0031186084000899496
+          ],
+          [
+            "shipping",
+            0.0003629967439403007
+          ],
+          [
+            "cancellation",
+            0.00018981083283587475
+          ]
+        ],
+        "latency_sec": 1.4857408970000279
+      },
+      {
+        "text": "The app crashes every time I open the settings menu.",
+        "true_label": "technical",
+        "group": "easy",
+        "pred": "technical",
+        "correct": true,
+        "probability": 0.9994743207852937,
+        "confidence": 0.9992990943803917,
+        "ranked": [
+          [
+            "technical",
+            0.9994743207852937
+          ],
+          [
+            "cancellation",
+            0.00023201402782571773
+          ],
+          [
+            "billing",
+            0.00022940897313274836
+          ],
+          [
+            "shipping",
+            6.425621374778828e-05
+          ]
+        ],
+        "latency_sec": 1.5479206809999368
+      },
+      {
+        "text": "I want to cancel my subscription, I no longer need this service.",
+        "true_label": "cancellation",
+        "group": "easy",
+        "pred": "cancellation",
+        "correct": true,
+        "probability": 0.9987982076941023,
+        "confidence": 0.9983976102588031,
+        "ranked": [
+          [
+            "cancellation",
+            0.9987982076941023
+          ],
+          [
+            "billing",
+            0.0009447952204945947
+          ],
+          [
+            "technical",
+            0.00013664650892936244
+          ],
+          [
+            "shipping",
+            0.00012035057647374599
+          ]
+        ],
+        "latency_sec": 1.5196618129999706
+      },
+      {
+        "text": "My package has been stuck in transit for two weeks, where is my delivery?",
+        "true_label": "shipping",
+        "group": "easy",
+        "pred": "shipping",
+        "correct": true,
+        "probability": 0.9992309261519281,
+        "confidence": 0.9989745682025708,
+        "ranked": [
+          [
+            "shipping",
+            0.9992309261519281
+          ],
+          [
+            "technical",
+            0.000491553541797329
+          ],
+          [
+            "billing",
+            0.00020086715653954654
+          ],
+          [
+            "cancellation",
+            7.665314973501837e-05
+          ]
+        ],
+        "latency_sec": 1.5293528250000463
+      },
+      {
+        "text": "Can you explain the charge of $49.99 on my latest invoice?",
+        "true_label": "billing",
+        "group": "easy",
+        "pred": "billing",
+        "correct": true,
+        "probability": 0.9915568478245401,
+        "confidence": 0.9887424637660535,
+        "ranked": [
+          [
+            "billing",
+            0.9915568478245401
+          ],
+          [
+            "technical",
+            0.006681535156927314
+          ],
+          [
+            "shipping",
+            0.0009618378486579998
+          ],
+          [
+            "cancellation",
+            0.0007997791698746175
+          ]
+        ],
+        "latency_sec": 1.523815093000053
+      },
+      {
+        "text": "The login page keeps giving me a 500 error.",
+        "true_label": "technical",
+        "group": "easy",
+        "pred": "technical",
+        "correct": true,
+        "probability": 0.9992706252179929,
+        "confidence": 0.9990275002906572,
+        "ranked": [
+          [
+            "technical",
+            0.9992706252179929
+          ],
+          [
+            "billing",
+            0.00035592069874989727
+          ],
+          [
+            "cancellation",
+            0.0002878625257820153
+          ],
+          [
+            "shipping",
+            8.559155747512977e-05
+          ]
+        ],
+        "latency_sec": 1.6644787349999888
+      },
+      {
+        "text": "Please terminate my membership, I will not be renewing it.",
+        "true_label": "cancellation",
+        "group": "easy",
+        "pred": "cancellation",
+        "correct": true,
+        "probability": 0.9987682892151193,
+        "confidence": 0.9983577189534923,
+        "ranked": [
+          [
+            "cancellation",
+            0.9987682892151193
+          ],
+          [
+            "billing",
+            0.0007710213106259347
+          ],
+          [
+            "technical",
+            0.0002797886608401433
+          ],
+          [
+            "shipping",
+            0.00018090081341462754
+          ]
+        ],
+        "latency_sec": 1.645289612000056
+      },
+      {
+        "text": "My tracking number shows delivered but I never received the package.",
+        "true_label": "shipping",
+        "group": "easy",
+        "pred": "shipping",
+        "correct": true,
+        "probability": 0.9984887080497502,
+        "confidence": 0.9979849440663336,
+        "ranked": [
+          [
+            "shipping",
+            0.9984887080497502
+          ],
+          [
+            "technical",
+            0.0013417712763458762
+          ],
+          [
+            "billing",
+            0.00010725599452466907
+          ],
+          [
+            "cancellation",
+            6.226467937926637e-05
+          ]
+        ],
+        "latency_sec": 1.494196795999983
+      },
+      {
+        "text": "Why was I billed for a plan with a higher price than what I signed up for?",
+        "true_label": "billing",
+        "group": "easy",
+        "pred": "billing",
+        "correct": true,
+        "probability": 0.9264958237019267,
+        "confidence": 0.901994431602569,
+        "ranked": [
+          [
+            "billing",
+            0.9264958237019267
+          ],
+          [
+            "cancellation",
+            0.049283852705199575
+          ],
+          [
+            "technical",
+            0.020907775317271567
+          ],
+          [
+            "shipping",
+            0.003312548275602151
+          ]
+        ],
+        "latency_sec": 1.4223408130000053
+      },
+      {
+        "text": "Why does the mobile app freeze whenever I try to upload a photo?",
+        "true_label": "technical",
+        "group": "easy",
+        "pred": "technical",
+        "correct": true,
+        "probability": 0.998529628318214,
+        "confidence": 0.9980395044242854,
+        "ranked": [
+          [
+            "technical",
+            0.998529628318214
+          ],
+          [
+            "billing",
+            0.0008094482498229732
+          ],
+          [
+            "cancellation",
+            0.0004808283189583742
+          ],
+          [
+            "shipping",
+            0.00018009511300464957
+          ]
+        ],
+        "latency_sec": 1.5174266199999238
+      },
+      {
+        "text": "Please cancel the duplicate charge on my card, I never asked for a second item.",
+        "true_label": "billing",
+        "group": "adversarial",
+        "pred": "billing",
+        "correct": true,
+        "probability": 0.9928926046848028,
+        "confidence": 0.9905234729130704,
+        "ranked": [
+          [
+            "billing",
+            0.9928926046848028
+          ],
+          [
+            "cancellation",
+            0.003457627195596567
+          ],
+          [
+            "technical",
+            0.0032247846818626883
+          ],
+          [
+            "shipping",
+            0.0004249834377379875
+          ]
+        ],
+        "latency_sec": 1.541265054000064
+      },
+      {
+        "text": "I don't want to cancel my account, I just want you to stop double-billing me every month.",
+        "true_label": "billing",
+        "group": "adversarial",
+        "pred": "billing",
+        "correct": true,
+        "probability": 0.8172932797069519,
+        "confidence": 0.7563910396092691,
+        "ranked": [
+          [
+            "billing",
+            0.8172932797069519
+          ],
+          [
+            "cancellation",
+            0.15042096647748343
+          ],
+          [
+            "technical",
+            0.03016215877224895
+          ],
+          [
+            "shipping",
+            0.0021235950433157675
+          ]
+        ],
+        "latency_sec": 1.5227667519999386
+      },
+      {
+        "text": "The checkout page crashes right before I can complete my payment, so I still haven't been charged correctly.",
+        "true_label": "technical",
+        "group": "adversarial",
+        "pred": "technical",
+        "correct": true,
+        "probability": 0.8767575697104493,
+        "confidence": 0.8356767596139324,
+        "ranked": [
+          [
+            "technical",
+            0.8767575697104493
+          ],
+          [
+            "billing",
+            0.12272987531122793
+          ],
+          [
+            "cancellation",
+            0.00033831827196498417
+          ],
+          [
+            "shipping",
+            0.00017423670635783112
+          ]
+        ],
+        "latency_sec": 1.6022743160000346
+      },
+      {
+        "text": "My refund for the broken item hasn't shown up in my account yet.",
+        "true_label": "billing",
+        "group": "adversarial",
+        "pred": "billing",
+        "correct": true,
+        "probability": 0.9846552235608891,
+        "confidence": 0.9795402980811855,
+        "ranked": [
+          [
+            "billing",
+            0.9846552235608891
+          ],
+          [
+            "technical",
+            0.01399955083402802
+          ],
+          [
+            "shipping",
+            0.0009714130070779326
+          ],
+          [
+            "cancellation",
+            0.0003738125980049817
+          ]
+        ],
+        "latency_sec": 1.6106936649999852
+      },
+      {
+        "text": "The delivery was fine, but I was accidentally charged shipping fees twice for one order.",
+        "true_label": "billing",
+        "group": "adversarial",
+        "pred": "billing",
+        "correct": true,
+        "probability": 0.9498389955975234,
+        "confidence": 0.9331186607966978,
+        "ranked": [
+          [
+            "billing",
+            0.9498389955975234
+          ],
+          [
+            "shipping",
+            0.03701979897946728
+          ],
+          [
+            "technical",
+            0.012646107792192345
+          ],
+          [
+            "cancellation",
+            0.0004950976308170159
+          ]
+        ],
+        "latency_sec": 1.6018582359999982
+      },
+      {
+        "text": "I tried to cancel my order before it shipped, but it looks like the package already left the warehouse.",
+        "true_label": "shipping",
+        "group": "adversarial",
+        "pred": "shipping",
+        "correct": true,
+        "probability": 0.9970497386814868,
+        "confidence": 0.9960663182419824,
+        "ranked": [
+          [
+            "shipping",
+            0.9970497386814868
+          ],
+          [
+            "technical",
+            0.002377480851907528
+          ],
+          [
+            "billing",
+            0.00034276901230311657
+          ],
+          [
+            "cancellation",
+            0.00023001145430257005
+          ]
+        ],
+        "latency_sec": 1.6011236769999186
+      },
+      {
+        "text": "Great, your app logged me out again right when I was about to pay my bill.",
+        "true_label": "technical",
+        "group": "adversarial",
+        "pred": "billing",
+        "correct": false,
+        "probability": 0.5571121156421618,
+        "confidence": 0.40948282085621573,
+        "ranked": [
+          [
+            "billing",
+            0.5571121156421618
+          ],
+          [
+            "technical",
+            0.42441624206262135
+          ],
+          [
+            "cancellation",
+            0.017127462312001938
+          ],
+          [
+            "shipping",
+            0.0013441799832149724
+          ]
+        ],
+        "latency_sec": 1.5464556150000135
+      },
+      {
+        "text": "This isn't a complaint about the delay, it's about being charged a rush fee I never agreed to.",
+        "true_label": "billing",
+        "group": "adversarial",
+        "pred": "billing",
+        "correct": true,
+        "probability": 0.9972697627428208,
+        "confidence": 0.9963596836570944,
+        "ranked": [
+          [
+            "billing",
+            0.9972697627428208
+          ],
+          [
+            "technical",
+            0.0011999779091549764
+          ],
+          [
+            "shipping",
+            0.0010877090600759022
+          ],
+          [
+            "cancellation",
+            0.000442550287948353
+          ]
+        ],
+        "latency_sec": 1.6100435270000162
+      }
+    ]
+  }
+}
