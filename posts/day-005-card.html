@@ -188,9 +188,9 @@ optimizer.pt: 13.7 MB(学習の形跡あり)</pre>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>学習プロセス自体(loss低下・ピークVRAM)は主張どおり動いた。しかし学習後に保存された
-      <code>adapter_model.safetensors</code>は最終出力・チェックポイントの両方でテンソル0個だった。
-      原因特定はこの検証の範囲外(soup-cli 0.75.0で発生、再現コードはexperiments/day-005/に公開)。</p>
+    <p>原因特定: <code>state_dict()</code>の独自上書き(inner.除去)と<code>named_parameters()</code>の
+      キー不一致でPEFTの<code>get_peft_model_state_dict()</code>が無警告で空dictを返す。
+      <code>state_dict()</code>からlora_キーを直接抽出する回避策は動作確認済み(soup-cli 0.75.0で再現)。</p>
   </div>
 
   <footer>

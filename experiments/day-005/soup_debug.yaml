@@ -1,0 +1,19 @@
+
+base: HuggingFaceTB/SmolLM2-135M-Instruct
+task: sft
+data:
+  train: train_small.jsonl
+  max_length: 128
+training:
+  epochs: 1
+  batch_size: 1
+  lr: 0.0002
+  logging_steps: 1
+  quantization: none
+  stream_layers: true
+  stream_buffers: 2
+  stream_vram_override: 4000000000
+  lora:
+    r: 8
+    alpha: 16
+output: ./out-debug

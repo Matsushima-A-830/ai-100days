@@ -36,6 +36,10 @@ Colabより高性能な実GPU(16GB、RTX 5060 Ti)上で、プロセスを`torch.
 
 検証コード: `sections_1to4.py`, `section5_8b_4gb.py`。実行ログ: `run2-sections1to4.log`, `run1-section5.log`。
 
+学習後に保存されたLoRAアダプタファイルが空(0テンソル)という不具合を発見したため、高速な
+SmolLM2-135Mで原因を切り分けるデバッグスクリプト`debug_empty_adapter.py`も追加した。
+根本原因(`state_dict()`と`named_parameters()`のキー不一致)と回避策の詳細は`results.md`を参照。
+
 ## 再現方法
 
 ```bash

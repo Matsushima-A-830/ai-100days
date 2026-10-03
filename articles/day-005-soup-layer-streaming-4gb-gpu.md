@@ -122,10 +122,46 @@ with safe_open('out-8b/adapter_model.safetensors', framework='pt') as f:
 つまり**学習そのもの(勾配計算・loss低下)は確かに起きているのに、学習済みのLoRA重みがファイルとして
 正しく保存されていない**ということです。
 
-今回の検証範囲ではこの原因の特定までは行っていません。筆者の環境固有の問題である可能性もありますが、
-4bit量子化 + Layer Streaming + LoRA保存という組み合わせに起因する可能性が高いと見ています
-(再現コードは[experiments/day-005/](https://github.com/matsushima-a-830/ai-100days/tree/main/experiments/day-005)
-にすべて置いてあるので、気になる方はぜひ再現してみてください)。
+8Bモデルでの再現は時間がかかるため、同じ経路を高速なSmolLM2-135M-Instructで再現し
+(`debug_empty_adapter.py`)、学習直後のモデルを3つの方法で覗いてみたところ、原因が見えてきました。
+
+```
+model.state_dict()                    -> ...layers.0.self_attn.q_proj.lora_A.default.weight   (inner無し、値は非ゼロ)
+model.named_parameters()              -> ...layers.0.inner.self_attn.q_proj.lora_A.default.weight  (inner有り)
+peft.get_peft_model_state_dict(model) -> 0 keys
+```
+
+Soupは、Layer Streaming用にラップした各デコーダ層(`StreamedDecoderLayer`)の`state_dict()`を
+独自に上書きし、保存時のキーからラッパー固有の`inner.`プレフィックスを取り除いています
+(ソースコードのコメントいわく「普通のLoRAアダプタと見分けがつかない形で保存する」ための意図的な設計)。
+
+ところがこの上書きは`state_dict()`にしか適用されておらず、PyTorch標準の`named_parameters()`は
+`inner.`付きのまま。Hugging Face `Trainer.save_model()` → `PeftModel.save_pretrained()`が内部で呼ぶ
+`peft.get_peft_model_state_dict()`は、`named_parameters()`ベースでLoRAキーを特定してから
+`state_dict()`と突き合わせる実装になっているため、**キー名が一致せず「該当パラメータなし」と判断され、
+エラーも警告も出さずに空のdictを返してしまう**のです。これがそのまま`adapter_model.safetensors`に
+書き込まれ、0テンソルのファイルになっていました。
+
+学習自体(勾配計算・loss低下)が正常だったのは、この不一致がフォワード/バックワードパスには
+一切影響しないから。135Mモデルでも8Bモデルでも同じ現象が再現したので、モデルの種類に依存しない、
+Layer Streaming機能自体に起因する不具合と見ています。
+
+**回避策も確認できました。** `trainer.save_model()`を経由せず、`model.state_dict()`
+(Soup独自の上書き版。キーは正しく、値も実際に学習済み)から`"lora_" in key`で直接フィルタして
+`safetensors.save_file()`で保存すればOKです。
+
+```python
+sd = model.state_dict()
+lora_sd = {k: v.clone().cpu() for k, v in sd.items() if "lora_" in k}
+from safetensors.torch import save_file
+save_file(lora_sd, "adapter_model.safetensors")
+```
+
+SmolLM2-135Mで実際にこの方法を試したところ、120個のテンソルが正しく保存・再読み込みでき、
+学習済みの非ゼロ値(例: `max_abs=0.0417`)も確認できました。
+
+(再現コード一式は[experiments/day-005/](https://github.com/matsushima-a-830/ai-100days/tree/main/experiments/day-005)
+に置いてあります。)
 
 ## まとめ
 
@@ -136,11 +172,16 @@ with safe_open('out-8b/adapter_model.safetensors', framework='pt') as f:
 | streamed/resident フォワード出力のbit-exact一致 | ✓ |
 | 8Bモデルを4GB予算内で学習 | ✓(peak 1.78GB) |
 | 学習済みLoRAアダプタの保存 | ✗(空ファイル) |
+| 不具合の原因特定 | ✓(state_dict()とnamed_parameters()のキー不一致) |
+| 回避策 | ✓(state_dict()から直接lora_キーを抽出、動作確認済み) |
 
 「4GB GPUで8Bモデルを学習できる」という開発元の主張は、**計算・メモリの面では本当に成立していました**。
 Layer Streamingという技術自体の正しさ(streamed/residentのbit-exact一致)も実測で確認できています。
 ただ、今回ぶつかったのは「動いた」の先、「学習済みモデルを実際に持ち帰れるか」という部分の問題でした。
-派手な主張ほど、末端(保存・永続化)まで含めて検証する価値があるという、地味だけど実用上大事な教訓でした。
+原因はPEFTの`get_peft_model_state_dict()`とSoup独自の`state_dict()`上書きとのキー名不一致で、
+回避策(state_dict()から直接抽出)も動作確認できたので、最終的には「使える学習済みモデルを実際に
+持ち帰る」ところまで到達できました。派手な主張ほど、末端(保存・永続化)まで含めて検証する価値が
+あるという、地味だけど実用上大事な教訓でした。
 
 ## ライセンス・出典
 

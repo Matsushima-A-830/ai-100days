@@ -79,8 +79,51 @@ with safe_open('out-8b/adapter_model.safetensors', framework='pt') as f:
 つまり**学習自体は(lossの低下からも)実際に起きているが、学習済みのLoRA重みがディスクに正しく保存されていない**。
 
 これは筆者が自作した比較コードの不備ではなく、`soup train`本体の保存処理(`wrapper.train()`内のアダプタ保存)で
-起きている。Layer Streaming + 4bit量子化 + LoRA保存の組み合わせに固有の問題である可能性があり、
-再現性のある具体的な不具合として記録しておく(本記事の検証範囲では原因の特定までは行っていない)。
+起きている。
+
+## 根本原因の特定: state_dict()とnamed_parameters()のキー不一致
+
+8Bモデルでの再現には時間がかかるため、同じ経路(`stream_layers: true`)を高速な
+SmolLM2-135M-Instructで再現し(`debug_empty_adapter.py`)、学習直後のモデルを3つの異なる方法で
+調べたところ、キーの付け方に不一致があることがわかった。
+
+```
+model.state_dict()                    -> ...layers.0.self_attn.q_proj.lora_A.default.weight   (inner無し、値は非ゼロ)
+model.named_parameters()              -> ...layers.0.inner.self_attn.q_proj.lora_A.default.weight  (inner有り)
+peft.get_peft_model_state_dict(model) -> 0 keys
+```
+
+Soupは、Layer Streaming用にラップした各デコーダ層(`StreamedDecoderLayer`、
+`soup_cli/utils/layer_stream_runtime.py`)の`state_dict()`を独自に上書きし、保存時のキーから
+`inner.`というラッパー固有のプレフィックスを取り除いている(ソースコードのコメントによれば、
+「普通のLoRAアダプタと見分けがつかない形で保存する」ための意図的な設計)。
+
+しかしこの上書きは`state_dict()`にしか適用されておらず、`named_parameters()`(PyTorch標準メソッド)
+は`inner.`付きのままである。Hugging Face `Trainer.save_model()` -> `PeftModel.save_pretrained()`が
+内部で呼ぶ`peft.get_peft_model_state_dict()`は、`named_parameters()`ベースでLoRAキーを特定してから
+`state_dict()`と突き合わせる実装になっているため、キー名の不一致により**該当パラメータが1つも
+見つからず、エラーも警告も出さずに空のdictを返す**。これがそのまま`adapter_model.safetensors`に
+書き込まれ、0テンソルのファイルになっていた。
+
+学習自体(勾配計算・loss低下)が正常だったのは、この不一致がフォワード/バックワードパスには
+一切影響せず、保存経路だけが壊れているため。135Mモデルでも8Bモデルでも同じ現象が再現したことから、
+モデルアーキテクチャに依存しない、Layer Streaming機能自体に起因する不具合と考えられる。
+
+### 回避策(動作確認済み)
+
+`trainer.save_model()`(内部で`get_peft_model_state_dict()`を使う)を経由せず、
+`model.state_dict()`(Soup独自の上書き版、キーは正しく値も実際に学習済み)から
+`"lora_" in key`で直接フィルタして`safetensors.save_file()`で保存すれば、正しいLoRA重みが取れる。
+
+```python
+sd = model.state_dict()
+lora_sd = {k: v.clone().cpu() for k, v in sd.items() if "lora_" in k}
+from safetensors.torch import save_file
+save_file(lora_sd, "adapter_model.safetensors")
+```
+
+SmolLM2-135Mで実際にこの方法を試したところ、120個のテンソルが正しく保存・再読み込みでき、
+学習済みの非ゼロ値(例: `max_abs=0.0417`)も確認できた。再現コード: `debug_empty_adapter.py`。
 
 ## まとめ
 
@@ -92,9 +135,13 @@ with safe_open('out-8b/adapter_model.safetensors', framework='pt') as f:
 | 8Bモデルを4GB予算内で学習 | ✓ (peak VRAM 1.78GB < 4GB) |
 | 学習によるloss低下 | ✓ (4.533 → 4.073、7ステップ) |
 | 学習済みLoRAアダプタの保存 | ✗ (adapter_model.safetensorsが空、0テンソル) |
+| 不具合の原因特定 | ✓ (state_dict()とnamed_parameters()のキー不一致、135M/8B両方で再現) |
+| 回避策 | ✓ (model.state_dict()からlora_キーを直接抽出して保存、動作確認済み) |
 
 「4GB GPUで8Bモデルを学習できる」という開発元の主張は、計算量・メモリ使用量の面では
 このRTX 5060 Ti上でも再現できた。しかし今回使った条件(4bit量子化 + Layer Streaming + LoRA)では、
-学習済みの成果物(アダプタの重み)がファイルとして正しく永続化されない、という
-別の問題に実際にぶつかった。「動いた」のは学習プロセスまでで、「使える学習済みモデルが手に入った」
-とまでは言えない、というのが今回の正直な結論。
+学習済みの成果物(アダプタの重み)がファイルとして正しく永続化されない、という別の問題に実際に
+ぶつかった。原因は`StreamedDecoderLayer.state_dict()`の独自上書きと`named_parameters()`の
+キー不一致で、PEFTの`get_peft_model_state_dict()`が黙って空のdictを返すこと。回避策(state_dict()
+から直接lora_キーを抽出)も動作確認できたので、「動いた」で終わらず「使える学習済みモデルを
+実際に持ち帰る」ところまで到達できた。
