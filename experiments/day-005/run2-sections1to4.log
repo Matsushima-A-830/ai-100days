@@ -1,0 +1,27 @@
+=== section 1: versions ===
+torch        2.11.0+cu128
+transformers 5.18.0
+peft         0.21.2
+bitsandbytes 0.50.2
+soup_cli     0.75.0
+
+=== section 2: GPU / bf16 ===
+GPU                   NVIDIA GeForce RTX 5060 Ti  (sm_120)
+VRAM                  17.1 GB
+bf16, incl. emulation True
+bf16 IN HARDWARE      True
+Soup will train in    bf16
+
+=== section 3: cap this process to 4 GB ===
+capped at 4.00 GB  (fraction 0.234 of this card)
+refused, as it should be: CUDA out of memory. Tried to allocate 4.29 GiB. GPU 0 has a total capacity of 15.93 GiB of
+
+=== section 4: streamed == resident, bit for bit ===
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 1106.38it/s]
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+streamed: 30 layers, dtype=bfloat16
+Loading weights:   0%|          | 0/272 [00:00<?, ?it/s]Loading weights:  60%|█████▉    | 162/272 [00:00<00:00, 1612.05it/s]Loading weights: 100%|██████████| 272/272 [00:00<00:00, 2021.67it/s]
+/home/matsu/soup-venv/lib/python3.12/site-packages/peft/mapping_func.py:154: UserWarning: The PEFT config's `base_model_name_or_path` was renamed from '/home/matsu/.soup/spectrum/weights/HuggingFaceTB__SmolLM2-135M-Instruct' to 'HuggingFaceTB/SmolLM2-135M-Instruct'. Please ensure that the correct base model is loaded when loading this checkpoint.
+  warnings.warn(
+bit-exact (torch.equal): True
+max abs diff:            0.0

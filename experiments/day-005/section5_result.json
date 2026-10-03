@@ -1,0 +1,9 @@
+{
+  "peak_vram_bytes": 1780064768,
+  "peak_vram_gb": 1.780064768,
+  "budget_gb": 4.0,
+  "steps": 7,
+  "initial_loss": 4.532831192016602,
+  "final_loss": 4.072790145874023,
+  "adapter_written": true
+}

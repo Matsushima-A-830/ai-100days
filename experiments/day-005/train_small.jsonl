@@ -1,0 +1,8 @@
+{"messages": [{"role": "user", "content": "Q0 streaming"}, {"role": "assistant", "content": "a"}]}
+{"messages": [{"role": "user", "content": "Q0 NF4"}, {"role": "assistant", "content": "b"}]}
+{"messages": [{"role": "user", "content": "Q1 streaming"}, {"role": "assistant", "content": "a"}]}
+{"messages": [{"role": "user", "content": "Q1 NF4"}, {"role": "assistant", "content": "b"}]}
+{"messages": [{"role": "user", "content": "Q2 streaming"}, {"role": "assistant", "content": "a"}]}
+{"messages": [{"role": "user", "content": "Q2 NF4"}, {"role": "assistant", "content": "b"}]}
+{"messages": [{"role": "user", "content": "Q3 streaming"}, {"role": "assistant", "content": "a"}]}
+{"messages": [{"role": "user", "content": "Q3 NF4"}, {"role": "assistant", "content": "b"}]}
