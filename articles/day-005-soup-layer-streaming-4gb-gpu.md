@@ -3,7 +3,7 @@ title: "「4GB GPUで8Bモデルを学習できる」というSoupの主張をRT
 emoji: "🍲"
 type: "tech"
 topics: ["ai", "llm", "pytorch", "finetuning", "gpu"]
-published: false
+published: true
 ---
 
 ## これは何
