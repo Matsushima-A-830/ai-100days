@@ -1,0 +1,270 @@
+{
+  "summary": {
+    "baseline": {
+      "n_pred_steps": 10,
+      "n_correct": 0,
+      "accuracy": 0.0,
+      "n_tail_steps": 3,
+      "n_tail_correct": 0,
+      "tail_accuracy": 0.0,
+      "avg_prompt_chars": 432.2,
+      "avg_context_chars": 58.4
+    },
+    "ctwm": {
+      "n_pred_steps": 10,
+      "n_correct": 0,
+      "accuracy": 0.0,
+      "n_tail_steps": 3,
+      "n_tail_correct": 0,
+      "tail_accuracy": 0.0,
+      "avg_prompt_chars": 427.9,
+      "avg_context_chars": 58.1
+    }
+  },
+  "per_step": {
+    "baseline": [
+      {
+        "step": 24,
+        "current_state": 2,
+        "actual_action": "act_2",
+        "actual_next": 22,
+        "predicted": 6,
+        "correct": false,
+        "is_tail": false,
+        "obs_freq_of_current_state": 5,
+        "prompt_chars": 447,
+        "context_chars": 58
+      },
+      {
+        "step": 25,
+        "current_state": 22,
+        "actual_action": "act_0",
+        "actual_next": 2,
+        "predicted": null,
+        "correct": false,
+        "is_tail": false,
+        "obs_freq_of_current_state": 2,
+        "prompt_chars": 435,
+        "context_chars": 58
+      },
+      {
+        "step": 26,
+        "current_state": 2,
+        "actual_action": "act_2",
+        "actual_next": 7,
+        "predicted": 6,
+        "correct": false,
+        "is_tail": false,
+        "obs_freq_of_current_state": 5,
+        "prompt_chars": 447,
+        "context_chars": 58
+      },
+      {
+        "step": 27,
+        "current_state": 7,
+        "actual_action": "act_0",
+        "actual_next": 17,
+        "predicted": 13,
+        "correct": false,
+        "is_tail": false,
+        "obs_freq_of_current_state": 3,
+        "prompt_chars": 431,
+        "context_chars": 59
+      },
+      {
+        "step": 28,
+        "current_state": 17,
+        "actual_action": "act_0",
+        "actual_next": 7,
+        "predicted": null,
+        "correct": false,
+        "is_tail": true,
+        "obs_freq_of_current_state": 0,
+        "prompt_chars": 423,
+        "context_chars": 58
+      },
+      {
+        "step": 29,
+        "current_state": 7,
+        "actual_action": "act_0",
+        "actual_next": 17,
+        "predicted": 13,
+        "correct": false,
+        "is_tail": false,
+        "obs_freq_of_current_state": 3,
+        "prompt_chars": 431,
+        "context_chars": 59
+      },
+      {
+        "step": 30,
+        "current_state": 17,
+        "actual_action": "act_0",
+        "actual_next": 7,
+        "predicted": null,
+        "correct": false,
+        "is_tail": true,
+        "obs_freq_of_current_state": 0,
+        "prompt_chars": 423,
+        "context_chars": 58
+      },
+      {
+        "step": 31,
+        "current_state": 7,
+        "actual_action": "act_0",
+        "actual_next": 17,
+        "predicted": 13,
+        "correct": false,
+        "is_tail": false,
+        "obs_freq_of_current_state": 3,
+        "prompt_chars": 431,
+        "context_chars": 59
+      },
+      {
+        "step": 32,
+        "current_state": 17,
+        "actual_action": "act_0",
+        "actual_next": 7,
+        "predicted": null,
+        "correct": false,
+        "is_tail": true,
+        "obs_freq_of_current_state": 0,
+        "prompt_chars": 423,
+        "context_chars": 58
+      },
+      {
+        "step": 33,
+        "current_state": 7,
+        "actual_action": "act_0",
+        "actual_next": 2,
+        "predicted": 13,
+        "correct": false,
+        "is_tail": false,
+        "obs_freq_of_current_state": 3,
+        "prompt_chars": 431,
+        "context_chars": 59
+      }
+    ],
+    "ctwm": [
+      {
+        "step": 24,
+        "current_state": 2,
+        "actual_action": "act_2",
+        "actual_next": 22,
+        "predicted": 6,
+        "correct": false,
+        "is_tail": false,
+        "obs_freq_of_current_state": 5,
+        "prompt_chars": 443,
+        "context_chars": 58
+      },
+      {
+        "step": 25,
+        "current_state": 22,
+        "actual_action": "act_0",
+        "actual_next": 2,
+        "predicted": null,
+        "correct": false,
+        "is_tail": false,
+        "obs_freq_of_current_state": 2,
+        "prompt_chars": 431,
+        "context_chars": 58
+      },
+      {
+        "step": 26,
+        "current_state": 2,
+        "actual_action": "act_2",
+        "actual_next": 7,
+        "predicted": 6,
+        "correct": false,
+        "is_tail": false,
+        "obs_freq_of_current_state": 5,
+        "prompt_chars": 443,
+        "context_chars": 58
+      },
+      {
+        "step": 27,
+        "current_state": 7,
+        "actual_action": "act_0",
+        "actual_next": 17,
+        "predicted": null,
+        "correct": false,
+        "is_tail": false,
+        "obs_freq_of_current_state": 3,
+        "prompt_chars": 426,
+        "context_chars": 58
+      },
+      {
+        "step": 28,
+        "current_state": 17,
+        "actual_action": "act_0",
+        "actual_next": 7,
+        "predicted": null,
+        "correct": false,
+        "is_tail": true,
+        "obs_freq_of_current_state": 0,
+        "prompt_chars": 419,
+        "context_chars": 58
+      },
+      {
+        "step": 29,
+        "current_state": 7,
+        "actual_action": "act_0",
+        "actual_next": 17,
+        "predicted": 13,
+        "correct": false,
+        "is_tail": false,
+        "obs_freq_of_current_state": 3,
+        "prompt_chars": 427,
+        "context_chars": 59
+      },
+      {
+        "step": 30,
+        "current_state": 17,
+        "actual_action": "act_0",
+        "actual_next": 7,
+        "predicted": null,
+        "correct": false,
+        "is_tail": true,
+        "obs_freq_of_current_state": 0,
+        "prompt_chars": 419,
+        "context_chars": 58
+      },
+      {
+        "step": 31,
+        "current_state": 7,
+        "actual_action": "act_0",
+        "actual_next": 17,
+        "predicted": null,
+        "correct": false,
+        "is_tail": false,
+        "obs_freq_of_current_state": 3,
+        "prompt_chars": 426,
+        "context_chars": 58
+      },
+      {
+        "step": 32,
+        "current_state": 17,
+        "actual_action": "act_0",
+        "actual_next": 7,
+        "predicted": null,
+        "correct": false,
+        "is_tail": true,
+        "obs_freq_of_current_state": 0,
+        "prompt_chars": 419,
+        "context_chars": 58
+      },
+      {
+        "step": 33,
+        "current_state": 7,
+        "actual_action": "act_0",
+        "actual_next": 2,
+        "predicted": null,
+        "correct": false,
+        "is_tail": false,
+        "obs_freq_of_current_state": 3,
+        "prompt_chars": 426,
+        "context_chars": 58
+      }
+    ]
+  }
+}
