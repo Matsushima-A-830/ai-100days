@@ -93,17 +93,24 @@
     letter-spacing: 0.08em; color: var(--ink-faint);
   }
 
-  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .compare-panel { border-radius: 10px; padding: 14px 16px; border: 1px solid; display: flex; flex-direction: column; gap: 8px; }
-  .compare-panel.bad { background: var(--bad-bg); border-color: var(--bad-border); }
-  .compare-panel.good { background: var(--good-bg); border-color: var(--good-border); }
-  .compare-title { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; font-weight: 500; }
-  .compare-panel.bad .compare-title { color: var(--bad); }
-  .compare-panel.good .compare-title { color: var(--good); }
-  .compare-output {
-    margin: 0; font-family: "IBM Plex Mono", monospace; font-size: 11px; line-height: 1.6;
-    color: var(--ink-muted); white-space: pre-wrap; word-break: break-word;
+  .chart-wrap { position: relative; }
+  svg.chart { width: 100%; height: auto; overflow: visible; }
+  .chart-grid { stroke: var(--grid-line); stroke-width: 1; }
+  .chart-axis-label { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; fill: var(--ink-faint); }
+  .line-a { fill: none; stroke: var(--series-a); stroke-width: 2.5; }
+  .line-b { fill: none; stroke: var(--series-b); stroke-width: 2.5; }
+  .pt-a { fill: var(--series-a); } .pt-b { fill: var(--series-b); } .pt-halo { fill: var(--surface); }
+  .end-label { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .end-label.a { fill: var(--series-a); } .end-label.b { fill: var(--series-b); }
+  .series-name { font-family: "IBM Plex Sans", sans-serif; font-size: 11.5px; fill: var(--ink-muted); }
+  .chart-tooltip {
+    position: absolute; pointer-events: none; background: var(--terminal-bg); color: var(--terminal-ink);
+    font-family: "IBM Plex Mono", monospace; font-size: 11.5px; padding: 6px 9px; border-radius: 6px;
+    border: 1px solid var(--terminal-border); transform: translate(-50%, -130%); white-space: nowrap;
+    opacity: 0; transition: opacity 0.1s ease; z-index: 5;
   }
+  .chart-tooltip.show { opacity: 1; }
+  .hit { fill: transparent; cursor: crosshair; }
 
   .caveat {
     display: flex; gap: 10px; padding: 12px 14px; border: 1px dashed var(--border);
@@ -129,7 +136,6 @@
   @media (max-width: 480px) {
     .card { padding: 26px 20px 24px; gap: 20px; }
     .stat-number { font-size: 46px; }
-    .compare-grid { grid-template-columns: 1fr; }
     footer { flex-direction: column; align-items: flex-start; }
     .progress { align-items: flex-start; }
   }
@@ -146,38 +152,30 @@
   </div>
 
   <div class="heading">
-    <h1>CTWMのτを変えても、縮小実験では差が出なかった</h1>
-    <p><span class="src">Heavy-Tailed Memory Traces in Long-Horizon Language Agents</span>(arXiv:2610.00010)のCore-Tail World Model(CTWM)を、外部LLM APIなしで24ノード・35ステップの縮小スケールで概念実証した。</p>
+    <h1>1回目は正解率0%、直したらCTWMの効果が見えた</h1>
+    <p><span class="src">Heavy-Tailed Memory Traces in Long-Horizon Language Agents</span>(arXiv:2610.00010)のCore-Tail World Model(CTWM)を外部LLM APIなしで縮小再現。1回目(24ノード)は惨敗したが、原因を直した2回目(60ノード)で論文通りの傾向が見えた。</p>
   </div>
 
   <div class="stat-row">
-    <div class="stat-number">0/10</div>
-    <div class="stat-caption">baseline(τ=0.0)・ctwm(τ=1.0)どちらも次状態予測の正解率は<strong>0/10</strong>(テール状態3件も含め全問不正解)</div>
+    <div class="stat-number">13.3%</div>
+    <div class="stat-caption">2回目の次状態予測正解率(baseline・ctwmで<strong>同じ</strong>)。ただしctwmは平均プロンプト文字数がbaselineの<strong>約6割</strong>(514 / 863文字)で同じ精度を達成</div>
   </div>
 
-  <section class="block compare">
-    <div class="block-label">設定上のプロンプト予算見積もり vs 実測ヒント文字数</div>
-    <div class="compare-grid">
-      <div class="compare-panel bad">
-        <div class="compare-title">τ=0.0 baseline(均等配分)</div>
-        <pre class="compare-output">core_slots=3 / tail_slots=999(無制限)
-予算見積もり: 12*3+6*999 = 6030
-実測ヒント文字数(平均): 58.4文字
-次状態予測 正解率: 0/10</pre>
-      </div>
-      <div class="compare-panel good">
-        <div class="compare-title">τ=1.0 ctwm(CTWM推奨値)</div>
-        <pre class="compare-output">core_slots=3 / tail_slots=2(ランク重み付き)
-予算見積もり: 12*3+6*2 = 48
-実測ヒント文字数(平均): 58.1文字
-次状態予測 正解率: 0/10</pre>
-      </div>
+  <section class="block">
+    <div class="block-label">平均プロンプト文字数の推移(v1: 24ノード → v2: 60ノード)</div>
+    <div class="chart-wrap">
+      <svg class="chart" viewBox="0 0 580 220" role="img"
+           aria-label="v1ではbaselineとctwmの平均プロンプト文字数がほぼ同じだったが、v2ではctwmだけ大きく下がった">
+        <g id="grid"></g>
+        <g id="plot"></g>
+      </svg>
+      <div class="chart-tooltip" id="tooltip"></div>
     </div>
   </section>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>設定上の予算見積もりは2桁以上差があるのに、実測した文字数はほぼ同じだった(本家のcontext_string()がテールをクラスタ数だけで表示するため)。次状態予測が両設定とも0%だったのは、出次数より行動数が少ない状態があり(state) → next が一意に決まらないため。詳細はexperiments/day-006/results.md参照。</p>
+    <p>正解率そのものは13.3%と低く、論文のベンチマーク数値とは直接比較できない。1回目(v1)は両設定とも正解率0%で、原因は予測ルールが行動名に縛られていたこと・グラフが小さすぎてテールが育たなかったこと。詳細はexperiments/day-006/results.md参照。</p>
   </div>
 
   <footer>
@@ -204,5 +202,117 @@
       frag.appendChild(el);
     }
     grid.appendChild(frag);
+  })();
+
+  (function () {
+    var data = [
+      { x: 'v1 (24ノード)', a: 432.2, b: 427.9 },
+      { x: 'v2 (60ノード)', a: 863.2, b: 514.3 }
+    ];
+    if (!data.length) return;
+
+    var W = 580, H = 220, padL = 30, padR = 78, padT = 10, padB = 28;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var yMax = 900;
+
+    function x(i) { return padL + (plotW * i) / (data.length - 1); }
+    function y(v) { return padT + plotH - (plotH * v) / yMax; }
+
+    var svgNS = 'http://www.w3.org/2000/svg';
+    var grid = document.getElementById('grid');
+    var plot = document.getElementById('plot');
+
+    [0, yMax / 3, (yMax * 2) / 3, yMax].forEach(function (v) {
+      var ly = y(v);
+      var line = document.createElementNS(svgNS, 'line');
+      line.setAttribute('x1', padL); line.setAttribute('x2', W - padR);
+      line.setAttribute('y1', ly); line.setAttribute('y2', ly);
+      line.setAttribute('class', 'chart-grid');
+      grid.appendChild(line);
+
+      var label = document.createElementNS(svgNS, 'text');
+      label.setAttribute('x', padL - 8); label.setAttribute('y', ly + 3);
+      label.setAttribute('text-anchor', 'end');
+      label.setAttribute('class', 'chart-axis-label');
+      label.textContent = Math.round(v) + '字';
+      grid.appendChild(label);
+    });
+
+    data.forEach(function (d, i) {
+      var lbl = document.createElementNS(svgNS, 'text');
+      lbl.setAttribute('x', x(i)); lbl.setAttribute('y', H - 6);
+      lbl.setAttribute('text-anchor', 'middle');
+      lbl.setAttribute('class', 'chart-axis-label');
+      lbl.textContent = d.x;
+      grid.appendChild(lbl);
+    });
+
+    function buildPath(key) {
+      return data.map(function (d, i) {
+        return (i === 0 ? 'M' : 'L') + x(i) + ' ' + y(d[key]);
+      }).join(' ');
+    }
+
+    ['a', 'b'].forEach(function (key) {
+      if (data[0][key] === undefined) return;
+      var path = document.createElementNS(svgNS, 'path');
+      path.setAttribute('d', buildPath(key));
+      path.setAttribute('class', 'line-' + key);
+      plot.appendChild(path);
+    });
+
+    var tooltip = document.getElementById('tooltip');
+    var wrap = document.querySelector('.chart-wrap');
+
+    ['a', 'b'].forEach(function (key) {
+      if (data[0][key] === undefined) return;
+      data.forEach(function (d, i) {
+        var cx = x(i), cy = y(d[key]);
+
+        var halo = document.createElementNS(svgNS, 'circle');
+        halo.setAttribute('cx', cx); halo.setAttribute('cy', cy); halo.setAttribute('r', 5);
+        halo.setAttribute('class', 'pt-halo');
+        plot.appendChild(halo);
+
+        var pt = document.createElementNS(svgNS, 'circle');
+        pt.setAttribute('cx', cx); pt.setAttribute('cy', cy); pt.setAttribute('r', 3.5);
+        pt.setAttribute('class', 'pt-' + key);
+        plot.appendChild(pt);
+
+        var hit = document.createElementNS(svgNS, 'circle');
+        hit.setAttribute('cx', cx); hit.setAttribute('cy', cy); hit.setAttribute('r', 12);
+        hit.setAttribute('class', 'hit');
+        hit.addEventListener('pointerenter', function () {
+          var rect = wrap.getBoundingClientRect();
+          var scale = rect.width / W;
+          tooltip.style.left = (cx * scale) + 'px';
+          tooltip.style.top = (cy * scale) + 'px';
+          tooltip.textContent = d.x + '  ' + d[key] + '字';
+          tooltip.classList.add('show');
+        });
+        hit.addEventListener('pointerleave', function () {
+          tooltip.classList.remove('show');
+        });
+        plot.appendChild(hit);
+      });
+    });
+
+    var last = data[data.length - 1];
+    ['a', 'b'].forEach(function (key) {
+      if (last[key] === undefined) return;
+      var label = document.createElementNS(svgNS, 'text');
+      label.setAttribute('x', x(data.length - 1) + 10);
+      label.setAttribute('y', y(last[key]) - 4);
+      label.setAttribute('class', 'end-label ' + key);
+      label.textContent = last[key] + '字';
+      plot.appendChild(label);
+
+      var name = document.createElementNS(svgNS, 'text');
+      name.setAttribute('x', x(data.length - 1) + 10);
+      name.setAttribute('y', y(last[key]) + 11);
+      name.setAttribute('class', 'series-name');
+      name.textContent = key === 'a' ? 'baseline(τ=0.0)' : 'ctwm(τ=1.0)';
+      plot.appendChild(name);
+    });
   })();
 </script>
