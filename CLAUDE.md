@@ -10,9 +10,10 @@
 2. **通勤中(人間)**: 朝のPRをマージ(または`today.md`更新用の小さいブランチ+PRを作ってマージ)して、
    その日やるネタを`today.md`に反映する。
 3. **昼(実装Routine, 自動)**: `today.md` を読み、`experiments/day-NNN/` で実際に検証コードを書いて実行し、
-   Zenn記事下書き・X投稿案・note原稿・X投稿用シェアカード(`posts/day-NNN-card.html`)を作り、PRを出す。
+   Zenn記事下書き・X投稿案(`posts/x/day-NNN.md`)・note原稿(`posts/note/day-NNN.md`)・
+   X投稿用シェアカード(`posts/cards/day-NNN.html`)を作り、PRを出す。
 4. **夜(人間, 目安1時間)**: PRを見て自分の手元で再現・検証し、感想を足してマージ。
-   Zennは `published: true` にして公開、`posts/day-NNN-card.html` をブラウザで開いてスクリーンショットし、
+   Zennは `published: true` にして公開、`posts/cards/day-NNN.html` をブラウザで開いてスクリーンショットし、
    その画像を添えてXに自分の言葉で投稿。
    最後に `tools/sync-to-obsidian.ps1` を実行し、その日の成果をローカルのObsidian Vaultに蓄積する
    (このリポジトリ自体はクラウド上の履歴で、Obsidianは自分のPC上の恒久的な蓄積場所という役割分担)。
@@ -76,6 +77,12 @@ published: false
 - 記事は「調べてみた」ではなく「実際に手を動かして試した」トーンで書く。一人称は「筆者」または「私」。
 - X投稿案は3パターン(要点訴求型・驚き訴求型・技術者向け詳細型)を用意する。
 - note原稿は記事より少し柔らかい語り口にし、週刊まとめ用に再利用できるよう要点を先頭に3行でまとめる。
+  単日分の下書きは `posts/note/day-NNN.md`、複数日をまとめたもの(週刊まとめなど)は
+  `posts/note/weekly/day-NNN-NNN.md` に置く。
+- note記事(単日・まとめ共通)は、技術的な結果の要約ではなく「きっかけ→葛藤・失敗→学び・気づき」という
+  ストーリー構成で書く。Zennとの違いは「何が起きたか」ではなく「なぜそれをやったか・何を感じたか」を
+  主役にすること。ただし感情表現を前面に出しすぎない。心理描写(「頭が真っ白になった」等)で盛るのではなく、
+  何が起きて何を考えてどう対処したかという経緯を落ち着いた筆致で書く。
 - コードブロックには実行コマンドと実行結果を必ずセットで載せる。
 - **Zenn記事本文の改行は句点(「。」)の直後のみ。** 句点より前、つまり文の途中(読点「、」の位置を
   含む)で改行しない。1文を1行で書き切り、強調のためにあえて改行したい場合のみ例外とする。
@@ -100,9 +107,9 @@ Zennは不正利用(ボット投稿・乱造)防止のため、記事の投稿�
 - 引っかかった場合は時間経過での自動解除を待つのが基本。急ぐ場合はZennの問い合わせフォームで
   経緯(複数日分をまとめて検証・公開した事情)を説明して相談できる。
 
-## X投稿用シェアカード(posts/day-NNN-card.html, 必須)
+## X投稿用シェアカード(posts/cards/day-NNN.html, 必須)
 
-X投稿は画像付きの方が反応が良いため、実装Routineは毎回 `posts/day-NNN-card.html` という
+X投稿は画像付きの方が反応が良いため、実装Routineは毎回 `posts/cards/day-NNN.html` という
 自己完結した1枚のHTMLカードを作る。これはX投稿時にブラウザで開いてスクリーンショットし、
 画像として添付するためのもの。
 
@@ -122,17 +129,23 @@ X投稿は画像付きの方が反応が良いため、実装Routineは毎回 `p
 
 ```
 ai-100days/
-├── CLAUDE.md            # このファイル
-├── sources.md           # 巡回する情報源リスト
-├── backlog.md           # ネタ候補の蓄積(スコア付き)
-├── today.md             # 今日やるネタ(人間が朝に選ぶ)
-├── experiments/day-NNN/       # 検証コード・実行ログ・README・results.md
-├── articles/day-NNN-<slug>.md # Zenn記事(ファイル名がslugになる。命名規則は上記参照)
-├── posts/day-NNN.md           # X投稿案3パターン + note原稿
-├── posts/day-NNN-card.html    # X投稿用シェアカード(tools/card-template.htmlから複製)
-├── tools/card-template.html   # シェアカードの共通テンプレート(デザインの土台、直接編集しない)
-└── tools/sync-to-obsidian.*   # Obsidian Vaultへの同期スクリプト
+├── CLAUDE.md                   # このファイル
+├── sources.md                  # 巡回する情報源リスト
+├── backlog.md                  # ネタ候補の蓄積(スコア付き)
+├── today.md                    # 今日やるネタ(人間が朝に選ぶ)
+├── experiments/day-NNN/        # 検証コード・実行ログ・README・results.md
+├── articles/day-NNN-<slug>.md  # Zenn記事(ファイル名がslugになる。命名規則は上記参照)
+├── posts/
+│   ├── x/day-NNN.md            # X投稿案3パターン
+│   ├── note/day-NNN.md         # note原稿(単日分の下書き)
+│   ├── note/weekly/day-NNN-NNN.md  # note複数日まとめ(週刊まとめなど)
+│   └── cards/day-NNN.html      # X投稿用シェアカード(tools/card-template.htmlから複製)
+├── tools/card-template.html    # シェアカードの共通テンプレート(デザインの土台、直接編集しない)
+└── tools/sync-to-obsidian.*    # Obsidian Vaultへの同期スクリプト
 ```
+
+(2026-10-04付けでpostsディレクトリを種類別のサブディレクトリに再編した。それ以前の過去のコミット履歴には
+`posts/day-NNN.md` / `posts/day-NNN-card.html` というフラットな配置が残っているが、現在の正とする構成は上記。)
 
 ## Routineへの指示で守ってほしいこと
 

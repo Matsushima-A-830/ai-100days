@@ -23,9 +23,10 @@
    (例: day-002-example-topic-name.md)。day-{N}.mdのような12文字未満の短いファイル名は
    Zennのデプロイが失敗するので絶対に避ける。CLAUDE.md記載のfrontmatter(title, emoji, type,
    topics, published: false)を必ず全て含める。出典URLを明記し、実際に検証した結果を中心に書く。
-6. posts/day-{N}.md にX投稿案を3パターン(要点訴求型・驚き訴求型・技術者向け詳細型)と、
-   note用原稿(冒頭に要点3行)を作る。
-7. posts/day-{N}-card.html を作る。**tools/card-template.html をコピーして使うこと**
+6. posts/x/day-{N}.md にX投稿案を3パターン(要点訴求型・驚き訴求型・技術者向け詳細型)を作る。
+   posts/note/day-{N}.md に note用原稿(冒頭に要点3行、「きっかけ→葛藤・失敗→学び・気づき」の
+   ストーリー構成、感情表現は前面に出しすぎない)を作る。
+7. posts/cards/day-{N}.html を作る。**tools/card-template.html をコピーして使うこと**
    (ゼロから新しいデザインを考えない)。テンプレート内のコメントの指示に従い、その日の結果の形に
    合わせて「パターンA: 数値推移チャート」か「パターンB: Before/After比較」のどちらか一方を選んで
    実装する。中に入れる数値・出典・出力ログは experiments/day-{N}/results.md にある実際のものだけを

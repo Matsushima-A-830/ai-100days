@@ -4,7 +4,7 @@
 # 夜の確認・マージ作業のあとに WSL のターミナルから手動で実行する想定。
 #   1. リポジトリを最新化(git pull)
 #   2. experiments/day-N が存在し、まだ Vault に取り込んでいない日を探す
-#   3. README / results / 記事下書き / 投稿案をまとめて1つのノートにする
+#   3. README / results / 記事下書き / X投稿案 / note原稿をまとめて1つのノートにする
 #   4. Vault の Days/day-N.md を作成し、00-Index.md に行を追記する
 #
 # 使い方:
@@ -80,8 +80,10 @@ for dir in "${day_dirs[@]}"; do
     article="$(cat "$article_file")"
     article_link_path="articles/$(basename "$article_file")"
   fi
-  posts=""
-  [[ -f "$REPO_PATH/posts/day-$n.md" ]] && posts="$(cat "$REPO_PATH/posts/day-$n.md")"
+  x_post=""
+  [[ -f "$REPO_PATH/posts/x/day-$n.md" ]] && x_post="$(cat "$REPO_PATH/posts/x/day-$n.md")"
+  note_post=""
+  [[ -f "$REPO_PATH/posts/note/day-$n.md" ]] && note_post="$(cat "$REPO_PATH/posts/note/day-$n.md")"
 
   status="unknown"
   if grep -qE 'published:\s*true' <<<"$article"; then
@@ -115,15 +117,20 @@ $results
 
 $article
 
-## X投稿案 / note原稿 (posts/day-$n.md)
+## X投稿案 (posts/x/day-$n.md)
 
-$posts
+$x_post
+
+## note原稿 (posts/note/day-$n.md)
+
+$note_post
 
 ## リンク
 
 - [GitHub: experiments/day-$n](https://github.com/Matsushima-A-830/ai-100days/tree/main/experiments/day-$n)
 - [GitHub: $article_link_path](https://github.com/Matsushima-A-830/ai-100days/blob/main/$article_link_path)
-- [GitHub: posts/day-$n.md](https://github.com/Matsushima-A-830/ai-100days/blob/main/posts/day-$n.md)
+- [GitHub: posts/x/day-$n.md](https://github.com/Matsushima-A-830/ai-100days/blob/main/posts/x/day-$n.md)
+- [GitHub: posts/note/day-$n.md](https://github.com/Matsushima-A-830/ai-100days/blob/main/posts/note/day-$n.md)
 EOF
 
   echo "Synced day-$n -> $note_path"
