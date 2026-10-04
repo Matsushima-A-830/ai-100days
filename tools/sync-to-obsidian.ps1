@@ -6,7 +6,7 @@
     夜の確認・マージ作業のあとに手動で実行する想定。
     1. リポジトリを最新化(git pull)
     2. experiments/day-N が存在し、まだ Vault に取り込んでいない日を探す
-    3. README / results / 記事下書き / 投稿案をまとめて1つのノートにする
+    3. README / results / 記事下書き / X投稿案 / note原稿をまとめて1つのノートにする
     4. Vault の Days/day-N.md を作成し、00-Index.md に行を追記する
 
 .PARAMETER RepoPath
@@ -96,7 +96,8 @@ foreach ($dir in $dayDirs) {
     }
     $article = if ($articlePath) { Get-FileTextOrEmpty $articlePath.FullName } else { "" }
     $articleLinkPath = if ($articlePath) { "articles/$($articlePath.Name)" } else { "articles/day-$n.md" }
-    $posts = Get-FileTextOrEmpty (Join-Path $RepoPath ("posts\day-{0}.md" -f $n))
+    $xPost = Get-FileTextOrEmpty (Join-Path $RepoPath ("posts\x\day-{0}.md" -f $n))
+    $notePost = Get-FileTextOrEmpty (Join-Path $RepoPath ("posts\note\day-{0}.md" -f $n))
 
     $status = "unknown"
     if ($article -match 'published:\s*true') {
@@ -130,15 +131,20 @@ $results
 
 $article
 
-## X投稿案 / note原稿 (posts/day-$n.md)
+## X投稿案 (posts/x/day-$n.md)
 
-$posts
+$xPost
+
+## note原稿 (posts/note/day-$n.md)
+
+$notePost
 
 ## リンク
 
 - [GitHub: experiments/day-$n](https://github.com/Matsushima-A-830/ai-100days/tree/main/experiments/day-$n)
 - [GitHub: $articleLinkPath](https://github.com/Matsushima-A-830/ai-100days/blob/main/$articleLinkPath)
-- [GitHub: posts/day-$n.md](https://github.com/Matsushima-A-830/ai-100days/blob/main/posts/day-$n.md)
+- [GitHub: posts/x/day-$n.md](https://github.com/Matsushima-A-830/ai-100days/blob/main/posts/x/day-$n.md)
+- [GitHub: posts/note/day-$n.md](https://github.com/Matsushima-A-830/ai-100days/blob/main/posts/note/day-$n.md)
 "@
 
     Set-Content -Path $notePath -Value $noteBody -Encoding UTF8
