@@ -244,3 +244,48 @@
 - 検証難易度: 低(`npx skills add JuliusBrussee/caveman -g`等で導入可能。APIキー・GPU不要。本リポジトリ自身のRoutine実行時のトークン消費量をBefore/Afterで比較する自己言及的な検証がしやすい)
 - 見栄え: 自分の実行環境(Claude Code)への導入前後でトークン消費量を実測してグラフ化できるが、日本語記事が極めて多く差別化が最大の課題。扱うなら「本チャレンジ自身のRoutine運用コストにどう効くか」という独自切り口に絞る必要あり。
 - 状態: 未選択
+
+### [2026-10-03] Chandra OCR 2 — 手書き・複雑な表に強いOSS OCRモデル(Datalab)
+
+- 出典: https://github.com/datalab-to/chandra (モデル: https://huggingface.co/datalab-to/chandra-ocr-2)
+- 概要: スキャン文書・手書き・複雑な表組み・数式・90言語以上のレイアウトを保持したままHTML/Markdown/JSONに変換するOCRモデル。2026年3月にChandra 2としてメジャーアップデートし、DeepSeek-OCR等と比較する海外レビューが相次いでいる。コードはApache-2.0だが、モデル本体は改変OpenRAIL-M(研究・個人利用および年間売上/資金調達$2M未満のスタートアップは無料、それ以上の商用利用は別途ライセンス契約が必要)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(Medium等の英語記事は複数あるが日本語での検証記事は検索した範囲で未検出)
+- 検証難易度: 低〜中(`pip install chandra-ocr`で導入可能、APIキー不要。GPUは任意でCPU推論も可能だが低速。手元の手書きメモや複雑な表組みPDFを用意してBefore/After的に既存OCR(Tesseract等)と精度を比較するデモが6時間以内で狙える)
+- 見栄え: 手書き・表組みの認識結果を画像と並べて見せられ、精度比較の数値表も作りやすい。ライセンス(改変OpenRAIL-M)の条件を記事内で明記する必要あり。
+- 状態: 未選択
+
+### [2026-10-03] Heavy-Tailed Memory Traces in Long-Horizon Language Agents — エージェント記憶のロングテール問題とCore-Tail World Model(論文)
+
+- 出典: https://arxiv.org/abs/2610.00010 (コード: https://github.com/Hik289/world-model-self-organized-criticality)
+- 概要: 長期稼働するLLMエージェントが外部メモリを「凍結した世界モデル」として使う際、記憶が少数の「コア」状態に集中し、稀な状態が「テール」に押し込まれて予測誤差が蓄積する現象を定式化。ランク依存の単一指数τでプロンプト予算を配分しつつテールを要約として保持するCore-Tail World Model(CTWM)を提案し、合成グラフ世界でプロンプトトークン5.9%削減・テール予測誤差13.6%改善、LongMemEvalでトークン24.48%削減を報告。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 中(コードはMITで公開済み、GPU不要)。ただしLLMポリシーを使う本家の実験は外部LLM API(OpenAI互換エンドポイント)のAPIキーが前提の実装になっている。本リポジトリの方針(有料APIキー不要)に沿うなら、ランダムウォークのスケーリング実験(API不要・CPUのみ)の再現、またはLLM呼び出し部分をClaude Code自身に代替させる縮小版の概念実証に絞る必要がある。
+- 見栄え: 「記憶のコア/テール」構造とトークン削減率をBefore/Afterのグラフで見せやすく、エージェントメモリ系の話題(Hindsight等)の発展形として語れる。日本語記事が無く差別化しやすい。
+- 状態: 未選択
+
+### [2026-10-03] claude-mem — Claude Codeにセッション横断の永続メモリを追加するプラグイン
+
+- 出典: https://github.com/thedotmack/claude-mem
+- 概要: Claude Codeのセッション中の操作をフックで捕捉し、AIで要約・圧縮してSQLite+ベクトル検索(Chroma)に保存、次回以降のセッションにCLAUDE.mdへの差し込み等で関連文脈を復元するメモリプラグイン(Apache-2.0)。GitHub Trending(TypeScript)で本日急伸中。
+- 日本語記事件数: Zenn 1件以上(「claude-mem: Claude Codeに永続メモリを追加する」という紹介記事を確認) / Qiita 数件(ツールまとめ記事内での言及あり) / note 未確認
+- 検証難易度: 低(`/plugin marketplace add thedotmack/claude-mem`等で導入可能。Node.js 20+とBun/uv(自動導入)のみで、基本機能は外部APIキー不要・GPU不要)
+- 見栄え: 本リポジトリ自身のClaude Code Routine運用(朝リサーチ→昼実装)にインストールし、セッションを跨いだ文脈復元が実際に効くかを自己言及的に検証できるのが強み。日本語記事が既に1件以上あるため、「自分たちの運用への適用」という独自切り口が必要。
+- 状態: 未選択
+
+### [2026-10-03] Agent-Reach — AIエージェントにSNS/Web横断の「検索・閲覧」能力を与えるCLI(要注意・出典確認必須)
+
+- 出典: https://github.com/vinay121314/Agent-Reach (GitHub Trending Python 2026-10-02、+1,683star/日)
+- 概要: Twitter/Reddit/YouTube/GitHub/Bilibili/XiaoHongShu等を「ゼロAPI費用」で横断的に読み書き・検索できるとするAIエージェント向けCLI。Cookie認証で各プラットフォームの公式APIを介さずアクセスする設計だと説明されている。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 低(APIキー・GPU不要でCLIのみで動作)。**ただし要注意**: 同一READMEを持つほぼ同名のフォーク/コピーリポジトリが極めて多数(binawoh, Yverr0y, rdriaz, 0xfudman, zhudao, iqjiy, 899ms, silently0801 等)存在し、スター数の急伸パターンもVoiceStudio/TensorFoldで過去に見られた疑わしいフォーム群に類似。さらに「Cookie認証で公式APIを回避して各SNSにアクセスする」という設計自体が各プラットフォームの利用規約に抵触する可能性が高く、検証・紹介するかどうかは慎重な判断が必要。
+- 見栄え: 「CLIから複数SNSを横断検索」はデモ映えしそうだが、上記のライセンス/ToS/出所の懸念から今回は見送り、または深く掘らずにニュース解説のみに留めるのが無難。
+- 状態: 未選択
+
+### [2026-10-03] OpenDLSS-NR — NVIDIA DLSS 5ニューラルレンダリングのOSS(Vulkan/WebGPU)再実装(要ライセンス確認)
+
+- 出典: https://github.com/spydrful/OpenDLSS-NR-AMD (関連: https://github.com/aloshdenny/open-dlss , https://github.com/bhouston/three-dlss-nr) (解説: https://wccftech.com/nvidia-dlss-5-gets-open-source-vulkan-reimplementation-runs-on-rtx-40-gpus-and-even-in-web-browsers/)
+- 概要: NVIDIA DLSS 5のニューラルレンダリングネットワーク(71ブロック構成)を、Vulkanおよびブラウザ上のWebGPU/WGSLで「bit-exact」に再実装したというOSS。RTX 4070で1080p 7.8msを主張し、AMD GPU向けポートやThree.js(WebGPURenderer)向けポートも派生している。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 高(クラウド実行環境にGPU・ディスプレイが無い場合、Vulkan/WebGPUでの実レンダリング検証は困難。WebGPU対応ブラウザでの代替実行ができるかは要確認。加えて、NVIDIAの非公開ネットワークを「bit-exact」でリバースエンジニアリングしたと称する点は著作権・知的財産の観点でグレーゾーンの可能性があり、紹介する場合はその経緯・ライセンス表記を慎重に確認する必要がある)
+- 見栄え: 映像的な見栄えは良いが、法的・環境的な制約が大きいニュース解説向きの候補。動かして検証するには環境がネックになる可能性が高い。
+- 状態: 未選択
