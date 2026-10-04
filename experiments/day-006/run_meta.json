@@ -1,0 +1,40 @@
+{
+  "n_nodes": 24,
+  "graph_type": "scale_free",
+  "seed": 42,
+  "obs_steps": 24,
+  "pred_steps": 10,
+  "n_steps": 35,
+  "mem_configs": {
+    "baseline": {
+      "tau": 0.0,
+      "core_pct": 0.3,
+      "core_slots": 3,
+      "tail_slots": 999,
+      "capacity": 200,
+      "seed": 42,
+      "seed_offset": 8
+    },
+    "ctwm": {
+      "tau": 1.0,
+      "core_pct": 0.3,
+      "core_slots": 3,
+      "tail_slots": 2,
+      "capacity": 200,
+      "seed": 42,
+      "seed_offset": 8
+    }
+  },
+  "graph_edge_count": 46,
+  "obs_unique_states": 8,
+  "obs_state_freq": {
+    "13": 3,
+    "7": 3,
+    "2": 5,
+    "6": 1,
+    "22": 2,
+    "0": 2,
+    "3": 5,
+    "4": 4
+  }
+}

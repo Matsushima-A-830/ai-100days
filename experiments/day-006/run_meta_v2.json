@@ -1,0 +1,56 @@
+{
+  "version": "v2",
+  "n_nodes": 60,
+  "graph_type": "scale_free",
+  "seed": 42,
+  "obs_steps": 45,
+  "pred_steps": 15,
+  "n_steps": 61,
+  "mem_configs": {
+    "baseline": {
+      "tau": 0.0,
+      "core_pct": 0.3,
+      "core_slots": 3,
+      "tail_slots": 999,
+      "capacity": 300,
+      "seed": 42,
+      "seed_offset": 8
+    },
+    "ctwm": {
+      "tau": 1.0,
+      "core_pct": 0.3,
+      "core_slots": 3,
+      "tail_slots": 2,
+      "capacity": 300,
+      "seed": 42,
+      "seed_offset": 8
+    }
+  },
+  "graph_edge_count": 232,
+  "obs_unique_states": 19,
+  "obs_state_freq": {
+    "26": 5,
+    "29": 3,
+    "31": 1,
+    "6": 3,
+    "9": 1,
+    "8": 2,
+    "3": 1,
+    "0": 5,
+    "32": 2,
+    "5": 3,
+    "11": 1,
+    "42": 3,
+    "22": 3,
+    "4": 3,
+    "13": 3,
+    "18": 3,
+    "54": 2,
+    "49": 1,
+    "16": 1
+  },
+  "improvements_over_v1": [
+    "予測ルールを「最上位1件」から「頻度(f)最大のnext」に変更し、プロンプトにも頻度を明示",
+    "グラフ/ステップ数を24ノード・35ステップから60ノード・61ステップに拡大し、テールの成長を狙う"
+  ]
+}
