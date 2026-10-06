@@ -132,3 +132,49 @@ Mem++論文がC3(Bi-temporal as-of capability)として指摘している問題�
   `compare_memory.py`は標準ライブラリのみで動作する純Pythonスクリプト)
 - Python 3.11.15(リポジトリ側のrequires-python>=3.13は`uv sync`がブロックされたため無関係)
 - 有料APIキーは使用していない(ANTHROPIC_API_KEY・OPENAI_API_KEYともに未設定・未使用)
+
+## 5. 追記: 「過去だけ正解、現在だけ不正解」のメモリも同じ仕組みで作れるか(`compare_memory_embargo.py`)
+
+本編の結果(要約・上書き型は「現在」3/3正解・「過去」6/6不正解)の逆、つまり
+「過去は分かるが現在だけはわざと分からない」メモリが、同じ非破壊+as_ofフィルタの
+延長で作れるかを試した。`NonDestructiveMemory`と全く同じ選択ロジックに、
+**「取り込み締切(ingestion_cutoff)より新しい記録はそもそも保持時点で除外する」**
+という1行だけを足した`EmbargoedMemory`を実装した(実世界でいう日次バッチ取り込みや、
+承認待ちで未確定の記録のシミュレーション)。
+
+```
+$ python3 experiments/day-008/compare_memory_embargo.py
+ingestion_cutoff = 2025-05-24 (today=2026-10-06 - 500days)
+
+topic    as_of        nondestructive   embargoed
+search   2024-06-01   OK               OK
+search   2025-01-01   OK               OK
+search   2026-10-06   OK               NG
+    期待:         追加クラスタ運用をやめ、Postgres全文検索(tsvector)に一本化する。
+    embargo型の回答: 運用コストの都合でElasticsearchからOpenSearchに移行する。
+cloud    2024-06-01   OK               OK
+cloud    2025-03-01   OK               OK
+cloud    2026-10-06   OK               NG
+    期待:         社内のML基盤統合に合わせてAzureに移行する。
+    embargo型の回答: コスト最適化のためGCPへ移行する。
+review   2024-06-01   OK               OK
+review   2025-04-01   OK               OK
+review   2026-10-06   OK               NG
+    期待:         Lintボットを信頼し、人間レビューは1人承認のみで良いとする。
+    embargo型の回答: レビュー負荷が高いため、1人承認+Lintボットの自動チェックに変更する。
+
+nondestructive accuracy: 9/9 = 100.0%
+embargoed accuracy:      6/9 = 66.7%
+  内訳: 過去クエリ 6/6 、「現在」クエリ 0/3
+```
+
+狙い通り、**過去を問う6クエリは全問正解、「現在」を問う3クエリは全問不正解**という、
+本編の要約・上書き型とちょうど鏡写しの結果になった。過去クエリが正解なのは、必要な記録が
+すべて締切より前に起きているため。「現在」クエリが全滅するのは、本当の最新記録
+(2025年6〜8月に起きたもの)が締切(2025-05-24)より後で、EmbargoedMemoryにまだ
+取り込まれておらず、1つ前の古い記録を返してしまうため。
+
+これにより、「要約・上書き型メモリが現在にしか強くない」のは設計上の欠陥である一方、
+「過去にしか強くないメモリ」は意図的な制約(取り込み遅延・embargo)として普通に作れる、
+という非対称性が確認できた。後者は実在のアーキテクチャパターン(日次ETL、法的な
+凍結期間、承認後に確定する社内ナレッジベースなど)に対応する。
