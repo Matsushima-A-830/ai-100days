@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Mem++: 要約型memory vs 非破壊memory</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+JP:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -176,6 +177,11 @@
   <div class="caveat">
     <span class="mark">⚠</span>
     <p>実リポジトリ(AIDAChip-Inc/mem-plus-plus)の`uv sync`はクラウド実行環境の安全分類器に「Code from External」としてブロックされ、本体コードは未実行。上記の比較は筆者が独自に書いた最小再現コード(experiments/day-008/compare_memory.py)によるもので、OrgMemBenchでの論文の報告値(8.0〜13.1ポイント差)とは無関係。</p>
+  </div>
+
+  <div class="caveat">
+    <span class="mark">追記</span>
+    <p>「取り込み締切より新しい記録は保持しない」という1行を足したEmbargoedMemoryで、過去クエリ6/6正解・「現在」クエリ0/3正解という、本編とちょうど鏡写しの結果を確認(experiments/day-008/compare_memory_embargo.py)。「過去にしか強くないメモリ」も同じ仕組みで意図的に作れることが分かった。</p>
   </div>
 
   <footer>
