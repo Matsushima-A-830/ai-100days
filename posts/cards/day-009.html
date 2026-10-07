@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Day 009: OpenMontageの数字を実測</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+JP:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -189,6 +190,11 @@
   <div class="caveat">
     <span class="mark">⚠</span>
     <p>今回の動画はPiper TTS・Remotion・FFmpegの3点をこちらで直接組み立てたもので、OpenMontage本来のエージェント運用フロー(自然言語1行の指示だけでパイプラインを自律選択させる使い方)は検証していない。レンダリングもPiperの日本語音声取得も、最初は別々の理由で一度失敗している。詳細は experiments/day-009/results.md 参照。</p>
+  </div>
+
+  <div class="caveat">
+    <span class="mark">追記</span>
+    <p>完成動画を人間が実際に再生して確認したところ、全体は違和感なしだったが、Piper TTSのナレーションで「有料」が中国語読み風、「FFmpeg」も誤読になっていた。日本語TTS辞書にない語をそのまま読ませた結果と考えられる。音声の再生成・再レンダリングは未実施。</p>
   </div>
 
   <footer>
