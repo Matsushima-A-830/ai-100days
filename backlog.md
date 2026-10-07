@@ -415,3 +415,39 @@
 - 検証難易度: 高(**flash-linear-attentionカーネルがGPU専用のためCUDA対応GPUが必須、CPUのみでの実行は不可**と公式に明記。論文の学習には6xH200を使用しているが、公開済み重みを使った推論のみであればより小さいGPUでも可能な見込み。クラウド実行環境にGPUが無い場合は検証不可能であり、採用する場合はGPU付き環境の確保が前提)
 - 見栄え: 「自己回帰生成 vs 直接確率予測」の速度比較(tok/s、レイテンシ)を数値とグラフで見せやすく、検索エージェントの実行速度という実用的な切り口が技術者向けに刺さりやすい。
 - 状態: 未選択
+
+### [2026-10-07] i-have-adhd — 「結論を埋没させない」出力整形スキルがClaude Code向けに急拡大
+
+- 出典: https://github.com/ayghri/i-have-adhd (GitHub Trending Python 2026-10-07、本日+620star、55,020star)
+- 概要: コーディングエージェントの応答を、次の一手を先頭に出し・複数ステップを番号付けし・前置きを削り・末尾に具体的な次の一手を1つだけ残す形式に変換するスキル+プラグイン(MITライセンス)。Claude Code/Codex等に`claude plugin`経由で追加できる。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では本リポジトリ固有の日本語紹介記事は未検出。Android Authority・Medium等の英語メディアでは既に複数紹介されている)
+- 検証難易度: 低(MIT。`claude plugin marketplace add`で導入するだけで動作確認できる。追加のAPIキー・GPU不要)
+- 見栄え: スキル導入前後で同じ質問をしてClaude Codeの応答フォーマットがどう変わるかをBefore/Afterで見せやすい。中身は1枚のSKILL.mdなので、検証に深さを出すには応答の行数・結論までの文字数などの定量評価を自分で設計する必要がある。
+- 状態: 未選択
+
+### [2026-10-07] REA(morluto/rea) — ネイティブバイナリ/アプリをエージェントにリバースエンジニアリングさせるMCPサーバーが急伸
+
+- 出典: https://github.com/morluto/rea (GitHub Trending TypeScript 2026-10-07、本日+4,666star、14,340star。npm: rea-agents)
+- 概要: コーディングエージェントにネイティブバイナリ(Mach-O/ELF/PE)・Electron/JSアプリ・.NETアセンブリ・Android APK等を解析させ、「元のソースコードは復元しない」前提で機能の挙動を調査し自分のプロジェクトへの再実装の参考にするためのCLI/MCPサーバー(MITライセンス)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 中(MIT。静的なJS解析だけならNode.js/npmのみで追加ツール不要だが、ネイティブバイナリ解析には解析エンジン(Hopper/Ghidra/IDA Pro)が別途必要。無料OSSのGhidra〈JDK21+〉を使えば有料ソフトなしで検証可能。APIキーはエージェント側の既存契約で足りる見込み、GPU不要)
+- 見栄え: 「自分で作った/公開されている小さなバイナリやアプリを渡し、エージェントが機能をどこまで正確に説明できるか」のBefore/After的なデモが作れる。リバースエンジニアリング系ツールのため、検証対象は自分が用意した・ライセンス上問題のないサンプルに限定し、教育・防御目的である旨を記事で明記する必要がある。
+- 状態: 未選択
+
+### [2026-10-07] Uber ADR — AIエージェント専用の検知・対応システム(社内10ヶ月運用実績のEDR相当)がオープンソース化
+
+- 出典: https://github.com/uber/ADR (MLSys 2026採択論文。解説: https://techstrong.ai/articles/uber-open-sources-tool-to-catch-agentic-blunders-legacy-security-misses/)
+- 概要: Uberが社内のAIエージェント(Claude Code/Cursor等の従業員向けツールや顧客対応チャットボット)を10ヶ月以上監視してきた、プロンプト・推論・ツール呼び出し・結果の因果チェーンを記録するエージェント専用の検知システム「Agentic AI Detection and Response(ADR)」。302タスク×17攻撃手法×133MCPサーバーのベンチマークADR-Benchで既存手法比2〜4倍のF1スコアを主張(Apache-2.0)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出。英語では複数のテック系メディア記事あり)
+- 検証難易度: 中(Apache-2.0。デフォルトの`adr`検知器はAnthropic/OpenAI両方のAPIキーが必須だが、`--detector llamafirewall`を使えばAPIキー不要のkeylessスモークテストが可能と公式に明記されている。本リポジトリの方針上、llamafirewall検知器に限定して検証する必要がある。GPU不要)
+- 見栄え: 意図的に不審な振る舞い(権限外アクセス等)を含むセッションをADR-Bench収録タスクの一部で流し、検知される/されないをBefore/After的に見せられる。既に扱ったエージェント安全性系(HexStrike AI・OpenShell・SkillSpector)の続編として語りやすい。
+- 状態: 未選択
+
+### [2026-10-07] treg — 「モデルのOpenRouter」ではなく「ツールのOpenRouter」を自称するAIエージェント向けAPIゲートウェイ
+
+- 出典: https://github.com/superdesigndev/treg (GitHub Trending Python 2026-10-07、本日+407star、4,734star。PyPI: tools-registry)
+- 概要: SEO・ソーシャル分析・スクレイピング等2,600以上の外部APIを1つのトークンでまとめて呼び出せる、認証情報注入型のプロキシ+レジストリ。チームの鍵・スキル・CLIを共有しエージェント同士で使い回せる(Apache-2.0+再配布制限条項)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲ではZenn/Qiita/noteへの固有紹介記事は未検出。海外メディアの日本語翻訳記事〈eesel.ai等〉はあるが一次検証記事ではない)
+- 検証難易度: 低(treg.toへの無料アカウント登録とtregトークン取得が必要だが、有料APIキーなしでも「検証済み公開ルート」経由でカタログの一部ツールを無料で呼び出せると説明されている。GPU不要。セルフホスト版〈`pip install "tools-registry[server]"`〉ならSQLiteで単体起動も可能)
+- 見栄え: 「1つのトークンでエージェントが複数の外部APIを横断的に呼び出す」様子を実際のレスポンスとともに見せやすい。無料ルートの範囲でどこまで使えるかを正直に書く必要がある。アカウント登録が前提になる点は記事内で明記する。
+- 状態: 未選択
