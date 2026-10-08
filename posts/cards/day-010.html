@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>REA静的解析 構造は完璧、意味づけは人間待ち</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+JP:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -210,6 +211,11 @@ main.js/preload.js等のモジュール関係を
   <div class="caveat">
     <span class="mark">⚠</span>
     <p>検証対象は筆者が自作した小さなElectronアプリのみ(第三者ソフトは未解析)。`rea setup`によるMCP登録はこのセッションの設定を書き換えるため行わず、README記載の正式なCLIフォールバックで検証した。詳細はexperiments/day-010/results.md参照。</p>
+  </div>
+
+  <div class="caveat">
+    <span class="mark">追記</span>
+    <p>上記の"no-match"は、ノードの`application_node_ids`(jag_node_*)をnode-idシードに渡すと解決(28ノード・43エッジを識別子起点で再構築できた)。もう1つの失敗(Wakaru未導入)も`npm install wakaru@1.13.0`で解決し、package.jsonにpinして再現可能にした。詳細はresults.mdの「6.5. 追記」参照。</p>
   </div>
 
   <footer>

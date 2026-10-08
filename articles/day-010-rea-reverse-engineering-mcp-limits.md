@@ -146,11 +146,40 @@ REA付属のskillドキュメントが推奨する`trace_application_feature`を
 
 READMEのトップレベルの説明は「静的JS解析はHopper/Ghidra不要」と強調しているが、「読みやすいソースへの変換」は別の外部ツール(Wakaru)が必要で、これはREAが自動インストールしない。「Evidenceを取る」部分と「読みやすいソースに変換する」部分は別の依存関係を持つ、という点は実際に動かして初めて分かった。
 
+## 追記: 2つの失敗は、両方とも実際に解決できた
+
+記事公開前のレビューで、上記2つの失敗について「本当に解決できないのか」を実際に試してみた。結論から言うと、**どちらもREA自体の欠陥ではなく、ドキュメントに書かれていない運用上の前提**だった。
+
+### 識別子の"no-match"は`node-id`シードで解決する
+
+`trace_application_feature`の`seed.kind`には、ドキュメント化はされていないが`"node-id"`という選択肢もある(バリデーションエラーのメッセージから判明)。最初、Evidenceノードの`function_node_id`(`jsrg_node_*`という接頭辞)をそのままこれに渡してみたが、やはり`"no-match"`だった。これは別の内部グラフのIDだったためで、同じノードが持つ`application_node_ids`フィールドの方(`jag_node_*`という接頭辞)を渡すと、正しくマッチした。
+
+```
+seed: {"kind": "node-id", "value": "jag_node_df28...", "match": "exact"}
+→ "coverage": {"status": "complete-within-source", "total_seed_matches": 1}
+```
+
+`coupon:debug`という文字列リテラルでトレースしたときと同じ28ノード・43エッジのグラフが、識別子`COUPON_DEBUG`を起点にしても再構築できた。つまり「識別子で検索したい」という要求自体は満たせるが、`analyze-javascript-application`の出力から該当ノードを自分で(またはエージェントが)検索し、正しい接頭辞のIDを取り出して渡す、という一手間が必要だった。
+
+### Wakaruは普通にnpmで入り、単一ファイルを渡せば動く
+
+エラーメッセージに書かれていた`wakaru@1.13.0`は、そのままnpmに公開されている(Apache-2.0)。
+
+```bash
+npm install wakaru@1.13.0
+export REA_WAKARU_COMMAND="$(realpath node_modules/@wakaru/cli-linux-x64/wakaru)"
+```
+
+これで「Wakaru未導入」エラーは消えたが、代わりに「ディレクトリでなくファイルを渡せ」という別のエラーが出た。`recover-javascript-sources`は単一のバンドルファイル(webpackなどで1つにまとめられたminified JS)を入力に取る設計で、複数ファイル構成の`sample-app`ディレクトリをそのまま渡すのはそもそも対象外の使い方だった。対象を`sample-app/renderer/renderer.js`という単一ファイルに絞ると、`exit_code: 0`で正常終了し、復元済みモジュールが実際に出力された。
+
+この修正はその後、誰でも再現できる形に落とし込んだ。`experiments/day-010/package.json`に`wakaru@1.13.0`をpinし、`npm install`だけで同じ環境が再現できるようにしてある。
+
 ## まとめ
 
 - アプリの構造(IPC配線・公開API・ウィンドウ設定)の再構築は、数値レベルで完全に正確だった。
 - 「隠しデバッグチャンネルが存在する」という事実自体は、最初の1回の解析で既にEvidenceの中に存在していた。
 - しかし「なぜそれが隠し機能なのか(どの環境変数のどの値でゲートされているか)」という1文の説明は自動では出てこず、Evidenceグラフを自分で読んで繋ぐ必要があった。
 - 今回のような軽度の難読化(短い変数名程度)であれば、人間が`lib/pricing.js`を直接読んでも10分かからず正解に到達できる。REAの価値は「その読む作業を省略してくれる」ことではなく、「正確な断片的事実(ファイル位置・confidence・コードフロー)を揃えて、読み間違いや見落としを減らしてくれる」ことにある、というのが実際に手を動かした上での結論。
+- 最初に見つかった2つの失敗(識別子検索の"no-match"、Wakaru未導入によるソース復元失敗)は、どちらもREA自体の欠陥ではなく、ドキュメントに書かれていない運用上の前提が原因で、実際に両方とも解決できた。
 
 検証に使ったコード・実行ログの全文は[本記事のGitHubリポジトリ](https://github.com/matsushima-a-830/ai-100days/tree/main/experiments/day-010)に置いている。
