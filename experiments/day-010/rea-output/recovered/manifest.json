@@ -1,0 +1,88 @@
+{
+  "source": {
+    "path": "/home/matsu/workspace/ai-100days/experiments/day-010/sample-app/renderer/renderer.js",
+    "snapshot_path": "/tmp/rea-wakaru-W8CsMQ/inputs/bundle.js",
+    "sha256": "561d6d2fc9860684f537c3f9fb25120caec8f05c71a58953b979383d32fac887",
+    "bytes": 329,
+    "published_copy": {
+      "path": "/home/matsu/workspace/ai-100days/experiments/day-010/rea-output/recovered/inputs/bundle.js",
+      "sha256": "561d6d2fc9860684f537c3f9fb25120caec8f05c71a58953b979383d32fac887",
+      "bytes": 329
+    }
+  },
+  "engine": {
+    "id": "wakaru",
+    "version": "1.13.0",
+    "executable": {
+      "path": "/home/matsu/workspace/ai-100days/experiments/day-010/.wakaru-install/node_modules/@wakaru/cli-linux-x64/wakaru",
+      "sha256": "e8c7ca052974604197389f6ace7464e4dd24dce64e2730971521bd6606ec9c9e",
+      "bytes": 25301016
+    },
+    "audited_source_revision": "6070266d24b32951fa2fe1d2dad5b4313bd5c81b",
+    "executed_source_revision": null
+  },
+  "options": {
+    "extraction_mode": "structural",
+    "rewrite_level": "standard"
+  },
+  "status": "complete",
+  "detected_formats": [],
+  "reported_safety": "normal",
+  "reported_strategy": "structural",
+  "reported_format": "unknown",
+  "total": 1,
+  "failed": 0,
+  "modules": [
+    {
+      "reported_filename": "bundle.js",
+      "reported_status": "decompiled",
+      "artifact": {
+        "path": "/home/matsu/workspace/ai-100days/experiments/day-010/rea-output/recovered/modules/bundle.js",
+        "sha256": "4ff8247e599df5fa3ec52e8294f66ae6fae7e0f59167836bba313628674f0d47",
+        "bytes": 347
+      },
+      "source_map": {
+        "path": "/home/matsu/workspace/ai-100days/experiments/day-010/rea-output/recovered/modules/bundle.js.map",
+        "sha256": "83604ca950d5c96d5369e375e5eaf4b21bea362b4daa5e870cd5f03c8edc4651",
+        "bytes": 332
+      },
+      "provenance": {
+        "reported_input": "/tmp/rea-wakaru-W8CsMQ/inputs/bundle.js",
+        "original_path": "/home/matsu/workspace/ai-100days/experiments/day-010/sample-app/renderer/renderer.js",
+        "original_sha256": "561d6d2fc9860684f537c3f9fb25120caec8f05c71a58953b979383d32fac887",
+        "extraction": "structural",
+        "byte_ranges": [
+          {
+            "start": 0,
+            "end": 329
+          }
+        ],
+        "context_byte_ranges": [],
+        "range_semantics": "half-open-utf8-bytes"
+      }
+    }
+  ],
+  "warnings": [],
+  "report": {
+    "path": "/home/matsu/workspace/ai-100days/experiments/day-010/rea-output/recovered/reports/stdout.json",
+    "sha256": "b3f5b354a5e81dfbaaba3d56dcb92e4f2bc26311659c73d26022826ff24d21b3",
+    "bytes": 171
+  },
+  "provenance": {
+    "path": "/home/matsu/workspace/ai-100days/experiments/day-010/rea-output/recovered/reports/provenance.json",
+    "sha256": "021ad1d4a27e895fad0134c1ca7a9cde0db76c10ab026093c1478018a3b4e001",
+    "bytes": 193
+  },
+  "analysis_input": {
+    "input_path": "/home/matsu/workspace/ai-100days/experiments/day-010/rea-output/recovered/modules",
+    "format": "directory"
+  },
+  "runtime_equivalence": "unknown",
+  "limitations": [
+    "Recovered sources are derived artifacts; original variable names and runtime equivalence are not established.",
+    "Extraction ranges refer to half-open UTF-8 byte offsets in the original input, not rewritten line positions or whole-bundle coverage.",
+    "Emitted source maps are preserved as reported by the engine; their mapping accuracy is not independently established.",
+    "Inspection mode may produce non-executable regions. No input or recovered application code is executed.",
+    "Linux adapter: one worker, 1 GiB address-space ceiling, 120-second deadline, 64 MiB input, 128 MiB output, 10000 output entries and 8 MiB per diagnostic/report stream. Resource limits are per operation, not aggregate host containment."
+  ]
+}

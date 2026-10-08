@@ -269,6 +269,87 @@ READMEのトップレベルの説明では「Hopper/Ghidraはネイティブ解�
   (`trace_application_feature`など)は、そこまでの要約・説明は自動生成せず、「正確な断片的事実」を
   返すところで止まる、という設計だと確認できた。
 
+## 6.5. 追記(2026-10-08、人間の指摘を受けて): 2つの失敗を実際に解決した
+
+PR作成後、「識別子名をseedに渡すとno-matchになる」「recover-javascript-sourcesがWakaru未導入で失敗する」
+という2つの失敗について、実際に解決策を試して両方とも解消できた。
+
+### 解決1: 識別子の"no-match"は、`jag_node_*` ID をseedに渡せば解決する
+
+4-3節の`"no-match"`は、`seed.kind: "string"`が**AST上の文字列リテラル値のみ**を対象にしており、
+識別子(変数名・プロパティ名)そのものは別の扱いだったのが原因。`seed.kind`には`"node-id"`という
+選択肢もドキュメント化されていた(4-1節のバリデーションエラー参照)ので、識別子を含むノードの
+`node_id`を直接渡せないか試した。
+
+最初、`analyze-javascript-application`の出力から`COUPON_DEBUG`を含むノードの`function_node_id`
+(`jsrg_node_...`という接頭辞)をそのままseedに渡したところ、やはり`"no-match"`だった。
+
+```
+$ (seed: {"kind": "node-id", "value": "jsrg_node_2537...", "match": "exact"})
+→ "coverage": {"status": "no-match", "total_seed_matches": 0}
+```
+
+`jsrg_node_*`は別の内部グラフ(JS解決グラフ)の識別子で、`trace_application_feature`が検索する
+グラフ(アプリケーショングラフ)のIDとは名前空間が違う、と気づいた。同じノードの
+`application_node_ids`フィールドに入っていた`jag_node_*`の方を代わりに渡すと、正しくマッチした。
+
+```
+$ (seed: {"kind": "node-id", "value": "jag_node_df28...", "match": "exact"})
+→ "coverage": {"status": "complete-within-source", "total_seed_matches": 1}
+→ "summary": {"matched_seeds": 1, "traced_nodes": 28, "traced_edges": 43, ...}
+```
+
+`coupon:debug`という文字列リテラルでトレースしたときと同じ28ノード・43エッジのグラフが、
+識別子`COUPON_DEBUG`を起点にしても再構築できた。**つまり「識別子で検索したい」という要求自体は
+満たせるが、手順は「`seed.value`に識別子の文字列を直接書く」ではなく、「`analyze-javascript-application`
+の出力JSONを(`jq`やスクリプトで)自分で検索して該当ノードの`jag_node_*` IDを取り出し、それを
+`kind: "node-id"`でseedに渡す」という2段階が必要**、というのが結論。これはツールのバグというより、
+ドキュメントに書かれていない運用上のコツだった。
+
+### 解決2: Wakaruを実際にインストールすれば`recover-javascript-sources`は動く
+
+エラーメッセージ自体に`"Wakaru 1.13.0 on Linux x64"`という具体的なバージョン・プラットフォームが
+書かれていたので、そのままnpmで取得できるか試した。
+
+```bash
+npm install wakaru@1.13.0   # Apache-2.0、npm上に公開されている
+```
+
+`node_modules/@wakaru/cli-linux-x64/wakaru`というネイティブバイナリ(Rust製、ELF実行ファイル)が
+インストールされ、`--version`で`wakaru 1.13.0`が確認できた。このバイナリの絶対パスを
+`REA_WAKARU_COMMAND`環境変数に設定して再実行したところ、エラーメッセージは変わった。
+
+```
+$ REA_WAKARU_COMMAND=/abs/path/to/wakaru npx rea-agents recover-javascript-sources ./sample-app ./out
+→ "reason": "Expected a regular file no larger than 67108864 bytes: .../sample-app"
+```
+
+「Wakaru未導入」エラーは解消されたが、新たに「`sample-app`はディレクトリであってファイルではない」
+という別のエラーが出た。`recover-javascript-sources`は単一のバンドルファイル(webpack等で1つに
+固められたminifiedなJS)を入力に取る設計で、複数ファイルで構成された(未バンドルの)`sample-app`
+ディレクトリ全体をそのまま渡すのは、そもそも対象外の使い方だったとわかった。対象を
+`sample-app/renderer/renderer.js`という単一ファイルに絞って渡すと、正常終了した。
+
+```
+$ REA_WAKARU_COMMAND=/abs/path/to/wakaru npx rea-agents recover-javascript-sources \
+    ./sample-app/renderer/renderer.js ./rea-output/recovered
+→ exit_code: 0, "report": {"modules": [{"filename": "bundle.js", "status": "decompiled"}], "failed": 0}
+```
+
+`rea-output/recovered/modules/bundle.js`に復元済みのソースが実際に出力された(今回のrenderer.jsは
+元々未難読化のプレーンなコードだったので、復元結果も素直な内容になっている)。
+
+### まとめ
+
+| 問題 | 原因 | 解決策 |
+|---|---|---|
+| 識別子seedで"no-match" | `kind: "string"`は文字列リテラル専用、`function_node_id`(`jsrg_node_*`)はグラフ名前空間違い | 該当ノードの`application_node_ids`(`jag_node_*`)を`kind: "node-id"`で渡す |
+| `recover-javascript-sources`失敗 | (1) Wakaru本体が未インストール (2) ディレクトリではなく単一バンドルファイルが入力として必要 | (1) `npm install wakaru@1.13.0`→`REA_WAKARU_COMMAND`に絶対パスを設定 (2) 単一ファイルを指定する |
+
+どちらも「ドキュメントに書かれていない前提」が原因で、REA自体の欠陥ではなかった。
+実行ログ全文は`rea-output/trace-coupon-debug-jagid.json`・`rea-output/recover-sources-fixed2.json`・
+`rea-output/recovered/`に保存している。
+
 ## 7. 日本語記事の有無(再確認)
 
 2026-10-08時点であらためて確認。Zenn/Qiita/noteで「REA」「rea-agents」「morluto/rea」での日本語紹介記事は
