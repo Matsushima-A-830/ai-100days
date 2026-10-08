@@ -1,0 +1,246 @@
+<meta charset="utf-8">
+<title>REA静的解析 構造は完璧、意味づけは人間待ち</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+JP:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg: #eff2f6;
+    --surface: #ffffff;
+    --ink: #14181f;
+    --ink-muted: #5b6472;
+    --ink-faint: #8792a2;
+    --border: #dde2e8;
+    --accent: #d15a25;
+    --series-a: #eb6834;   /* 第1系列 / train・before など */
+    --series-b: #2a78d6;   /* 第2系列 / held-out・after など */
+    --good: #0a7a3d;
+    --good-bg: rgba(10, 122, 61, 0.08);
+    --good-border: #0a7a3d;
+    --bad: #b3261e;
+    --bad-bg: rgba(179, 38, 30, 0.08);
+    --bad-border: #b3261e;
+    --terminal-bg: #12151c;
+    --terminal-ink: #e7ebf1;
+    --terminal-border: #2a3140;
+    --terminal-base: #7c8494;
+    --grid-line: #e3e7ec;
+    --tick-off: #d9dee5;
+    --shadow: 0 1px 2px rgba(20, 24, 31, 0.04), 0 12px 32px -16px rgba(20, 24, 31, 0.18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1218; --surface: #161b24; --ink: #e8ebf0; --ink-muted: #97a1b2;
+      --ink-faint: #626d80; --border: #262e3b; --accent: #e2793f;
+      --series-a: #e2793f; --series-b: #4f93ea;
+      --good: #4cc283; --good-bg: rgba(76, 194, 131, 0.12); --good-border: #4cc283;
+      --bad: #ef6a63; --bad-bg: rgba(239, 106, 99, 0.12); --bad-border: #ef6a63;
+      --terminal-bg: #090b10; --terminal-ink: #dde3ec; --terminal-border: #262e3b;
+      --terminal-base: #6b7484; --grid-line: #232a35; --tick-off: #262e3b;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 20px 40px -20px rgba(0, 0, 0, 0.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1218; --surface: #161b24; --ink: #e8ebf0; --ink-muted: #97a1b2;
+    --ink-faint: #626d80; --border: #262e3b; --accent: #e2793f;
+    --series-a: #e2793f; --series-b: #4f93ea;
+    --good: #4cc283; --good-bg: rgba(76, 194, 131, 0.12); --good-border: #4cc283;
+    --bad: #ef6a63; --bad-bg: rgba(239, 106, 99, 0.12); --bad-border: #ef6a63;
+    --terminal-bg: #090b10; --terminal-ink: #dde3ec; --terminal-border: #262e3b;
+    --terminal-base: #6b7484; --grid-line: #232a35; --tick-off: #262e3b;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 20px 40px -20px rgba(0, 0, 0, 0.6);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--ink); margin: 0;
+    font-family: "IBM Plex Sans JP", "IBM Plex Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+    padding: 40px 20px 56px; display: flex; justify-content: center;
+  }
+  .card {
+    width: 100%; max-width: 660px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow);
+    padding: 36px 40px 32px; display: flex; flex-direction: column; gap: 26px;
+  }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace; font-size: 12.5px; color: var(--ink-faint);
+    letter-spacing: 0.02em; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  }
+  .eyebrow .path { color: var(--accent); }
+  .eyebrow .divider { color: var(--border); }
+
+  .heading h1 {
+    font-family: "Fraunces", serif; font-weight: 500; font-size: 28px; line-height: 1.24;
+    letter-spacing: -0.01em; margin: 0 0 8px; text-wrap: balance; color: var(--ink);
+  }
+  .heading p { margin: 0; font-size: 14.5px; line-height: 1.7; color: var(--ink-muted); max-width: 54ch; }
+  .heading p .src { color: var(--ink); font-weight: 500; }
+
+  .stat-row {
+    display: flex; align-items: flex-end; gap: 22px; padding: 18px 22px;
+    background: linear-gradient(180deg, rgba(235,104,52,0.07), rgba(235,104,52,0));
+    border: 1px solid var(--border); border-radius: 10px;
+  }
+  .stat-number {
+    font-family: "Fraunces", serif; font-weight: 600; font-size: 56px; line-height: 0.9;
+    color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .stat-caption { font-size: 13.5px; line-height: 1.6; color: var(--ink-muted); padding-bottom: 4px; }
+  .stat-caption strong { color: var(--ink); font-weight: 600; }
+
+  section.block { display: flex; flex-direction: column; gap: 12px; }
+  .block-label {
+    font-family: "IBM Plex Mono", monospace; font-size: 11.5px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--ink-faint);
+  }
+
+  .chart-wrap { position: relative; }
+  svg.chart { width: 100%; height: auto; overflow: visible; }
+  .chart-grid { stroke: var(--grid-line); stroke-width: 1; }
+  .chart-axis-label { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; fill: var(--ink-faint); }
+  .line-a { fill: none; stroke: var(--series-a); stroke-width: 2.5; }
+  .line-b { fill: none; stroke: var(--series-b); stroke-width: 2.5; }
+  .pt-a { fill: var(--series-a); } .pt-b { fill: var(--series-b); } .pt-halo { fill: var(--surface); }
+  .end-label { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .end-label.a { fill: var(--series-a); } .end-label.b { fill: var(--series-b); }
+  .series-name { font-family: "IBM Plex Sans", sans-serif; font-size: 11.5px; fill: var(--ink-muted); }
+  .chart-tooltip {
+    position: absolute; pointer-events: none; background: var(--terminal-bg); color: var(--terminal-ink);
+    font-family: "IBM Plex Mono", monospace; font-size: 11.5px; padding: 6px 9px; border-radius: 6px;
+    border: 1px solid var(--terminal-border); transform: translate(-50%, -130%); white-space: nowrap;
+    opacity: 0; transition: opacity 0.1s ease; z-index: 5;
+  }
+  .chart-tooltip.show { opacity: 1; }
+  .hit { fill: transparent; cursor: crosshair; }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .compare-panel { border-radius: 10px; padding: 14px 16px; border: 1px solid; display: flex; flex-direction: column; gap: 8px; }
+  .compare-panel.bad { background: var(--bad-bg); border-color: var(--bad-border); }
+  .compare-panel.good { background: var(--good-bg); border-color: var(--good-border); }
+  .compare-title { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; font-weight: 500; }
+  .compare-panel.bad .compare-title { color: var(--bad); }
+  .compare-panel.good .compare-title { color: var(--good); }
+  .compare-output {
+    margin: 0; font-family: "IBM Plex Mono", monospace; font-size: 11px; line-height: 1.6;
+    color: var(--ink-muted); white-space: pre-wrap; word-break: break-word;
+  }
+
+  .terminal {
+    background: var(--terminal-bg); border: 1px solid var(--terminal-border); border-radius: 10px;
+    padding: 16px 18px 14px; font-family: "IBM Plex Mono", monospace; font-size: 12.5px;
+    color: var(--terminal-ink); display: flex; flex-direction: column; gap: 10px;
+  }
+  .term-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .term-tag { font-size: 10.5px; color: var(--terminal-base); letter-spacing: 0.06em; width: 52px; flex: none; }
+  .toks { display: flex; flex-wrap: wrap; gap: 4px; }
+  .term-foot { font-size: 11px; color: var(--terminal-base); border-top: 1px solid var(--terminal-border); padding-top: 9px; }
+  .term-foot b { color: var(--terminal-ink); font-weight: 500; }
+
+  .caveat {
+    display: flex; gap: 10px; padding: 12px 14px; border: 1px dashed var(--border);
+    border-radius: 8px; background: var(--bg);
+  }
+  .caveat .mark { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-faint); flex: none; }
+  .caveat p { margin: 0; font-size: 12.5px; line-height: 1.65; color: var(--ink-muted); }
+
+  footer {
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 16px;
+    border-top: 1px solid var(--border); padding-top: 18px;
+  }
+  .sources { display: flex; flex-direction: column; gap: 5px; }
+  .sources a { font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: var(--ink-muted); text-decoration: none; border-bottom: 1px solid transparent; }
+  .sources a:hover { color: var(--accent); border-color: var(--accent); }
+  .progress { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex: none; }
+  .progress .num { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-faint); letter-spacing: 0.03em; }
+  .progress .num b { color: var(--ink); font-weight: 500; }
+  .grid100 { display: grid; grid-template-columns: repeat(20, 5px); grid-auto-rows: 5px; gap: 2px; }
+  .grid100 i { background: var(--tick-off); border-radius: 1px; display: block; }
+  .grid100 i.on { background: var(--accent); }
+
+  @media (max-width: 480px) {
+    .card { padding: 26px 20px 24px; gap: 20px; }
+    .stat-number { font-size: 46px; }
+    .compare-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; align-items: flex-start; }
+    .progress { align-items: flex-start; }
+  }
+</style>
+
+<div class="card" id="card">
+
+  <div class="eyebrow">
+    <span>$ day-010</span>
+    <span class="divider">/</span>
+    <span class="path">--topic rea-reverse-engineering</span>
+    <span class="divider">/</span>
+    <span>海外AIネタ100日チャレンジ</span>
+  </div>
+
+  <div class="heading">
+    <h1>「Reverse Engineer Anything」のREAに<br>自作アプリの隠し機能を見つけさせてみた</h1>
+    <p><span class="src">morluto/rea</span>(MIT, npm: rea-agents@5.0.0)の静的JS解析を、割引ロジック+隠しデバッグ機能を仕込んだ自作Electronアプリで検証。構造の再構築と、機能の「意味づけ」で結果が分かれた。</p>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-number">6/6</div>
+    <div class="stat-caption">IPCチャンネル数・contextBridge公開API数など<strong>構造の集計値は全項目が正解と一致</strong>(results.md 3節)</div>
+  </div>
+
+  <section class="block compare">
+    <div class="block-label">trace_application_feature のseedに何を渡したか</div>
+    <div class="compare-grid">
+      <div class="compare-panel good">
+        <div class="compare-title">✓ IPCチャンネル名(文字列リテラル)</div>
+        <pre class="compare-output">seed: {kind:"string", value:"coupon:debug"}
+-> matched_seeds: 2, traced_nodes: 28
+ipc-channel/ipc-handlerに正確にヒットし、
+main.js/preload.js等のモジュール関係を
+丸ごと正しく再構築した。</pre>
+      </div>
+      <div class="compare-panel bad">
+        <div class="compare-title">✗ 識別子名(関数名・プロパティ名)</div>
+        <pre class="compare-output">seed: {kind:"string", value:"COUPON_DEBUG"}
+-> coverage.status: "no-match"
+"quote" "debugSnapshot" "VIP-" も同様にno-match。
+隠しデバッグ機能のゲート条件(環境変数)
+までは1回のトレースで繋がらなかった。</pre>
+      </div>
+    </div>
+  </section>
+
+  <div class="caveat">
+    <span class="mark">⚠</span>
+    <p>検証対象は筆者が自作した小さなElectronアプリのみ(第三者ソフトは未解析)。`rea setup`によるMCP登録はこのセッションの設定を書き換えるため行わず、README記載の正式なCLIフォールバックで検証した。詳細はexperiments/day-010/results.md参照。</p>
+  </div>
+
+  <div class="caveat">
+    <span class="mark">追記</span>
+    <p>上記の"no-match"は、ノードの`application_node_ids`(jag_node_*)をnode-idシードに渡すと解決(28ノード・43エッジを識別子起点で再構築できた)。もう1つの失敗(Wakaru未導入)も`npm install wakaru@1.13.0`で解決し、package.jsonにpinして再現可能にした。詳細はresults.mdの「6.5. 追記」参照。</p>
+  </div>
+
+  <footer>
+    <div class="sources">
+      <a href="https://github.com/morluto/rea" target="_blank" rel="noopener">→ github.com/morluto/rea</a>
+      <a href="https://www.npmjs.com/package/rea-agents" target="_blank" rel="noopener">→ npmjs.com/package/rea-agents</a>
+    </div>
+    <div class="progress">
+      <span class="num"><b>010</b> / 100 days</span>
+      <div class="grid100" id="grid100"></div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var grid = document.getElementById('grid100');
+    var frag = document.createDocumentFragment();
+    var currentDay = 10;
+    for (var i = 1; i <= 100; i++) {
+      var el = document.createElement('i');
+      if (i <= currentDay) el.className = 'on';
+      frag.appendChild(el);
+    }
+    grid.appendChild(frag);
+  })();
+</script>

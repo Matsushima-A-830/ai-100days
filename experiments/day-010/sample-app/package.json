@@ -1,0 +1,11 @@
+{
+  "name": "coupon-desk",
+  "version": "1.0.0",
+  "description": "Self-authored sample Electron app for REA static-analysis verification (day-010).",
+  "main": "main.js",
+  "author": "matsu (ai-100days day-010 verification sample)",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^33.0.0"
+  }
+}

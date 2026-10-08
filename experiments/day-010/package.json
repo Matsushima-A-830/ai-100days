@@ -1,0 +1,8 @@
+{
+  "name": "day-010-rea-verification",
+  "private": true,
+  "description": "Day 010の再現用ローカル依存。recover-javascript-sources (REA) が必要とするWakaruをpinして固定する。",
+  "devDependencies": {
+    "wakaru": "1.13.0"
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "evidence_id": "ev_c92aa5b7553a976c57280ae7a4b2452a0e6d7a567c13db677214148d018bbb02",
+  "subject": null,
+  "provider": {
+    "id": "rea-javascript-application-workflows",
+    "name": "REA JavaScript application workflows",
+    "version": "1"
+  },
+  "predicate_type": "rea.application-feature-trace",
+  "operation": "trace_application_feature",
+  "parameters": {
+    "application_evidence_id": "ev_ceef7c0fce649b9cb9625eac393d6610ff93aa71cdc84e8e45fc8b3c71c2d64e",
+    "native_evidence_ids": [],
+    "seed": {
+      "kind": "string",
+      "value": "COUPON_DEBUG",
+      "match": "exact",
+      "case_sensitive": false
+    },
+    "direction": "both"
+  },
+  "raw_result": null,
+  "normalized_result": {
+    "trace_id": "jatr_5c5546bc5e83aa23c28e939ba6bf56828d122e913186e828c9dc4f3b590b6bce",
+    "source_evidence_id": "ev_ceef7c0fce649b9cb9625eac393d6610ff93aa71cdc84e8e45fc8b3c71c2d64e",
+    "source_graph_id": "jag_e4ce3a6ee610cbfc29d90cabc3a9d6bd0e7ca00c5364f76f3c3c204cef6b46be",
+    "seed": {
+      "kind": "string",
+      "value": "COUPON_DEBUG",
+      "match": "exact",
+      "case_sensitive": false
+    },
+    "direction": "both",
+    "seed_matches": [],
+    "graph": null,
+    "paths": [],
+    "native_handoffs": [],
+    "summary": {
+      "matched_seeds": 0,
+      "traced_nodes": 0,
+      "traced_edges": 0,
+      "terminal_paths": 0,
+      "native_handoffs": 0,
+      "observed_facts": 0,
+      "inferred_facts": 0,
+      "unknown_facts": 0,
+      "unavailable_facts": 0
+    },
+    "coverage": {
+      "status": "no-match",
+      "source_graph_status": "complete",
+      "total_seed_matches": 0
+    },
+    "evidence_links": [
+      "ev_ceef7c0fce649b9cb9625eac393d6610ff93aa71cdc84e8e45fc8b3c71c2d64e"
+    ],
+    "limitations": [
+      "No graph entity matched the literal seed; this is not evidence that the feature is absent."
+    ]
+  },
+  "confidence": "inferred",
+  "authority": "analyst-inference",
+  "environment": null,
+  "limitations": [
+    "Artifact identity is unavailable for this observation.",
+    "No graph entity matched the literal seed; this is not evidence that the feature is absent."
+  ],
+  "locations": [],
+  "evidence_links": [
+    "ev_ceef7c0fce649b9cb9625eac393d6610ff93aa71cdc84e8e45fc8b3c71c2d64e"
+  ]
+}
