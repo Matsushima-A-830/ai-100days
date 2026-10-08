@@ -1,0 +1,14 @@
+{
+  "code": "capability_unavailable",
+  "category": "unsupported_provider",
+  "message": "This analysis is unavailable for the current target. Choose another analysis or target.",
+  "retryable": false,
+  "remediation": {
+    "action": "This analysis is unavailable for the current target. Choose another analysis or target."
+  },
+  "details": {
+    "provider_id": "wakaru",
+    "operation": "recover_javascript_sources",
+    "reason": "Provide an absolute REA_WAKARU_COMMAND pointing to Wakaru 1.13.0 on Linux x64; no tool is installed by REA"
+  }
+}
