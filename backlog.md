@@ -342,6 +342,51 @@
 - 日本語記事件数: Zenn 0件(Mem0/Zep等の一般的なエージェントメモリ記事はあるがMem++固有の記事は見当たらない) / Qiita 0件 / note 0件
 - 検証難易度: 低〜中(デフォルトはローカルONNX MiniLM埋め込みで動作し有料APIキー不要。PostgreSQL16+pgvectorの準備は必要、GPU不要)。注意: GitHubスター3個と非常に新しく実績の薄いリポジトリのため、挙動の個体差に留意すること。
 - 見栄え: 従来の要約型メモリとMem++の非破壊取得を同じ質問にぶつけ、回答精度・情報欠落の有無を比較するBefore/Afterデモが作りやすい。
+
+### [2026-10-08] diagram-design — 指示文だけでエディトリアル調の図解を自動生成するClaude Code向けagent skill
+
+- 出典: https://github.com/cathrynlavery/diagram-design
+- 概要: Claude Code/Codex/GitHub Copilot等向けのagent skillで、自然言語の指示だけで自己完結HTML+インラインSVGのエディトリアル調図解(アーキテクチャ図・シーケンス図・ER図・タイムライン等)を生成する。Mermaid風の素朴な見た目を避け、対象Webサイトの配色・フォントを読み取ってブランドに合わせる機能もある(MITライセンス)。本日GitHub Trending(全言語)で2位に急伸中。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(海外メディアの解説記事は複数あるが日本語での一次紹介は未検出)
+- 検証難易度: 低(MIT。Claude Code自身にスキルとして追加するだけで追加の有料APIキー不要、GPUも不要。PNG書き出しにはPlaywright+Chromiumが必要だが、SVG/HTMLでの確認だけなら不要)
+- 見栄え: 本リポジトリ自身の構成図やexperiments/day-NNNの処理フローをこのスキルで自動生成し、手書き/Mermaidとの見た目をBefore/After比較できる。本チャレンジのX投稿用シェアカード(HTML+SVG)との相性も良い。
+- 状態: 未選択
+
+### [2026-10-08] plannotator — エージェントの計画・コード差分をブラウザでアノテーションして戻すローカル完結レビューツール
+
+- 出典: https://github.com/backnotprop/plannotator
+- 概要: Claude Code/Codex/Gemini CLI等のエージェントが提示した「計画(プラン)」やコード差分・HTML出力をブラウザ上で開き、削除・置換・挿入・コメントで直接アノテーションしてエージェントにフィードバックを返すローカル完結のレビューツール。GitHub/GitLabのPR/MRレビューにも対応。GitHub Trending(TypeScript)で急伸中。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(日本語ドキュメントのミラーはあるが一次解説記事は未検出)
+- 検証難易度: 低(公式READMEはApache-2.0/MITデュアルライセンスと明記。ただし日本語ドキュメントの付録にはクラウド共有機能について「BSL-1.1」という記載もあり要確認。コアのローカルレビュー機能自体には追加のLLM APIキーは不要、GPUも不要)
+- 見栄え: 本リポジトリのRoutine運用(朝リサーチ→通勤中レビュー→昼実装→夜レビュー)にこのツールを組み込み、実際にPRの差分をブラウザでアノテーションして戻す様子をBefore/After的に見せられる。「人間が確認・仕上げを行う」という本チャレンジの運用そのものを強化する自己言及的なネタとして語りやすい。
+- 状態: 未選択
+
+### [2026-10-08] freellmapi — 複数プロバイダの無料枠を1つのOpenAI互換エンドポイントに集約するセルフホスト型ルーター
+
+- 出典: https://github.com/tashfeenahmed/freellmapi
+- 概要: 複数のLLMプロバイダの無料枠を1つのOpenAI互換`/v1`エンドポイントに集約し、レート制限(429)やサーバーエラー時には自動で次のプロバイダへフェイルオーバーするセルフホスト型ルーター。登録したAPIキーはSQLiteにAES-256-GCMで暗号化保存される(MITライセンス、「個人の実験用」と明記)。GitHub Trending(TypeScript)で急伸中。
+- 日本語記事件数: Zenn 0件(無関係なllama.cpp記事のみ検出) / Qiita 0件 / note 0件
+- 検証難易度: 中(ルーター本体はMITでAPIキー・GPU不要だが、実際に使うには複数プロバイダの無料枠キーを自分で取得・登録する必要がある。Dockerでの一発導入は可能)
+- 見栄え: 本チャレンジの方針「有料APIキー不要」に正面から合致するツールで、複数の無料LLMプロバイダを1つの窓口で切り替えながら応答品質・速度をBefore/After的に比較する表が作りやすい。
+- 状態: 未選択
+
+### [2026-10-08] OpenSRE — ログ・メトリクス・トレースを集めて根拠付きで根本原因を返すAI SREエージェント構築OSS
+
+- 出典: https://github.com/Tracer-Cloud/opensre
+- 概要: ログ・メトリクス・トレース・直近のデプロイ情報を集めて仮説を検証し、根拠付きの回答を返す「AI SREエージェント」を構築するOSSフレームワーク(Apache-2.0)。60以上のツールに接続でき、Slack/PagerDuty/Telegramへの要約投稿にも対応。Public alpha。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(agentpedia.codesの日本語ガイドはあるが著者自身による一次検証ではない)
+- 検証難易度: 中〜高(Apache-2.0。`opensre`実行時のサインインでホスト型モデルが有効化される仕組みで、無料枠の範囲かは要確認。セルフホスト・コンテナ構成では`LLM_PROVIDER`と対応するAPIキーが必須。Public alphaのため挙動が変わりやすい点にも注意)
+- 見栄え: 意図的に軽微な障害(ログにエラーを仕込む等)を用意し、根本原因レポートが返ってくる様子をBefore/After的に見せられる。既に扱ったエージェント安全性・信頼性系(HexStrike AI・OpenShell・Uber ADR等)の実務応用編として語れる。
+- 状態: 未選択
+
+### [2026-10-08] Codex Security — 脆弱性の発見・検証・修正パッチ生成までを担うOpenAI公式CLI/SDK(要注意・有料APIキー前提)
+
+- 出典: https://github.com/openai/codex-security
+- 概要: リポジトリやGit差分をスキャンして脆弱性を発見・検証し、修正パッチやSECURITY.mdドラフトまで生成するOpenAI公式のCLI/TypeScript SDK(Apache-2.0)。2026年3月に研究プレビュー、7月にOSS版CLIが公開された。GitHub Trending(Python)で急伸中。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(Gigazine等のニュース解説記事はあるが一次検証記事は未検出)
+- 検証難易度: 高(**スキャン実行には`OPENAI_API_KEY`または`CODEX_API_KEY`が必須**で、代替のAmazon Bedrock/OpenRouter/Fireworks AIもいずれも有料API前提。本リポジトリの方針「有料APIキー必須候補は選ばない」に抵触するため、無料枠だけで完結できない限りtoday.mdでは選ばないこと)
+- 見栄え: 意図的に脆弱なサンプルコード(例: SQLインジェクション可能な簡単なアプリ)を用意し、検出→検証→修正パッチ提案までの流れをBefore/Afterで見せられ、インパクトは大きい。ただし有料キー制約のため、扱う場合は無料クレジット枠内での限定実行に留める必要がある。
+- 状態: 未選択
 - 状態: 未選択
 
 ### [2026-10-05] ICoA — 「ユーザーに気づかれるか」で間接プロンプトインジェクションの成功率を分解する指標CSR/OSR(EMNLP 2026採択論文、要注意・有料APIキー前提)
