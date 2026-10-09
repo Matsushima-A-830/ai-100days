@@ -134,11 +134,71 @@ diagram-design版は、同じ情報量(4レーン・7ノード・6矢印)に対�
 - **マイナス/注意点**: 同梱サンプル(`example-swimlane.html`)自体がスキル自身のチェックリスト
   (§9の `overflow-x: auto` ラッパー要件)を完全には満たしていなかった。スキルの指示と
   同梱サンプルの間に小さな不整合がある。
-- **検証の限界**: 公式のplugin経由のインストール・起動は今回のクラウド実行環境のサンドボックス
+- **検証の限界(当初)**: 公式のplugin経由のインストール・起動は今回のクラウド実行環境のサンドボックス
   ポリシーにより確認できなかった。また `scripts/self_check.py` や `scripts/verify-geometry.py`
-  による自動検証も実行できず、目視・手計算での代替確認にとどまる。記事ではこの制約を明記する。
+  による自動検証も実行できず、目視・手計算での代替確認にとどまっていた。
+  → **後日(2026-10-09)、人間がローカルPCで公式インストール・`self_check.py`実行の両方を実施し、
+  手動適用が自動チェックにも合格すること、および同梱サンプルの不整合は自動チェックの対象外である
+  ことを確認した(詳細は上記の追記セクション)。
 - PNG書き出し(`scripts/export_svg.py` 経由)もコード実行が必要なため今回は試していない。
   今回はSVGをそのままHTML埋め込みで確認するところまで。
+
+## 追記(2026-10-09、人間のローカルPCで公式インストールを実際に試した結果)
+
+クラウドRoutine環境ではブロックされていた公式インストールを、ローカルPC(サンドボックス外)で
+実際に試した。
+
+```
+$ claude plugin marketplace add cathrynlavery/diagram-design
+✔ Successfully added marketplace: diagram-design (declared in user settings)
+
+$ claude plugin install diagram-design@diagram-design
+✔ Successfully installed plugin: diagram-design@diagram-design (scope: user)
+```
+
+両方とも問題なく成功した。`claude plugin details diagram-design@diagram-design`で内訳も確認できた
+(スキル7個: `diagram-design`/`doctor`/`export-diagram`/`import-drawio`/`import-excalidraw`/
+`import-mermaid`/`profile`、エージェント・フック・MCPサーバーは0個)。
+
+### `self_check.py`を実際に実行し、手動適用との差分を確認した
+
+インストールされたプラグインに同梱の`self_check.py`(Windows環境では`PYTHONUTF8=1`が無いと
+ヘルプ表示で`UnicodeEncodeError`になったため指定)を、本検証で作った2つのHTMLに対して実行した。
+
+```
+$ python3 self_check.py after-diagram-design.html before-mermaid.html
+OK after-diagram-design.html
+FAIL before-mermaid.html
+  - remote reference on <script>: https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js
+  - diagram file needs at least one accessible (non-aria-hidden) SVG
+  - at most one script is allowed; found 2
+  - script 1 must carry only the canonical data-diagram-controls attribute
+  - script 2 must carry only the canonical data-diagram-controls attribute
+  - expected exactly one data-motion-root; found 0
+```
+
+**手動適用で作った`after-diagram-design.html`は、公式の自動チェックに実際に合格した(OK)。**
+手で1項目ずつ確認した§9 Pre-Output Checklistの結果と、ツールによる自動判定が一致したことになる。
+比較用の`before-mermaid.html`(そもそもdiagram-designの出力ではない)は想定通りFAILで、
+CDN参照・複数script・motion root不在など、単一ファイル完結の要件を満たしていないことが
+機械的にも確認できた。
+
+### 同梱サンプルの不整合も、自動チェックでは検出されないことがわかった
+
+本編で「同梱サンプル`example-swimlane.html`は`overflow-x: auto`ラッパーを満たしていない」と
+指摘した点について、同じ`self_check.py`をこのサンプルファイル自体にかけてみた。
+
+```
+$ python3 self_check.py example-swimlane.html
+OK example-swimlane.html
+```
+
+**`self_check.py`はこのサンプルをOK判定する。** つまり、本編で見つけた不整合はSKILL.md §9の
+チェックリスト(人間/エージェントが目視で確認する前提の文書)の方にしか書かれておらず、
+`self_check.py`(README/SKILL.mdが「リポジトリ本体のゲート`lint-skin.py`/`verify-motion.py`の
+縮小版」と明記している自動スクリプト)のチェック項目には含まれていない、という切り分けができた。
+自動チェックと人間向けチェックリストの間に、互いにカバーしきれていない項目がある
+(「自動チェック=完全な正解」ではない)ことが、実際に両方を実行して初めてわかった。
 
 ## ファイル一覧
 
