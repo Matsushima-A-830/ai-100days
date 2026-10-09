@@ -496,3 +496,39 @@
 - 検証難易度: 低(treg.toへの無料アカウント登録とtregトークン取得が必要だが、有料APIキーなしでも「検証済み公開ルート」経由でカタログの一部ツールを無料で呼び出せると説明されている。GPU不要。セルフホスト版〈`pip install "tools-registry[server]"`〉ならSQLiteで単体起動も可能)
 - 見栄え: 「1つのトークンでエージェントが複数の外部APIを横断的に呼び出す」様子を実際のレスポンスとともに見せやすい。無料ルートの範囲でどこまで使えるかを正直に書く必要がある。アカウント登録が前提になる点は記事内で明記する。
 - 状態: 未選択
+
+### [2026-10-09] Headroom — ツール出力・ログ・RAGチャンクをLLMに渡す前にローカル圧縮するコンテキスト圧縮レイヤー
+
+- 出典: https://github.com/headroomlabs-ai/headroom (GitHub Trending Python 2026-10-09、+120star/日、74,834star。旧名chopratejas/headroom、2026年1月公開・7月に開発元がHeadroom Labsとして法人化した同一プロジェクトの改名と確認)
+- 概要: AIエージェントのツール出力・ログ・ファイル・RAGチャンク・会話履歴をLLMに送る前にローカルで圧縮するミドルウェア(ライブラリ/プロキシ/MCPサーバーの3形態で導入可能)。JSONはSmartCrusher、ソースコードはAST対応のCodeCompressor、自然文はHugging Face上のKompress-v2-baseモデルで圧縮し、元データはローカルにキャッシュして必要時に取り出せる「可逆圧縮」が特徴(Apache-2.0)。
+- 日本語記事件数: Zenn 0件 / Qiita 1件(2026年の紹介記事あり) / note 0件
+- 検証難易度: 低(pipインストールのみでAPIキー不要。圧縮処理自体はローカルのONNXモデルで完結しGPU不要。x86では一部機能にAVX2が前提)
+- 見栄え: ツール出力を生のまま渡した場合とHeadroom経由で圧縮した場合のトークン数をBefore/Afterで比較しやすく、本リポジトリのRoutine自体に組み込んで実測できる自己言及的ネタとしても語れる(context-mode・caveman等これまでの「コンテキスト削減」系候補の系譜)。公称の「60〜95%削減」はベンダー自身の値でJSON限定、コーディング用途では15〜20%程度との報告もあり、実測値で検証する必要がある。
+- 状態: 未選択
+
+### [2026-10-09] alibaba/open-code-review — Claude Codeより少ないトークンで高精度なレビューを主張するAlibaba発OSSコードレビューCLI
+
+- 出典: https://github.com/alibaba/open-code-review (GitHub Trending全言語 2026-10-09、+323star/日)
+- 概要: 決定的なファイル選定・バンドリング・ルールマッチングのパイプラインと、動的なコード解析を行うLLMエージェントを組み合わせたハイブリッド型AIコードレビューCLI(Go製、Apache-2.0)。社内2万人以上が利用し100万件超の欠陥を検出したと主張。200PR×10言語の内部ベンチマークでClaude Codeより高いPrecision/F1をおよそ1/9のトークン数で達成したと報告(Alibaba自身の計測で第三者検証ではない)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出。英語のDEV Community記事やInfoQ記事は複数あり)
+- 検証難易度: 低(Apache-2.0。npm一発導入。通常のLLM接続には自前のAPIキー設定が必要だが、「Delegation Mode」を使えばClaude Code等既存のコーディングエージェント自身にレビューさせる方式で追加の有料APIキーは不要。GPU不要)
+- 見栄え: 同じPull RequestをClaude Codeの通常レビューとopen-code-review(Delegation Mode)の両方にかけ、指摘内容・トークン消費量をBefore/After比較できる。Alibaba自身の「1/9のトークンで高精度」という主張を自分の環境で検証できる切り口は技術者向けに刺さりやすい。
+- 状態: 未選択
+
+### [2026-10-09] video-shotcraft — Claude Code/Codex向けの「映画的プロダクト動画」自動生成agent skill(Remotion土台)
+
+- 出典: https://github.com/Vincentwei1021/video-shotcraft (GitHub Trending TypeScript 2026-10-09、+161star/日)
+- 概要: Remotion(Reactベースの動画生成フレームワーク)を土台に、152枚のショットレシピカード・209本のモーションプレビュー・すぐ使える36.2秒のプロモ用テンプレート「Ink Press」を備えたClaude Code/Codex向けagent skill(Apache-2.0。Remotion自体は個人・小規模チームは無料だが企業利用は別途ライセンス契約が必要な場合がある)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(中国語記事・英語ブログでの紹介はあるが日本語での一次紹介は未検出)
+- 検証難易度: 低(Claude Code自身にスキルとして追加するだけで追加の有料APIキー不要、GPUも不要。ヘッドレスLinuxでのレンダリングには`--concurrency=1`指定・ヘッドレスChromeの差し替え・`--browser-executable`指定が必要と報告されており、day-009(OpenMontage)で遭遇したRemotionレンダリングの詰まりどころと共通する点がある)
+- 見栄え: テンプレート「Ink Press」をレンダリングし、実際に生成された短いプロモ動画そのものをデモにできる。day-009の知見(Remotionのheadless環境での詰まりどころ)を活かした「今回はどこで詰まったか/詰まらなかったか」という比較記事にしやすい。
+- 状態: 未選択
+
+### [2026-10-09] Tencent Hunyuan「Hy-MT2」— 33言語対応・1.8B/7B/30B-A3Bの3サイズを持つ高速多言語翻訳モデル
+
+- 出典: https://github.com/Tencent-Hunyuan/Hy-MT2 (GitHub Trending全言語 2026-10-09、+147star/日)
+- 概要: Tencent Hunyuanが公開した多言語翻訳特化モデル群(1.8B/7B/30B-A3B MoEの3サイズ、33言語対応)。自然言語の翻訳指示への追従力を測るベンチマークIFMTBenchも同時公開。公表値では7B/30B-A3Bが高速思考モードでDeepSeek-V4-Pro等を上回り、1.8Bも大手商用翻訳APIを上回ると主張(Apache-2.0)。
+- 日本語記事件数: Zenn 1件(kun432氏のスクラップでREADMEベースの概要紹介のみ、詳細な検証はまだ無い) / Qiita 0件 / note 0件
+- 検証難易度: 低(APIキー不要。1.8Bモデルはtransformersでのロード、またはllama.cppのGGUF(CPU実行、`-ngl 0`)でGPU無しでも動作可能。30B-A3Bはvllm/SGLang推奨でGPU前提だが、1.8B/7Bに絞れば6時間以内にCPUのみでの検証も狙える)
+- 見栄え: 既存の無料翻訳(DeepL無料枠等)とHy-MT2(1.8B)の翻訳品質・指示追従力(「です/ます調で」等のスタイル指定付き翻訳)をBefore/After比較しやすい。1.25bit量子化版(440MB)は個人検証で読み込みに失敗したとの報告もあり、「軽量化の限界」という切り口も語れる。
+- 状態: 未選択
