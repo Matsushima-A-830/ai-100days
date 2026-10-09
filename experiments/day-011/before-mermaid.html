@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ai-100days の1日の流れ · Mermaid（Before）</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script>
+<style>
+  body { font-family: sans-serif; background: #ffffff; padding: 2rem; }
+  h1 { font-size: 1.1rem; margin-bottom: 1rem; }
+</style>
+</head>
+<body>
+<h1>ai-100days の1日の流れ（Mermaid flowchart, デフォルトテーマ）</h1>
+<pre class="mermaid">
+flowchart LR
+  subgraph RESEARCH["朝 (リサーチRoutine)"]
+    A1[Scan sources]
+    A2[Open PR: backlog.md]
+    A1 --> A2
+  end
+  subgraph COMMUTE["通勤中 (人間)"]
+    B1[Merge PR: today.md更新]
+  end
+  subgraph IMPL["昼 (実装Routine)"]
+    C1[Verify locally: experiments/day-NNN]
+    C2[Open PR: articles + posts]
+    C1 --> C2
+  end
+  subgraph EVENING["夜 (人間)"]
+    D1[Review: GitHub PR]
+    D2[Publish and sync: Zenn/X/Obsidian]
+    D1 --> D2
+  end
+  A2 -->|PR merged| B1
+  B1 -.->|if set| C1
+  C2 -->|review gate| D1
+</pre>
+<script>
+  mermaid.initialize({ startOnLoad: true });
+</script>
+</body>
+</html>
