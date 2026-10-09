@@ -79,6 +79,33 @@ plugin機構もコード実行もできない制約下でも、指示書を読�
 一方で、今回は公式のplugin経由のインストール・起動そのものは検証できておらず、オンボーディング時のスタイルガイド対話(SKILL.md §0で説明されている、初回利用時に配色をカスタマイズするか聞かれるフロー)や自動チェックスクリプトの実行結果は未確認のままである。
 この制約は検証の限界として正直に書いておく。
 
+## 追記: 公式インストールと自動チェックを、後日ローカルPCで実際に試した
+
+クラウド実行環境でブロックされていた公式インストールを、後日ローカルPC(サンドボックス外)で試した。
+
+```
+$ claude plugin marketplace add cathrynlavery/diagram-design
+✔ Successfully added marketplace: diagram-design (declared in user settings)
+
+$ claude plugin install diagram-design@diagram-design
+✔ Successfully installed plugin: diagram-design@diagram-design (scope: user)
+```
+
+どちらもあっさり成功した。インストールされたプラグインには同梱の`self_check.py`も含まれていたので、本検証で作った2つのファイルに対して実際に実行してみた。
+
+```
+OK after-diagram-design.html
+FAIL before-mermaid.html
+  - remote reference on <script>: https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js
+  - diagram file needs at least one accessible (non-aria-hidden) SVG
+  - at most one script is allowed; found 2
+  ...
+```
+
+**手動でSKILL.mdを適用して作った成果物が、公式の自動チェックにも実際に合格した。** 手で1項目ずつ確認したPre-Output Checklistの結果と、ツールによる自動判定がちゃんと一致したことになる。比較用のMermaid版は想定通りFAILで、単一ファイル完結の要件を満たしていないことが機械的にも裏付けられた。
+
+さらに面白かったのは、本編で見つけた「同梱サンプルの不整合(`overflow-x: auto`ラッパー未対応)」を、同じ`self_check.py`で改めて確認したところ**OK判定**になったことだ。つまりこの不整合は、人間やエージェントが目視で確認する前提のチェックリスト(SKILL.md §9)にしか書かれておらず、自動スクリプトの検査項目には含まれていなかった。「自動チェックを通る=完全に正しい」わけではなく、人間向けのチェックリストと自動チェックには互いにカバーしきれていない領域がある、ということが実際に両方動かして初めてわかった。
+
 ## 参考
 
 - リポジトリ: https://github.com/cathrynlavery/diagram-design

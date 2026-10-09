@@ -202,7 +202,12 @@ Reason: [Untrusted Code Integration]</pre>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>plugin経由の公式インストール・起動と、同梱の自動チェックスクリプト(self_check.py等)は今回の環境では実行できず未検証。チェックリストは目視・座標計算で代替確認した。</p>
+    <p>plugin経由の公式インストール・起動と、同梱の自動チェックスクリプト(self_check.py等)は、クラウドRoutine環境では実行できず未検証だった。チェックリストは目視・座標計算で代替確認した。</p>
+  </div>
+
+  <div class="caveat">
+    <span class="mark">追記</span>
+    <p>後日ローカルPCで公式インストール・self_check.pyを実際に実行。手動適用した成果物はOK判定、比較用Mermaid版は想定通りFAIL。本編で見つけた同梱サンプルの不整合は、self_check.pyでは検出されない(OK判定)ことも判明した。</p>
   </div>
 
   <footer>
