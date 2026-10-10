@@ -20,6 +20,42 @@
 
 (ここに候補が積まれていきます)
 
+### [2026-10-10] anthropics/knowledge-work-plugins — Anthropic公式、Claude Cowork/Code向け職種別プラグイン集
+
+- 出典: https://github.com/anthropics/knowledge-work-plugins (本日GitHub Trending Python/全言語で+626star/日)
+- 概要: Anthropic自身が公開した、Claude Cowork(および Claude Code)向けの職種特化プラグイン集(Apache-2.0)。productivity/sales/customer-support/product-management/marketing/legal/finance/data/enterprise-search/bio-research/cowork-plugin-managementの11種を収録し、各プラグインはskills・MCP連携(`.mcp.json`)・slashコマンド・サブエージェントをMarkdown/JSONのみで構成する(コード・ビルド不要)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語での一次検証記事は未検出。英語解説記事〈the-decoder.com等〉は複数あり)
+- 検証難易度: 低(Apache-2.0。`claude plugin marketplace add anthropics/knowledge-work-plugins`→`claude plugin install <plugin>@knowledge-work-plugins`でClaude Code側から追加の有料APIキー無しで導入可能。外部ツール〈Slack/Notion/HubSpot等〉と連携するMCPは`.mcp.json`経由だが、未設定でも各skillやslashコマンド単体の動作は確認できる見込み。GPU不要)
+- 見栄え: 「productivityプラグイン導入前後でClaude Codeの職務特化タスク〈議事録整理・スプレッドシート作成等〉への応答がどう変わるか」のBefore/After比較が作りやすい。Anthropic公式発というニュース価値も高い。
+- 状態: 未選択
+
+### [2026-10-10] ppt-master — ドキュメント/トピックからネイティブ編集可能なPowerPointを生成するAIエージェント向けスキル
+
+- 出典: https://github.com/hugohe3/ppt-master (本日GitHub Trending Pythonで+515star/日)
+- 概要: Claude Code/Cursor/Codex CLI等のエージェントに組み込み、文書やトピックからスライド画像ではなくネイティブな図形・グラフ・表を持つ編集可能な`.pptx`を生成するワークフロー(MIT。オプションのPDF変換機能はAGPL-3.0のPyMuPDFに依存)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(open-design.ai等に日本語の紹介記事はあるが著者自身による検証記事ではない)
+- 検証難易度: 低(Python 3.10+とrequirements.txtの導入のみ。画像生成はエージェント自身の画像ツールかOpenverse/Wikimedia経由の無料Web画像検索で代替でき、有料の`*_API_KEY`〈gpt-image-2等〉無しでも検証可能。モデルはClaude Code自身を使えば追加キー不要。GPU不要)
+- 見栄え: 実際に生成された`.pptx`(ネイティブなグラフ・表入り)をスクリーンショットで見せられ、「スライド画像ではなく編集可能なオブジェクトとして生成される」という差別化ポイントを実物で示せる。短期間で38k star超という伸びの速さにも触れる価値あり。
+- 状態: 未選択
+
+### [2026-10-10] REMORY — 要約だけでは拾えない情報を補う「残差メモリ」でLLMエージェントのコンテキスト圧縮を改善(論文)
+
+- 出典: https://arxiv.org/abs/2610.11287 (Hugging Face Daily Papers、コード: https://github.com/1ring2rta/Remory)
+- 概要: 長期稼働エージェントの履歴をテキスト要約だけに圧縮すると、要約が拾いきれない情報が後続の判断を損なうという問題に対し、履歴と要約を条件に少数の「ソフトメモリトークン」を要約の後ろに追加生成し、フルコンテキストでの応答に近づける手法(残差接続のアナロジー)。SummHayで入力位置の5.2%のみでフルコンテキスト相当のスコアに近づき、Qwen3.8-27B/GLM-5.3-FlashでBrowseComp・Terminal-Bench 2.1のツール呼び出し重複/エラーを削減したと報告。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 中(コード公開済み〈github.com/1ring2rta/Remory〉、Hugging Faceに学習済み重み〈Qwen3.8-27B/GLM-5.3-Flash向け〉もあるが、いずれも大型モデルでGPU前提の可能性が高い。本リポジトリの方針に沿うなら、フル再現ではなく「要約のみ」vs「要約+残差メモリ」の設計思想を小規模な自作ログ・軽量モデルで疑似再現する縮小版の概念実証に絞る必要がある)
+- 見栄え: Hindsight・Mem++・MemAdapter・Headroom等、本チャレンジで既に扱ってきた「エージェントメモリ/コンテキスト圧縮」シリーズの最新作として位置づけられ、Before/Afterのトークン削減率・精度比較グラフが作りやすい。ただし同テーマが頻出しているため、採用する場合は差別化(「要約の欠落をどう補うか」という新しい切り口)を明記した方がよい。
+- 状態: 未選択
+
+### [2026-10-10] andrej-karpathy-skills — Karpathyの指摘するLLMコーディングの落とし穴に対処する単一CLAUDE.mdファイル
+
+- 出典: https://github.com/forrestchang/andrej-karpathy-skills (ミラー: https://github.com/multica-ai/andrej-karpathy-skills。本日GitHub Trending〈multica-ai版〉で+279star/日、本家forrestchang版は218.2k star・22.0k fork)
+- 概要: Andrej Karpathyが公言したLLMコーディングの落とし穴(未検証の前提を置く・過剰な抽象化等)に対処するため、「コーディング前に考える」「シンプルさ優先」「外科的な変更のみ」「ゴール駆動の実行」という4原則をまとめた単一のCLAUDE.mdファイル(MIT)。Claude Codeプラグインとしての導入、または既存CLAUDE.mdへの追記のどちらでも使える。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出。英語・ドイツ語・中国語の紹介記事は複数あり)
+- 検証難易度: 低(MIT。ファイル1つをプロジェクトに追記するだけで追加の有料APIキー・GPU不要。導入前後で同じ曖昧なタスクをClaude Codeに与え、応答〈前提確認の有無・変更範囲の広さ等〉がどう変わるかを比較するだけで6時間以内に完結する)
+- 見栄え: 「CLAUDE.mdを1つ追加するだけでClaude Codeの振る舞いがどう変わるか」というBefore/After比較は分かりやすく、本リポジトリ自身がClaude Code Routineで運用されているという自己言及的な文脈にも合う。注意: multica-ai版は本家forrestchang版のミラー/派生と見られ、READMEのインストールコマンドもforrestchang側を指すため、検証はforrestchang/andrej-karpathy-skills(本家)で行うこと。
+- 状態: 未選択
+
 ### [2026-09-28] Shorthand for Thought — エントロピー誘導supertokenでLLMの思考トークンを平均8.1%圧縮(COLM 2026採択)
 
 - 出典: https://arxiv.org/abs/2604.26355 (コード: https://github.com/Writer/shorthand-for-thought)
