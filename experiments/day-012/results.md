@@ -58,9 +58,14 @@ README.mdの「Headless / CI notes」は3つの既知の壁を挙げている。
 
 3番目の「遭遇せず」は偶然ではなく、設計の違いに起因することをソースコードで確認した。
 OpenMontageのコンポジションは`@remotion/google-fonts`等で外部フォントを都度取得していたのに対し、
-video-shotcraftの`template/src/`では`fontFamily`に`SERIF` / `SANS` / `MONO`という
-システムフォントの総称(generic family)しか使っておらず(`grep -rn fontFamily template/src`で確認)、
-レンダリング時に外部ネットワークへフォントを取りに行かない。**「同じRemotion・同じheadless環境」でも、
+video-shotcraftの`template/src/`では`fontFamily`に`SERIF` / `SANS` / `MONO`という定数しか使っておらず
+(`grep -rn fontFamily template/src`で確認)、その中身は`ui-serif, Georgia, "Times New Roman", serif`や
+`ui-monospace, SFMono-Regular, Menlo, monospace`のような**システムフォントのフォールバックスタック**
+(具体的なフォント名と総称の並び)だった。`@font-face` / Google Fonts / `loadFont`の使用は0件で、
+レンダリング時に外部ネットワークへフォントを取りに行かない。
+(当初この節は「総称(generic family)しか使っていない」と書いていたが、手元での再現確認(8節)で
+`Georgia`などの具体名を含むスタックだと分かり訂正した。外部取得しないという結論は変わらない。)
+**「同じRemotion・同じheadless環境」でも、
 コンポジション側が外部リソースに依存するかどうかで詰まりどころが変わる**、というのが今回の実測から得られた知見。
 
 `--browser-executable`で指定した実行ファイル:
@@ -122,7 +127,8 @@ real	3m28.997s
 ```
 
 `ffprobe`で検証: `h264 1920x1080` + `aac`、`duration=36.224000`秒(scale=0.5版と1フレームも
-違わず完全に一致。Remotionのレンダリングが決定論的であることの傍証)、サイズ20,264,136 bytes。
+違わず一致。同一環境内でレンダリング結果の尺が安定していることの傍証。ただし環境をまたいだ
+再現性までは保証しない。8節参照)、サイズ20,264,136 bytes。
 レンダリング実時間はscale=0.5版の約2.2倍(1m35s→3m29s)で、ピクセル数が4倍になった割には
 増加が緩やかだった(ブラウザ起動やバンドルなど解像度に依存しない固定コストの割合が大きいため
 と考えられる)。
@@ -190,6 +196,35 @@ $ cd video-shotcraft && npm install && npx vitest run
 - SFX素材: Mixkit Sound Effects Free License(リポジトリ同梱の`assets/audio/ATTRIBUTION.md`に
   逐ファイルの出典URLが記録されている。一部古い音源は原URLが反査できず「商用前に要確認」と
   リポジトリ自身が明記していた)。
+
+## 8. 手元(Windows)での再現確認(2026-10-10、人間側の夜の検証)
+
+Routine(Linux・4コア)とは別環境の、Windows 11・Node v24.15.0・16論理コアで同じcommit
+`5ddbf52`をcloneし、`template/`で再現した。ffmpegは未導入のためffprobeはRemotion同梱のものを使った。
+
+| 項目 | Routineの記録 | 手元(Windows) |
+|---|---|---|
+| `npm install` | 187 packages、脆弱性7件(moderate 3 / high 4) | 185 packages、脆弱性7件(同内訳) |
+| QA静止画(frame=150) | 1.2MBのPNG | 1,219,014 bytes |
+| scale=0.5レンダリング | 1m35.8s | 1m07s(`--concurrency=1`) |
+| scale=0.5動画の尺 | 36.224秒 | 36.22秒(960x540、h264+aac、30fps) |
+| scale=0.5動画のサイズ | 8,415,916 bytes | 8,549,911 bytes |
+| カード数 / プレビュー数 | 157 / 214 | 157 / 214(`references/shots`のmd 158件 − ATTRIBUTION 1件) |
+| vitest | 23 passed | 23 passed |
+
+フル解像度(1080p)版の再レンダリングはしていない。
+
+分かったこと:
+
+- **壁#2(Chrome自動ダウンロードのブロック)は手元では出なかった。** `--browser-executable`を
+  指定せずにstill/renderが通った。この壁はRoutine実行環境のネットワーク制限に由来するもので、
+  video-shotcraft側の問題ではない。
+- **見出し文字の幅が環境で変わる。** 同じframe=150でも、見出し "One card," の右端が
+  Linux版で約540px、Windows版で約615pxだった。`ui-serif, Georgia, ...`スタックが
+  OSごとに別のフォントに解決されるため。ファイルサイズも上表のとおり一致しない。
+  動画の尺・フレーム数は一致するが、見た目まで環境非依存とは言えない。
+- 見出しと背景のぼかしカードの文字が重なって見えるのは、Linux版・Windows版の両方で同じで、
+  環境差ではなくテンプレートのデザイン上の挙動。
 
 ## まとめ
 
