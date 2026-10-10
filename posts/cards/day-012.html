@@ -164,7 +164,7 @@
 
   <div class="stat-row">
     <div class="stat-number">36.2s</div>
-    <div class="stat-caption">scale=0.5版・フル1920×1080版の<strong>両方</strong>で実測した尺。公式スペック「36.2秒」と1フレームも違わず一致。</div>
+    <div class="stat-caption">scale=0.5版・フル1920×1080版の<strong>両方</strong>で実測した尺。公式スペック「36.2秒」と一致。</div>
   </div>
 
   <section class="block compare">
@@ -178,7 +178,7 @@
       </div>
       <div class="compare-panel good">
         <div class="compare-title">✓ day-012: video-shotcraft</div>
-        <pre class="compare-output">fontFamily: SERIF/SANS/MONO のみ
+        <pre class="compare-output">fontFamily: システムフォントのスタックのみ
 (grep -rn fontFamily template/src で確認)
 外部フォント取得なし → 証明書エラーなし</pre>
       </div>
@@ -186,7 +186,7 @@
   </section>
 
   <section class="block">
-    <div class="block-label">3つの既知の壁 × 実際の遭遇結果</div>
+    <div class="block-label">day-009で扱った既知の壁 × 実際の遭遇結果</div>
     <div class="terminal">
       <div class="term-row">
         <span class="term-tag">壁1</span>
@@ -194,10 +194,6 @@
       </div>
       <div class="term-row">
         <span class="term-tag">壁2</span>
-        <span class="toks">remotion.mediaへのChrome自動DLが403 → 遭遇(day-009と同じ)。--browser-executableで回避</span>
-      </div>
-      <div class="term-row">
-        <span class="term-tag">壁3</span>
         <span class="toks">外部フォントのTLS証明書エラー → 遭遇せず(上記パネル参照)</span>
       </div>
       <div class="term-foot">同じRemotion・同じheadless環境でも、動画側の実装次第で詰まりどころが変わると実測で確認した。</div>
