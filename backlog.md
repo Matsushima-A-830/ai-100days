@@ -27,7 +27,7 @@
 - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語での一次検証記事は未検出。英語解説記事〈the-decoder.com等〉は複数あり)
 - 検証難易度: 低(Apache-2.0。`claude plugin marketplace add anthropics/knowledge-work-plugins`→`claude plugin install <plugin>@knowledge-work-plugins`でClaude Code側から追加の有料APIキー無しで導入可能。外部ツール〈Slack/Notion/HubSpot等〉と連携するMCPは`.mcp.json`経由だが、未設定でも各skillやslashコマンド単体の動作は確認できる見込み。GPU不要)
 - 見栄え: 「productivityプラグイン導入前後でClaude Codeの職務特化タスク〈議事録整理・スプレッドシート作成等〉への応答がどう変わるか」のBefore/After比較が作りやすい。Anthropic公式発というニュース価値も高い。
-- 状態: 未選択
+- 状態: 採用済み(day-013)
 
 ### [2026-10-10] ppt-master — ドキュメント/トピックからネイティブ編集可能なPowerPointを生成するAIエージェント向けスキル
 
