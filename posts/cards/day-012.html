@@ -1,0 +1,242 @@
+<meta charset="utf-8">
+<title>Day 012 — video-shotcraft</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+JP:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg: #eff2f6;
+    --surface: #ffffff;
+    --ink: #14181f;
+    --ink-muted: #5b6472;
+    --ink-faint: #8792a2;
+    --border: #dde2e8;
+    --accent: #d15a25;
+    --series-a: #eb6834;
+    --series-b: #2a78d6;
+    --good: #0a7a3d;
+    --good-bg: rgba(10, 122, 61, 0.08);
+    --good-border: #0a7a3d;
+    --bad: #b3261e;
+    --bad-bg: rgba(179, 38, 30, 0.08);
+    --bad-border: #b3261e;
+    --terminal-bg: #12151c;
+    --terminal-ink: #e7ebf1;
+    --terminal-border: #2a3140;
+    --terminal-base: #7c8494;
+    --grid-line: #e3e7ec;
+    --tick-off: #d9dee5;
+    --shadow: 0 1px 2px rgba(20, 24, 31, 0.04), 0 12px 32px -16px rgba(20, 24, 31, 0.18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1218; --surface: #161b24; --ink: #e8ebf0; --ink-muted: #97a1b2;
+      --ink-faint: #626d80; --border: #262e3b; --accent: #e2793f;
+      --series-a: #e2793f; --series-b: #4f93ea;
+      --good: #4cc283; --good-bg: rgba(76, 194, 131, 0.12); --good-border: #4cc283;
+      --bad: #ef6a63; --bad-bg: rgba(239, 106, 99, 0.12); --bad-border: #ef6a63;
+      --terminal-bg: #090b10; --terminal-ink: #dde3ec; --terminal-border: #262e3b;
+      --terminal-base: #6b7484; --grid-line: #232a35; --tick-off: #262e3b;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 20px 40px -20px rgba(0, 0, 0, 0.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1218; --surface: #161b24; --ink: #e8ebf0; --ink-muted: #97a1b2;
+    --ink-faint: #626d80; --border: #262e3b; --accent: #e2793f;
+    --series-a: #e2793f; --series-b: #4f93ea;
+    --good: #4cc283; --good-bg: rgba(76, 194, 131, 0.12); --good-border: #4cc283;
+    --bad: #ef6a63; --bad-bg: rgba(239, 106, 99, 0.12); --bad-border: #ef6a63;
+    --terminal-bg: #090b10; --terminal-ink: #dde3ec; --terminal-border: #262e3b;
+    --terminal-base: #6b7484; --grid-line: #232a35; --tick-off: #262e3b;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 20px 40px -20px rgba(0, 0, 0, 0.6);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--ink); margin: 0;
+    font-family: "IBM Plex Sans JP", "IBM Plex Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+    padding: 40px 20px 56px; display: flex; justify-content: center;
+  }
+  .card {
+    width: 100%; max-width: 660px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow);
+    padding: 36px 40px 32px; display: flex; flex-direction: column; gap: 26px;
+  }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace; font-size: 12.5px; color: var(--ink-faint);
+    letter-spacing: 0.02em; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  }
+  .eyebrow .path { color: var(--accent); }
+  .eyebrow .divider { color: var(--border); }
+
+  .heading h1 {
+    font-family: "Fraunces", serif; font-weight: 500; font-size: 28px; line-height: 1.24;
+    letter-spacing: -0.01em; margin: 0 0 8px; text-wrap: balance; color: var(--ink);
+  }
+  .heading p { margin: 0; font-size: 14.5px; line-height: 1.7; color: var(--ink-muted); max-width: 54ch; }
+  .heading p .src { color: var(--ink); font-weight: 500; }
+
+  .stat-row {
+    display: flex; align-items: flex-end; gap: 22px; padding: 18px 22px;
+    background: linear-gradient(180deg, rgba(235,104,52,0.07), rgba(235,104,52,0));
+    border: 1px solid var(--border); border-radius: 10px;
+  }
+  .stat-number {
+    font-family: "Fraunces", serif; font-weight: 600; font-size: 56px; line-height: 0.9;
+    color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .stat-caption { font-size: 13.5px; line-height: 1.6; color: var(--ink-muted); padding-bottom: 4px; }
+  .stat-caption strong { color: var(--ink); font-weight: 600; }
+
+  section.block { display: flex; flex-direction: column; gap: 12px; }
+  .block-label {
+    font-family: "IBM Plex Mono", monospace; font-size: 11.5px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--ink-faint);
+  }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .compare-panel { border-radius: 10px; padding: 14px 16px; border: 1px solid; display: flex; flex-direction: column; gap: 8px; }
+  .compare-panel.bad { background: var(--bad-bg); border-color: var(--bad-border); }
+  .compare-panel.good { background: var(--good-bg); border-color: var(--good-border); }
+  .compare-title { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; font-weight: 500; }
+  .compare-panel.bad .compare-title { color: var(--bad); }
+  .compare-panel.good .compare-title { color: var(--good); }
+  .compare-output {
+    margin: 0; font-family: "IBM Plex Mono", monospace; font-size: 11px; line-height: 1.6;
+    color: var(--ink-muted); white-space: pre-wrap; word-break: break-word;
+  }
+
+  .terminal {
+    background: var(--terminal-bg); border: 1px solid var(--terminal-border); border-radius: 10px;
+    padding: 16px 18px 14px; font-family: "IBM Plex Mono", monospace; font-size: 12.5px;
+    color: var(--terminal-ink); display: flex; flex-direction: column; gap: 10px;
+  }
+  .term-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .term-tag { font-size: 10.5px; color: var(--terminal-base); letter-spacing: 0.06em; width: 52px; flex: none; }
+  .toks { display: flex; flex-wrap: wrap; gap: 4px; }
+  .term-foot { font-size: 11px; color: var(--terminal-base); border-top: 1px solid var(--terminal-border); padding-top: 9px; }
+  .term-foot b { color: var(--terminal-ink); font-weight: 500; }
+
+  .caveat {
+    display: flex; gap: 10px; padding: 12px 14px; border: 1px dashed var(--border);
+    border-radius: 8px; background: var(--bg);
+  }
+  .caveat .mark { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-faint); flex: none; }
+  .caveat p { margin: 0; font-size: 12.5px; line-height: 1.65; color: var(--ink-muted); }
+
+  footer {
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 16px;
+    border-top: 1px solid var(--border); padding-top: 18px;
+  }
+  .sources { display: flex; flex-direction: column; gap: 5px; }
+  .sources a { font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: var(--ink-muted); text-decoration: none; border-bottom: 1px solid transparent; }
+  .sources a:hover { color: var(--accent); border-color: var(--accent); }
+  .progress { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex: none; }
+  .progress .num { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-faint); letter-spacing: 0.03em; }
+  .progress .num b { color: var(--ink); font-weight: 500; }
+  .grid100 { display: grid; grid-template-columns: repeat(20, 5px); grid-auto-rows: 5px; gap: 2px; }
+  .grid100 i { background: var(--tick-off); border-radius: 1px; display: block; }
+  .grid100 i.on { background: var(--accent); }
+
+  @media (max-width: 480px) {
+    .card { padding: 26px 20px 24px; gap: 20px; }
+    .stat-number { font-size: 46px; }
+    .compare-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; align-items: flex-start; }
+    .progress { align-items: flex-start; }
+  }
+</style>
+
+<div class="card" id="card">
+
+  <div class="eyebrow">
+    <span>$ day-012</span>
+    <span class="divider">/</span>
+    <span class="path">--topic video-shotcraft-ink-press</span>
+    <span class="divider">/</span>
+    <span>海外AIネタ100日チャレンジ</span>
+  </div>
+
+  <div class="heading">
+    <h1>GitHubトレンドの動画生成skillを<br>実際にレンダリングしてみた</h1>
+    <p><span class="src">video-shotcraft</span>(Apache-2.0)の同梱テンプレート「Ink Press」を、有料APIキー・GPUなしで最後までレンダリング。day-009(OpenMontage)と同じRemotion土台で、詰まりどころを比較した。</p>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-number">36.2s</div>
+    <div class="stat-caption">scale=0.5版・フル1920×1080版の<strong>両方</strong>で実測した尺。公式スペック「36.2秒」と1フレームも違わず一致。</div>
+  </div>
+
+  <section class="block compare">
+    <div class="block-label">headlessレンダリングの詰まりどころ(day-009 vs day-012)</div>
+    <div class="compare-grid">
+      <div class="compare-panel bad">
+        <div class="compare-title">✗ day-009: OpenMontage</div>
+        <pre class="compare-output">外部フォントを都度取得
+→ net::ERR_CERT_AUTHORITY_INVALID
+--ignore-certificate-errors が必須だった</pre>
+      </div>
+      <div class="compare-panel good">
+        <div class="compare-title">✓ day-012: video-shotcraft</div>
+        <pre class="compare-output">fontFamily: SERIF/SANS/MONO のみ
+(grep -rn fontFamily template/src で確認)
+外部フォント取得なし → 証明書エラーなし</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-label">3つの既知の壁 × 実際の遭遇結果</div>
+    <div class="terminal">
+      <div class="term-row">
+        <span class="term-tag">壁1</span>
+        <span class="toks">低コア機の--concurrency上限 → 遭遇せず(4コア、--concurrency=1指定のみ)</span>
+      </div>
+      <div class="term-row">
+        <span class="term-tag">壁2</span>
+        <span class="toks">remotion.mediaへのChrome自動DLが403 → 遭遇(day-009と同じ)。--browser-executableで回避</span>
+      </div>
+      <div class="term-row">
+        <span class="term-tag">壁3</span>
+        <span class="toks">外部フォントのTLS証明書エラー → 遭遇せず(上記パネル参照)</span>
+      </div>
+      <div class="term-foot">同じRemotion・同じheadless環境でも、動画側の実装次第で詰まりどころが変わると実測で確認した。</div>
+    </div>
+  </section>
+
+  <div class="caveat">
+    <span class="mark">⚠</span>
+    <p>紹介文の「152カード/209プレビュー」はREADME記載の2026-08時点の旧マイルストーン値。実際にcloneしたcommit(5ddbf52)では157カード/214プレビューで、library.jsonの統計値とも完全一致した。紹介文の不正確さではなく、数日間のリポジトリ更新によるズレだった。</p>
+  </div>
+
+  <div class="caveat">
+    <span class="mark">⚠</span>
+    <p>フル解像度版(1920×1080, 20.3MB)も実際にレンダリングし尺・ffprobe出力を確認したが、リポジトリ容量の都合でscale=0.5版(960×540, 8.4MB)のみをコミットしている。</p>
+  </div>
+
+  <footer>
+    <div class="sources">
+      <a href="https://github.com/Vincentwei1021/video-shotcraft" target="_blank" rel="noopener">→ github.com/Vincentwei1021/video-shotcraft</a>
+      <a href="https://github.com/calesthio/OpenMontage" target="_blank" rel="noopener">→ github.com/calesthio/OpenMontage (day-009)</a>
+    </div>
+    <div class="progress">
+      <span class="num"><b>012</b> / 100 days</span>
+      <div class="grid100" id="grid100"></div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var grid = document.getElementById('grid100');
+    var frag = document.createDocumentFragment();
+    var currentDay = 12;
+    for (var i = 1; i <= 100; i++) {
+      var el = document.createElement('i');
+      if (i <= currentDay) el.className = 'on';
+      frag.appendChild(el);
+    }
+    grid.appendChild(frag);
+  })();
+</script>
