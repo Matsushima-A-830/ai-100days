@@ -2,12 +2,14 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 013
-- 選んだ候補(backlog.mdのタイトルかURL): anthropics/knowledge-work-plugins — Anthropic公式、Claude Cowork/Code向け職種別プラグイン集 — https://github.com/anthropics/knowledge-work-plugins
+- Day: 014
+- 選んだ候補(backlog.mdのタイトルかURL): TokenRouter(thu-nics) — 複数LLMをトークン単位で動的に振り分ける推論サーバー — https://github.com/thu-nics/TokenRouter
 - 補足メモ(あれば):
-  - Apache-2.0ライセンス。Anthropic自身が公開した、Claude Cowork(および Claude Code)向けの職種特化プラグイン集。productivity/sales/customer-support/product-management/marketing/legal/finance/data/enterprise-search/bio-research/cowork-plugin-managementの11種を収録。各プラグインはskills・MCP連携(`.mcp.json`)・slashコマンド・サブエージェントをMarkdown/JSONのみで構成しており、コード・ビルドは不要。
-  - 導入は`claude plugin marketplace add anthropics/knowledge-work-plugins`→`claude plugin install <plugin>@knowledge-work-plugins`。追加の有料APIキー不要、GPUも不要。外部ツール(Slack/Notion/HubSpot等)と連携するMCPは`.mcp.json`経由だが、未設定でも各skill・slashコマンド単体の動作検証は可能(そちらに絞って検証する)。
-  - 検証の軸: productivityプラグイン(または外部連携が要らない別プラグイン)を実際に導入し、`/productivity:...`等のslashコマンドやskillの自動発火を試す。導入前後で同じ職務特化タスク(議事録整理・スプレッドシート作成・要件のまとめ等)への応答がどう変わるかをBefore/Afterで比較する。
-  - 日本語記事は確認した範囲でZenn/Qiita/note共に0件(2026-10-10時点、backlog.md参照)。Anthropic公式発というニュース価値も高い。
+  - 複数のLLM(小型モデルと大型モデルなど)をトークン単位で動的に振り分けながら配信するサービングシステム。`route()`/`send()`/`receive()`の3インターフェースでルーティング手法(R2R・CITER・Co-LLM等)を定義でき、遅延バッチングスケジューラにより既存スタック比2.01〜64.15倍のデコードスループットを報告。NeurIPS 2026採択。Hugging Face Daily Papers(2026-10-09)掲載。
+  - **ライセンス表記をリポジトリ上で確認できていない。** 検証開始前に必ずLICENSEファイルの有無・内容を確認し、不明なまま記事化・コード転載をしないこと。
+  - **GPU要否に注意。** サンプル構成は最小でもQwen3-32Bを含み、CUDA MPSが前提で、公式のreadmeではGPUが実質必須に見える。まずRoutineのクラウド実行環境にCUDA GPUがあるか確認し、無ければ小型モデル同士(例: 0.6B+1.7B程度)の最小構成で動くかを試す。それでも動かない場合は「ツール自体がGPU前提」という検証に直接関係する制約なのか、「Routine環境固有(GPUが無い)」の制約なのか区別し、後者であればCLAUDE.mdの手順に従いPR冒頭に「ローカル検証が必要」と明記して再現手順を添え、人間にエスカレーションする(推測で埋めたり安易に「失敗」と書かない)。
+  - APIキーは不要(モデルはYAML設定でローカル指定)。
+  - 検証の軸: ルーティングあり/なしでのデコードスループット(トークン/秒)比較。可能なら複数のルーティング手法(R2R等)の違いも併せて見る。
+  - 日本語記事は確認した範囲でZenn/Qiita/note共に0件(2026-10-11時点、backlog.md参照 ※backlog.mdへの追記はPR #51で対応中)。
 
 状態: 設定済み
