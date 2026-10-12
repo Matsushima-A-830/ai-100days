@@ -1,7 +1,9 @@
 # Day 014 — TokenRouter(thu-nics) 検証結果
 
 **結論: Routine実行環境の制約(CUDA GPUが存在しない)およびライセンス表記の不備により、
-実際のルーティング/スループット検証には進めなかった。ローカル検証待ち。**
+実際のルーティング/スループット検証には進めなかった。人間がローカルPC(RTX 5060 Ti, 16GB)で
+検証した結果、ライセンス不備は再確認、GPU面では新たに「ハードウェア世代の非対応」という
+別種のブロッカーが判明した(詳細は末尾の追記セクション)。**
 
 出典: https://github.com/thu-nics/TokenRouter (Hugging Face Daily Papers 2026-10-09掲載)
 
@@ -93,3 +95,86 @@ Routine環境の制約なのかツール自体の性質なのかを断定せず�
 現時点では記事・X投稿案・note原稿・シェアカードは作成していない(実際に動かしていないものを
 「動いた」として書かないため)。ローカル検証の結果が出た段階で、本ディレクトリに結果を追記し、
 記事等を作成する。
+
+## 4. 追記(2026-10-12、人間のローカルPCでの検証結果)
+
+### 4-1. ライセンス: GitHub自身の自動検出でも「不明」を再確認
+
+GitHub REST APIの `license` フィールドを直接確認した。
+
+```
+$ gh api repos/thu-nics/TokenRouter | jq .license
+null
+```
+
+GitHub自身のライセンス自動検出機構(有名なLICENSEファイルパターンやSPDX識別子を認識する仕組み)でも
+`null`(未検出)という結果だった。`pyproject.toml`のclassifierにApacheの記載がある以外、確定的な
+ライセンス表記はリポジトリ内に存在しないことを、Routineとは独立した経路で再確認した形になる。
+**→ ライセンスは依然として未確定。著者への確認を推奨する状態に変わりはない。**
+
+### 4-2. GPU: 「GPUが無い」から「GPUの世代が新しすぎて対応していない」に問題が変わった
+
+ローカルPC(NVIDIA GeForce RTX 5060 Ti, 16GB VRAM, Blackwell世代 / Compute Capability sm_120、
+Driver 591.86)で、実際に環境構築とサーバー起動を試みた。
+
+```bash
+git clone https://github.com/thu-nics/TokenRouter
+cd TokenRouter
+python3 -m venv .venv && source .venv/bin/activate
+pip install -e .
+```
+
+`pyproject.toml`が指定する `torch==2.8.0`・`sglang==0.5.1`・`sgl-kernel==0.3.8`・
+`flashinfer-python==0.2.11.post3`・`cuda-python` を含む全依存関係のインストールは**成功した**
+(exit code 0)。torchも`torch.cuda.is_available()`でRTX 5060 Tiを正しく認識した
+(`torch-2.8.0+cu128`、`capability: (12, 0)`)。
+
+公式configが要求するQwen3-32B(tp_size=2、複数GPU)は16GB・GPU1枚のこの環境では原理的に
+不可能なため、代わりに軽量なQwen3-0.6B単体で `sglang.launch_server` を実際に起動し、
+推論サーバーとしての基本動作を確認した。
+
+```bash
+python3 -m sglang.launch_server --model-path Qwen/Qwen3-0.6B --port 30001 \
+  --mem-fraction-static 0.5 --disable-cuda-graph
+```
+
+サーバーは正常に起動し、モデルの重みも正しくGPUにロードされた。
+
+```
+[2026-10-12 11:25:04] Load weight end. type=Qwen3ForCausalLM, dtype=torch.bfloat16, avail mem=13.58 GB, mem usage=1.22 GB.
+[2026-10-12 11:25:04] KV Cache is allocated. #tokens: 57883, K size: 3.09 GB, V size: 3.09 GB
+[2026-10-12 11:25:05] INFO:     Uvicorn running on http://127.0.0.1:30001 (Press CTRL+C to quit)
+```
+
+ところが、最初の実推論リクエスト(`GET /get_model_info` 後の最初のprefillバッチ)で、
+以下のエラーが発生しサーバーがクラッシュした。
+
+```
+[2026-10-12 11:25:27] TpModelWorkerClient hit an exception: Traceback (most recent call last):
+  ...
+  File ".../sgl_kernel/elementwise.py", line 45, in rmsnorm
+    torch.ops.sgl_kernel.rmsnorm.default(out, input, weight, eps, enable_pdl)
+RuntimeError: RMSNorm failed with error code no kernel image is available for execution on the device
+```
+
+`sgl_kernel`(TokenRouterが依存する`sglang`のCUDAカーネル実装パッケージ、v0.3.8)が提供する
+`rmsnorm`カーネルの事前コンパイル済みバイナリに、RTX 50シリーズ(Blackwell、sm_120)向けの
+カーネルイメージが含まれていない、という意味のエラーである。`torch`自体はpip索引が
+`cu128`(CUDA 12.8)ビルドを提供しているためBlackwellを正しく認識できるが、`sgl-kernel`の
+バイナリ配布はそれに追いついておらず、GPUという「デバイスの有無」ではなく
+**「GPUの世代に対する、依存ライブラリ側のビルド対応状況」**という、別種のハードウェア要件の壁に
+あたったことになる。
+
+### 4-3. まとめ
+
+| 項目 | クラウドRoutine環境での結果 | ローカルPCでの結果 |
+|---|---|---|
+| ライセンス | LICENSEファイル無し、classifierのみ | GitHub自身の自動検出でも未検出(再確認) |
+| GPUデバイスの有無 | 存在しない | RTX 5060 Ti(16GB)が存在し、torchも正しく認識 |
+| 実際のサーバー起動 | 試行不可 | 起動・モデルロードまでは成功 |
+| 実推論 | 試行不可 | `sgl_kernel`がsm_120(Blackwell)向けのビルドを持たず失敗 |
+
+「GPUが無いから動かせない」という当初の制約は、ローカルPCに移しても形を変えて残っていた。
+GPU自体はあっても、TokenRouterが依存するCUDAカーネル実装ライブラリの事前ビルド済みバイナリが、
+発売されたばかりのハードウェア世代にまだ追いついていなかった、というのが正確な結論である。
+本来の検証目的だった「ルーティングあり/なしでのデコードスループット比較」には、今回も到達できなかった。
