@@ -3,7 +3,9 @@
 **結論: Routine実行環境の制約(CUDA GPUが存在しない)およびライセンス表記の不備により、
 実際のルーティング/スループット検証には進めなかった。人間がローカルPC(RTX 5060 Ti, 16GB)で
 検証した結果、ライセンス不備は再確認、GPU面では新たに「ハードウェア世代の非対応」という
-別種のブロッカーが判明した(詳細は末尾の追記セクション)。**
+別種のブロッカーが判明した。回避策として`sgl-kernel`の新しいバージョンへの差し替えも試したが、
+RMSNormカーネル自体はBlackwellで動作することを確認できた一方、`sglang==0.5.1`本体の起動は
+別のAPI不整合で失敗し、現時点では動かせなかった(詳細は末尾の追記セクション)。**
 
 出典: https://github.com/thu-nics/TokenRouter (Hugging Face Daily Papers 2026-10-09掲載)
 
@@ -178,3 +180,78 @@ RuntimeError: RMSNorm failed with error code no kernel image is available for ex
 GPU自体はあっても、TokenRouterが依存するCUDAカーネル実装ライブラリの事前ビルド済みバイナリが、
 発売されたばかりのハードウェア世代にまだ追いついていなかった、というのが正確な結論である。
 本来の検証目的だった「ルーティングあり/なしでのデコードスループット比較」には、今回も到達できなかった。
+
+## 5. 追記(2026-10-12、回避策の検証: sgl-kernelの新しいバージョンを試す)
+
+`sgl-kernel`の新しいバージョンがBlackwell(sm_120)に対応していないか、実際に試した。
+
+```
+$ pip index versions sgl-kernel
+sgl-kernel (0.3.21)
+Available versions: 0.3.21, 0.3.20, ..., 0.3.9, 0.3.8, ...
+```
+
+TokenRouterが指定する`torch==2.8.0`を変えずに、`sgl-kernel`だけを`--no-deps`で
+段階的に新しいバージョンへ差し替え、importできるか(torchとのC++ ABI互換性があるか)を
+二分探索的に確認した。
+
+| sgl-kernelバージョン | torch==2.8.0とのimport | 備考 |
+|---|---|---|
+| 0.3.8(元の指定) | OK | RMSNormでsm_120未対応エラー(上記4-2) |
+| 0.3.9 / 0.3.12 / 0.3.14 / 0.3.16 / 0.3.18 | **OK** | いずれもエラーなくimportできた |
+| 0.3.21(最新) | **NG** | `undefined symbol: _ZNK3c106SymInt22maybe_as_int_slow_pathEv`(torchのC++ ABI不一致) |
+
+0.3.21は読み込み時点で、torch側のC++クラス(`c10::SymInt`)のシンボルが見つからずimportに失敗した。
+これは`sgl-kernel`の0.3.21が、こちらの`torch==2.8.0`とは異なる(より新しい)torchバージョン向けに
+ビルドされているためと考えられる。一方、0.3.9〜0.3.18の間はimport自体は成功した。
+
+### RMSNormカーネル単体では、実際にBlackwellで動いた
+
+importできた最新版の`0.3.18`で、問題のRMSNormカーネルだけを直接呼び出して確認した。
+
+```python
+import torch
+from sgl_kernel import rmsnorm
+x = torch.randn(4, 128, device='cuda', dtype=torch.bfloat16)
+w = torch.ones(128, device='cuda', dtype=torch.bfloat16)
+out = rmsnorm(x, w, 1e-6)
+torch.cuda.synchronize()
+print('RMSNORM_KERNEL_OK', out.shape, out.dtype)
+```
+
+```
+RMSNORM_KERNEL_OK torch.Size([4, 128]) torch.bfloat16
+```
+
+`sgl_kernel`パッケージ内に`sm90`/`sm100`というアーキテクチャ別バイナリのディレクトリがあり、
+sm_120(Blackwell)のGPUには`sm100`向けバイナリが使われる仕組みになっていた。
+0.3.8の時点ではこの仕組み自体が無く(アーキテクチャ別バイナリの分割がない単一バイナリ)、
+sm_120向けのカーネルイメージが欠けていた。0.3.9〜0.3.18のどこかでこの分割が入り、
+Blackwellのカーネルイメージが追加されたと考えられる。
+**→ RMSNorm単体では、0.3.8→0.3.18への差し替えでBlackwell非対応問題が解消することを実機で確認できた。**
+
+### ただしsglang==0.5.1本体の起動では別のAPI不整合で失敗した
+
+`sgl-kernel==0.3.18`に差し替えた状態で、TokenRouterが指定する`sglang==0.5.1`の
+`sglang.launch_server`を実際に起動しようとしたところ、RMSNormとは別の箇所でエラーになった。
+
+```
+File ".../sglang/srt/layers/quantization/awq.py", line 44, in <module>
+    from sgl_kernel import (
+ImportError: cannot import name 'fused_marlin_moe' from 'sgl_kernel'
+```
+
+`sgl-kernel`側でMoE/Marlin量子化関連の関数群が0.3.8から0.3.18までの間に再構成されており
+(`fused_marlin_moe`という名前の関数がもう存在せず、`moe_wna16_marlin_gemm`など別名の
+関数群に置き換わっていた)、`sglang==0.5.1`はこのモジュールを(量子化を使う/使わないに関わらず)
+起動時に無条件でimportするため、サーバー自体が起動できなかった。
+
+Qwen3-0.6Bはbf16(量子化なし)で動かすため、この量子化コード自体は本来不要だが、
+import自体が無条件に実行される設計のため回避できなかった。
+
+**→ まとめ: `sgl-kernel`を新しいバージョンに差し替えるだけでは、TokenRouterが指定する
+`sglang==0.5.1`との組み合わせでは動かせなかった。RMSNormカーネル自体はBlackwellで
+動作することを実機で確認できたが、`sglang`側のPython APIが`sgl-kernel`の新しいバージョンの
+API変更に追従していないため、`sglang`自体のアップグレード、または`sglang`のソース側を
+パッチする(量子化モジュールのimportを回避する等)作業が追加で必要になる。
+これはTokenRouter単体の検証の範囲を超える改造であり、今回はここまでの確認にとどめた。**
