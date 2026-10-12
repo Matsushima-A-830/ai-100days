@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Day 014 — TokenRouter / sglang Blackwellパッチ</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+JP:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg: #eff2f6;
+    --surface: #ffffff;
+    --ink: #14181f;
+    --ink-muted: #5b6472;
+    --ink-faint: #8792a2;
+    --border: #dde2e8;
+    --accent: #d15a25;
+    --good: #0a7a3d;
+    --good-bg: rgba(10, 122, 61, 0.08);
+    --good-border: #0a7a3d;
+    --bad: #b3261e;
+    --bad-bg: rgba(179, 38, 30, 0.08);
+    --bad-border: #b3261e;
+    --terminal-bg: #12151c;
+    --terminal-ink: #e7ebf1;
+    --terminal-border: #2a3140;
+    --terminal-base: #7c8494;
+    --tick-off: #d9dee5;
+    --shadow: 0 1px 2px rgba(20, 24, 31, 0.04), 0 12px 32px -16px rgba(20, 24, 31, 0.18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1218; --surface: #161b24; --ink: #e8ebf0; --ink-muted: #97a1b2;
+      --ink-faint: #626d80; --border: #262e3b; --accent: #e2793f;
+      --good: #4cc283; --good-bg: rgba(76, 194, 131, 0.12); --good-border: #4cc283;
+      --bad: #ef6a63; --bad-bg: rgba(239, 106, 99, 0.12); --bad-border: #ef6a63;
+      --terminal-bg: #090b10; --terminal-ink: #dde3ec; --terminal-border: #262e3b;
+      --terminal-base: #6b7484; --tick-off: #262e3b;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 20px 40px -20px rgba(0, 0, 0, 0.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1218; --surface: #161b24; --ink: #e8ebf0; --ink-muted: #97a1b2;
+    --ink-faint: #626d80; --border: #262e3b; --accent: #e2793f;
+    --good: #4cc283; --good-bg: rgba(76, 194, 131, 0.12); --good-border: #4cc283;
+    --bad: #ef6a63; --bad-bg: rgba(239, 106, 99, 0.12); --bad-border: #ef6a63;
+    --terminal-bg: #090b10; --terminal-ink: #dde3ec; --terminal-border: #262e3b;
+    --terminal-base: #6b7484; --tick-off: #262e3b;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 20px 40px -20px rgba(0, 0, 0, 0.6);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--ink); margin: 0;
+    font-family: "IBM Plex Sans JP", "IBM Plex Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+    padding: 40px 20px 56px; display: flex; justify-content: center;
+  }
+  .card {
+    width: 100%; max-width: 660px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow);
+    padding: 36px 40px 32px; display: flex; flex-direction: column; gap: 26px;
+  }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace; font-size: 12.5px; color: var(--ink-faint);
+    letter-spacing: 0.02em; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  }
+  .eyebrow .path { color: var(--accent); }
+  .eyebrow .divider { color: var(--border); }
+
+  .heading h1 {
+    font-family: "Fraunces", serif; font-weight: 500; font-size: 27px; line-height: 1.26;
+    letter-spacing: -0.01em; margin: 0 0 8px; text-wrap: balance; color: var(--ink);
+  }
+  .heading p { margin: 0; font-size: 14.5px; line-height: 1.7; color: var(--ink-muted); max-width: 54ch; }
+  .heading p .src { color: var(--ink); font-weight: 500; }
+
+  .stat-row {
+    display: flex; align-items: flex-end; gap: 22px; padding: 18px 22px;
+    background: linear-gradient(180deg, rgba(235,104,52,0.07), rgba(235,104,52,0));
+    border: 1px solid var(--border); border-radius: 10px;
+  }
+  .stat-number {
+    font-family: "Fraunces", serif; font-weight: 600; font-size: 50px; line-height: 0.9;
+    color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .stat-caption { font-size: 13.5px; line-height: 1.6; color: var(--ink-muted); padding-bottom: 4px; }
+  .stat-caption strong { color: var(--ink); font-weight: 600; }
+
+  section.block { display: flex; flex-direction: column; gap: 12px; }
+  .block-label {
+    font-family: "IBM Plex Mono", monospace; font-size: 11.5px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--ink-faint);
+  }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .compare-panel { border-radius: 10px; padding: 14px 16px; border: 1px solid; display: flex; flex-direction: column; gap: 8px; }
+  .compare-panel.bad { background: var(--bad-bg); border-color: var(--bad-border); }
+  .compare-panel.good { background: var(--good-bg); border-color: var(--good-border); }
+  .compare-title { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; font-weight: 500; }
+  .compare-panel.bad .compare-title { color: var(--bad); }
+  .compare-panel.good .compare-title { color: var(--good); }
+  .compare-output {
+    margin: 0; font-family: "IBM Plex Mono", monospace; font-size: 11px; line-height: 1.6;
+    color: var(--ink-muted); white-space: pre-wrap; word-break: break-word;
+  }
+
+  .terminal {
+    background: var(--terminal-bg); border: 1px solid var(--terminal-border); border-radius: 10px;
+    padding: 16px 18px 14px; font-family: "IBM Plex Mono", monospace; font-size: 12.5px;
+    color: var(--terminal-ink); display: flex; flex-direction: column; gap: 10px;
+  }
+  .term-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .term-tag { font-size: 10.5px; color: var(--terminal-base); letter-spacing: 0.06em; width: 68px; flex: none; }
+  .toks { display: flex; flex-wrap: wrap; gap: 4px; word-break: break-all; }
+  .term-foot { font-size: 11px; color: var(--terminal-base); border-top: 1px solid var(--terminal-border); padding-top: 9px; }
+  .term-foot b { color: var(--terminal-ink); font-weight: 500; }
+
+  .caveat {
+    display: flex; gap: 10px; padding: 12px 14px; border: 1px dashed var(--border);
+    border-radius: 8px; background: var(--bg);
+  }
+  .caveat .mark { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-faint); flex: none; }
+  .caveat p { margin: 0; font-size: 12.5px; line-height: 1.65; color: var(--ink-muted); }
+
+  footer {
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 16px;
+    border-top: 1px solid var(--border); padding-top: 18px;
+  }
+  .sources { display: flex; flex-direction: column; gap: 5px; }
+  .sources a { font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: var(--ink-muted); text-decoration: none; border-bottom: 1px solid transparent; }
+  .sources a:hover { color: var(--accent); border-color: var(--accent); }
+  .progress { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex: none; }
+  .progress .num { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-faint); letter-spacing: 0.03em; }
+  .progress .num b { color: var(--ink); font-weight: 500; }
+  .grid100 { display: grid; grid-template-columns: repeat(20, 5px); grid-auto-rows: 5px; gap: 2px; }
+  .grid100 i { background: var(--tick-off); border-radius: 1px; display: block; }
+  .grid100 i.on { background: var(--accent); }
+
+  @media (max-width: 480px) {
+    .card { padding: 26px 20px 24px; gap: 20px; }
+    .stat-number { font-size: 42px; }
+    .compare-grid { grid-template-columns: 1fr; }
+    footer { flex-direction: column; align-items: flex-start; }
+    .progress { align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="card" id="card">
+
+  <div class="eyebrow">
+    <span>$ day-014</span>
+    <span class="divider">/</span>
+    <span class="path">--topic sgl-kernel-blackwell-patch</span>
+    <span class="divider">/</span>
+    <span>海外AIネタ100日チャレンジ</span>
+  </div>
+
+  <div class="heading">
+    <h1>Blackwell世代GPUで動かない推論サーバーを、ソースパッチで動かした</h1>
+    <p><span class="src">TokenRouter</span>(ライセンス未確定のため転載なし)を検証中、依存先の<span class="src">sglang / sgl-kernel</span>がRTX 50シリーズ(Blackwell)にまだ対応していないという壁にぶつかった。バージョン差し替えと最小限のソースパッチで、実際に推論まで通した。</p>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-number">2</div>
+    <div class="stat-caption">ローカルの<strong>sglang</strong>パッケージに当てたパッチファイル数(<strong>awq.py</strong> / <strong>gptq.py</strong>、いずれも未使用のimportをtry/exceptで遅延)</div>
+  </div>
+
+  <section class="block compare">
+    <div class="block-label">sgl-kernel==0.3.8(元の指定) vs 0.3.18+パッチ後</div>
+    <div class="compare-grid">
+      <div class="compare-panel bad">
+        <div class="compare-title">✗ sgl-kernel==0.3.8</div>
+        <pre class="compare-output">RuntimeError: RMSNorm failed
+with error code no kernel image
+is available for execution on
+the device
+
+(RTX 5060 Ti, sm_120 Blackwell
+向けのカーネルイメージが無い)</pre>
+      </div>
+      <div class="compare-panel good">
+        <div class="compare-title">✓ sgl-kernel==0.3.18 + patch</div>
+        <pre class="compare-output">{"text":" Paris. The capital
+of France is also the capital
+of the Republic of France.",
+"finish_reason":{"type":"length"},
+"completion_tokens":16}</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="block-label">切り分けの経緯</div>
+    <div class="terminal">
+      <div class="term-row">
+        <span class="term-tag">bisect</span>
+        <span class="toks">0.3.9/0.3.12/0.3.14/0.3.16/0.3.18 → torchとimport互換OK / 0.3.21 → undefined symbol(ABI不一致)</span>
+      </div>
+      <div class="term-row">
+        <span class="term-tag">kernel</span>
+        <span class="toks">rmsnorm()単体はsgl-kernel==0.3.18でBlackwell上で正常動作を確認</span>
+      </div>
+      <div class="term-row">
+        <span class="term-tag">blocker</span>
+        <span class="toks">ImportError: cannot import name 'fused_marlin_moe' from 'sgl_kernel'</span>
+      </div>
+      <div class="term-foot">呼び出し箇所はAWQ/GPTQのMoE量子化メソッド内の<b>2箇所のみ</b>。bf16推論では未使用と判明し、importを遅延させるだけで解決した。</div>
+    </div>
+  </section>
+
+  <div class="caveat">
+    <span class="mark">⚠</span>
+    <p>TokenRouter本体はLICENSE/COPYING/NOTICEファイルが無く、GitHub自身のライセンス自動検出でも未検出(null)。そのためTokenRouterのコード・検証結果自体は記事の主役にしていない。ここで書いたのはその検証中に踏んだ、依存先sglang(Apache-2.0)側のGPU世代対応の話。</p>
+  </div>
+
+  <footer>
+    <div class="sources">
+      <a href="https://github.com/thu-nics/TokenRouter" target="_blank" rel="noopener">→ github.com/thu-nics/TokenRouter</a>
+      <a href="https://github.com/sgl-project/sglang" target="_blank" rel="noopener">→ github.com/sgl-project/sglang</a>
+    </div>
+    <div class="progress">
+      <span class="num"><b>014</b> / 100 days</span>
+      <div class="grid100" id="grid100"></div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var grid = document.getElementById('grid100');
+    var frag = document.createDocumentFragment();
+    var currentDay = 14;
+    for (var i = 1; i <= 100; i++) {
+      var el = document.createElement('i');
+      if (i <= currentDay) el.className = 'on';
+      frag.appendChild(el);
+    }
+    grid.appendChild(frag);
+  })();
+</script>
+</body>
+</html>
