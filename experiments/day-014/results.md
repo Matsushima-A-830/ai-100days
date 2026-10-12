@@ -3,9 +3,10 @@
 **結論: Routine実行環境の制約(CUDA GPUが存在しない)およびライセンス表記の不備により、
 実際のルーティング/スループット検証には進めなかった。人間がローカルPC(RTX 5060 Ti, 16GB)で
 検証した結果、ライセンス不備は再確認、GPU面では新たに「ハードウェア世代の非対応」という
-別種のブロッカーが判明した。回避策として`sgl-kernel`の新しいバージョンへの差し替えも試したが、
-RMSNormカーネル自体はBlackwellで動作することを確認できた一方、`sglang==0.5.1`本体の起動は
-別のAPI不整合で失敗し、現時点では動かせなかった(詳細は末尾の追記セクション)。**
+別種のブロッカーが判明した。このGPUブロッカーは、`sgl-kernel`を新しいバージョン(0.3.18)に
+差し替え、`sglang`側の2ファイルに小さなソースパッチ(使われないimportの遅延)を当てることで、
+**最終的にBlackwell上での実推論まで動作させることができた。** ライセンス不備は未解消のまま
+(詳細は末尾の追記セクション、特に「6. 追記」)。**
 
 出典: https://github.com/thu-nics/TokenRouter (Hugging Face Daily Papers 2026-10-09掲載)
 
@@ -249,9 +250,103 @@ ImportError: cannot import name 'fused_marlin_moe' from 'sgl_kernel'
 Qwen3-0.6Bはbf16(量子化なし)で動かすため、この量子化コード自体は本来不要だが、
 import自体が無条件に実行される設計のため回避できなかった。
 
-**→ まとめ: `sgl-kernel`を新しいバージョンに差し替えるだけでは、TokenRouterが指定する
+**→ まとめ(このセクション時点): `sgl-kernel`を新しいバージョンに差し替えるだけでは、TokenRouterが指定する
 `sglang==0.5.1`との組み合わせでは動かせなかった。RMSNormカーネル自体はBlackwellで
 動作することを実機で確認できたが、`sglang`側のPython APIが`sgl-kernel`の新しいバージョンの
 API変更に追従していないため、`sglang`自体のアップグレード、または`sglang`のソース側を
-パッチする(量子化モジュールのimportを回避する等)作業が追加で必要になる。
-これはTokenRouter単体の検証の範囲を超える改造であり、今回はここまでの確認にとどめた。**
+パッチする(量子化モジュールのimportを回避する等)作業が追加で必要になる。**
+(この後、実際にソースパッチまで踏み込んで最終的に動作させた。「6. 追記」を参照。)
+
+## 6. 追記(2026-10-12、ソースパッチによる最終的な動作確認)
+
+「`sglang`のソース側をパッチする」という回避策を、実際に手を動かして試した。
+
+### 原因の特定: `fused_marlin_moe`は2箇所でのみimportされ、どちらも呼び出されるのは量子化モデルのみ
+
+```
+$ grep -rn 'fused_marlin_moe' .venv/lib/python3.12/site-packages/sglang/
+.../layers/quantization/awq.py:48:        fused_marlin_moe,
+.../layers/quantization/awq.py:756:        return fused_marlin_moe(
+.../layers/quantization/gptq.py:55:    from sgl_kernel import fused_marlin_moe, ...
+.../layers/quantization/gptq.py:1074:        return fused_marlin_moe(
+```
+
+`fused_marlin_moe`は`sgl_kernel==0.3.18`には存在しないが(関数群が`moe_wna16_marlin_gemm`などに
+再構成されたため)、実際に**呼び出されている**のは`awq.py`と`gptq.py`それぞれのAWQ/GPTQ版MoE量子化
+メソッド内の1箇所だけだった。Qwen3-0.6Bはbf16(量子化なし)で動かすため、この呼び出し自体は
+実行時には一度も使われない。問題は「importされているかどうか」だけであり、「呼び出せるかどうか」
+ではなかった。
+
+### パッチ内容: importをtry/exceptで囲んで未使用時は`None`にする
+
+`awq.py`(44行目付近)と`gptq.py`(55行目付近)の、CUDA時に`fused_marlin_moe`をimportしている
+箇所を、以下のように変更した(ローカルの`.venv`内のインストール済みファイルを直接編集。
+リポジトリや`sgl-kernel`本体には一切変更を加えていない)。
+
+```python
+# awq.py
+if _is_cuda:
+    from sgl_kernel import (
+        awq_dequantize,
+        awq_marlin_moe_repack,
+        awq_marlin_repack,
+    )
+    try:
+        from sgl_kernel import fused_marlin_moe
+    except ImportError:
+        fused_marlin_moe = None  # AWQ-MoE量子化モデルを使う場合のみ必要
+
+# gptq.py
+if _is_cuda:
+    from sgl_kernel import gptq_gemm, gptq_marlin_repack, gptq_shuffle
+    try:
+        from sgl_kernel import fused_marlin_moe
+    except ImportError:
+        fused_marlin_moe = None  # GPTQ-MoE量子化モデルを使う場合のみ必要
+```
+
+### 結果: サーバー起動・実推論まで到達した
+
+```bash
+python3 -m sglang.launch_server --model-path Qwen/Qwen3-0.6B --port 30003 \
+  --mem-fraction-static 0.5 --disable-cuda-graph
+```
+
+```
+[2026-10-12 11:57:12] Load weight end. type=Qwen3ForCausalLM, dtype=torch.bfloat16, avail mem=13.58 GB, mem usage=1.22 GB.
+[2026-10-12 11:57:12] KV Cache is allocated. #tokens: 57883, K size: 3.09 GB, V size: 3.09 GB
+[2026-10-12 11:57:14] INFO:     Uvicorn running on http://127.0.0.1:30003 (Press CTRL+C to quit)
+[2026-10-12 11:57:15] Prefill batch. #new-seq: 1, #new-token: 6, #cached-token: 0, token usage: 0.00, #running-req: 0, #queue-req: 0,
+```
+
+以前はこの直後(最初のprefillバッチ)で`RuntimeError: RMSNorm failed...`が発生してクラッシュしていたが、
+今回はクラッシュせずサーバーが起動し続けた。実際にcurlで推論リクエストを送って確認した。
+
+```bash
+curl -s http://127.0.0.1:30003/generate -H 'Content-Type: application/json' \
+  -d '{"text": "The capital of France is", "sampling_params": {"max_new_tokens": 16, "temperature": 0}}'
+```
+
+```json
+{"text":" Paris. The capital of France is also the capital of the Republic of France.","output_ids":[785,6722,315,9625,374,12095,13,576,6722,315,9625,374,1083,279,6722,315,279,5429,315,9625,13],"meta_info":{"id":"4df83b83808645d29d7ed1af87e3fd05","finish_reason":{"type":"length","length":16},"prompt_tokens":5,"weight_version":"default","completion_tokens":16,"cached_tokens":2,"e2e_latency":11.269001960754395}}
+```
+
+**実際にBlackwell(RTX 5060 Ti)上で、TokenRouterが依存する`sglang`サーバー経由の推論が
+最後まで動作することを確認できた。** 出力文自体は0.6Bモデル・greedy decodingゆえの
+繰り返し気味な内容だが、エラーなく最後まで生成が完了している点が重要な結果である。
+
+### この結果の位置づけ
+
+- 変更したのは**ローカルの`.venv`にインストールされた`sglang`パッケージの2ファイル**のみ。
+  TokenRouterのリポジトリ自体や`sgl-kernel`本体には変更を加えていない。
+- パッチの内容は「使われない機能(AWQ/GPTQのMoE量子化)のimportを遅延させる」という
+  最小限のものであり、Qwen3-0.6B(bf16・量子化なし)の動作には影響しない。
+- 公式のTokenRouter configが前提とする構成(Qwen3-32B + Qwen3-0.6B、複数GPU)での
+  本来のルーティング検証には、このGPU1枚・16GBの環境では別途モデルサイズの制約が残る。
+  今回確認できたのは「軽量モデル単体なら、Blackwell上でもsglangサーバーとして動く」という、
+  GPU世代の壁そのものを越えられることの実証である。
+
+**→ まとめ(最終): 「GPUの世代が新しすぎて対応していない」というブロッカーは、
+(1) `sgl-kernel`を0.3.8→0.3.18に差し替え、(2) `sglang`側の2ファイルに
+使われない機能のimportを遅延させる小さなパッチを当てる、という2段階の作業で
+実際に解消できた。ライセンス不備というもう一つのブロッカーは今回の作業では解消していない。**
