@@ -2,14 +2,18 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 014
-- 選んだ候補(backlog.mdのタイトルかURL): TokenRouter(thu-nics) — 複数LLMをトークン単位で動的に振り分ける推論サーバー — https://github.com/thu-nics/TokenRouter
+- Day: 015
+- 選んだ候補(backlog.mdのタイトルかURL): google/skills — Google公式のAgent Skillsライブラリ(Anthropic版との比較候補) — https://github.com/google/skills
 - 補足メモ(あれば):
-  - 複数のLLM(小型モデルと大型モデルなど)をトークン単位で動的に振り分けながら配信するサービングシステム。`route()`/`send()`/`receive()`の3インターフェースでルーティング手法(R2R・CITER・Co-LLM等)を定義でき、遅延バッチングスケジューラにより既存スタック比2.01〜64.15倍のデコードスループットを報告。NeurIPS 2026採択。Hugging Face Daily Papers(2026-10-09)掲載。
-  - **ライセンス表記をリポジトリ上で確認できていない。** 検証開始前に必ずLICENSEファイルの有無・内容を確認し、不明なまま記事化・コード転載をしないこと。
-  - **GPU要否に注意。** サンプル構成は最小でもQwen3-32Bを含み、CUDA MPSが前提で、公式のreadmeではGPUが実質必須に見える。まずRoutineのクラウド実行環境にCUDA GPUがあるか確認し、無ければ小型モデル同士(例: 0.6B+1.7B程度)の最小構成で動くかを試す。それでも動かない場合は「ツール自体がGPU前提」という検証に直接関係する制約なのか、「Routine環境固有(GPUが無い)」の制約なのか区別し、後者であればCLAUDE.mdの手順に従いPR冒頭に「ローカル検証が必要」と明記して再現手順を添え、人間にエスカレーションする(推測で埋めたり安易に「失敗」と書かない)。
-  - APIキーは不要(モデルはYAML設定でローカル指定)。
-  - 検証の軸: ルーティングあり/なしでのデコードスループット(トークン/秒)比較。可能なら複数のルーティング手法(R2R等)の違いも併せて見る。
-  - 日本語記事は確認した範囲でZenn/Qiita/note共に0件(2026-10-11時点、backlog.md参照)。
+  - Google Cloud/Gemini関連プロダクト(BigQuery・Cloud Run・GKE・Cloud SQL・AlloyDB・Firebase等)向けのAgent Skillsとプロダクトプラグイン(MCPサーバー連携含む)を集めたGoogle公式リポジトリ(Apache-2.0)。`npx skills add google/skills`でSKILL.md単位にインストールでき、Claude Code/Codex/Antigravity CLI等に対応。
+  - **検証結果(results.md)には、day-013で検証したanthropics/knowledge-work-plugins(Anthropic公式Agent Skills)との比較を必須項目として必ず含めること。** 具体的には以下の観点を揃えて比較する:
+    - 導入方法の違い: day-013は`claude plugin marketplace add`+`claude plugin install`でプラグイン単位の導入だったのに対し、google/skillsは`npx skills add google/skills`でSKILL.md単位の導入になる。実際のインストールログを両方とも`results.md`に残す。
+    - 構成・粒度の違い: day-013(productivityプラグイン)はスキル+スラッシュコマンド+ダッシュボードHTMLのセットだったが、google/skillsは個々のSKILL.mdがどう構成されているか(スラッシュコマンドやMCP連携の有無など)を実際に確認して記録する。
+    - ライセンス表記の違い: day-013はApache-2.0で確認済み。google/skillsも同じApache-2.0だが、LICENSEファイルの実在と範囲(プラグイン部分も含むか)を同様の手順で確認する。
+    - 可能であれば、day-013で行った「Before/After」形式の検証(ツール利用を禁止した`claude -p`非対話モードで、スキル導入前後の応答がどう変わるかを比較し、`total_cost_usd`・`duration_ms`・`num_turns`等のメタ情報も記録する手法)と同じ測定方法をgoogle/skillsの適切なスキル1つに対しても行い、2社の導入体験・応答品質の変化を横並びで比較できる形にする。
+    - 結論として「2社の公式Agent Skills配布のされ方・構成・導入体験の違い」を一言でまとめる節を`results.md`に設ける。
+  - 外部クラウドリソース(BigQuery等)に実際に接続するskillを使う場合は別途GCP認証情報が必要になる可能性がある。個々のskill単体の動作確認(ファイル構成の読み込み・応答への反映)には追加の有料APIキーは不要と見込まれるが、検証中に有料API/GCP認証が必須と分かった場合はその旨を正直に記録し、該当skillは見送って別のskillで代替する。
+  - 日本語記事は確認した範囲でZenn/Qiita/note共に0件(2026-10-12時点、backlog.md参照)。
+  - GPU不要。
 
 状態: 設定済み
