@@ -604,3 +604,39 @@
 - 検証難易度: 中(検索した範囲ではAgentMonBenchのコード・データセット公開は確認できず、フル再現は不可。本リポジトリの絶対ルール「動かしていないものを動いたと書かない」と直接共鳴するテーマのため、Claude Code自身に簡単なコーディングタスクをやらせ、実行ログと「申告された完了報告」を突き合わせて不一致を検出する自作の縮小版モニタを作る、という概念実証に絞れば6時間以内で可能。APIキー・GPU追加不要)
 - 見栄え: 「エージェントが"やりました"と言った内容」と「実際のツール呼び出しログ」を並べて不一致を可視化するBefore/After表が作りやすく、本リポジトリの検証ルールそのものを定量的に補強するテーマとして自己言及的に語れる。日本語記事が無く差別化しやすい。
 - 状態: 未選択
+
+### [2026-10-12] obsidian-mind — AIコーディングエージェントにセッション横断の永続メモリを与える自己組織化Obsidianボルト
+
+- 出典: https://github.com/breferrari/obsidian-mind (GitHub Trending TypeScript 2026-10-12、+82star/日、5.2k star)
+- 概要: Claude Code/Codex CLI/Gemini CLI向けに、North Star・進行中プロジェクト・直近の意思決定を記録するObsidianボルトのテンプレートとフック/MCPサーバー群を提供し、セッションをまたいで文脈・決定事項・メモを保持できるようにするOSS(MITライセンス)。セマンティック検索用のQMDはローカルの小型モデル(約2.3GB)で動き追加APIキー不要、GPUがあれば使うがCPUフォールバックもある。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 低(MIT。`npm install -g shardmind`→`shardmind install github:breferrari/obsidian-mind`で導入し、Claude Code自身をエージェントとして使えば追加の有料APIキー不要。GPUも不要)
+- 見栄え: 本リポジトリ自身が`tools/sync-to-obsidian.*`でObsidian Vaultを「恒久的な蓄積場所」として使っている運用方針と直接重なるテーマで、「このRoutine自体にobsidian-mindを試験導入し、セッションを跨いで文脈が本当に復元されるか」を自己言及的に検証できるのが最大の強み。claude-mem(backlog内2026-10-03、未選択)等の既存メモリプラグインとの比較軸も作れる。
+- 状態: 未選択
+
+### [2026-10-12] google/skills — Google公式のAgent Skillsライブラリ(Anthropic版との比較候補)
+
+- 出典: https://github.com/google/skills (GitHub Trending Python 2026-10-12、+66star/日、21.2k star)
+- 概要: Google Cloud/Gemini関連プロダクト(BigQuery・Cloud Run・GKE・Cloud SQL・AlloyDB・Firebase等)向けのAgent Skillsとプロダクトプラグイン(MCPサーバー連携含む)を集めたGoogle公式リポジトリ(Apache-2.0)。`npx skills add google/skills`でSKILL.md単位にインストールでき、Claude Code/Codex/Antigravity CLI等に対応。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲ではZenn/Qiita/noteでの一次紹介記事は未検出。英語解説記事〈pinggy.io等〉は複数あり)
+- 検証難易度: 低(Apache-2.0。Node.js〈npx〉のみで導入可能、個々のskill単体の動作確認には追加の有料APIキー不要と見込まれる。外部クラウドリソース〈BigQuery等〉に実際に接続するskillを使う場合は別途GCP認証情報が必要になる点に注意。GPU不要)
+- 見栄え: day-013で検証したanthropics/knowledge-work-plugins(Anthropic公式)と並べ、「2社の公式Agent Skills配布のされ方・構成・導入体験の違い」を比較するBefore/After的な記事が作りやすい。
+- 状態: 未選択
+
+### [2026-10-12] microsoft/BitNet — 1-bit LLM(BitNet b1.58)をCPUで高速推論するMicrosoft公式フレームワークが再浮上
+
+- 出典: https://github.com/microsoft/BitNet (本日GitHub Trendingで再浮上、134star/日)
+- 概要: 全重みを三値{-1,0,1}に量子化したBitNet b1.58モデル(2.4Bパラメータ・4Tトークン学習済み)を、llama.cppベースの独自カーネル(T-MACのlookup-table手法を応用)でCPU上で高速・損失なく推論するMicrosoft公式フレームワーク(MITライセンス)。ARM CPUで最大5.07倍、x86 CPUで最大6.17倍の高速化を主張。2026年7月にはBitNet量子化を使ったリアルタイム多言語ASR「VibeASR.cpp」や埋め込みモデルも追加された。
+- 日本語記事件数: Zenn 2件(GitHub Trending入りを受けた入門記事、および関連する軽量化手法の論文ベース整理記事) / Qiita 0件 / note 0件(単体の実測検証記事はまだ少なく入門記事止まり)
+- 検証難易度: 低(MIT。`huggingface-cli`でBitNet-b1.58-2B-4Tモデルをダウンロードし`python setup_env.py`→`run_inference.py`で動作、GPU不要・追加APIキー不要。CPUのみのクラウド実行環境でも6時間以内に動作確認・簡易速度計測が可能)
+- 見栄え: 同程度サイズの通常精度モデル(FP16等)とのCPU推論速度・メモリ使用量をBefore/After比較でき、数値グラフが作りやすい。日本語記事が入門記事止まりのため、実測比較という切り口で差別化しやすい。
+- 状態: 未選択
+
+### [2026-10-12] "Self-Preservation in Language Models" — 継続ファインチューニング中にモデル自身が生成したリプレイデータで既存知識の忘却を防ぐ手法(論文、コード未確認)
+
+- 出典: https://huggingface.co/papers/2610.12602
+- 概要: 継続的なファインチューニングで既存タスクの性能が失われる「破滅的忘却」に対し、保持したいタスクを短い説明(Task Bank)として与え、更新前のモデルのコピー自身にリプレイ用データを生成させて新タスクの学習データと混合する手法。Qwen3(0.6B/1.7B/4B)をMedQA/C-STANCEでファインチューニングし、ARC-C/WinoGrande/PIQA/SVAMP等の未知タスクでの保持率(Retention)を計測、4Bモデルでは新タスクを意識したリプレイ対象選択がランダム選択より保持率を改善(95.69% vs 92.94%)したと報告。平均精度だけでは「3.6%が不正解化・3.6%が正解化」のような変化を見落とす点も指摘。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 高(検索した範囲では公式コード・データセットの公開リンクは確認できず、フル再現は不可。本リポジトリの絶対ルールに沿うなら、Qwen3の最小サイズ〈0.6B〉を使い「ファインチューニング後にリプレイ無し/自己生成リプレイ有りで既存タスクの正答率がどう変わるか」を小規模データで疑似再現する縮小版の概念実証に絞る必要がある。APIキー不要、GPUはあれば望ましいがCPUでも0.6Bなら時間次第で可能)
+- 見栄え: 「忘却したかどうかを平均精度だけで判断すると見誤る」という論文の指摘自体が、本リポジトリの「動かしていないものを動いたと書かない」という検証ルールと響き合うテーマ。保持率のBefore/Afterグラフが作りやすいが、再現スコープを事前に絞り込む必要があるため採用する場合は候補メモにその旨を明記すること。
+- 状態: 未選択
