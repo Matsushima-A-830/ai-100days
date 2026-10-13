@@ -640,3 +640,39 @@
 - 検証難易度: 高(検索した範囲では公式コード・データセットの公開リンクは確認できず、フル再現は不可。本リポジトリの絶対ルールに沿うなら、Qwen3の最小サイズ〈0.6B〉を使い「ファインチューニング後にリプレイ無し/自己生成リプレイ有りで既存タスクの正答率がどう変わるか」を小規模データで疑似再現する縮小版の概念実証に絞る必要がある。APIキー不要、GPUはあれば望ましいがCPUでも0.6Bなら時間次第で可能)
 - 見栄え: 「忘却したかどうかを平均精度だけで判断すると見誤る」という論文の指摘自体が、本リポジトリの「動かしていないものを動いたと書かない」という検証ルールと響き合うテーマ。保持率のBefore/Afterグラフが作りやすいが、再現スコープを事前に絞り込む必要があるため採用する場合は候補メモにその旨を明記すること。
 - 状態: 未選択
+
+### [2026-10-13] mksglu/context-mode — AIコーディングエージェントのコンテキストウィンドウ消費を最大98%削減するMCPサーバー
+
+- 出典: https://github.com/mksglu/context-mode (GitHub Trending 全言語 2026-10-13、+978star/日、累計28.1k star)
+- 概要: Claude Code/Gemini CLI/Codex CLI等向けのMCPサーバー。ツールの生出力を会話に直接流さずサンドボックスでローカルSQLiteにフルテキストを保存し、会話には要約・検索結果のみを渡すことでコンテキストウィンドウ消費を削減(プロジェクト自身の計測では最大98%)。会話がcompactionされてもセッション状態(直近の編集・エラー・タスク等)をBM25検索付きで復元できる。Elastic License 2.0(ソースは公開だが本体をホスティングサービスとして提供することは不可)。
+- 日本語記事件数: Zenn 0件 / Qiita 1件(導入を勧める短い紹介記事。本体の検証記事ではない) / note 0件
+- 検証難易度: 低(Node.js 22.5+またはBunのみで追加の有料APIキー・GPU不要。`claude mcp add context-mode -- npx -y context-mode`で即導入可能)
+- 見栄え: 同じ調査・大量ログ読み込みタスクを導入前/導入後で実行し、`ctx stats`で実際のコンテキスト消費量の差を数値で見せられる。本Routine自身がWebFetch等で大量のツール出力を読む作業をしているため、自己言及的な検証がしやすい。
+- 状態: 未選択
+
+### [2026-10-13] mvanhorn/last30days-skill — Reddit/X/YouTube/HN等を並列検索し直近30日間の話題をエンゲージメント順にまとめるClaude Code向けAgent Skill
+
+- 出典: https://github.com/mvanhorn/last30days-skill (GitHub Trending Python 2026-10-13、+103star/日)
+- 概要: Reddit・X・YouTube・TikTok・Hacker News・Polymarket・GitHub等を並列検索し、実際のエンゲージメント(反応の大きさ)でランキングした上で出典付きの要約を1本にまとめるオープンソースのClaude Code向けAgent Skill(MIT)。Reddit/HN/Polymarket/GitHub/StockTwitsなど無料ソースのみでも動作し、X/TikTok等の追加ソースは任意の有料APIキーで拡張できる設計。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 低(MIT。`/plugin marketplace add mvanhorn/last30days-skill`→`/plugin install last30days`で導入、無料ソースのみに絞れば追加の有料APIキー・GPU不要)
+- 見栄え: 本Routine自身が毎朝行っている「複数の情報源を巡回してネタ候補を探す」作業と同じ領域のツールのため、「このスキルに同じ日・同じテーマを調べさせた結果」と「Routineが実際に見つけた候補」を並べて比較するBefore/After記事が作りやすい、非常に自己言及的な候補。
+- 状態: 未選択
+
+### [2026-10-13] cathrynlavery/diagram-design — 自然文の指示だけで自己完結HTML+SVGのエディトリアルな図解を生成するAgent Skill
+
+- 出典: https://github.com/cathrynlavery/diagram-design (GitHub Trending 全言語 2026-10-13、+1,813star/日)
+- 概要: 「アーキテクチャ図を作って」等の自然文の指示だけで、アーキテクチャ図・シーケンス図・ER図・Sankey図・Wardley mapなど40種類超のエディトリアルな図を、ビルド不要の自己完結HTML(インラインSVG)1ファイルとして生成するAIコーディングエージェント向けAgent Skill(MIT)。Mermaidのような「コードから図を起こす」方式ではなく、既存の関係性に統一されたデザイン規則(1色のアクセント・1pxの罫線・4pxグリッド等)を当てはめる「後処理型デザインシステム」という位置づけ。draw.io/Mermaid/Excalidrawからの読み込みにも対応。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(Zenn/Qiita/noteでの一次紹介・検証記事は未検出。日本語の解説コラム記事〈oflight.co.jp等〉はあるが著者自身の検証記事ではない)
+- 検証難易度: 低(MIT。`npx skills add cathrynlavery/diagram-design`またはClaude Codeのプラグインマーケットプレイスから導入。デフォルトのHTML/SVG出力は追加の有料APIキー・GPU不要。PNG書き出しのみPlaywright/Chromiumが必要)
+- 見栄え: 本リポジトリ自身の構成(CLAUDE.mdのフロー図やexperiments/day-NNN群の増え方)を実際にこのスキルで図解させ、出力HTMLをブラウザで開いたスクリーンショットをそのまま記事・シェアカードに使える。見た目のインパクトが強く、日本語の一次検証記事が無い点でも差別化しやすい。
+- 状態: 未選択
+
+### [2026-10-13] debpalash/VoiceStudio — ElevenLabsの完全ローカル代替を掲げる音声クローン/TTS OSSアプリ、646言語対応を主張
+
+- 出典: https://github.com/debpalash/VoiceStudio (GitHub Trending Python 2026-10-13、+2,277star/日、累計62.9k star)
+- 概要: 音声クローン・テキストからの音声デザイン・動画の吹き替え・文字起こし・オーディオブック生成を1つにまとめた、アカウント登録不要・完全ローカル動作のOSSデスクトップアプリ兼ローカルAPI/MCPサーバー(AGPL-3.0。モデル重み・音声・生成物の利用条件はアプリ本体のライセンスとは別途)。既定エンジンはk2-fsa/OmniVoiceで、CosyVoice3・GPT-SoVITS等16種のTTSエンジンに切り替え可能。646言語対応を主張。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(Zenn/Qiita/noteでの一次紹介・検証記事は未検出。日本語の解説コラム記事〈oflight.co.jp等〉はあるが著者自身の検証記事ではない)
+- 検証難易度: 中(APIキー・アカウント不要。GPU〈CUDA/Metal〉が無くてもCPUフォールバックで動作するとの記載があるが低速〈参考情報ではApple M3 Maxで1文あたり約30秒〉。クラウド実行環境がCPUのみの場合、短いサンプル生成なら6時間以内に収まる見込みだが、モデルの自動ダウンロード容量がRoutine環境のネットワーク制約に引っかからないかは実際に試して判断し、引っかかった場合はCLAUDE.mdの「Routine環境の制約」に沿ってローカル検証にエスカレーションする)
+- 見栄え: 音声サンプルをローカルでクローン生成し、生成音声そのものをデモにできれば非常に見栄えが良い。646言語対応という主張を日本語テキストで実際に試せるかも見どころ。「生成物の利用条件はアプリ本体のライセンスと別」である点を記事で明記する必要がある。
+- 状態: 未選択
