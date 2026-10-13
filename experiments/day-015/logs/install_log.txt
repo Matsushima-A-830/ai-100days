@@ -1,0 +1,33 @@
+
+|
+•   claude-code_2-1-296_agent  Agent detected — installing non-interactively
+[?25l|
+o  Source: https://github.com/google/skills.git
+[?25h[?25l|
+•  Cloning repository…[1G[Jo  Cloning repository…[1G[JO  Cloning repository…[1G[J0  Cloning repository…[1G[J•  Cloning repository…[1G[Jo  Cloning repository…[1G[JO  Cloning repository…[1G[J0  Cloning repository…[1G[J•  Cloning repository….[1G[Jo  Cloning repository….[1G[JO  Cloning repository….[1G[J0  Cloning repository….[1G[Jo  Repository cloned
+[?25h[?25l|
+[1G[J•  Discovering skills…[1G[Jo  Discovering skills…[1G[Jo  Found 155 skills
+[?25h|
+•  Selected 1 skill: finding-google-skills
+
+|
+o  Installation Summary -------------------+
+|                                          |
+|  ./.agents/skills/finding-google-skills  |
+|    copy → Claude Code                    |
+|                                          |
++------------------------------------------+
+[?25l|
+[1G[Jo  Installation complete
+[?25h
+|
+o  Installed 1 skill --------------------------+
+|                                              |
+|  ✓ finding-google-skills (copied)            |
+|    → ./.claude/skills/finding-google-skills  |
+|                                              |
++----------------------------------------------+
+
+|
+—  Done!  Review skills before use; they run with full agent permissions.
+
