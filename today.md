@@ -2,19 +2,18 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 016
-- 選んだ候補(backlog.mdのタイトルかURL): diagram-design — 指示文だけでエディトリアル調の図解を自動生成するClaude Code向けagent skill — https://github.com/cathrynlavery/diagram-design
+- Day: 017
+- 選んだ候補(backlog.mdのタイトルかURL): K-Dense-AI/scientific-agent-skills — AIエージェントを「AI研究者」に変えるAgent Skills集(旧Claude Scientific Skills) — https://github.com/K-Dense-AI/scientific-agent-skills
 - 補足メモ(あれば):
-  - 自然言語の指示だけで自己完結HTML+インラインSVGのエディトリアル調図解(アーキテクチャ図・シーケンス図・ER図・タイムライン・Sankey図・Wardley map等40種類超)を生成するAIコーディングエージェント向けagent skill(MIT)。Mermaid風の「コードから図を起こす」方式ではなく、既存の関係性に統一されたデザイン規則(1色のアクセント・1pxの罫線・4pxグリッド等)を当てはめる「後処理型デザインシステム」という位置づけ。対象Webサイトの配色・フォントを読み取ってブランドに合わせるオンボーディング機能や、draw.io/Mermaid/Excalidrawからの読み込みにも対応。
-  - 導入は `npx skills add cathrynlavery/diagram-design` または Claude Codeなら `/plugin marketplace add cathrynlavery/diagram-design` → `/plugin install diagram-design@diagram-design`。
-  - **検証の軸は「本リポジトリ自身の構成図をこのスキルで自動生成し、見た目・精度を評価する」こと。** 具体的には以下を`results.md`に残す:
-    - 本リポジトリのCLAUDE.mdに書かれている全体フロー(朝のリサーチRoutine→人間のtoday.md反映→昼の実装Routine→夜の人間確認・公開、という4段階の流れ)を、このスキルに説明させて図解(フローチャートまたはシーケンス図)を生成させる。実際に使った指示文とスキルが選んだ図の種類・生成までのやり取りをログとして残す。
-    - `experiments/day-NNN/` が増えていく構成(ディレクトリ構造)も別の図(アーキテクチャ図など)として生成させ、2種類の図を作る。
-    - 生成されたHTMLファイルをブラウザで開いて崩れていないか確認し、スクリーンショットを撮る(Routine実行環境にブラウザが無い場合は、HTML/SVGとして構文的に破綻していないかを目視で確認し、その旨をCLAUDE.mdの「Routine環境の制約」に従って正直に記録する)。
-    - ライセンス表記(MIT、LICENSEファイルの実在)を確認する。
-    - 40種類超(READMEの表記と実際のギャラリーの数に食い違いがあるとの報告もあるため、実際に確認した数を書く)の図の種類のうち、今回使ったものがどの種類かを明記する。
-  - backlog.mdには本リポジトリに関する候補メモが2件ある(2026-10-08付と2026-10-13付、どちらも同じリポジトリ)。両方の内容を踏まえてよい。
-  - 日本語記事は確認した範囲でZenn/Qiita/note共に0件(2026-10-13時点、backlog.md参照)。海外の解説コラム記事はあるが日本語の一次検証記事ではない。
-  - GPU不要、追加の有料APIキー不要。PNG書き出しのみPlaywright/Chromiumが必要だが、SVG/HTMLでの確認だけなら不要。
+  - 生物学・化学・医学・物理・工学・地球科学・データ解析・科学コミュニケーションにまたがる163種のスキルと、100種類超の科学データベースへのガイダンスを収録したAgent Skills集(MIT。個々のスキルのライセンスは`SKILL.md`ごとに異なる場合があるため、実際に使うスキルのライセンス表記も確認すること)。元はClaude Scientific Skillsという名前だったが、Claude専用ではなく汎用のオープンなAgent Skills標準に対応するホスト(Claude Code/Cursor/Codex/Google Antigravity等)向けに改称された。
+  - 導入は `npx skills add K-Dense-AI/scientific-agent-skills`。
+  - **検証の軸は「APIキー不要なスキルに絞って、Claude Code自身にスキル無し/有りで同じ疑似研究タスクを解かせ、応答の深さ・正確さがどう変わるかを比較する」こと。** 具体的には以下を`results.md`に残す:
+    - リポジトリ内のスキル一覧(`SKILL.md`)を確認し、外部APIキー(Exa・Benchling・NCBI・Materials Project等)が不要なスキルを2〜3個選ぶ(候補: 統計解析・文献レビュー手法・データ可視化系など、具体的にどれを選んだか理由とともに明記)。
+    - 選んだスキルを実際に `npx skills add` で導入し、導入ログ(成功/失敗・出力)をそのまま記録する。
+    - スキル無しの状態と、スキル導入後の状態で、同一の簡単な疑似研究タスク(例: 「ある小規模な実験データセットを渡して統計的に妥当な検定手法を選ばせ理由を説明させる」等、具体的に設計すること)をClaude Codeに解かせ、両者の回答を並べてBefore/After比較する。
+    - GPU不要・APIキー不要の範囲に検証スコープを限定したことと、その理由(CLAUDE.mdの「当面は有料APIキーが必須の候補を選ばない」方針)を`results.md`冒頭に明記する。
+    - ライセンス表記(リポジトリ全体のMIT、および実際に使ったスキルの`SKILL.md`内のライセンス記載)を確認する。
+  - 日本語記事は確認した範囲でZenn/Qiita/note共に0件(2026-10-14時点、backlog.md参照)。英語のDEV Community記事等はあるが日本語の一次検証記事ではない。
+  - GPU不要。スキルによってはExa・Benchling・NCBI・Materials Project等の有料/要登録APIキーが必要だが、今回の検証スコープではそれらを使わない。
 
 状態: 設定済み
