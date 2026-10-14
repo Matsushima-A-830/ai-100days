@@ -693,7 +693,7 @@
 - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
 - 検証難易度: 低(MIT。`npx skills add K-Dense-AI/scientific-agent-skills`で導入。多くのスキルは追加の有料APIキー不要だが、Exa・Benchling・NCBI・Materials Project等一部の外部データベース連携スキルは個別にAPIキーが要る。APIキー不要なスキルに絞って検証範囲を選べば6時間以内に収まる。GPU不要〈GPU活用スキルはオプション〉)
 - 見栄え: Claude Code自身に特定の科学スキル〈例: 化学または生物学系〉を実際に使わせ、スキル無し/有りで疑似研究タスクへの応答の深さ・正確さがどう変わるかのBefore/After比較が作りやすい。同じ`npx skills add`エコシステムの中でdiagram-design〈day-016で検証済み〉と対比できる、領域特化スキル集という切り口。
-- 状態: 未選択
+- 状態: 採用済み(day-017)
 
 ### [2026-10-14] HKUDS/CLI-Anything — 既存ソフトウェアをAIエージェント対応CLIに自動変換する7フェーズパイプライン
 
