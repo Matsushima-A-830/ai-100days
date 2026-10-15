@@ -2,18 +2,18 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 017
-- 選んだ候補(backlog.mdのタイトルかURL): K-Dense-AI/scientific-agent-skills — AIエージェントを「AI研究者」に変えるAgent Skills集(旧Claude Scientific Skills) — https://github.com/K-Dense-AI/scientific-agent-skills
+- Day: 018
+- 選んだ候補(backlog.mdのタイトルかURL): morluto/rea — AIエージェントにアプリ〜ネイティブバイナリまでリバースエンジニアリングさせるMCPサーバー/CLI — https://github.com/morluto/rea
 - 補足メモ(あれば):
-  - 生物学・化学・医学・物理・工学・地球科学・データ解析・科学コミュニケーションにまたがる163種のスキルと、100種類超の科学データベースへのガイダンスを収録したAgent Skills集(MIT。個々のスキルのライセンスは`SKILL.md`ごとに異なる場合があるため、実際に使うスキルのライセンス表記も確認すること)。元はClaude Scientific Skillsという名前だったが、Claude専用ではなく汎用のオープンなAgent Skills標準に対応するホスト(Claude Code/Cursor/Codex/Google Antigravity等)向けに改称された。
-  - 導入は `npx skills add K-Dense-AI/scientific-agent-skills`。
-  - **検証の軸は「APIキー不要なスキルに絞って、Claude Code自身にスキル無し/有りで同じ疑似研究タスクを解かせ、応答の深さ・正確さがどう変わるかを比較する」こと。** 具体的には以下を`results.md`に残す:
-    - リポジトリ内のスキル一覧(`SKILL.md`)を確認し、外部APIキー(Exa・Benchling・NCBI・Materials Project等)が不要なスキルを2〜3個選ぶ(候補: 統計解析・文献レビュー手法・データ可視化系など、具体的にどれを選んだか理由とともに明記)。
-    - 選んだスキルを実際に `npx skills add` で導入し、導入ログ(成功/失敗・出力)をそのまま記録する。
-    - スキル無しの状態と、スキル導入後の状態で、同一の簡単な疑似研究タスク(例: 「ある小規模な実験データセットを渡して統計的に妥当な検定手法を選ばせ理由を説明させる」等、具体的に設計すること)をClaude Codeに解かせ、両者の回答を並べてBefore/After比較する。
-    - GPU不要・APIキー不要の範囲に検証スコープを限定したことと、その理由(CLAUDE.mdの「当面は有料APIキーが必須の候補を選ばない」方針)を`results.md`冒頭に明記する。
-    - ライセンス表記(リポジトリ全体のMIT、および実際に使ったスキルの`SKILL.md`内のライセンス記載)を確認する。
-  - 日本語記事は確認した範囲でZenn/Qiita/note共に0件(2026-10-14時点、backlog.md参照)。英語のDEV Community記事等はあるが日本語の一次検証記事ではない。
-  - GPU不要。スキルによってはExa・Benchling・NCBI・Materials Project等の有料/要登録APIキーが必要だが、今回の検証スコープではそれらを使わない。
+  - ソースコード非公開のアプリでも、高レベルな挙動から.NETアセンブリ・Android APK・JavaScript/Electronアプリ・Webサイト・パケットキャプチャ・ファームウェア・実行中プロセスの挙動、さらにネイティブバイナリ(Hopper/Ghidra/IDA連携)までをAIエージェントに解析させるMCPサーバー/CLI(MIT。Hopper/IDA/JEB等の商用解析ツール自体は別途正規に入手する必要があり、REAはそれらのツールライセンスを付与しない)。解析はローカルで実行され外部のホスト型解析サービスにアップロードしない設計。累計267,621star(2026-10-15時点)。
+  - 導入は `npx rea-agents setup`(Node.js 22/24/26系が前提)。70以上のMCPツールを備え、Claude Code/Codex/Cursor/Gemini CLI等に対応。
+  - **検証スコープは「静的なJavaScript/.NET解析など、Hopper/Ghidra/IDA等の商用ツールを使わない範囲」に限定すること。** 対象には自分が所有している、またはMIT/Apache-2.0等でライセンスされ再配布・解析が許諾されている小規模なOSS製CLIやシンプルなアプリ(例: 本リポジトリ自身のtools/配下のスクリプト、または別途用意する小さなサンプルアプリ)を選ぶ。第三者が権利を持つ非公開ソフトウェアや、解析許諾のないアプリは対象にしないこと。
+  - 具体的に`results.md`に残すこと:
+    - 対象に選んだソフトウェア名・入手元・ライセンス(自分の所有物か、解析が許諾されたOSSであることの確認結果)。
+    - `npx rea-agents setup` の導入ログ(成功/失敗・出力)をそのまま記録。
+    - REA(MCP経由でClaude Codeから)に対象の挙動解析を依頼し、実際に得られた解析結果(根拠・限界も含む)をそのまま記録。解析できなかった場合も正直に書く。
+    - ネイティブバイナリ解析(Hopper/Ghidra/IDA連携)は商用ツールが前提のため今回のスコープ外とし、その旨をresults.mdに明記する。
+  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-10-15時点、backlog.md参照。GameBusiness.jpのニュース解説記事1件のみで、著者自身の一次検証記事ではない)。
+  - GPU不要。APIキーは導入先エージェント(Claude Code)自身のモデルに依存するため追加の有料APIキー不要。
 
 状態: 設定済み
