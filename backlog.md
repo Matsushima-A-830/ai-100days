@@ -712,3 +712,39 @@
 - 検証難易度: 低(MIT。`npx skills add <repo>`のみでAPIキー不要〈GitHub Tokenはprivateリポジトリ用のオプション〉、GPUも不要。6時間以内に複数のスキルソース〈GitHub/GitLab/直接URL等〉からのインストール動作を一通り試せる)
 - 見栄え: 単体のデモとしては地味だが、「day-016以降この100日チャレンジが繰り返し使ってきた`npx skills add`の正体を掘り下げる」という裏方・エコシステム視点の記事になる。75以上のエージェント対応表やインストール元の多様性〈GitHub以外にGitLab/Azure Repos等〉を一覧化するBefore/After的な整理記事も作りやすい。
 - 状態: 未選択
+
+### [2026-10-15] obra/superpowers — Jesse Vincent氏発、Claude Code等向けの「考えてから書く」エージェント向けスキル・開発方法論フレームワーク
+
+- 出典: https://github.com/obra/superpowers (GitHub Trending Shell 2026-10-15、本日+688star/日、累計299,787star。MITライセンス)
+- 概要: 「ブレインストーミングで要求を明確化→計画を小タスクに分解→TDDで実装(サブエージェント・レビューを挟む)→テスト確認とブランチ整理」という一連の開発方法論を、文脈に応じて自動発火する複数のSKILL.mdスキル(ブレインストーミング・計画作成・TDD・体系的デバッグ・コードレビュー・診断用スキル等)として提供するフレームワーク。Claude Code/Codex/Cursor/Gemini CLI/GitHub Copilot CLI/OpenCode等、複数のコーディングエージェントで動作する。Anthropic公式プラグインディレクトリ(`anthropics/claude-plugins-official`、本バックログにも別途候補として記録)にも掲載されている。
+- 日本語記事件数: Zenn 0件 / Qiita 1件(pythonista0328氏、2026-02-02付。スキル14種・MITライセンス・対応エージェント等を紹介する導入記事) / note 0件(検索した範囲では確認できず)
+- 検証難易度: 低(MIT。Claude Codeでは`/plugin marketplace add obra/superpowers-marketplace`→`/plugin install superpowers@superpowers-marketplace`で導入。追加の有料APIキー・GPU不要〈動作は導入先エージェント自身のモデルに依存〉。導入前後で同じ曖昧なタスクをClaude Codeに与え、ブレインストーミング・計画立案などのスキルが自動発火するか、応答プロセスがどう変わるかを比較すれば6時間以内に完結する)
+- 見栄え: 「スキルフレームワーク導入前後でClaude Codeの振る舞いがどう変わるか」というBefore/After比較は分かりやすく、本リポジトリ自身が「朝リサーチ→昼実装」というRoutine運用をしている自己言及的な文脈とも相性が良い。ただしQiitaに既に紹介記事が1件あり、またAnthropic公式knowledge-work-plugins(day-013)・google/skills・vercel-labs/skills等、本バックログで既に「エージェントSkillsエコシステム」系の候補が多いため、採用する場合は「自分たちのRoutine運用に実際に組み込んで効果を見る」等の独自切り口が必要。
+- 状態: 未選択
+
+### [2026-10-15] morluto/rea — AIエージェントにアプリ・ネイティブバイナリまで丸ごとリバースエンジニアリングさせるMCPサーバー/CLI
+
+- 出典: https://github.com/morluto/rea (GitHub Trending TypeScript 2026-10-15、累計267,621star、2026-04-14作成で半年で急伸)
+- 概要: ソースコード非公開のアプリでも、高レベルな挙動から.NETアセンブリ・Android APK・JavaScript/Electronアプリ・Webサイト・パケットキャプチャ・ファームウェア・実行中プロセスの挙動、さらにネイティブバイナリ(Hopper/Ghidra/IDA連携)までをAIエージェントに解析させるMCPサーバー/CLI(MIT。Hopper/IDA/JEB等の商用解析ツール自体は別途正規に入手する必要があり、REAはそれらのツールライセンスを付与しない)。解析はローカルで実行され外部のホスト型解析サービスにアップロードしない設計。70以上のMCPツールを備え、Claude Code/Codex/Cursor/Gemini CLI等に対応。日本語READMEも用意されている。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では一次検証記事は未検出。GameBusiness.jpに日本語のニュース解説記事が1件あるが著者自身の検証記事ではない)
+- 検証難易度: 低〜中(MIT。Node.js 22/24/26系が前提で`npx rea-agents setup`等で導入、追加の有料APIキー・GPU不要〈動作は導入先エージェント自身のモデルに依存〉。静的なJavaScript/.NET解析はHopper/Ghidra/IDA等の商用ツール無しでも動作するため、自分が所有する/ライセンス上問題ない小規模なOSS製CLIやAPK等を対象にした静的解析のみに検証範囲を絞れば6時間以内に収まる。ネイティブバイナリの深い解析は別途Hopper/Ghidra/IDA等の用意が必要なため今回のスコープ外とする)
+- 見栄え: 「ソース非公開のアプリの挙動をAIエージェントに解析させ、同等機能を再実装させてみる」は技術者向けに非常にインパクトがあり、日本語の一次検証記事が無い点で差別化しやすい。記事化する場合は対象ソフトウェアが自分の所有物またはリバースエンジニアリングが許諾された対象であることを明記する必要がある。
+- 状態: 未選択
+
+### [2026-10-15] affaan-m/ECC(Everything Claude Code) — Anthropicハッカソン優勝者発、71エージェント・311スキルを束ねるエージェントハーネス最適化システム
+
+- 出典: https://github.com/affaan-m/ECC (GitHub Trending JavaScript 2026-10-15、累計280,242star、2026-01-18作成)
+- 概要: Anthropic×Cerebral Valley主催ハッカソン優勝者が、約10ヶ月の日常利用で磨いた設定を公開したAIコーディングエージェント向けの「エージェントハーネス」(MIT)。約71種の専門エージェント・311種の再利用可能スキル・97種のスラッシュコマンド・フック・ルール・メモリシステム(Memory Vault)・エージェント設定を静的スキャンするセキュリティツール「AgentShield」を束ね、「計画→テスト→実装→レビュー→検証→記憶」というワークフローを毎回のプロンプトで作り直さずに済むことを狙う。Claude Codeをメインに、Codex/Qoder/Cursor/OpenCode/Gemini/Copilot等にも部分対応。
+- 日本語記事件数: Zenn 1件(haboshi氏、インストール手順を解説する導入ガイド) / Qiita 0件 / note 0件
+- 検証難易度: 低(MIT。Node.js 18+とGitが前提、`npx ecc-universal@2.2.3 setup`またはClaude Codeの`/plugin marketplace add`経由で導入。核となる機能に追加の有料APIキー・GPU不要〈Kimi連携やカスタムゲートウェイ等の一部オプション機能のみ追加キーが必要〉。導入前後で同じ開発タスクをClaude Codeに与え、専門エージェント・スキルの自動活用やAgentShieldのスキャン結果を比較すれば6時間以内に完結する)
+- 見栄え: 大量のエージェント・スキルを一括導入した際の実際の振る舞いの変化や、AgentShieldによる危険な設定の検出デモは見せやすい。ただし本バックログには既にobra/superpowers(同日候補)・knowledge-work-plugins(day-013)・google/skills・vercel-labs/skills等、同系統の「エージェント拡張エコシステム」候補が多数あるため、採用する場合は差別化(例: AgentShieldのセキュリティスキャン機能に絞る等)が必要。
+- 状態: 未選択
+
+### [2026-10-15] Cortex — プロンプトで与えた文脈の効果をモデルの重みに「定着」させるMemory Consolidation手法(論文、コード未確認)
+
+- 出典: https://huggingface.co/papers/2610.20399 (Hugging Face Daily Papers 2026-10-15時点で62 upvotes)
+- 概要: 文脈(プロンプト)で一時的に得られる性能向上は、その文脈を取り除くと消えてしまう問題に対し、文脈がどう使われるかを予測する「prospective query」を生成し、文脈付きの出力を少数の低ランク/構造的なFFN更新へ蒸留して重みに統合する「Memory Consolidation」手法Cortexを提案。4B〜120Bのdense/MoEモデル(テキストのみ・マルチモーダル含む)で、定着(consolidation)と既存能力の保持(retention)のパレートフロンティア上に位置すると報告。14Bモデルで50回の逐次的な知識編集後も文脈由来の性能向上の88.9%を保持(非対象タスクの性能保持率99.8%)としている。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 高(arXiv抄録ページでは公式コード・学習済み重みの公開リンク・ライセンス表記を確認できず、フル再現は不可の可能性が高い。本リポジトリの絶対ルールに沿うなら、手法のアイデア〈文脈の効果を少数の更新に蒸留して定着させる〉のみを参考に、軽量モデル・小規模データでの縮小版の概念実証に絞る必要がある。APIキー不要、GPUはあれば望ましい)
+- 見栄え: 「文脈を外した後も効果が残るか」というBefore/After比較はHindsight・Remory・Core-Tail World Model等、本バックログで既に扱ってきたエージェントメモリ系の文脈と自然に接続できる。日本語記事が無く差別化しやすいが、再現スコープを事前に絞り込む必要があるため採用する場合は候補メモにその旨を明記すること。
+- 状態: 未選択
