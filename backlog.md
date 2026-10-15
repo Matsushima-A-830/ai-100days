@@ -676,3 +676,39 @@
 - 検証難易度: 中(APIキー・アカウント不要。GPU〈CUDA/Metal〉が無くてもCPUフォールバックで動作するとの記載があるが低速〈参考情報ではApple M3 Maxで1文あたり約30秒〉。クラウド実行環境がCPUのみの場合、短いサンプル生成なら6時間以内に収まる見込みだが、モデルの自動ダウンロード容量がRoutine環境のネットワーク制約に引っかからないかは実際に試して判断し、引っかかった場合はCLAUDE.mdの「Routine環境の制約」に沿ってローカル検証にエスカレーションする)
 - 見栄え: 音声サンプルをローカルでクローン生成し、生成音声そのものをデモにできれば非常に見栄えが良い。646言語対応という主張を日本語テキストで実際に試せるかも見どころ。「生成物の利用条件はアプリ本体のライセンスと別」である点を記事で明記する必要がある。
 - 状態: 未選択
+
+### [2026-10-14] ifixai-ai/iFixAi — AIエージェントが「言ったこと」と「実際の挙動」のズレを監査するOSSツールが本日GitHub Trendingで急上昇
+
+- 出典: https://github.com/ifixai-ai/iFixAi (GitHub Trending Python 2026-10-14、+2,143star/日、累計27.3k star。Product Hunt 2026-09-29ローンチ)
+- 概要: AIエージェントが実際に申告通りの仕事をしているかを独立監査するPython製OSSツール(Apache-2.0)。Fabrication(捏造)・Manipulation(操作)・Deception(欺瞞)・Unpredictability(予測不能性)・Opacity(不透明性)の5本柱に沿った60項目の検査(アドバーサリアルテスト+運用チェック)でA〜Fを採点する。`--provider mock`ならネットワーク非依存のモック相手に動作確認でき(意図的に欠陥入りのため不合格スコアが出る想定)、実際のエージェントを本物のグレードで監査するには検査対象用と判定用(ジャッジ)で異なるベンダーの有料APIキーが2つ必要(フルスイートで見積もり$10〜18)。Claude Code/Codex向けプラグインもあり。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出。英語のProduct Huntローンチ記事はあり)
+- 検証難易度: 低〜中(モック監査〈`--provider mock`〉なら追加の有料APIキー・GPU不要で6時間以内に実行・スコアカード取得が可能。ただし「実際に動くエージェントを本物の基準で監査する」フル検証には検査対象モデル用+ジャッジモデル用の計2種類の有料APIキーが必要〈推定$10〜18〉。CLAUDE.mdの方針〈当面は有料APIキー必須の候補を選ばない〉に沿うなら、today.mdではモック監査または自作の簡易エージェントに絞ったスコープを明記して選ぶ必要がある)
+- 見栄え: 本リポジトリの絶対ルール「動かしていないものを動いたと書かない」と直接共鳴するテーマで、他ツールのレビューより一段メタな「ツールを監査するツールを監査する」自己言及的な記事が書ける。5本柱ごとのA〜Fスコアカードはそのまま見せやすい。
+- 状態: 未選択
+
+### [2026-10-14] K-Dense-AI/scientific-agent-skills — AIエージェントを「AI研究者」に変えるAgent Skills集(旧Claude Scientific Skills)が163種に拡大
+
+- 出典: https://github.com/K-Dense-AI/scientific-agent-skills (累計49.2k star、GitHub Trending Python 2026-10-14で+146star/日。関連arXiv論文: 2609.00065)
+- 概要: 生物学・化学・医学・物理・工学・地球科学・データ解析・科学コミュニケーションにまたがる163種のスキルと、100種類超の科学データベースへのガイダンスを収録したAgent Skills集(MIT。個々のスキルのライセンスは`SKILL.md`ごとに異なる場合がある)。Claude Code/Cursor/Codex/Google Antigravity等、オープンなAgent Skills標準に対応するホストで使える。元はClaude Scientific Skillsという名前だったが、Claude専用ではなく汎用のAgent Skills標準対応に改称された。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 低(MIT。`npx skills add K-Dense-AI/scientific-agent-skills`で導入。多くのスキルは追加の有料APIキー不要だが、Exa・Benchling・NCBI・Materials Project等一部の外部データベース連携スキルは個別にAPIキーが要る。APIキー不要なスキルに絞って検証範囲を選べば6時間以内に収まる。GPU不要〈GPU活用スキルはオプション〉)
+- 見栄え: Claude Code自身に特定の科学スキル〈例: 化学または生物学系〉を実際に使わせ、スキル無し/有りで疑似研究タスクへの応答の深さ・正確さがどう変わるかのBefore/After比較が作りやすい。同じ`npx skills add`エコシステムの中でdiagram-design〈day-016で検証済み〉と対比できる、領域特化スキル集という切り口。
+- 状態: 採用済み(day-017)
+
+### [2026-10-14] HKUDS/CLI-Anything — 既存ソフトウェアをAIエージェント対応CLIに自動変換する7フェーズパイプライン
+
+- 出典: https://github.com/HKUDS/CLI-Anything (累計52.4k star、GitHub Trending Python 2026-10-14で+94star/日)
+- 概要: 「あらゆるソフトウェアをAIエージェントネイティブにする」を掲げ、既存のGUIアプリ〈GIMP・Blender・LibreOffice・Inkscape・OBS Studio・Zotero・Draw.io・Godot・Ollama等50種類超〉を解析し、Clickベースの構造化CLI〈REPL+JSON出力対応〉を自動生成する7フェーズパイプライン(分析→設計→実装→テスト計画→テスト作成→ドキュメント化→公開)のOSS(Apache-2.0)。生成済みCLIを集めたレジストリ「CLI-Hub」も付属し、`cli-hub install <name>`でコミュニティ製CLIを導入できる。Claude Code/Cursor/Codex等のプラグインとして動作。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出。韓国語〈PyTorch Korea User Group〉・英語の紹介記事は複数あり)
+- 検証難易度: 中(Apache-2.0、CLI-Hub自体の導入〈`pip install cli-anything-hub`〉や既存CLIの一覧閲覧・起動は追加の有料APIキー・GPU不要。ただし新規にCLIを自動生成する7フェーズパイプラインを試す場合、対象ソフトウェア〈GIMP等〉がRoutine実行環境に実際にインストールされている必要があり、クラウド実行環境で対象アプリを用意できない場合はCLAUDE.mdの「Routine環境の制約」に沿って軽量な対象〈CLIツールやPythonライブラリ等、追加インストール不要なもの〉に絞るか、ローカル検証にエスカレーションする判断が必要)
+- 見栄え: 「このツールにGIMPやBlenderを食わせてAI操作可能なCLIを自動生成させ、実際にエージェントから操作させてみる」というデモは視覚的インパクトが大きい。本リポジトリ自身〈ai-100days〉を解析対象にして簡易CLIを生成させる自己言及的な切り口も可能。
+- 状態: 未選択
+
+### [2026-10-14] vercel-labs/skills — Vercel公式のAgent Skillsインストーラ、75以上のコーディングエージェントに対応
+
+- 出典: https://github.com/vercel-labs/skills (累計34.9k star、GitHub Trending TypeScript 2026-10-14で+732star/日)
+- 概要: `SKILL.md`形式の再利用可能なAgent Skillsを導入・管理するVercel公式CLI(MIT)。GitHub省略形・フルURL・GitLab・Azure Repos・任意のgit URL・ローカルパス・直接ダウンロードURLなど多様なソース指定に対応し、OpenCode/Claude Code/Codex/Cursor等75以上のエージェントで動作する。実はdiagram-design〈day-016で検証済み〉・K-Dense scientific-agent-skills・CLI-Anythingなど、本バックログに並ぶ他候補が導入コマンドとして挙げている`npx skills add ...`自体がこのツール。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 低(MIT。`npx skills add <repo>`のみでAPIキー不要〈GitHub Tokenはprivateリポジトリ用のオプション〉、GPUも不要。6時間以内に複数のスキルソース〈GitHub/GitLab/直接URL等〉からのインストール動作を一通り試せる)
+- 見栄え: 単体のデモとしては地味だが、「day-016以降この100日チャレンジが繰り返し使ってきた`npx skills add`の正体を掘り下げる」という裏方・エコシステム視点の記事になる。75以上のエージェント対応表やインストール元の多様性〈GitHub以外にGitLab/Azure Repos等〉を一覧化するBefore/After的な整理記事も作りやすい。
+- 状態: 未選択
