@@ -1,0 +1,16 @@
+$ xerj autoindex /home/user/ai-100days --data-dir ./data
+
+error: unknown argument: --data-dir
+
+xerj autoindex — point it at any folder and make the contents AI-searchable, zero config
+...
+OPTIONS:
+--url <U>            ES-compat endpoint (default http://localhost:9200)
+--api-key <K>        Authorization header (or env XERJ_API_KEY)
+...
+
+→ `autoindex` has no `--data-dir`. It talks to an ALREADY-RUNNING node over
+  the ES-compat HTTP API via `--url` (default http://localhost:9200); the
+  node itself (the bare `xerj [OPTIONS]` server-start form) is the one that
+  takes `--data-dir`. Easy to confuse since both subcommands share the same
+  binary and many flag names.

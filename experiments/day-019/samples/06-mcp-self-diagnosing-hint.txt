@@ -1,0 +1,37 @@
+MCP(stdio, JSON-RPC 2.0)経由で `xerj_search`(BM25全文検索)を、意味は
+対応するが単語をほぼ共有しないパラフレーズクエリで呼んだ結果。
+
+リクエスト(tools/call): xerj_search
+  arguments: {"index": "neu-docs", "query":
+    "CのバグをRustへの書き換えで安全にした検証のまとめ", "size": 5}
+
+レスポンス(抜粋):
+{
+  "_xerj": {
+    "hints": [{
+      "code": "lexical_on_semantic_text",
+      "reason": "`body` is `semantic_text`, but this query scored it with
+        BM25 over the analysed text — the embedding written at ingest was
+        NOT consulted, so these hits are lexical and a paraphrase sharing
+        no words with the target will not find it. For meaning-based
+        recall run the `semantic` query on `body`; to keep both signals,
+        combine them with `hybrid`.",
+      "try": {
+        "request": "POST /neu-docs/_search",
+        "body": {"query": {"semantic": {"field": "body",
+          "query": "CのバグをRustへの書き換えで安全にした検証のまとめ",
+          "k": 10}}}
+      }
+    }]
+  },
+  "hits": {"total": {"value": 237}, "hits": [
+    {"_source": {"ax_path": "day-008-non-destructive-memory-as-of-query.md"}},
+    ...
+  ]}
+}
+
+→ xerjはクエリ方法を間違えたときに、黙って的外れな結果を返すのではなく
+  「このフィールドはsemantic_textだが今回はBM25でしか見ていない、
+  パラフレーズクエリなら`semantic`または`hybrid`を使え」という具体的な
+  診断ヒントをレスポンス自体に埋め込んで返してくる。エージェントが
+  自己修正しやすい、良いUX設計だと感じた。

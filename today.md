@@ -2,18 +2,13 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 018
-- 選んだ候補(backlog.mdのタイトルかURL): morluto/rea — AIエージェントにアプリ〜ネイティブバイナリまでリバースエンジニアリングさせるMCPサーバー/CLI — https://github.com/morluto/rea
+- Day: 019
+- 選んだ候補(backlog.mdのタイトルかURL): xerj-org/xerj — AIエージェント専用のローカル検索エンジン(Elasticsearch API互換、Rust製) — https://github.com/xerj-org/xerj
 - 補足メモ(あれば):
-  - ソースコード非公開のアプリでも、高レベルな挙動から.NETアセンブリ・Android APK・JavaScript/Electronアプリ・Webサイト・パケットキャプチャ・ファームウェア・実行中プロセスの挙動、さらにネイティブバイナリ(Hopper/Ghidra/IDA連携)までをAIエージェントに解析させるMCPサーバー/CLI(MIT。Hopper/IDA/JEB等の商用解析ツール自体は別途正規に入手する必要があり、REAはそれらのツールライセンスを付与しない)。解析はローカルで実行され外部のホスト型解析サービスにアップロードしない設計。累計267,621star(2026-10-15時点)。
-  - 導入は `npx rea-agents setup`(Node.js 22/24/26系が前提)。70以上のMCPツールを備え、Claude Code/Codex/Cursor/Gemini CLI等に対応。
-  - **検証スコープは「静的なJavaScript/.NET解析など、Hopper/Ghidra/IDA等の商用ツールを使わない範囲」に限定すること。** 対象には自分が所有している、またはMIT/Apache-2.0等でライセンスされ再配布・解析が許諾されている小規模なOSS製CLIやシンプルなアプリ(例: 本リポジトリ自身のtools/配下のスクリプト、または別途用意する小さなサンプルアプリ)を選ぶ。第三者が権利を持つ非公開ソフトウェアや、解析許諾のないアプリは対象にしないこと。
-  - 具体的に`results.md`に残すこと:
-    - 対象に選んだソフトウェア名・入手元・ライセンス(自分の所有物か、解析が許諾されたOSSであることの確認結果)。
-    - `npx rea-agents setup` の導入ログ(成功/失敗・出力)をそのまま記録。
-    - REA(MCP経由でClaude Codeから)に対象の挙動解析を依頼し、実際に得られた解析結果(根拠・限界も含む)をそのまま記録。解析できなかった場合も正直に書く。
-    - ネイティブバイナリ解析(Hopper/Ghidra/IDA連携)は商用ツールが前提のため今回のスコープ外とし、その旨をresults.mdに明記する。
-  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-10-15時点、backlog.md参照。GameBusiness.jpのニュース解説記事1件のみで、著者自身の一次検証記事ではない)。
-  - GPU不要。APIキーは導入先エージェント(Claude Code)自身のモデルに依存するため追加の有料APIキー不要。
+  - 人間(matsu)から直接指定された候補で、通常の「朝research→通勤中にtoday.md反映→昼実装」という分業を経ず、同日中に選定から検証まで一括で実施した。
+  - コード・ドキュメント・ログ・PDF等のフォルダをまるごとインデックス化し、AIエージェントがファイル全体を読み込まずに該当箇所だけを取り出せるようにするローカル検索エンジン(Apache-2.0)。全文検索(BM25)・ベクトル検索・ハイブリッド検索に対応し、Elasticsearch 8.x互換APIとMCPサーバー(16ツール)を備える単一バイナリ。
+  - 導入はGitHub Releasesの公式プリビルドバイナリ(`x86_64-unknown-linux-gnu`)をダウンロードするのみ。追加の有料APIキー不要。既定(lexical)モードはGPU不要、`--embed-mode neural`はCPUでも動くが低速。
+  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-10-16時点、backlog.md参照)。
+  - 検証は本リポジトリ(ai-100days)自身をautoindexの対象にして行った。
 
 状態: 設定済み

@@ -1,0 +1,25 @@
+状況: `xerj --insecure --data-dir ./experiments/day-019/work/data --port 9200` を
+experiments/day-019/work/ の中で起動したまま、同じ work/ ディレクトリを含む
+リポジトリ全体 `/home/user/ai-100days` に対して `xerj autoindex` を実行した。
+サーバー自身のログ・audit.jsonlが、まさにインデックス対象のフォルダの中で
+書き込まれ続けていたため、スキャン中にファイルサイズが変化して失敗した。
+
+$ xerj autoindex /home/user/ai-100days --url http://localhost:9200
+
+...
+phase B: indexing 287 files with 4 workers → http://localhost:9200
+xerj-done ok=false exit=1 reason=aborted wall=5.0s
+error: autoindex stopped with bulk/backend failures:
+  /home/user/ai-100days/experiments/day-019/work/server.log changed size
+    during autoindex (expected 15451, now 22472); retry the run
+  | /home/user/ai-100days/experiments/day-019/work/autoindex2.log changed
+    size during autoindex (expected 426, now 5506); retry the run
+  | /home/user/ai-100days/experiments/day-019/work/data/audit.jsonl changed
+    size during autoindex (expected 82, now 118784); retry the run
+Failed source files were not journaled complete; fix the reported server
+or embedding configuration and rerun the same command to resume safely
+
+→ 教訓: `--data-dir` や自分の作業ログを、まさにautoindexでインデックスする
+  フォルダの中に置いてはいけない。サーバー自身が書き込むファイルが
+  スキャン中に変化し、自己言及的に失敗する。データディレクトリ・ログは
+  必ずインデックス対象の外(例: /tmp配下)に置くこと。

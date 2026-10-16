@@ -1,0 +1,36 @@
+`xerj mcp --url http://localhost:9200` を標準入出力でJSON-RPC 2.0
+(initialize → notifications/initialized → tools/list → tools/call)として
+直接叩いて確認した16個のMCPツール一覧(backlog.mdで見積もった「16個」と一致):
+
+xerj_search, xerj_semantic_search, xerj_vector_search, xerj_hybrid_search,
+xerj_memory_store, xerj_memory_recall, xerj_brain_ego, xerj_brain_link,
+xerj_brain_unlink, xerj_brain_overview, xerj_map, xerj_code_search,
+xerj_plan, xerj_hub_find, xerj_hub_def, xerj_hub_ask
+
+`body` が本当に `semantic_text` になっているインデックス(exp-docs,
+experiments/配下を--embed-mode neuralでautoindex中、383件時点)に対して、
+同じ日本語パラフレーズクエリをxerj_searchとxerj_semantic_searchの両方に
+投げた結果:
+
+query = "CのバグをRustへの書き換えで安全にした検証のまとめ"
+(day-002の「Cのバグをメモリ安全性の観点でRustに書き換えた検証」を
+ 意図した言い換えクエリ。単語はほぼ共有していない)
+
+xerj_search (BM25):      hits.total.value = 0  (単語が合わないため0件)
+
+xerj_semantic_search (k=5, field=body):
+  score=0.8007  experiments/day-006/results.md
+  score=0.7985  experiments/day-011/results.md
+  score=0.7922  experiments/day-007/results.md
+  score=0.7574  experiments/day-012/results.md
+  score=0.7413  experiments/day-010/results.md
+
+→ BM25が0件で諦めるクエリに対しても、semantic_searchは常に何らかの
+  近傍を返す(「本当に意味的に近い」かどうかは別問題。day-002自体は
+  まだこの部分インデックスに取り込まれていなかったため、肝心の
+  「正解」が候補に入っているかは今回検証しきれなかった — Routine
+  実行環境のCPUのみでの実測速度では、全体の再インデックスに15分以上
+  かかる見積りだったため、途中で打ち切って確認した)。
+  スコアが0.74〜0.80の狭い帯に収まっている点は、all-MiniLM-L6-v2が
+  英語中心のモデルで日本語の意味差をあまり細かく分離できていない
+  可能性を示唆しており、過大評価はできない。
