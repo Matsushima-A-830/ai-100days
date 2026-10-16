@@ -1,0 +1,36 @@
+サーバーを `--embed-mode neural` で起動した状態でも、autoindexの対象
+フォルダが小さい(ファイル数・バイト数が少なく処理が1〜2秒で終わる)場合、
+`body` フィールドが `semantic_text` にならず、素の `text` のままになる
+ケースを複数回再現した。
+
+- `/home/user/ai-100days/articles`(18ファイル, 224KB) → 1.0〜1.2秒で完了
+  → body: {"type": "text"}  (semantic_textにならない)
+- `/home/user/ai-100days/experiments/day-002`(9ファイル) → 1.2秒で完了
+  → body: {"type": "text"}  (同上)
+- `/home/user/ai-100days/experiments`(約200ファイル, 4.85MB) → 実測
+  3-6KB/sで数分以上かかる規模 → 383件時点で確認
+  → body: {"type": "semantic_text"}  (期待通り)
+
+$ curl -s http://localhost:9200/<small>-docs/_mapping | ...
+  "body": {"type": "text"}
+$ curl -s http://localhost:9200/exp-docs/_mapping | ...
+  "body": {"type": "semantic_text"}
+
+小規模インデックスに対して `xerj_semantic_search` を呼ぶと、黙って
+おかしな結果を返すのではなく明確なHTTP 400で失敗する(安全側の挙動):
+
+{"error":{"reason":"semantic query on field [body]: it is not a
+  `semantic_text` field, so there is no comparable stored vector to
+  match. A `semantic` query requires either a `semantic_text` field
+  (auto-embedded with the built-in lexical embedder) or an active
+  embedding backend (`embedding.mode = \"neural\"`; ...)."},"status":400}
+
+→ 結論: `--embed-mode neural` をサーバーに渡しただけでは、小さい/速く
+  終わるコーパスに対しては `semantic_text` マッピングが有効にならない
+  場合がある(根本原因は未特定。おそらく最初の数件の書き込みがモデルの
+  初期化より先に完了し、デフォルトの素のtextマッピングで確定してしまう
+  タイミング依存の挙動と推測される)。`xerj_semantic_search` を実際に
+  使う前には、`autoindex map` や `_mapping` で対象フィールドが本当に
+  `semantic_text` になっているかを確認すべきで、neuralモードを指定した
+  からといって無条件に信用してはいけない。失敗自体は分かりやすいHTTP 400
+  で止まるため、気づけないまま壊れた結果を受け取ることはない。

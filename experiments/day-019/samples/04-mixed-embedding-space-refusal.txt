@@ -1,0 +1,17 @@
+状況: 同じリポジトリを対象に、lexical(既定)モードで一度 autoindex した後、
+サーバーを `--embed-mode neural` で再起動し、同じ `--prefix`(既定の ax)で
+再度 autoindex しようとした。
+
+$ xerj autoindex /home/user/ai-100days --url http://localhost:9200
+
+...
+xerj-done ok=false exit=1 reason=aborted wall=5.2s
+error: embedding execution identity changed since this autoindex journal
+was created; refusing to mix vector spaces. Restore the original embedding
+identity, or rebuild all vectors with --fresh and a new --prefix. Before
+reusing the old prefix, delete and recreate its prior autoindex indices
+
+→ lexicalとneuralのベクトル空間は別物として扱われ、混在させようとすると
+  明確なエラーで止まる。`--fresh --prefix <new>` で別名のインデックスを
+  作れば解決する。これは安全側に倒れた良い挙動だと感じた(無言で
+  ベクトル空間が壊れるよりずっと良い)。

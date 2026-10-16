@@ -1,0 +1,31 @@
+`xerj def` (go-to-definition) を、全リポジトリをlexicalモードでautoindexした
+状態で試した結果。Python/C/Rustの関数定義は正しく拾えるが、Markdown内の
+コードフェンスに書かれたJavaScript関数(day-018のresults.md内のtoType())は
+一切拾えない。
+
+$ xerj def "build_base_tokenizer"
+─── experiments/day-001/run_experiment.py:47  [function]
+    def build_base_tokenizer(train_texts: list[str]) -> Tokenizer:
+2 definition(s) from 'ax-*'.
+
+$ xerj def "rle_decode"
+─── experiments/day-002/rust/src/lib.rs:17  [function]
+    pub fn rle_decode(input: &[u8], out_cap: usize) -> Result<Vec<u8>, CapacityExceeded>
+─── experiments/day-002/c/driver.c:13  [function]
+    size_t rle_decode(const uint8_t *in, size_t in_len, uint8_t *out, size_t out_cap);
+─── experiments/day-002/c/rle_decode.c:21  [function]
+    size_t rle_decode(const uint8_t *in, size_t in_len, uint8_t *out, size_t out_cap)
+5 definition(s) from 'ax-*'.
+→ day-002で検証した「同じrle_decodeのC版/Rust版」がヘッダ・実装・Rust
+  移植版まで一括でヒットし、go-to-definitionとしてかなり実用的だった。
+
+$ xerj def "toType"
+no definition in ax-* for: toType
+(broader ranked retrieval: xerj search "toType")
+
+→ `xerj search "toType"` (全文検索)では day-018/results.md 等が見つかる
+  ものの、`def`(symbol抽出)では見つからない。autoindexの `autoindex map`
+  で確認した `language` フィールドの実例は python/c/rust のみで、javascript
+  は対象外と見られる(かつMarkdown内のコードフェンスはそもそも「コード
+  シンボル抽出」の対象にならない)。既定構成でのスコープ外、という位置づけ
+  と考えられる。

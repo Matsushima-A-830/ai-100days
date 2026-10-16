@@ -1,0 +1,29 @@
+状況: 上記の自己言及的な失敗を直した後、作業ファイル(xerjバイナリ・ログ等)を
+リポジトリの外(/tmp)に退避してから同じフォルダに対して再度 autoindex を
+実行した。すると、前回のレジューム用ジャーナル(~/.xerj/autoindex/<hash>/)が
+「このファイルが消えている」と検知し、インデックス更新そのものを拒否した。
+
+$ xerj autoindex /home/user/ai-100days --url http://localhost:9200
+
+...
+xerj-done ok=false exit=1 reason=aborted wall=0.0s
+error: this attempt made no remote mutations — no documents, aliases, graph
+edges or catalog entries were written. 7 file(s) indexed under this resume
+plan no longer exist in the folder, and their documents are still live in
+the destination; removing files from an indexed folder is not reconciled
+yet. Deleted content groups [experiments/day-019/work/autoindex.log (...),
+experiments/day-019/work/data/audit.jsonl (...), ...].
+Recovery, cheapest first: restore the DELETED file(s) and rerun — every
+other file keeps its resume state; rebuild in place by deleting the
+indices this plan publishes (...) and the state directory
+/root/.xerj/autoindex/5bd9a7368139083a, then rerunning — this re-extracts
+and re-embeds the whole corpus. ... `--fresh` picks up added and changed
+files in place but never deletes documents for removed or excluded files,
+so it is refused here too
+
+→ 設計として理解できる安全策(「消えたファイルの扱いは未実装、黙って
+  古いドキュメントを残したままにはしない」)だが、「ファイルをいくつか
+  移動/削除した状態で同じフォルダを再autoindexする」という、普段の開発で
+  普通にやりそうな操作が、復旧には「インデックス+ジャーナルを丸ごと削除して
+  全件再構築」という比較的重い対応を要求される点は、使い始めで驚いた挙動
+  だった。
