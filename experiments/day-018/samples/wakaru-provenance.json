@@ -1,0 +1,7 @@
+{
+  "format": "amd",
+  "strategy": "structural",
+  "modules": {
+    "module.js": {"input": "/tmp/rea-wakaru-Q1CAD7/inputs/bundle.js", "ranges": [[0,87442]], "extraction": "structural"}
+  }
+}
