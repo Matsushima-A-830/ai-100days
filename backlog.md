@@ -748,3 +748,39 @@
 - 検証難易度: 高(arXiv抄録ページでは公式コード・学習済み重みの公開リンク・ライセンス表記を確認できず、フル再現は不可の可能性が高い。本リポジトリの絶対ルールに沿うなら、手法のアイデア〈文脈の効果を少数の更新に蒸留して定着させる〉のみを参考に、軽量モデル・小規模データでの縮小版の概念実証に絞る必要がある。APIキー不要、GPUはあれば望ましい)
 - 見栄え: 「文脈を外した後も効果が残るか」というBefore/After比較はHindsight・Remory・Core-Tail World Model等、本バックログで既に扱ってきたエージェントメモリ系の文脈と自然に接続できる。日本語記事が無く差別化しやすいが、再現スコープを事前に絞り込む必要があるため採用する場合は候補メモにその旨を明記すること。
 - 状態: 未選択
+
+### [2026-10-16] xerj-org/xerj — AIエージェント専用のローカル検索エンジン(Elasticsearch API互換、Rust製)
+
+- 出典: https://github.com/xerj-org/xerj (本日GitHub Trending Rustで急伸、累計6.8k star)
+- 概要: コード・ドキュメント・ログ・PDF等のフォルダをまるごとインデックス化し、AIエージェントがファイル全体を読み込まずに該当箇所だけを取り出せるようにするローカル検索エンジン(Apache-2.0)。全文検索(BM25)・ベクトル検索・ハイブリッド検索に対応し、Elasticsearch 8.x互換APIとMCPサーバーを備える単一バイナリ(JVM等の依存無し)。「似た実装を持つOSSを参照しながらコーディングする(reference coding)」を主な用途として想定している。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 低(Apache-2.0。単一バイナリをダウンロードし`--insecure`フラグ付きで起動すれば追加の有料APIキー不要で検証可能〈それ以外では認証キーが自動生成される〉。既定の埋め込みはオフラインの軽量lexical方式でGPU不要。ニューラル埋め込みはオプションで約90MBのモデルファイルを追加DLするのみ。リランク機能のみ外部有料サービス〈TypeSafe Jev〉のキーが必要だが、今回は未使用の範囲で検証可能)
+- 見栄え: 本リポジトリ(ai-100days)のexperiments/articles等のフォルダをXERJでインデックスし、キーワード検索・ベクトル検索・ハイブリッド検索でヒットする結果がどう変わるかをBefore/After的に並べられる。MCPサーバーとしてClaude Code自身から直接呼び出すデモも作りやすく、自己言及的な切り口になる。注意: 同一READMEを持つフォーク(github.com/pradaev/xerj)が存在するため、検証は公式(xerj-org/xerj)で行うこと。
+- 状態: 未選択
+
+### [2026-10-16] MadsLorentzen/ai-job-search — Claude Code上で動く求職活動自動化フレームワーク
+
+- 出典: https://github.com/MadsLorentzen/ai-job-search (本日GitHub Trending Pythonで+879star/日、累計48.3k star)
+- 概要: Claude Codeに「求人検索(`/scrape`)」「応募書類作成(`/apply <url>`)」「面接対策(`/interview`)」をスラッシュコマンドとして実行させる、オープンソースの求職活動フレームワーク(MIT)。アプリやSaaSではなく指示・スキル・テンプレート集のフォルダで、利用者自身のPCとClaude Code自身のサブスクリプション認証だけで動く設計。同梱の求人サイト連携スキルはデンマーク市場向けが中心。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出。英語・中国語・スペイン語の紹介記事は複数あり)
+- 検証難易度: 低〜中(MIT。Python 3.10+/Bun、CV生成にはLaTeX〈lualatex/xelatex〉が必要。追加の有料APIキーは不要〈Claude Code自身のサブスクリプション認証で動く設計〉、GPUも不要。ただし同梱の求人サイト連携スキルはデンマーク向けのため、日本の求人サイトを対象にするには`/apply`等のコア機能〈求人票テキストからのCV/カバーレター自動生成〉に検証範囲を絞るか、架空・公開済みの求人票テキストを使う縮小版の概念実証が必要)
+- 見栄え: 同じ求人票に対し、素のClaude Codeに頼んだ場合と、このフレームワーク導入後(スキル・テンプレート活用)でCV/カバーレターの質・作業時間がどう変わるかのBefore/After比較が作りやすい。実務に直結するテーマで読者の関心を引きやすい。
+- 状態: 未選択
+
+### [2026-10-16] anthropics/claude-plugins-official — Anthropic公式のClaude Codeプラグイン・ディレクトリ自体が本日GitHub Trendingで急伸
+
+- 出典: https://github.com/anthropics/claude-plugins-official (本日GitHub Trending Pythonで+1,552star/日、累計40.4k star)
+- 概要: Anthropic自身が管理する、Claude Code向けプラグインの公式ディレクトリ(Apache-2.0。個々のプラグインは別途ライセンスがある場合がある)。`/plugins`にAnthropic自身が開発・保守する内部プラグイン、`/external_plugins`にパートナー・コミュニティ製のサードパーティプラグイン(品質・セキュリティ基準を満たしたもののみ掲載)を収録し、`/plugin install <name>@claude-plugins-official`やClaude Code内の`/plugin > Discover`から導入できる。day-013で検証したanthropics/knowledge-work-plugins等、個々のプラグイン自体は既に話題になっているが、この「公式ディレクトリ」自体がGitHub Trendingで急伸するのは本日が初観測。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語の一次紹介記事は未検出。タイ語ブログ等の海外記事はあり)
+- 検証難易度: 低(Apache-2.0。Claude Code自身の`/plugin`コマンドから追加の有料APIキー・GPU不要で導入・比較できる)
+- 見栄え: ディレクトリに掲載された複数のAnthropic内部プラグインを実際に`/plugin install`し、未導入時と導入後でClaude Codeの応答がどう変わるかを比較できる。本バックログで既に扱った(または扱う予定の)google/skills・vercel-labs/skills・obra/superpowers等の「エージェント拡張エコシステム」系候補と比べ、「Anthropic自身の公式配布チャネルの実態」という一段メタな切り口で差別化できる。
+- 状態: 未選択
+
+### [2026-10-16] android/skills — Google公式、Android開発向けAgent Skills集
+
+- 出典: https://github.com/android/skills (本日GitHub Trendingで+163star/日、累計8.0k star)
+- 概要: developer.android.comの公式ガイダンスに基づき、XMLレイアウトからComposeへの移行・AGP 9へのアップグレード・R8設定の点検など、LLMが苦手とされる領域に絞ったAndroid開発向けのAgent Skills集(Apache-2.0)。オープンなAgent Skills標準(SKILL.md形式)に準拠し、Claude Code/Codex等に導入できる。day-015で検証したgoogle/skills(Cloud/Gemini向け)とは異なる、Android開発特化のGoogle公式スキル集。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出。developer.android.comの公式ガイド日本語版はあるが著者自身の検証記事ではない)
+- 検証難易度: 中(Apache-2.0。スキル自体の導入は`.skills/`配下への配置のみで追加の有料APIキー・GPU不要だが、「XML→Compose移行」等の効果を実際に検証するには手元に小さなAndroidサンプルプロジェクト(Android Studio/Gradle)を用意する必要がある。既存のXMLレイアウトを持つ軽量なサンプルを自作すれば6時間以内に収まる見込み)
+- 見栄え: 同じXMLレイアウトファイルをスキル無し/有りでClaude Codeに移行させ、生成されたComposeコードの品質・ベストプラクティス準拠度をBefore/After比較できる。Google公式のAgent Skills第2弾という文脈で、day-015のgoogle/skillsとの比較軸も作れる。
+- 状態: 未選択
