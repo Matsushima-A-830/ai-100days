@@ -784,3 +784,39 @@
 - 検証難易度: 中(Apache-2.0。スキル自体の導入は`.skills/`配下への配置のみで追加の有料APIキー・GPU不要だが、「XML→Compose移行」等の効果を実際に検証するには手元に小さなAndroidサンプルプロジェクト(Android Studio/Gradle)を用意する必要がある。既存のXMLレイアウトを持つ軽量なサンプルを自作すれば6時間以内に収まる見込み)
 - 見栄え: 同じXMLレイアウトファイルをスキル無し/有りでClaude Codeに移行させ、生成されたComposeコードの品質・ベストプラクティス準拠度をBefore/After比較できる。Google公式のAgent Skills第2弾という文脈で、day-015のgoogle/skillsとの比較軸も作れる。
 - 状態: 未選択
+
+### [2026-10-17] debpalash/VoiceStudio — ElevenLabsのローカル完全動作版を目指すOSS音声クローン/ダビング/文字起こしスタジオ
+
+- 出典: https://github.com/debpalash/VoiceStudio (本日GitHub Trending Pythonで5位、累計73,084star・本日+2,135star。短期間での急伸)
+- 概要: 音声クローン・ボイスデザイン・動画ダビング・ディクテーション・文字起こし・オーディオブック作成を646言語分、すべてローカルで行えることを掲げるデスクトップアプリ(アプリ本体はAGPL-3.0)。既定のTTSエンジンはk2-fsa/OmniVoiceで、HTTP/WebSocket/JSON-RPC/CLI/MCPの各トランスポートを備え、エージェントからも呼び出せる。NVIDIA(CUDA)/Apple Silicon(Metal)で高速化、専用GPUが無い環境でもCPUで動作可能(その場合はPyTorchのCPUビルドに約5GBの空き容量が必要。モデル込みで合計約14GBという報告もある)。
+- 日本語記事件数: Zenn 0件 / Qiita 4件前後(tsuzuri_ai, Git_Dayori等の「GitHub日報」系まとめ記事でのトレンド紹介のみで、著者自身による検証記事は確認できず) / note 4件前後(shali_note氏「ローカルだけでやる声クローン」、generativeai_new氏「AIボイスを自作する前に ── VoiceStudioに必要な約14GB」等、一部ハンズオン的な内容を含む記事あり。ただしELiteprise的な深い技術検証記事ではない)
+- 検証難易度: 低(追加の有料APIキー不要。既定のGPU無し構成でCPU動作可能なため6時間以内に声クローン・ディクテーション・文字起こし等の主要機能を一通り試せる見込み。話者分離(diarization)機能のみHugging Faceトークンが必要だが今回はオプションとして除外可能。注意: アプリ本体はAGPL-3.0だが、既定のOmniVoiceモデル重みはCC-BY-NC〈非商用〉とする日本語記事の報告があり、ライセンスが二重構造になっている点を記事中で明記する必要がある)
+- 見栄え: 自分の声を10秒程度の録音からクローンし、テキストから読み上げさせるBefore/After的なデモは一般読者にも分かりやすい。ElevenLabs等の有料SaaSとの対比、完全ローカルで個人情報が外部に出ない点も訴求しやすい。日本語音声の品質は未確認のため、検証記事ではそこに触れる価値がある。
+- 状態: 未選択
+
+### [2026-10-17] google/artemis(ARTEMIS) — Google公式、自然言語の指示だけでAndroid端末を自動操作するエージェントハーネス
+
+- 出典: https://github.com/google/artemis (本日GitHub Trending全言語で1位、累計12,154star・本日+135star。GoogleのPixel Test Engineering〈PTE〉Fusionチームが開発)
+- 概要: 自然言語の指示を、実機またはエミュレータ上のAndroid操作(画面観察→行動決定→ADB経由で実行→結果確認のループ)に変換するオープンソースのエージェントハーネス(Apache-2.0。`third_party/mobile_use`配下はMinitap, Inc.由来のApache-2.0コードで、2026年9月にはMinitap社の`mobile-use`からのコード一致・帰属表記欠落を指摘される一幕もあった)。Web console・CLI・Python SDK・MCPサーバーの4経路で利用でき、MCP経由でClaude Code/Codex/Cursor等から呼び出せる。高速なFlashプロファイルと、計画・検証を挟むProプロファイルの2モードを持つ。AndroidWorldベンチマークで99%超(自己申告)と主張。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 1件(ai_driven氏「Googleの『ARTEMIS』を徹底分析:AndroidWorldの99.1%はどこから来たのか、公式リーダーボードには存在せず」。ベンチマークの検証可能性とMinitap社由来の帰属問題まで深く掘り下げた記事で、既に日本語での一次解説が存在する)
+- 検証難易度: 中〜高(Apache-2.0。導入にはPython 3.12+に加え、実機〈USBデバッグ有効〉またはAndroidエミュレータが必要。さらに画面理解・行動決定にGemini/Claude/GPT-4o/Qwen-VL等のモデルAPIキーが必須〈`.env`経由〉で、本リポジトリの「当面は有料APIキー必須の候補を選ばない」方針に抵触する可能性が高い。Gemini APIの無料枠で足りる範囲に絞れば方針上は選べるが、無料枠のレート制限内に収まるか要確認。エミュレータ+無料枠モデルの組み合わせなら6時間以内に収まる見込み)
+- 見栄え: 「日本語の簡単な指示だけでAndroidアプリを横断操作させる」デモは視覚的に分かりやすいが、既に上記のnote記事がベンチマークの信頼性や帰属問題まで踏み込んで解説済みのため、採用する場合は「実際に手元のエミュレータで動かして公式ベンチマークの再現性を自分の目で確認する」等、既存記事と差別化できる検証軸が必要。有料APIキー方針の制約もあり、現時点では優先度を下げる。
+- 状態: 未選択
+
+### [2026-10-17] akitaonrails/ai-memory — Claude Code↔Codex等、異なるAIコーディングエージェント間でセッションの記憶を引き継ぐRust製ツール
+
+- 出典: https://github.com/akitaonrails/ai-memory (本日GitHub Trending全言語で+208star/日、累計約9.9k star・2026年8月に急伸)
+- 概要: ライフサイクルフックでセッション中の作業を観測し、セッション終了時にMarkdown形式のWikiへ要約・整理して蓄積するAIコーディングエージェント向けの長期記憶ツール(MIT、Rust製)。Claude Code/Codex/Cursor/Gemini CLI/OpenCode/Kimi Code/Grok Build CLI/Kiro CLI/VS Code Copilot等20種類超のharnessに対応し、「Claude Codeで中断した作業をCodexで続きから再開する」といったツール間ハンドオフが主目的。サーバー経由で複数マシン・チーム間の記憶共有にも対応。
+- 日本語記事件数: Zenn 0件 / Qiita 1件(jqit_suwa氏「Claude Codeをやめて Codexで続きから作業できた — ただし引き継がれたのは要約ではなかった」。Windows環境でv1.28.1を実際に検証したハンズオン記事で、既定ではLLMプロバイダ未設定のためハンドオフされた文脈がLLM要約ではなくヒューリスティックな合成だった点を指摘している) / note 1件(totorotom氏「Claude CodeからCodexへ、コンテキストを引き継ぐOSSが急成長——ai-memoryの急伸が示す『エージェントメモリ』層」という深掘り解説記事)
+- 検証難易度: 低(MIT。核となるキャプチャ・検索・ハンドオフ機能は追加の有料APIキー不要〈LLM/embeddingプロバイダはオプションで、未設定だとヒューリスティックな要約になる〉。GPU不要。Linux/macOS対応、Windowsネイティブは実験的(WSL2推奨)。6時間以内に複数harness間のハンドオフを一通り試せる)
+- 見栄え: 既にQiitaに「Codexへの引き継ぎ内容がLLM要約ではなくヒューリスティック合成だった」という具体的なハンズオン検証記事があるため、同じ切り口の再検証では差別化が難しい。採用する場合は「LLMプロバイダを明示的に設定した場合に引き継ぎ品質がどう変わるか」「本リポジトリ(ai-100days)自身のRoutine運用〈朝research→昼実装〉にハンドオフを組み込めるか」等、既存記事が触れていない軸を選ぶ必要がある。
+- 状態: 未選択
+
+### [2026-10-17] Behavioral Compositionality of Sparse Autoencoder Representations(SAE Additivity Residuals, SAR) — SAEの特徴は本当に「足し算」で振る舞いを説明できるのか を定量評価する解釈可能性研究(論文)
+
+- 出典: https://huggingface.co/papers/2610.21261 (Ziye Mei, Frederic Sala〈University of Wisconsin–Madison〉、コード: https://github.com/OpenSAE/SAE-Behavioral-Compositionality)
+- 概要: Sparse Autoencoder(SAE)の個々の特徴が、モデルの出力(振る舞い)に対して本当に加算的に効いているのかを「SAE Additivity Residuals(SAR)」という指標で定量化する研究。学習済みSAEの座標系を、同じ部分空間のランダム回転(足し算は保存するが特徴の意味は保たない対照群)と比較し、18種類のモデル・振る舞いの組み合わせすべてで学習済み座標系の方が1次(個々の特徴のみ)残差が小さいことを示す一方、2次(特徴ペア)の交互作用を加えるとcoalitionの順序予測やsteering実験のrank fidelityが0.5874→0.7790まで改善したと報告しており、「SAEの特徴は完全な足し算ではない」ことを示している。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 高(コードはOpenSAE/SAE-Behavioral-Compositionalityで公開されているが、ライセンス表記は確認できていない。実験にはGemma Scope 2・Llama ScopeなどSAELens経由で入手できる既存の公開SAE・公開モデルを使うためAPIキーは不要だが、フル再現にはGPUが前提になる可能性が高い。本リポジトリの方針に沿うなら、公開されている小型モデル向けSAE〈例: GPT-2 small等〉1つに絞り、「学習済みSAE座標 vs ランダム回転」の1次残差比較のみをCPUでも動く範囲に縮小した概念実証に絞る必要がある)
+- 見栄え: 「AIの思考の部品(特徴)は本当に独立して足し算できるのか」という解釈可能性の根本的な問いに切り込める点で、本バックログで続いているエージェントSkillsエコシステム系の候補群とは一線を画す差別化ポイントになる。グラフで「1次残差」「2次残差込みの改善」を可視化すれば見栄えも作りやすい。ただし再現スコープを事前に強く絞り込む必要があるため、採用する場合は候補メモにその旨を明記すること。
+- 状態: 未選択
