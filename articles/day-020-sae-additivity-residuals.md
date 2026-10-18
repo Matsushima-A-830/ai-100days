@@ -62,10 +62,31 @@ layerが深くなるほど(4→10)残差自体が小さくなっており(0.32�
 
 公式の`requirements_demo.txt`は`numpy==2.5.0`を固定しているが、これはPython 3.12以降が前提のバージョンで、今回使ったPython 3.11環境ではインストールできなかった(`requirements_demo.txt`のコメント自体に「Python 3.12.10で動作確認」と明記されている)。バージョン指定を外して最新の互換版(numpy 2.4.6)を入れ直すと問題なく動いた。
 
+## 追加検証: 自分のPCのGPUで再実行してみた
+
+CPUだけでも十分動いたとはいえ、「GPUを使ったら結果は変わるのか、速くなるのか」が気になったので、自分のローカルPC(WSL2 Ubuntu、NVIDIA GeForce RTX 5060 Ti、16GB VRAM)でも同じデモをそのまま再実行してみた。ローカルはPython 3.12が入っていたので、今度は`requirements_demo.txt`の固定バージョン(`numpy==2.5.0`・`torch==2.11.0`など)を一切変更せずそのままインストールでき、`torch.cuda.is_available()`が`True`を返してGPUが使われていることも確認できた。
+
+```
+$ python3 -c "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.get_device_name(0))"
+2.11.0+cu130 True NVIDIA GeForce RTX 5060 Ti
+
+$ time python3 demo/demo.py --layers 4 10
+Layer  SAR_1 SAE  SAR_1 rotated  SAE lower   rho_2  affine SAR_1
+    4     0.3232         0.5652     24 / 24   0.383       2.6e-27
+   10     0.0148         0.0481     24 / 24   0.945       7.1e-26
+
+real    1m0.801s
+```
+
+結果から言うと、**SAR_1・rotated・SAE lowerの比率・ρ₂・rank fidelityまで、報告される桁数ではCPU版と完全に一致した**。`affine SAR_1`のような理論上0になるはずの量にだけ、GPU特有の浮動小数誤差(e-27〜e-26オーダー)の違いが出たが、実質的には誤差の範囲内である。一方で実行時間は4分13秒から1分1秒まで短縮され、約4.2倍速かった。
+
+地味な発見だが、これも今回の検証にとって無視できない点だと思う。CPU環境でつまずいた「`numpy==2.5.0`が入らない」という問題は、ツールのバグではなく、こちらの環境(Python 3.11)が公式の前提(Python 3.12)からズレていたことが原因で、Python 3.12・GPUが揃ったローカル環境では何の対処もなくそのまま動いた。環境を変えても主張の中身(学習済みSAE座標の優位性)は変わらない、という再現性の高さを別の角度から確認できたのは収穫だった。
+
 ## まとめ
 
 - `OpenSAE/SAE-Behavioral-Compositionality`(Apache-2.0)は、GPU・有料APIキーなしでも、CPUのみ・4分程度で「SAEの学習済み座標はランダム回転よりも振る舞いを足し算的に説明できる」という論文の中心的主張を再現できた。
-- Python 3.11環境では公式の固定バージョン(`numpy==2.5.0`)がそのままでは入らない点に注意が必要(Python 3.12前提と明記されている)。
+- Python 3.11環境では公式の固定バージョン(`numpy==2.5.0`)がそのままでは入らない点に注意が必要(Python 3.12前提と明記されている)。実際、Python 3.12・GPUのローカル環境では固定バージョンのままで何も手を加えずに動いた。
+- ローカルPCのGPU(RTX 5060 Ti)で追加検証したところ、主要な数値はCPU版と完全に一致し、実行時間は約4.2倍(4分13秒→1分1秒)短縮された。環境(CPU/GPU、Python 3.11/3.12)が変わっても結論は揺るがない、という再現性を確認できた。
 - 今回はGPT-2 Small・2層・24プロンプトという縮小スケールでの再現であり、論文本体の大型モデルでの集計値とは別物である点は留意してほしい。
 
 出典・ライセンス: 論文は[https://huggingface.co/papers/2610.21261](https://huggingface.co/papers/2610.21261)、コードは[OpenSAE/SAE-Behavioral-Compositionality](https://github.com/OpenSAE/SAE-Behavioral-Compositionality)(Apache-2.0)。今回使用した`sar.py`・`demo/demo.py`は無改変でそのまま取り込んでいる。検証コード・実行ログの全文は[GitHubリポジトリのexperiments/day-020](https://github.com/Matsushima-A-830/ai-100days/tree/main/experiments/day-020)を参照。
