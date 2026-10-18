@@ -820,3 +820,39 @@
 - 検証難易度: 高(コードはOpenSAE/SAE-Behavioral-Compositionalityで公開されているが、ライセンス表記は確認できていない。実験にはGemma Scope 2・Llama ScopeなどSAELens経由で入手できる既存の公開SAE・公開モデルを使うためAPIキーは不要だが、フル再現にはGPUが前提になる可能性が高い。本リポジトリの方針に沿うなら、公開されている小型モデル向けSAE〈例: GPT-2 small等〉1つに絞り、「学習済みSAE座標 vs ランダム回転」の1次残差比較のみをCPUでも動く範囲に縮小した概念実証に絞る必要がある)
 - 見栄え: 「AIの思考の部品(特徴)は本当に独立して足し算できるのか」という解釈可能性の根本的な問いに切り込める点で、本バックログで続いているエージェントSkillsエコシステム系の候補群とは一線を画す差別化ポイントになる。グラフで「1次残差」「2次残差込みの改善」を可視化すれば見栄えも作りやすい。ただし再現スコープを事前に強く絞り込む必要があるため、採用する場合は候補メモにその旨を明記すること。
 - 状態: 採用済み(day-020)
+
+### [2026-10-18] ahujasid/mcp-for-blender — 任意のLLMでBlender 3Dを操作できるMCPサーバー(旧称blender-mcp)
+
+- 出典: https://github.com/ahujasid/mcp-for-blender (本日GitHub Trending Python/全言語で+2,098star/日)
+- 概要: Blenderアドオン(ソケットサーバー)とMCPサーバーの2部構成で、Claude Code/Claude Desktop等のAIクライアントからBlender Python APIを直接実行させ、シーン検査・レンダリング・Poly Haven/Sketchfab/Poly Pizzaからのアセット取り込み、Tripo/Hyper3D Rodin/Hunyuan3D/Meshy経由の3Dモデル生成までを自然言語で行える(MITライセンス)。Blender Foundation非公式のコミュニティプラグイン。
+- 日本語記事件数: Zenn 2件以上(前身の「blender-mcp」として社内勉強会のハンズオン記事・アーキテクチャ解説記事が既に公開済み) / Qiita 0件 / note 0件(本日時点の検索範囲)
+- 検証難易度: 低(MIT。Blender 3.0+・Python 3.10+・uvのみで追加の有料APIキー不要〈Poly Haven等は無料で利用できるアセット取得先もある〉。GPUは任意〈Blenderのレンダリング品質には影響するが必須ではない〉。`execute_blender_code`は任意のPythonを実行するため、検証前にBlenderファイルを保存すること)
+- 見栄え: 「日本語の指示だけでBlenderに低ポリゴンの3Dシーンを作らせる」様子はスクリーンショットで非常に見栄えがよい。前身のblender-mcp自体はZenn記事が複数あるため完全新規ではないが、mcp-for-blenderへの改称後に強化されたアセット生成系連携(Tripo等)を中心に据えれば差別化できる。
+- 状態: 未選択
+
+### [2026-10-18] Graphify-Labs/graphify — コードベース・ドキュメントを問い合わせ可能な知識グラフに変換するAIエージェント向けスキル
+
+- 出典: https://github.com/Graphify-Labs/graphify (本日GitHub Trending Pythonで+592star/日)
+- 概要: tree-sitterでコードをローカル解析し、ドキュメント・SQLスキーマ・設定ファイル・PDF・画像も含めて(コードのみならLLM不要で)問い合わせ可能な知識グラフ(graph.html/GRAPH_REPORT.md/graph.json)に変換するツール。エッジは「EXTRACTED(明記された関係)」「INFERRED(推論された関係)」で区別され、Claude Code/Cursor/Codex/Gemini CLI等20以上のアシスタント向けに`/graphify`スキルとして動作する(リポジトリにApache-2.0・MIT両方のLICENSEファイルがあるデュアルライセンス表記)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語の一次紹介記事は未検出。韓国語〈braindetox.kr〉・英語の解説記事は複数あり)
+- 検証難易度: 低(`uv tool install graphifyy`で導入可能。`--code-only`オプションを使えばコードのみの知識グラフ構築に追加の有料APIキー不要〈ドキュメント/PDF/画像の意味抽出にLLMを使う場合のみ任意でAPIキーまたはClaude Code自身のモデルを使用〉。GPU不要)
+- 見栄え: 本リポジトリ(ai-100days)自身に対して`/graphify .`を実行し、生成されたgraph.htmlの可視化と、grep/手動探索との比較(同じ質問に対する正答率や所要ファイル読み込み数の違い)をBefore/After的に見せられる。既出のcontext-mode・caveman等「Routine運用コスト改善」系ネタの発展として自己言及的に語りやすい。
+- 状態: 未選択
+
+### [2026-10-18] superdesigndev/treg — AIエージェント向けツールAPIの「OpenRouter」を謳うレジストリ/プロキシ
+
+- 出典: https://github.com/superdesigndev/treg (本日GitHub Trending Pythonで+76star/日。8月のProduct Hunt公開後も継続的に伸長中)
+- 概要: エージェントが1つのベースURL・1つのトークンだけで、SEO・企業情報・スクレイピング・メディア生成等サードパーティAPI群(数千エンドポイント規模)に従量課金でアクセスできるレジストリ兼プロキシ。認証情報はサーバー側に保持され呼び出し元には渡らない設計。CLIは`tools-registry`としてPyPI配布、サーバーはFastAPI製で自己ホスト可能。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出。英語のレビュー記事〈eesel.ai等〉は複数あり)
+- 検証難易度: 低〜中(ライセンスはApache-2.0に追加条件〈競合するホスト型レジストリとしての再配布は不可。自己ホスト・自社利用は無制限〉が付く非OSI的ライセンスのため、記事内で明記が必要。ローカルサーバー起動〈`scripts/dev-local.sh up`〉とサンドボックスDBでのCLIログイン・カタログ検索はAPIキー不要。実際の外部API呼び出し〈`treg call`〉はtreg.to側の残高を消費するため、検証はローカルサーバーでの登録・カタログ検索機能に限定するか、消費を最小限に絞ること)
+- 見栄え: 「1つのトークンで複数の外部APIにアクセスできる」仕組みをローカルサーバーのダッシュボード・カタログ検索のスクリーンショットで見せられる。有料枠を消費しない範囲に絞った検証であることを記事内で明記する必要あり。
+- 状態: 未選択
+
+### [2026-10-18] k2-fsa/OmniVoice — 600以上の言語に対応するゼロショット音声クローンTTS
+
+- 出典: https://github.com/k2-fsa/OmniVoice (本日GitHub Trending Pythonで+55star/日)
+- 概要: 離散・非自己回帰(NAR)アーキテクチャにより、3〜25秒の参照音声から600以上の言語でゼロショット音声クローンを行うTTSモデル(コードApache-2.0)。性別・年齢・ピッチ・アクセント指定による音声デザイン、`[laughter]`等のノンバーバルタグ、ピンイン/CMU音素による発音制御にも対応し、H100でRTF 0.025(リアルタイム比約40倍速)を主張。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語の一次検証記事は未検出。英語圏の紹介記事〈korben.info等〉はあり)
+- 検証難易度: 中〜高(コードはApache-2.0だが、公開されている事前学習済みモデルの重みは学習データ〈Emilia等〉のライセンス制約によりCC-BY-NC〈非商用〉。記事内で必ず明記すること。公式のベンチマーク・導入例はCUDA/MPS/XPU前提で、CPUのみでの動作例・速度報告は無く、GPUが使えない環境では大幅に低速化するか動作しない可能性がある。`pip install omnivoice`後に自分の声の短い参照クリップで`omnivoice-infer`を実行し、生成音声をASRで書き起こして入力テキストと一致するか確認する、という範囲なら6時間以内も狙えるが、着手前にGPU有無を確認すべき)
+- 見栄え: 自分の声をクローンして日本語以外の言語(例: 英語・中国語等)で読み上げさせる「多言語ゼロショット音声クローン」のBefore/After比較は非常にデモ映えする。既出のVoiceStudio(音声クローンアプリ全体)とは異なり、600言語対応・NARアーキテクチャという技術的切り口で差別化できる。
+- 状態: 未選択
