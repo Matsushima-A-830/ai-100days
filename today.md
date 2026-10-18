@@ -2,15 +2,15 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 020
-- 選んだ候補(backlog.mdのタイトルかURL): Behavioral Compositionality of Sparse Autoencoder Representations(SAE Additivity Residuals, SAR) — https://huggingface.co/papers/2610.21261
+- Day: 021
+- 選んだ候補(backlog.mdのタイトルかURL): ahujasid/mcp-for-blender — https://github.com/ahujasid/mcp-for-blender
 - 補足メモ(あれば):
-  - 人間(matsu)から直接指定された候補(research: 2026-10-17分のネタ候補PR内の候補の1つ)。
-  - 出典: https://huggingface.co/papers/2610.21261 (Ziye Mei, Frederic Sala〈University of Wisconsin–Madison〉)。コード公開: https://github.com/OpenSAE/SAE-Behavioral-Compositionality (ライセンス表記は要確認)。
-  - 概要: Sparse Autoencoder(SAE)の個々の特徴が、モデルの出力(振る舞い)に対して本当に加算的に効いているのかを「SAE Additivity Residuals(SAR)」という指標で定量化する解釈可能性研究。学習済みSAEの座標系を、同じ部分空間のランダム回転(足し算は保存するが特徴の意味は保たない対照群)と比較し、18種類のモデル・振る舞いの組み合わせすべてで学習済み座標系の方が1次(個々の特徴のみ)残差が小さいことを示す一方、2次(特徴ペア)の交互作用を加えるとcoalitionの順序予測やsteering実験のrank fidelityが0.5874→0.7790まで改善したと報告しており、「SAEの特徴は完全な足し算ではない」ことを示している。
-  - 検証範囲(縮小版の概念実証に絞る): フル再現(Gemma Scope 2・Llama Scope等の大型モデル向けSAE)はGPU前提になる可能性が高いため、CPUでも扱える公開済みの小型モデル向けSAE(例: GPT-2 small向けにSAELens等で配布されている既存の学習済みSAE)1つに絞り、「学習済みSAE座標 vs 同一部分空間のランダム回転」で1次残差を比較する部分のみを再現する。2次(特徴ペア)の交互作用やsteering実験のrank fidelity再現はスコープ外としてよい。
-  - 追加の有料APIキーは不要(公開済みの既存モデル・SAEを使用)。Routineのクラウド実行環境でGPUが使えない場合は、CLAUDE.mdの「Routine環境の制約」ではなく元から「縮小版の概念実証」に絞る方針のため、CPUで完結する範囲に収める。どうしても歯が立たない場合は、ローカル検証にエスカレーションする旨をPR冒頭に明記する。
-  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-10-17時点、backlog.md参照。日本語での一次紹介記事は未検出のため差別化しやすい)。
-  - 記事化の切り口: 「AIの思考の部品(特徴)は本当に独立して足し算できるのか」という解釈可能性の根本的な問いを、1次残差の比較グラフ(学習済み座標 vs ランダム回転)で可視化する。本リポジトリで続いていたエージェントSkillsエコシステム系の候補群とは一線を画す回なので、その旨も記事の導入で触れるとよい。
+  - 人間(matsu)から直接指定された候補(research: 2026-10-18分のネタ候補PR内の候補の1つ)。
+  - 出典: https://github.com/ahujasid/mcp-for-blender (本日GitHub Trending Python/全言語で+2,098star/日。旧称blender-mcp)。MITライセンス、Blender Foundation非公式のコミュニティプラグイン。
+  - 概要: Blenderアドオン(ソケットサーバー)とMCPサーバーの2部構成で、Claude Code/Claude Desktop等のAIクライアントからBlender Python APIを直接実行させ、シーン検査・レンダリング・Poly Haven/Sketchfab/Poly Pizzaからのアセット取り込み、Tripo/Hyper3D Rodin/Hunyuan3D/Meshy経由の3Dモデル生成までを自然言語で行える。
+  - 検証範囲: Blender 3.0+・Python 3.10+・uvを導入してmcp-for-blenderアドオンとMCPサーバーをセットアップし、Claude Code自身をMCPクライアントとして接続する。日本語の指示(例:「低ポリゴンのダンジョンシーンを作って」)でBlenderシーンを生成させ、生成前後のスクリーンショットをBefore/Afterで記録する。アセット取得はPoly Haven等キー不要のものに限定し、Sketchfab/Hyper3D/Meshy等の有料連携は使わない。
+  - 追加の有料APIキーは不要(Poly Havenはキー不要。有料の3D生成連携は使わない)。GPUは任意(Blenderのレンダリング品質には影響するが必須ではない)。`execute_blender_code`は任意のPythonを実行するため、検証前にBlenderファイルを保存すること。
+  - 日本語記事件数: Zenn 2件以上(前身の「blender-mcp」名義でのハンズオン記事・アーキテクチャ解説記事) / Qiita 0件 / note 0件(2026-10-18時点、backlog.md参照)。前身名義での記事があるため完全新規ではなく、mcp-for-blenderへの改称後に強化されたアセット生成系連携(Tripo等)への言及や、独自の3Dシーン生成デモを中心に据えて差別化すること。
+  - 記事化の切り口: 「日本語の指示だけでBlenderに3Dシーンを作らせてみた」というBefore/After比較を軸に、生成過程で実行されたBlender Pythonコードと結果画像をセットで見せる。
 
 状態: 設定済み
