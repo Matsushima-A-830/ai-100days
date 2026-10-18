@@ -37,5 +37,6 @@ python3 demo/demo.py --layers 4 10
 - `demo/demo.py` — GPT-2 Small + `gpt2-small-res-jb` を使った再現デモ本体。
   上流リポジトリから無改変で取得。
 - `LICENSE-upstream` — 上記2ファイルの出典元リポジトリのライセンス全文(Apache-2.0)。
-- `demo_layers4_10.png` — 実際に実行して得られた図(layer 4, 10の比較)。
-- `results.md` — 検証の過程・実際の実行ログ・結果の読み方・結論。
+- `demo_layers4_10.png` — クラウドRoutine環境(CPUのみ、Python 3.11)で実行して得られた図(layer 4, 10の比較)。
+- `demo_layers4_10_gpu_local.png` — 人間(matsu)のローカルPC(GPU、Python 3.12)で追加検証した際に得られた図。
+- `results.md` — 検証の過程・実際の実行ログ・結果の読み方・結論(5節にローカルGPUでの追加検証を記載)。
