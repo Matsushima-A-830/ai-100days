@@ -75,9 +75,21 @@ MCP経由でBlenderのレンダリング画像をファイルとして保存で�
 - `mcp_client_build_room.py` — 日本語指示に基づく部屋生成コードを`execute_blender_code`で実行
 - `mcp_client_fix_camera_and_render.py` — カメラ位置を部屋全体が見える構図に調整して`after.png`を再レンダリング
 
+## 再現手順(Windows / 実際のAIクライアントGUIからの接続)
+
+人間のローカルPC(Windows 11 + Blender 4.5)では、公式インストーラで同等の検証ができる。
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+uvx mcp-for-blender setup   # Blenderアドオンの導入・有効化と、見つかったMCPクライアント
+                            # (Claude Desktop/Claude Code/VS Code/Antigravity等)への設定登録を自動実行
+```
+
+Blenderを通常のGUIモードで起動すれば(`--background`無し)、追加の手動操作なしにport 9876で
+ソケットサーバーが自動起動する。あとは`claude mcp list`等で接続を確認し、実際のAIクライアントから
+日本語指示でBlenderを操作できる。詳細は`results.md`の8節を参照。
+
 ## 前提条件・制約
 
-- Claude Desktop等の実際のAIクライアントGUIはこの実行環境に無いため、MCPクライアントの役割は
-  上記の自作Pythonスクリプトで代替した。実際のAIクライアントからの接続体験そのものは未検証。
 - Poly Haven等のアセットインポート、Hyper3D/Sketchfab/Meshy/Tripo等の有料3D生成連携は未検証
   (後者はCLAUDE.mdの方針により対象外)。

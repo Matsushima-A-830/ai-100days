@@ -213,13 +213,13 @@
         <span class="term-tag">fix</span>
         <span class="toks">nohup xvfb-run -a blender &amp;  →  "BlenderMCP server started on localhost:9876"</span>
       </div>
-      <div class="term-foot">ヘッドレス拒否はツールの意図的な仕様。エラーメッセージ自体が<b>xvfb-run -a blender</b>という解決策を案内していた。</div>
+      <div class="term-foot">ヘッドレス拒否はツールの意図的な仕様。エラーメッセージ自体が<b>xvfb-run -a blender</b>という解決策を案内していた。後日、ローカルPCで実際のAIクライアント(Claude Code)からも同じスタックの接続・操作を確認した。</div>
     </div>
   </section>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>この環境にはClaude Desktop等の実際のAIクライアントGUIが無いため、MCPクライアントの役割はPythonの`mcp`パッケージで自作したスクリプトで代替した。Poly Haven等のアセット取り込み、有料3D生成連携(Hyper3D/Meshy等)は未検証。</p>
+    <p>Poly Haven等のアセット取り込み、有料3D生成連携(Hyper3D/Meshy等)は未検証。実際のAIクライアントGUIからの接続体験は、ローカルPC(Windows + Blender 4.5、Claude Code)で追加検証済み(詳細はresults.md参照)。</p>
   </div>
 
   <footer>
