@@ -2,15 +2,15 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 021
-- 選んだ候補(backlog.mdのタイトルかURL): ahujasid/mcp-for-blender — https://github.com/ahujasid/mcp-for-blender
+- Day: 022
+- 選んだ候補(backlog.mdのタイトルかURL): shiyu-coder/Kronos — https://github.com/shiyu-coder/Kronos
 - 補足メモ(あれば):
-  - 人間(matsu)から直接指定された候補(research: 2026-10-18分のネタ候補PR内の候補の1つ)。
-  - 出典: https://github.com/ahujasid/mcp-for-blender (本日GitHub Trending Python/全言語で+2,098star/日。旧称blender-mcp)。MITライセンス、Blender Foundation非公式のコミュニティプラグイン。
-  - 概要: Blenderアドオン(ソケットサーバー)とMCPサーバーの2部構成で、Claude Code/Claude Desktop等のAIクライアントからBlender Python APIを直接実行させ、シーン検査・レンダリング・Poly Haven/Sketchfab/Poly Pizzaからのアセット取り込み、Tripo/Hyper3D Rodin/Hunyuan3D/Meshy経由の3Dモデル生成までを自然言語で行える。
-  - 検証範囲: Blender 3.0+・Python 3.10+・uvを導入してmcp-for-blenderアドオンとMCPサーバーをセットアップし、Claude Code自身をMCPクライアントとして接続する。日本語の指示(例:「低ポリゴンのダンジョンシーンを作って」)でBlenderシーンを生成させ、生成前後のスクリーンショットをBefore/Afterで記録する。アセット取得はPoly Haven等キー不要のものに限定し、Sketchfab/Hyper3D/Meshy等の有料連携は使わない。
-  - 追加の有料APIキーは不要(Poly Havenはキー不要。有料の3D生成連携は使わない)。GPUは任意(Blenderのレンダリング品質には影響するが必須ではない)。`execute_blender_code`は任意のPythonを実行するため、検証前にBlenderファイルを保存すること。
-  - 日本語記事件数: Zenn 2件以上(前身の「blender-mcp」名義でのハンズオン記事・アーキテクチャ解説記事) / Qiita 0件 / note 0件(2026-10-18時点、backlog.md参照)。前身名義での記事があるため完全新規ではなく、mcp-for-blenderへの改称後に強化されたアセット生成系連携(Tripo等)への言及や、独自の3Dシーン生成デモを中心に据えて差別化すること。
-  - 記事化の切り口: 「日本語の指示だけでBlenderに3Dシーンを作らせてみた」というBefore/After比較を軸に、生成過程で実行されたBlender Pythonコードと結果画像をセットで見せる。
+  - 人間(matsu)から直接指定された候補(research: 2026-10-19分のネタ候補PR〈#76、backlog.md追記、マージ待ち〉内の候補の1つ)。
+  - 出典: https://github.com/shiyu-coder/Kronos (2026-10-19時点GitHub Trending Pythonで+355star/日、累計41.6k star。AAAI 2026採択)。MITライセンス。
+  - 概要: 世界45取引所・120億件超のK線(OHLCV)データで事前学習した、金融ローソク足専用の基盤モデル。専用トークナイザでOHLCVを階層的な離散トークンに変換し、自己回帰Transformerを事前学習する2段構成で、ゼロショットの価格系列予測でRankICが既存の時系列基盤モデルより93%高いと報告。Kronos-mini(4.1M)・Kronos-small(24.7M)・Kronos-base(102.3M)はHugging Face Hubで重み公開、Kronos-large(499.2M)は非公開。
+  - 検証範囲: Python 3.10+環境でrequirements.txtを導入し、Hugging Face Hubから`NeoQuasar/Kronos-Tokenizer-base`+`NeoQuasar/Kronos-small`(または最小構成の`Kronos-mini`)をダウンロード。`KronosPredictor`に自分で選んだ銘柄(例: BTC/USDT等、無料で取得できる公開OHLCVデータ)の直近K線データを入力して予測させ、予測チャートと実際の値動きをBefore/After的に記録する。公式デモ(shiyu-coder.github.io/Kronos-demo)との突き合わせも行う。
+  - 追加の有料APIキーは不要(Hugging Face Hubから直接ダウンロードする公開モデルのみ使用)。GPUは必須ではない(`device`パラメータでCPU指定も可能と見られるが、実際にノートPC相当のCPUで実用的な速度で推論できるかはKronos-miniから着手して確認すること。GPUが使えず極端に遅い場合は検証に直接関係する失敗としてCLAUDE.mdの基準に沿って記録してよい)。
+  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-10-19時点、backlog.md参照。中国語の紹介記事〈磐创AI由来、新浪財経転載〉はあるが日本語の一次検証記事は未検出)。
+  - 記事化の切り口: 「金融K線専用の基盤モデルに自分で選んだ銘柄の値動きを予測させてみた」というBefore/After比較を軸に、予測チャートと実際の値動きの差分・RankIC等の定量評価を見せる。「予測は確率的サンプルであり投資判断の唯一の根拠にしてはいけない」という公式の免責を記事にも明記すること。
 
 状態: 設定済み
