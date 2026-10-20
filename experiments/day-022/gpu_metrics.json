@@ -1,0 +1,10 @@
+{
+  "device": "cuda:0",
+  "predict_time_sec": 2.801178216934204,
+  "mae_usd": 1929.824632812501,
+  "mape_pct": 2.333985940504125,
+  "directional_hits": 60,
+  "directional_total": 120,
+  "directional_accuracy": 0.5,
+  "diff_correlation": 0.0425445412185806
+}
