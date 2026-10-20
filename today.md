@@ -2,15 +2,15 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 022
-- 選んだ候補(backlog.mdのタイトルかURL): shiyu-coder/Kronos — https://github.com/shiyu-coder/Kronos
+- Day: 023
+- 選んだ候補(backlog.mdのタイトルかURL): Graphify-Labs/graphify — https://github.com/Graphify-Labs/graphify
 - 補足メモ(あれば):
-  - 人間(matsu)から直接指定された候補(research: 2026-10-19分のネタ候補PR〈#76、backlog.md追記、マージ待ち〉内の候補の1つ)。
-  - 出典: https://github.com/shiyu-coder/Kronos (2026-10-19時点GitHub Trending Pythonで+355star/日、累計41.6k star。AAAI 2026採択)。MITライセンス。
-  - 概要: 世界45取引所・120億件超のK線(OHLCV)データで事前学習した、金融ローソク足専用の基盤モデル。専用トークナイザでOHLCVを階層的な離散トークンに変換し、自己回帰Transformerを事前学習する2段構成で、ゼロショットの価格系列予測でRankICが既存の時系列基盤モデルより93%高いと報告。Kronos-mini(4.1M)・Kronos-small(24.7M)・Kronos-base(102.3M)はHugging Face Hubで重み公開、Kronos-large(499.2M)は非公開。
-  - 検証範囲: Python 3.10+環境でrequirements.txtを導入し、Hugging Face Hubから`NeoQuasar/Kronos-Tokenizer-base`+`NeoQuasar/Kronos-small`(または最小構成の`Kronos-mini`)をダウンロード。`KronosPredictor`に自分で選んだ銘柄(例: BTC/USDT等、無料で取得できる公開OHLCVデータ)の直近K線データを入力して予測させ、予測チャートと実際の値動きをBefore/After的に記録する。公式デモ(shiyu-coder.github.io/Kronos-demo)との突き合わせも行う。
-  - 追加の有料APIキーは不要(Hugging Face Hubから直接ダウンロードする公開モデルのみ使用)。GPUは必須ではない(`device`パラメータでCPU指定も可能と見られるが、実際にノートPC相当のCPUで実用的な速度で推論できるかはKronos-miniから着手して確認すること。GPUが使えず極端に遅い場合は検証に直接関係する失敗としてCLAUDE.mdの基準に沿って記録してよい)。
-  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-10-19時点、backlog.md参照。中国語の紹介記事〈磐创AI由来、新浪財経転載〉はあるが日本語の一次検証記事は未検出)。
-  - 記事化の切り口: 「金融K線専用の基盤モデルに自分で選んだ銘柄の値動きを予測させてみた」というBefore/After比較を軸に、予測チャートと実際の値動きの差分・RankIC等の定量評価を見せる。「予測は確率的サンプルであり投資判断の唯一の根拠にしてはいけない」という公式の免責を記事にも明記すること。
+  - 人間(matsu)から直接指定された候補(research: 2026-10-20分のネタ候補PR〈#79、backlog.md追記、マージ待ち〉内の候補の1つ)。
+  - 出典: https://github.com/Graphify-Labs/graphify (2026-10-20時点GitHub Trending Pythonで+906star/日、累計約130k star)。開発者Safi Shamsi名義の個人リポジトリ〈safishamsi/graphify〉から移管/ミラーされた可能性があり記事によってURL表記が揺れているため、検証時はGraphify-Labs/graphifyが現行の公式であることを確認すること。
+  - 概要: コード・ドキュメント・SQLスキーマ・設定ファイル・PDF・画像・動画を1つのクエリ可能なナレッジグラフに変換するPython CLI兼Claude Code/Cursor/Codex/Gemini CLI向けスキル。コード解析はtree-sitterによる完全ローカル・LLM不要の決定的処理で、`--code-only`を使えば外部送信なしの完全オフライン動作が可能(ベクトルストア不使用)。出力は操作可能な`graph.html`・`GRAPH_REPORT.md`・`graph.json`で、grepやReadの繰り返しの代わりに`graphify query`等でグラフに問い合わせる運用を想定。
+  - 検証範囲: `uv tool install graphifyy`で導入し、`graphify install`でClaude Code等にスキルを登録する。本リポジトリ(ai-100days)自身のコードベース(experiments/配下のPythonコード等)に対して`--code-only`で`/graphify`を実行し、生成された`graph.html`/`GRAPH_REPORT.md`を確認する。その上で、同じ調査タスク(例:「day-0XXの実験で使われているライブラリと関数呼び出し関係を調べる」等)を、(a)従来のgrep/Read中心の探索と、(b)graphifyのグラフへの問い合わせ、の両方で実行し、ターン数・読み込んだトークン量(概算)・所要時間をBefore/After比較する。公式が主張するトークン削減率(日本語記事で言及されている「71.5分の1」等)が自分の環境・自分のコードベース規模でどの程度再現するかを実測する。
+  - 追加の有料APIキーは不要(`--code-only`モードはLLM呼び出しなしの完全ローカル処理)。GPUも不要。
+  - 日本語記事件数: Zenn 2件以上 / Qiita 1件以上 / note 5件以上(2026-10-20時点、backlog.md参照。公式主張のトークン削減率を疑問視する検証記事も既にある)。既に日本語記事が多いため、差別化として「本チャレンジ自身(ai-100days)のリポジトリという具体的な中規模Pythonコードベースでの実測」に焦点を絞ること。
+  - 記事化の切り口: 「AIコーディングエージェントのgrep/Read探索を、ナレッジグラフへの問い合わせに置き換えたら、本当にトークンは減るのか」を自分のリポジトリで実測するBefore/After比較。ライセンス表記(Apache-2.0/MIT両方の記載あり)を確認し記事に明記する。グラフ生成がLLM不要・完全ローカルで完結する点(プライバシー面のメリット)にも触れる。
 
 状態: 設定済み
