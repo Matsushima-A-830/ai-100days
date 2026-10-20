@@ -1,0 +1,10 @@
+{
+  "device": "cpu",
+  "predict_time_sec": 19.623706340789795,
+  "mae_usd": 1928.368054687501,
+  "mape_pct": 2.334507533729415,
+  "directional_hits": 56,
+  "directional_total": 120,
+  "directional_accuracy": 0.4666666666666667,
+  "diff_correlation": 0.03355408535081209
+}
