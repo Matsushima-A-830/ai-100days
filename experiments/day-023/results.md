@@ -287,6 +287,8 @@ $ python3 -m http.server 8793   # experiments/day-023/graphify-out/ 配下で実
   正しく表示され、インタラクティブな機能(ノード選択・コミュニティ別フィルタ等)も
   問題なく動作した。
 
+実際に描画された画面のスクリーンショットは[`graph_screenshot.jpg`](./graph_screenshot.jpg)。
+
 再現手順:
 ```
 cd experiments/day-023

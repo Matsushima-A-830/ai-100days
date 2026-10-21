@@ -57,4 +57,5 @@ vis-network.jsを読み込む構成になっており、このRoutine実行環�
 人間のローカルPC(通常のインターネット接続)で検証した結果、vis-network.jsが
 HTTP 200で正常に読み込まれ、JSエラー無くノードリンク図(914 nodes / 1657 edges /
 56 communities)が描画され、ノードクリック等のインタラクションも問題なく
-動作することを確認した。詳細はresults.md 7節を参照。
+動作することを確認した。詳細はresults.md 7節を参照。実際に描画された画面の
+スクリーンショットは[`graph_screenshot.jpg`](./graph_screenshot.jpg)。
