@@ -937,3 +937,39 @@
 - 検証難易度: 低(ライセンス表記はApache-2.0/MIT両方の記載があり要確認。`uv tool install graphifyy`で導入可能、`--code-only`モードならAPIキー・GPU不要で完全オフライン動作。本リポジトリ自身〈ai-100days〉のコードベースに対して`/graphify`を実行し、生成されたグラフとgrepベースの探索を比較するBefore/After実験が6時間以内で可能)
 - 見栄え: 自分のコードベースから生成した`graph.html`を実際にブラウザで開いて見せられ、ビジュアル的な説得力が高い。「公式が主張するトークン削減率は本当か」を自分の環境で実測する切り口であれば、既存の日本語記事(効果を疑問視する記事も既にある)との差別化もしやすい。
 - 状態: 未選択
+
+### [2026-10-21] stablyai/orca — Claude Code/Codex等を一括統括する複数コーディングエージェント艦隊運用OSSデスクトップIDE
+
+- 出典: https://github.com/stablyai/orca (本日GitHub Trending 全言語で+1,543star/日。公式サイト: https://onorca.dev)
+- 概要: Claude Code・Codex・OpenCode・Pi等の複数のCLIコーディングエージェントを、それぞれ独立したgit worktree・ターミナル・環境で同時に走らせ、1つのデスクトップアプリ(macOS/Windows/Linux)から横断管理できるOSS「艦隊運用」IDE(MITライセンス)。モバイル用コンパニオンアプリでの監視・GitHub/Linear連携・リモートマシンへのSSH worktree対応も備える。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(zenn.dev/qiita.com/note.comへのsite:検索ではいずれも0件。EvoMap.ai等の海外ブログに日本語記事は確認できたが、Zenn/Qiita/note上の一次検証記事は未検出)
+- 検証難易度: 低〜中(MIT。各自のCLIエージェントのサブスクリプション〈本リポジトリならClaude Codeのサブスクリプション認証〉を利用する設計のため追加の有料APIキーは不要と説明されている。GPU不要。ただしデスクトップGUIアプリのため、Routineのクラウド実行環境ではブラウザ/GUIが使えない可能性がある点に注意〈その場合はCLI機能のみの検証に絞るか、ローカル検証にエスカレーション〉)
+- 見栄え: Claude CodeとCodexを同じリポジトリの別worktreeで並走させ、1画面で進捗を見比べるBefore/After(単一エージェント運用 vs Orcaでの並列運用)は分かりやすく、本チャレンジ自身の「朝リサーチ→昼実装」という分業Routineとも文脈的に相性が良い。
+- 状態: 未選択
+
+### [2026-10-21] DietrichGebert/ponytail — コーディングエージェントに「最小限のコード」を書かせるClaude Code向けスキル
+
+- 出典: https://github.com/DietrichGebert/ponytail (本日GitHub Trending 全言語で+2,051star/日)
+- 概要: 「最も怠惰なシニア開発者」のように振る舞わせ、新しいコードを書く前に既存コード・標準ライブラリ・プラットフォーム標準機能の再利用を優先させ、リスクの高いロジックにはテストを残しつつ不要な抽象化や冗長なコードを削るルールセット(MITライセンス)。Claude Code/Codexへのプラグイン導入や、他エージェント向けのAGENTS.md/SKILL.md配置に対応し、`/ponytail-review`等のレビュー・監査コマンドも備える。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(site:検索ではいずれも0件。pasqualepillitteri.it等に日本語訳記事が1件あるが、日本語コミュニティでの一次検証記事は未検出)
+- 検証難易度: 低(MIT。`/plugin marketplace add DietrichGebert/ponytail`→`/plugin install ponytail@ponytail`でClaude Code CLIから追加の有料APIキー無しで導入可能。GPU不要。Node.jsがPATH上にあれば動作)
+- 見栄え: 同一タスクをponytail導入前/導入後のClaude Codeに与え、生成コード行数・トークン使用量・応答時間をBefore/After比較できる。公式は「54〜94%のコード削減」等を主張しているが独立検証では数値が小さく出る報告もあり、自分の環境での実測値を出す価値がある。本リポジトリで既に扱ったandrej-karpathy-skills(CLAUDE.mdでの原則提示)と似た系譜だが、実装・計測コマンド(`/ponytail-audit`等)まで備える点で差別化できる。
+- 状態: 未選択
+
+### [2026-10-21] "Good Judgment, Bad Advice" — Terminal-Bench 2.1でClaude Sonnet 5.5エージェントに決定モデルコントローラーを足すとコストだけ上がり成功率は上がらないと報告する論文(プラセボ対照研究)
+
+- 出典: https://huggingface.co/papers/2610.24649 (コード: https://github.com/namanvats/decision-model-controllers)
+- 概要: Claude Sonnet 5.5のターミナルエージェントに、停止判断・検証・方針転換といった決定ポイントでのみ介入する「決定モデル」コントローラー(Jev 1.13)を追加する効果を、none/ルールベース/小型LLM(Claude Haiku 5.5)/Jev/プラセボの5アームでプレ登録比較した研究。21タスク・315試行のheld-out評価で、Jevはコストを19%増やした一方で成功率(両アームとも73.0%)は変わらず、プラセボよりも22%高コストだったと報告。オフラインではJevの判定精度(AUROC 0.78)はルール/小型LLMより高かったが、キャリブレーションが悪く既に正しい作業にも検証を要求し、どのコントローラーも「打ち切り」を一度も選ばなかったという。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出。論文自体も直近の投稿)
+- 検証難易度: 高(コードは公開されているが、フル再現にはOpenRouter APIキー〈クレジット課金〉とDaytonaサンドボックス課金が必須〈smokeフェーズだけで約$3、評価フェーズは540試行〉。本リポジトリの方針「当面は有料APIキー必須の候補を選ばない」に抵触するため、フル再現は選定不可。取り上げる場合は論文の主張・実験設計の解説と、Claude Code自身を使った小規模な概念実証〈例: 自分の小さなタスクに簡易的な決定ルールを足して応答回数/手直し回数を比較する程度〉に限定する必要がある)
+- 見栄え: 「エージェントに賢そうな管理者を足したらむしろコストが増えるだけだった」という反直感的な結果はエージェント設計の議論として刺さりやすく、本チャレンジの「エージェント信頼性」系(Planning-as-Routing等)の続編として位置づけられる。有料API必須という制約を記事内で明記する必要あり。
+- 状態: 未選択
+
+### [2026-10-21] "More Memory, Worse Agents" — 要約・ルール化した記憶が誤りを定着させる「エラー再生産」を指摘し、生の軌跡を使い捨てる"Anti-Persistence"を提案する論文
+
+- 出典: https://huggingface.co/papers/2610.27406
+- 概要: モデル重みを更新せず自身の経験を蓄積して自己改善するLLMエージェントにおいて、推論ルールや要約を記憶として貯め込む従来design(Hindsight等、本チャレンジでも既に扱った系譜)は、誤りを含んだまま定着・再生産してしまう「エラー再生産(error reproduction)」を起こすと指摘。生の軌跡と結果だけを保持し、タスクごとにオンデマンドでガイダンスを組み立てて使い捨てる"Anti-Persistence"という設計を提案し、ALFWorld/WebShop/ScienceWorld(3バックボーン: Llama-4-Scout/Qwen3-Coder-Next/Gemma-4-31B-it)でheld-out成功率・LLM呼び出しコストの両方で既存の記憶設計を上回ったと報告。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出。論文自体も直近の投稿)
+- 検証難易度: 中〜高(論文側のコード公開は確認できず、検証に使われたバックボーン〈Llama-4-Scout/Qwen3-Coder-Next/Gemma-4-31B-it〉はいずれもGPU前提の大型モデル。フル再現ではなく、「要約を貯めて使う記憶」vs「生の軌跡を使い捨てるAnti-Persistence」という設計思想を、自作の小さなタスクログ・軽量モデルまたはClaude Code自身で疑似再現する縮小版の概念実証に絞る必要がある)
+- 見栄え: 本チャレンジで既に扱ってきたHindsight・Remory等の「エージェントメモリ」系候補群に対する反論・別解として位置づけられ、「記憶を貯めるほど良いとは限らない」という反直感的な切り口はBefore/After(要約ベース記憶 vs Anti-Persistence)の比較デモを作りやすい。
+- 状態: 未選択
