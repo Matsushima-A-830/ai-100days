@@ -47,11 +47,14 @@ grep側の比較対象として、`grep -rln "KronosPredictor" experiments/day-0
 4文字≒1トークンという粗い近似で概算トークン数を出している(厳密なトークナイザは
 使用していない。詳細はresults.md参照)。
 
-## 未検証部分(ローカル検証が必要)
+## Routine環境の制約(ローカルPCで検証済み)
 
 `experiments/day-023/graphify-out/graph.html`はCDN(unpkg.com)から
 vis-network.jsを読み込む構成になっており、このRoutine実行環境のネットワーク
 プロキシがunpkg.comをブロックしていたため、ブラウザでの描画を確認できなかった
-(Routine環境固有の制約。CLAUDE.md参照)。通常のインターネット接続がある
-ローカルPCで上記手順2・3を実行した後、生成された`graph.html`をブラウザで開いて
-ノードリンク図が表示されるか確認してください。
+(Routine環境固有の制約。CLAUDE.md参照)。
+
+人間のローカルPC(通常のインターネット接続)で検証した結果、vis-network.jsが
+HTTP 200で正常に読み込まれ、JSエラー無くノードリンク図(914 nodes / 1657 edges /
+56 communities)が描画され、ノードクリック等のインタラクションも問題なく
+動作することを確認した。詳細はresults.md 7節を参照。

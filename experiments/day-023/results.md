@@ -255,7 +255,7 @@ NODE KronosPredictor [src=experiments/day-022/model/kronos.py loc=L482 community
 (本記事・X投稿案の数値は、すべてこの節とは無関係な「クリーンな状態からの
 `extract`→`cluster-only`」の結果に基づく。4.と5.の実測もすべてこの版で統一している。)
 
-## 7. Routine環境の制約により未検証(ローカル検証待ち)
+## 7. Routine環境の制約(ローカルPCで検証済み)
 
 `graph.html`をブラウザで確認する工程で、`vis is not defined` / `network is not defined`
 というJSエラーが発生し可視化が描画されなかった。原因は`graph.html`が
@@ -265,11 +265,27 @@ NODE KronosPredictor [src=experiments/day-022/model/kronos.py loc=L482 community
 「Routine環境のネットワーク制限によるCDN/自動ダウンロードのブロック」に該当するため、
 記事・X投稿案・シェアカードでは触れていない。
 
-ローカル検証待ち: 通常のインターネット接続があるローカルPCで、本PRにコミット済みの
-`experiments/day-023/graphify-out/graph.html`をそのままブラウザで開いて
-ノードリンク図が正しく描画されるか確認してください
-(手元で最初から再現する場合は以下の手順。ツールの仕様で`--out`の下にさらに
-`graphify-out/`が作られるため、生成されるパスは`graphify-out/graphify-out/graph.html`になる)。
+**人間(matsu)のローカルPC(通常のインターネット接続)で検証した結果、この問題は
+Routine環境固有のものであり、`graph.html`自体に不具合は無いことを確認した。**
+
+```
+$ python3 -m http.server 8793   # experiments/day-023/graphify-out/ 配下で実行
+```
+
+ブラウザ(Chrome)でこのサーバー経由(`http://localhost:8793/graph.html`)を開き、
+以下を確認した。
+
+- ネットワークログで`https://unpkg.com/vis-network@9.1.6/standalone/umd/vis-network.min.js`
+  へのリクエストが**ステータス200**で成功していることを確認(Routine環境では403で
+  拒否されていたのと対照的)。
+- コンソールにJSエラーは一切出力されなかった(`vis is not defined`等は再現せず)。
+- ノードリンク図が実際に描画され、フッターの表示も`914 nodes・1657 edges・56
+  communities`とPR本文・results.mdの数値(914 nodes / 1657 edges / 56 communities)と
+  完全に一致した。
+- ノードを実際にクリックすると、右側の「NODE INFO」パネルに`jeff_client.py`の
+  ファイル名・種別(code)・所属コミュニティ(Community 12)・ソースパスが
+  正しく表示され、インタラクティブな機能(ノード選択・コミュニティ別フィルタ等)も
+  問題なく動作した。
 
 再現手順:
 ```
@@ -277,7 +293,7 @@ cd experiments/day-023
 uv tool install graphifyy
 graphify extract /path/to/ai-100days --code-only --out graphify-out
 graphify cluster-only graphify-out --no-label
-# graphify-out/graphify-out/graph.html をブラウザで開く
+# graphify-out/graphify-out/graph.html を、サーバー経由(file://ではなくhttp://)で開く
 ```
 
 ## まとめ
@@ -292,3 +308,6 @@ graphify cluster-only graphify-out --no-label
   ノード名を直接指定する`explain`の方が信頼できた。
 - ライセンスはApache-2.0が現行の主ライセンスで、MITはrelicense前のコード分のみ
   併存する形。
+- `graph.html`のCDN読み込みブロックはRoutine実行環境固有の制約であり、通常の
+  インターネット接続があるローカルPCでは問題なく描画・操作できることをローカル
+  検証で確認した。
