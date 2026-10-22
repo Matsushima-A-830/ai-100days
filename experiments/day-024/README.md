@@ -15,14 +15,18 @@
 4. 最初の2タスク(日付入力フィールド追加・チェックボックスフィールド追加)は、既存の汎用`Input`コンポーネントを再利用するのが明らかな最適解になるよう作った小さな固定サンプル(`fixture-template/`)に対して実行した。
 5. 結果、baseline/ponytailで生成コードが**完全に同じ行数(+1行)**になり、差が全く出なかった。公式ベンチマークの手法ノート(`benchmarks/agentic/README.md`)を読み直すと、LOCティアのタスクは意図的に「まだ存在しない機能」を選んでいる("a feature that does not already exist, so the agent chooses how much to build")。つまり、自分が最初に作った2タスクは「再利用一択」で過剰実装の余地がほぼ無く、ponytailの効果を測るには不適切なタスク設計だったと気づいた。
 6. そこで公式のLOCティアにある「star rating(星レーティング)」タスクと同じ設計で3つ目のタスクを追加した。既存コンポーネントでは対応できず、エージェントが「どこまで作るか」を自分で決める必要があるタスクで再比較した。
+7. 後日、人間のローカルPC(Windows 11 + WSL2 Ubuntu)で、2.でブロックされていた公式方式(`claude -p --plugin-dir`)そのものを実際に実行した。同じ3タスク・同じfixtureで、ローカルでは一切ブロックされずに全6回が正常完了し、Task Cでは代替手法(約68%減)を上回る約93%減という結果になった。詳細はresults.md 3節参照。
 
 ## ディレクトリ
 
 - `fixture-template/` — 3タスク共通の出発点(汎用`Input`コンポーネント + signupフォーム)
-- `runs/a-baseline/`, `runs/a-ponytail/` — Task A: 生年月日フィールド追加
-- `runs/b-baseline/`, `runs/b-ponytail/` — Task B: Remember meチェックボックス追加
-- `runs/c-baseline/`, `runs/c-ponytail/` — Task C: 星レーティング(1〜5)フィールド追加
-- `results.md` — 実測結果・diff・正直な記録
+- `runs/a-baseline/`, `runs/a-ponytail/` — Task A(代替手法・サブエージェント): 生年月日フィールド追加
+- `runs/b-baseline/`, `runs/b-ponytail/` — Task B(代替手法・サブエージェント): Remember meチェックボックス追加
+- `runs/c-baseline/`, `runs/c-ponytail/` — Task C(代替手法・サブエージェント): 星レーティング(1〜5)フィールド追加
+- `runs-cli/a-baseline/`, `runs-cli/a-ponytail/` — Task A(公式方式・`claude -p --plugin-dir`、ローカルPCで実行)
+- `runs-cli/b-baseline/`, `runs-cli/b-ponytail/` — Task B(公式方式、ローカルPCで実行)
+- `runs-cli/c-baseline/`, `runs-cli/c-ponytail/` — Task C(公式方式、ローカルPCで実行)
+- `results.md` — 実測結果・diff・正直な記録(3節に公式方式のローカル再現結果)
 
 ## 再現手順
 
@@ -32,16 +36,27 @@ git clone --depth 1 https://github.com/DietrichGebert/ponytail.git /tmp/ponytail
 # 自分の環境で各ディレクトリに対し、baseline/ponytail両方のタスクを実行し、diffを比較する
 ```
 
-公式ベンチマークそのもの(`claude -p --plugin-dir`によるheadlessセッション比較)をローカルで再現する場合:
+## 公式ベンチマークそのもの(`claude -p --plugin-dir`)をローカルで再現する(検証済み)
+
+人間のローカルPC(Windows 11 + WSL2 Ubuntu)で、以下の手順を実際に実行し、
+`runs-cli/`配下の結果を得た(詳細はresults.md 3節参照)。
 
 ```bash
-cd /tmp/ponytail-src
-# baseline(スキル無し)
-cd <タスク用の空ディレクトリ>
-claude -p "<タスク文>" --output-format json --permission-mode acceptEdits
+cd /tmp/ponytail-src   # または任意のクローン先
 
-# ponytail版(同じタスクディレクトリをコピーして)
-claude -p "<タスク文>" --output-format json --permission-mode acceptEdits --plugin-dir /tmp/ponytail-src
+# タスク用ディレクトリを作り、fixture-template/ の内容をコピーしておく
+cd <タスク用の空ディレクトリ>
+
+# baseline(スキル無し)
+claude -p "<タスク文>" --output-format json --permission-mode acceptEdits \
+  --disallowed-tools WebFetch,WebSearch
+
+# ponytail版(同じfixtureをコピーした別ディレクトリで)
+claude -p "<タスク文>" --output-format json --permission-mode acceptEdits \
+  --disallowed-tools WebFetch,WebSearch --plugin-dir /tmp/ponytail-src
 ```
 
-**注意: 上記の`claude -p --permission-mode acceptEdits/bypassPermissions`は、このRoutineのクラウド実行環境では「Create Unsafe Agents」という権限分類器によってブロックされた。** ローカルPC環境での実行结果は未検証(ローカル検証待ち)。
+**クラウドRoutine環境で発生した「Create Unsafe Agents」というブロックは、ローカルPCでは
+一切発生しなかった。** 6回の実行すべてで`permission_denials: []`・`terminal_reason:
+completed`となり、公式方式がponytail自体の問題ではなくRoutine実行環境固有の制約
+だったことを確認した。
