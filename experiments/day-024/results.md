@@ -217,11 +217,53 @@ Task A・Bではcost/durationに明確な傾向差は無かった(むしろponyt
 (新規ファイルを作らず、ターン数も7→5に減ったため)。公式が主張する「コスト-26%・
 時間-41%」ほど明確な差ではないが、同じ方向ではあった(n=1、1タスクのみの結果)。
 
-## 4. 結論(更新)
+## 4. 人間による対話セッションでの追加確認(3回目のponytail実行)
+
+記事中の「ponytailは星レーティングを`number`や`select`に置き換える」という指摘が、
+実際にponytailを導入した際の挙動として妥当か、人間(matsu)が自分のPCで
+`claude --plugin-dir /tmp/ponytail-src` による**対話型**のClaude Codeセッションを
+実際に起動し、Task Cと同じタスク文を人間自身の手で入力して確認した
+(3節の公式方式はheadless、本節は対話型という違いがあるが、どちらも実際にponytail
+プラグインを読み込んだ本物の実行である点は共通)。
+
+結果、今回も新規コンポーネントは作られず、`forms/signup.js`に`<select>`要素が
+1行追加される形になった。
+
+```js
+'<label for="excitement">Excitement to join (1-5 stars)</label>\n<select id="excitement" name="excitement">\n<option value="">N/A</option>\n<option value="1">1</option>\n<option value="2">2</option>\n<option value="3">3</option>\n<option value="4">4</option>\n<option value="5">5</option>\n</select>'
+```
+
+セッションのコメント:
+
+> Skipped: an actual star-icon widget/CSS — a dropdown covers "rate 1-5" with zero new code. Risk: if you want visual stars later, you'll need a real component; this just captures the value.
+
+生成されたファイルは`node`で実際に実行して動作を確認した(`experiments/day-024/runs-interactive/c-ponytail/`にコミット済み)。
+
+```
+$ node -e "console.log(require('./forms/signup').renderSignupForm())"
+...
+<label for="excitement">Excitement to join (1-5 stars)</label>
+<select id="excitement" name="excitement">
+<option value="">N/A</option>
+<option value="1">1</option>
+...
+</select>
+```
+
+**これで3回の実行のうち2回(3節のheadless公式方式・本節の対話型)が`<select>`
+ドロップダウンという結果になった。** しかも本節の対話セッションでは、3節のheadless
+実行で使われていた★記号(`<option value="1">★</option>`)すら使われず、
+素の数字(`1`〜`5`)になっている。実際にプラグインを読み込んで動かす2つの方式
+(headless・対話型)で一貫して「星アイコンではなくドロップダウン」という結果に
+なったことから、記事の指摘(「星レーティングというUI要求を厳密には満たさない」)は、
+たまたまのブレではなく再現性のある挙動である可能性が高いと判断できる
+(サブエージェント注入方式のみ`<input type="number">`という異なる結果だった)。
+
+## 5. 結論(更新)
 
 - 既存コンポーネントの再利用が「ほぼ唯一の正解」であるような簡単なタスク(Task A・B)では、ponytailのルールセットを与えても与えなくても、Sonnet 5は同じ最小限の解に到達した。差はゼロ。これは代替手法(2節)・公式方式(3節)の両方で一致した。
 - 新規UIコンポーネントを作る余地がある公式スタイルのタスク(Task C)では、代替手法で約68%減、公式方式で約93%減と、どちらもponytail側が大幅に少ないコード量で済ませた。方向性としては公式の主張(大幅なコード削減)と一致する。
 - **公式方式(`claude -p --plugin-dir`)のローカル再現により、1節でクラウドRoutine環境にブロックされていた「Create Unsafe Agents」エラーは、環境固有の制約でありponytail自体の問題ではないことが確定した。** ローカルPCでは6回すべての実行が`permission_denials: []`で正常完了した。
-- ponytail側の星レーティング実装は、2節では`<input type="number">`、3節(公式方式)では`<select>`ドロップダウンと、実行のたびに細部が変わった。どちらも「星レーティング」という視覚的な要求をインタラクティブな星アイコンでは満たしておらず、この限界は代替手法・公式方式を問わず一貫して見られた。
+- ponytail側の星レーティング実装は、2節(サブエージェント注入)では`<input type="number">`、3節(headless公式方式)・4節(対話型、人間が自分のPCで実際に確認)では`<select>`ドロップダウンだった。実際にプラグインを読み込む2つの方式(headless・対話型)では一貫して`<select>`になっており、どちらも「星レーティング」という視覚的な要求をインタラクティブな星アイコンでは満たしていない。これは一時的なブレではなく再現性のある挙動である可能性が高い。
 - 今回の実測はいずれもn=1(各タスク1回のみ)であり、公式の39タスク×5回という規模とは全く比較にならない点には引き続き注意が必要。
 - ponytailの効果は、タスクに「既に存在するコードで済ませられる余地」があるかどうかに強く依存するように見える。README自身も同様の設計思想(ladder: 既存コード→標準ライブラリ→プラットフォーム機能→依存→1行→最小実装、の順に検討する)を明言しており、今回の実測はその通りの挙動だった。

@@ -26,6 +26,7 @@
 - `runs-cli/a-baseline/`, `runs-cli/a-ponytail/` — Task A(公式方式・`claude -p --plugin-dir`、ローカルPCで実行)
 - `runs-cli/b-baseline/`, `runs-cli/b-ponytail/` — Task B(公式方式、ローカルPCで実行)
 - `runs-cli/c-baseline/`, `runs-cli/c-ponytail/` — Task C(公式方式、ローカルPCで実行)
+- `runs-interactive/c-ponytail/` — Task C(対話型セッション、人間が自分のPCで`claude --plugin-dir`を実際に起動して確認)
 - `results.md` — 実測結果・diff・正直な記録(3節に公式方式のローカル再現結果)
 
 ## 再現手順
