@@ -39,7 +39,12 @@ RoPEは2次元回転の合成則 `R(a)R(b) = R(a+b)` が成り立つ。つまり
 - `akv_poc.py` — 4方式の比較実験本体
 - `akv_generate_check.py` — 自由生成での補助確認
 - `results_raw.json` — `akv_poc.py`の生の実行結果(JSON)
-- `results.md` — 実測結果・実行ログ・正直な限界の記録
+- `akv_poc_gpu.py` / `akv_generate_check_gpu.py` — 人間のローカルGPUで、算術タスクを
+  実際に解けるモデル(`Qwen/Qwen2.5-3B-Instruct`)で再検証したGPU版(drop/reposの
+  ロジックは無改変。モデル名・デバイス・attention実装を環境変数で選べるようにした
+  だけ)。詳細はresults.md 5節参照。
+- `results_raw_gpu_qwen3b.json` — `akv_poc_gpu.py`をQwen2.5-3Bで実行した生データ
+- `results.md` — 実測結果・実行ログ・正直な限界の記録(5節にGPU追加検証)
 - `requirements.txt` — 検証に使ったPythonパッケージ
 
 ## 再現手順
@@ -57,3 +62,25 @@ cd experiments/day-025 && python3 akv_generate_check.py
 
 初回実行時は `HuggingFaceTB/SmolLM2-135M-Instruct` の重み(数百MB)をHugging Face Hubから
 ダウンロードする。APIキー・トークンは不要(パブリックモデル)。
+
+## GPU版の再現手順(算術タスクを実際に解けるモデルで再検証する場合)
+
+```bash
+# GPUが使えるマシンで(無くてもCPUにフォールバックする)
+python3 -m pip install torch transformers accelerate
+
+# 既定ではCPU版と同じSmolLM2-135Mを使う(AKV_MODELで差し替え可能)
+python3 experiments/day-025/akv_poc_gpu.py
+
+# より大きいモデル(16GB VRAM程度を想定)で再検証する場合
+AKV_MODEL="Qwen/Qwen2.5-3B-Instruct" \
+  AKV_OUT=experiments/day-025/results_raw_gpu_qwen3b.json \
+  python3 experiments/day-025/akv_poc_gpu.py
+
+cd experiments/day-025 && AKV_MODEL="Qwen/Qwen2.5-3B-Instruct" python3 akv_generate_check_gpu.py
+```
+
+環境変数: `AKV_MODEL`(モデル名、既定はSmolLM2-135M)、`AKV_ATTN`(attention実装、
+既定は`eager`。GPU上のSDPA/flash-attention系実装は恒等変換のはずの操作でも
+浮動小数の丸め方がわずかに変わることを確認したため、再現性のためeagerを既定にした。
+詳細はresults.md 5.2節)、`AKV_OUT`(出力JSONのパス)。
