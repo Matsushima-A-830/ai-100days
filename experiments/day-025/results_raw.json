@@ -1,0 +1,71 @@
+[
+  {
+    "policy": "full",
+    "final_cache_len": 423,
+    "prefill_seconds": 0.4721776026000043,
+    "management_seconds": 0.0,
+    "answer_seconds": 0.07232684119999248,
+    "answer_loss": 0.8046714067459106,
+    "n_reps": 5,
+    "answer_loss_all_reps": [
+      0.8046714067459106,
+      0.8046714067459106,
+      0.8046714067459106,
+      0.8046714067459106,
+      0.8046714067459106
+    ]
+  },
+  {
+    "policy": "summarize",
+    "final_cache_len": 257,
+    "prefill_seconds": 0.0,
+    "management_seconds": 0.1808566902000166,
+    "answer_seconds": 0.06551806859999942,
+    "answer_loss": 1.0250537395477295,
+    "note": "summarizeは「要約テキスト生成+system/user/summary/残りtool応答の全体再prefill」がそのままmanagement操作になるため、再prefill全体をmanagement_secondsに計上",
+    "n_reps": 5,
+    "answer_loss_all_reps": [
+      1.0250537395477295,
+      1.0250537395477295,
+      1.0250537395477295,
+      1.0250537395477295,
+      1.0250537395477295
+    ]
+  },
+  {
+    "policy": "drop",
+    "cache_len_before_drop": 423,
+    "dropped_tokens": 200,
+    "final_cache_len": 223,
+    "prefill_seconds": 0.45696398020002105,
+    "management_seconds": 0.0014907943999787677,
+    "answer_seconds": 0.06705729980003525,
+    "answer_loss": 1.4868128299713135,
+    "n_reps": 5,
+    "answer_loss_all_reps": [
+      1.4868128299713135,
+      1.4868128299713135,
+      1.4868128299713135,
+      1.4868128299713135,
+      1.4868128299713135
+    ]
+  },
+  {
+    "policy": "drop+repos",
+    "cache_len_before_drop": 423,
+    "dropped_tokens": 200,
+    "final_cache_len": 223,
+    "prefill_seconds": 0.4672683887999938,
+    "management_seconds": 0.0061286439999776125,
+    "answer_seconds": 0.06502765559998806,
+    "answer_loss": 0.8386205434799194,
+    "n_reps": 5,
+    "answer_loss_all_reps": [
+      0.8386205434799194,
+      0.8386205434799194,
+      0.8386205434799194,
+      0.8386205434799194,
+      0.8386205434799194
+    ]
+  }
+]
