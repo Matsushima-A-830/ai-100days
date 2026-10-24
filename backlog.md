@@ -1045,3 +1045,39 @@
 - 検証難易度: 低〜中(Apache-2.0。追加の有料APIキー不要。推奨VRAMは約8GBだが、Web UIはCPU/MPSデバイスも選択可能(速度は遅い見込み)。Routineのクラウド実行環境にGPUが無い場合はCPU推論で低速になるか、モデルダウンロード自体がネットワーク制限で進まない可能性があり、その場合はCLAUDE.mdの方針に従いローカル検証にエスカレーションする)
 - 見栄え: 同じテキストを「ボイスデザイン」で生成した声と「ボイスクローン」で複製した声とで聴き比べるBefore/After音声デモは分かりやすく、シェアカードに波形やスペクトログラムの画像を載せれば視覚的にも見栄えが良い。本チャレンジで音声生成系を取り上げるのは今回が初めてで、既存の「エージェント/コンテキスト圧縮」系とは異なる新しい切り口になる。
 - 状態: 未選択
+
+### [2026-10-24] pbakaus/impeccable — 「AIハーネスをデザインに強くする」デザイン言語・決定論的検出CLI(本日GitHub Trending 1位級、+733star/日)
+
+- 出典: https://github.com/pbakaus/impeccable (本日GitHub Trending全言語で+733star/日、累計86,288star。作者はjQuery UIの作者としても知られる元Google Developer Advocate)
+- 概要: Claude Code/Codex/Cursor等のAIコーディングエージェントが生成するフロントエンドが「AIスロップ」(Interフォント多用・紫→青グラデーション・カードの入れ子等の定型デザイン)になりがちな問題に対し、24個のスラッシュコマンド(`/impeccable audit`・`/polish`・`/critique`・`/harden`等)と、HTML/CSS/URLを62のルールでLLM不要・決定論的に検査するCLI検出器(`npx impeccable detect`)を組み合わせたデザイン言語(Apache-2.0)。同日GitHub Trendingには同種の設計方針を持つNutlope/hallmark(こちらはテーマベースのデザインスキル、MIT、+570star/日)も急伸しており、本チャレンジでは検出器が決定論的でAPIキー不要な点から1つを選び、重複を避けるためhallmarkは候補に含めなかった。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(site:検索ではいずれも0件。open-design.aiに日本語の紹介ページが1件あるが、著者自身による検証記事ではない。英語・ポルトガル語・スペイン語・ドイツ語・韓国語の紹介記事は多数あり)
+- 検証難易度: 低(Apache-2.0。検出器CLI自体はLLMもAPIキーも不要と明記されている。Node.jsのみで`npx impeccable detect`が動作し、ブラウザでのURL検査にはChrome/Chromium/Edgeが必要だが、無くても静的なHTML/CSSファイルへの検査は可能。GPU不要。telemetry送信はオプトアウト可)
+- 見栄え: 意図的に「AIスロップ」な定型HTML(Interフォント・紫グラデーション・空のカード等)を用意し、`impeccable detect`前後の検出ルール違反数をBefore/Afterの数値・グラフで見せやすい。さらにClaude Codeに同じプロンプトで画面を作らせ、スキル導入前後で生成結果がどう変わるかも比較できる。
+- 状態: 未選択
+
+### [2026-10-24] aws/agent-toolkit-for-aws — AWS公式、AIコーディングエージェントがAWS上で構築するためのMCPサーバー・スキル・プラグイン集
+
+- 出典: https://github.com/aws/agent-toolkit-for-aws (本日GitHub Trending Pythonで+11star/日・累計3,090star。2026年5月6日発表「Agent Toolkit for AWS」のOSS実体で、既存のAWS Labs発MCPサーバー/プラグイン群の後継)
+- 概要: Claude Code/Codex/Cursor/Devin/Kiro等のAIコーディングエージェントがAWS上でアプリを構築・デプロイ・管理できるよう支援する、AWS公式サポートのツール集(Apache-2.0)。AWS MCP Server(API呼び出し・サンドボックスでのスクリプト実行・ドキュメント検索)、タスク別スキル、プラグイン(`aws-core`・`aws-agents`〈Bedrock/AgentCore〉・`aws-data-analytics`等)、ルールファイルの4要素で構成される。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(site:検索ではいずれも0件。AWS公式発表〈aws.amazon.com/about-aws/whats-new〉と公式ドキュメントのみ確認、日本語の一次検証記事は検索した範囲では未検出)
+- 検証難易度: 中(ツール固有の追加APIキーは不要だが、実際にAWS MCP Server経由でAPI呼び出し・スクリプト実行を行うにはAWSアカウントとローカルのAWS認証情報が必要で、AWS利用料金が発生する可能性がある。本リポジトリの方針上、新しいシークレット登録はできないため、検証範囲は「アカウント不要」と明記されているドキュメント検索・スキルカタログの検出・プラグイン構成の確認に絞る必要がある。GPU不要)
+- 見栄え: 「AWS公式がAIエージェント向けに出したMCPツールキット」というニュース価値はあるが、AWSアカウント連携を伴う本格的なデプロイデモは本Routineの方針(新規シークレット不可)では見せられない。採用する場合は検証スコープの限定を記事内に明記する必要がある。
+- 状態: 未選択
+
+### [2026-10-24] makecindy/cindy — Claude Code/Codexを横断してメモリ・スキルを共有するゼロコンフィグOSS AIエージェント(本日GitHub Trending TypeScript+471star/日)
+
+- 出典: https://github.com/makecindy/cindy (本日GitHub Trending TypeScriptで+471star/日、累計4,024star)
+- 概要: Claude CodeとCodexを最初の対応ハーネスとして、複数のAIコーディングエージェント・モデル・ツールを1つのワークスペースにまとめ、一度修正したメモリやスキルをハーネスをまたいで共有できるデスクトップ/モバイルのOSSクライアント(Apache-2.0。モデル重み・データセット・商標等は別条件)。ブラウザ・コンピュータ・スマートフォンの操作、IM/スケジュール経由でのタスク受付、定期自動化、MCP連携も備える。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(site:検索ではいずれも0件。中国語〈简体中文README〉・トレンド集計サイトでの言及はあるが日本語の紹介記事は検索した範囲では未検出)
+- 検証難易度: 中〜高(Node.js 22.x/pnpm 10.x/Git LFSが前提で、`pnpm install`時にclaude-code・codex・ripgrepのプラットフォーム別バイナリをダウンロードする構成。「Skip Sign-In」でアカウント無しのローカルエージェント利用は可能(サーバー連携機能は不可)で追加APIキーは不要だが、デスクトップ/モバイルGUIアプリとしての動作確認はヘッドレスなクラウド実行環境では困難な可能性が高く、CLIレベルの検証に限定されるか、人間のローカルPCでのGUI確認が必要になる可能性がある)
+- 見栄え: 「Claude CodeとCodexの間でメモリ・スキルを共有しながら作業を引き継ぐ」様子はBefore/After的に見せやすいが、GUI部分の検証がRoutine環境の制約を受けやすい点に注意(CLAUDE.mdの「Routine環境の制約」エスカレーションルールに該当する可能性がある)。
+- 状態: 未選択
+
+### [2026-10-24] IQuestLab/IQuest-Q1 — 320B(active 15B)の疎MoEによるエージェント型CLI基盤モデル(Hugging Face Daily Papers上位)
+
+- 出典: https://huggingface.co/papers/2610.30949 (モデル: https://huggingface.co/IQuestLab/IQuest-Q1 、コード: github.com/IQuestLab/IQuest-Q1。本日Hugging Face Daily Papersで上位掲載)
+- 概要: ソフトウェア開発・汎用タスク実行・長期推論・サイバーセキュリティ等のCLI/エージェント作業に重点を置いた疎MoE基盤モデル(総パラメータ約320B、トークンあたり有効化15B、コンテキスト524,288トークン、BF16公開)。SWE-Bench Pro 57.5、Terminal-Bench 2.1で83.2、CyberGym 84.5などのベンチマークを報告。vLLM/SGLangでのデプロイ(`--tp-size 8`等、8GPU構成前提)が想定されている。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(site:検索ではいずれも0件。中国語〈量子位系記事の転載〉の紹介記事はあるが日本語の一次検証記事は検索した範囲では未検出)
+- 検証難易度: 高(Hugging Faceページには独自ライセンス「iquest-q1」の表記のみで条文の詳細・商用利用可否は未確認。Hosted Inference Providerや無料デモも無く、自前でvLLM/SGLangサーバーを立てる必要がある。BF16重みは約640GB相当と推定され8GPU構成が前提のため、個人が6時間以内に手元で動かすのは非現実的。CLAUDE.mdの方針(有料APIキー/GPU必須の候補は避けるか制約を明記)に抵触する可能性が高く、扱う場合はベンチマーク結果の紹介に留めるニュース解説のみに限定する必要がある)
+- 見栄え: ベンチマーク数値は豊富でニュース価値は高いが、実機で「動かしてみた」検証ができないため本チャレンジの「動かしていないものを動いたと書かない」原則に抵触しやすい。採用には慎重な判断が必要。
+- 状態: 未選択
