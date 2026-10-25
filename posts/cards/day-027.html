@@ -342,18 +342,32 @@
     });
 
     var last = data[data.length - 1];
+    // 末尾の2系列の値が近いと、数値+系列名の2段テキストが重なるため、
+    // 中心のy座標を最低間隔だけ離す(day-020のカードと同じ衝突回避ロジック)。
+    var centers = { a: y(last.a), b: y(last.b) };
+    var minGap = 34;
+    if (last.a !== undefined && last.b !== undefined) {
+      var gap = centers.a - centers.b;
+      if (Math.abs(gap) < minGap) {
+        var mid = (centers.a + centers.b) / 2;
+        var sign = gap >= 0 ? 1 : -1;
+        centers.a = mid + sign * (minGap / 2);
+        centers.b = mid - sign * (minGap / 2);
+      }
+    }
     ['a', 'b'].forEach(function (key) {
       if (last[key] === undefined) return;
+      var cy = centers[key];
       var label = document.createElementNS(svgNS, 'text');
       label.setAttribute('x', x(data.length - 1) + 10);
-      label.setAttribute('y', y(last[key]) - 4);
+      label.setAttribute('y', cy - 4);
       label.setAttribute('class', 'end-label ' + key);
       label.textContent = last[key];
       plot.appendChild(label);
 
       var name = document.createElementNS(svgNS, 'text');
       name.setAttribute('x', x(data.length - 1) + 10);
-      name.setAttribute('y', y(last[key]) + 11);
+      name.setAttribute('y', cy + 11);
       name.setAttribute('class', 'series-name');
       name.textContent = key === 'a' ? 'IQuest-Q1' : 'GPT-2';
       plot.appendChild(name);
