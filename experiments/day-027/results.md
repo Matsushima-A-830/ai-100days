@@ -75,7 +75,8 @@ Hugging Face上のモデルカード、GitHubリポジトリ、Web検索で以�
   公開されたGGUF量子化版は見つからなかった(README内の「llama.cpp向け」という記述は確認できたが、
   実際の量子化済みファイルの配布ページには到達できなかった)。
 
-→ 軽量な代替手段は無いため、本体推論は今回もスコープ外とする。
+→ 軽量な代替手段は無いため、本体推論は今回もスコープ外とする。**(後日ローカルPCで再確認したところ
+コミュニティによるGGUF量子化版が新たに見つかった。詳細は5節参照。)**
 
 ## 3. ダウンロード可能な軽量ファイルの実機検証
 
@@ -207,9 +208,116 @@ id 0 -> <|iquest_end|>
 GPT-5.6 Solに対して明確に下回っている(39.2 対 54.9/49.5)。これらは論文の報告値であり、
 筆者自身は再現していない。
 
+## 5. 人間のローカルPC(GPU環境)での独立検証
+
+人間(matsu)のローカルPC(Windows 11 + WSL2 Ubuntu、RTX 5060 Ti 16GB VRAM、RAM 30GB、
+空きディスク746GB)で、このPRの主張を独立に再検証した。
+
+### 5.1 LICENSE・config.json・トークナイザ結果の再現性確認
+
+別のPython仮想環境を新規に作成し、Hugging Faceから`LICENSE`・`config.json`・
+`tokenizer.json`・`tokenizer_config.json`を改めて取得し直した。
+
+```
+$ python3 -c "from huggingface_hub import list_repo_files; print(len(list_repo_files('IQuestLab/IQuest-Q1')))"
+190
+$ diff <(新規取得LICENSE) <(PRにコミット済みのLICENSE)
+(差分なし)
+$ diff <(新規取得config.json) <(PRにコミット済みのconfig.json)
+(差分なし)
+```
+
+**ファイル数(190)・LICENSE全文・config.json全体が、PRにコミットされたものとバイト単位で
+完全に一致した。** `tokenizer_test.py`を同じ環境で再実行したところ、出力も1桁たりとも
+違わず一致した。
+
+```
+sample            chars  iquest_tok  chars/tok  gpt2_tok  chars/tok
+japanese_news        94          56       1.68       158       0.59
+english_prose       188          32       5.88        32       5.88
+python_code         145          59       2.46        81       1.79
+```
+
+`additional_special_tokens`のvision系トークン一覧、`id_to_token(0)`が`<|iquest_end|>`を
+返す点も、PRの記載通りに再現した。
+
+### 5.2 ベンチマーク数値の論文との突き合わせ
+
+論文(https://huggingface.co/papers/2610.30949)のTable 2を改めて参照し、PRのresults.md
+4節の表と1セルずつ突き合わせた。**IQuest-Q1・GLM-5.3 Flash・DeepSeek-V4-Flash-0731・
+Tencent Hy3・MiniMax M3・Claude Opus-5・GPT-5.6 Solの全モデル×5ベンチマーク(SWE-Bench Pro・
+Terminal-Bench 2.1・CyberGym・SWE-bench Multilingual・Humanity's Last Exam)について、
+数値・アスタリスク注記(独自評価マーク)・CyberGymでClaude Opus-5が「–」(未記載)である点まで
+含めて完全に一致した。**
+
+### 5.3 GGUF量子化版の再捜索: 新たに2件見つかった
+
+PR記載時点(2026-10-25)では「公開されたGGUF量子化版は見つからなかった」としていたが、
+後日改めてHugging Face Hubを検索したところ、コミュニティによる量子化版が新たに公開されて
+いることを確認した。
+
+```
+$ python3 -c "
+from huggingface_hub import HfApi
+api = HfApi()
+for m in api.list_models(search='IQuest-Q1', limit=50):
+    print(m.id)
+"
+IQuestLab/IQuest-Q1
+Baekpica/IQuest-Q1-Mixed-Quant-GGUF
+xhxlb/IQuest-Q1-GGUF
+xhxlb/IQuest-Q1-FP8
+```
+
+`Baekpica/IQuest-Q1-Mixed-Quant-GGUF`の最小構成(IQ2_XXS)はGGUFファイル合計約88.0GB、
+`xhxlb/IQuest-Q1-GGUF`(複数量子化レベルを含む)は合計約844.2GB。**どちらも、このPCの
+VRAM(16GB)・RAM(30GB)には収まらず、88GBのダウンロード自体にも数時間を要するため、
+今回の検証時間内でのフル推論は見送った。**
+
+一方で、GGUFファイルのメタデータだけであれば、ファイル全体(17.1GB、シャード1/6)を
+ダウンロードせずにHTTPレンジリクエストで先頭200MBだけ取得し、読み取ることができた。
+
+```
+$ curl -sL -r 0-209715199 -o shard1-head.gguf \
+    "https://huggingface.co/Baekpica/IQuest-Q1-Mixed-Quant-GGUF/resolve/main/IQuest-Q1-MQ-IQ2_XXS-00001-of-00006.gguf"
+$ python3 -c "
+from gguf import GGUFReader
+class MetaOnlyReader(GGUFReader):
+    def _build_tensors(self, offs, tensors_fields):
+        self.tensors = []  # テンソル実データの検証はスキップし、メタデータだけ読む
+r = MetaOnlyReader('shard1-head.gguf')
+...
+"
+general.architecture          = iquest_q1
+general.name                  = IQuest-Q1 Mixed Quant IQ2_XXS minimum with recursive MTP
+general.quantization_version  = 2
+iquest_q1.block_count          = 88
+iquest_q1.context_length       = 524288
+iquest_q1.embedding_length     = 3072
+iquest_q1.attention.head_count    = 48
+iquest_q1.attention.head_count_kv = 8
+iquest_q1.expert_count         = 256
+iquest_q1.expert_used_count    = 8
+iquest_q1.rope.freq_base       = 1000000.0
+```
+
+**block_count(88)・embedding_length(3072)・head_count(48)・head_count_kv(8)・
+expert_count(256)・expert_used_count(8)・context_length(524288)のすべてが、
+`config.json`の値(3節参照)と完全に一致した。** 88GBフル版のダウンロード・推論実行こそ
+見送ったが、少なくとも「このGGUF量子化版は本物のIQuest-Q1アーキテクチャと矛盾しない」ことは
+メタデータレベルで確認できた。本体の実機推論(自由生成)の検証は、今回も未実施のまま
+将来の課題として残る。
+
 ## まとめ
 
 - 本体(320B、650GB、8GPU前提)の実機推論: **未実施**(個人が6時間以内に用意できる構成ではないため)。
+  ローカルGPU(16GB)でも、唯一見つかった最小のGGUF量子化版(IQ2_XXS、約88GB)がVRAM・RAMの
+  いずれにも収まらず、ダウンロードだけで数時間を要するため、今回も実機推論には至らなかった。
+  ただしGGUFのメタデータはHTTPレンジリクエストで部分取得し、アーキテクチャがconfig.jsonと
+  完全に一致することを確認した(5.3節)。
+- PR記載のライセンス全文・config.json・トークナイザ比較・ベンチマーク表は、人間のローカルPCでの
+  独立した再取得・再実行により、**バイト単位・数値単位で完全に再現性があることを確認した**
+  (5.1〜5.2節)。
 - ライセンス: **実際にLICENSEファイルを取得して全文を確認した。** 修正MITライセンス(商用利用可、
   UI表示義務のみ)で、backlog.md時点の「条文未確認」という懸念は解消された。
 - トークナイザ: **実際にダウンロードして動かした。** vocab_size 160,000がconfig.jsonの記載と一致し、

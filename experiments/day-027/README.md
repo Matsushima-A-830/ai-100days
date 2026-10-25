@@ -52,3 +52,13 @@ Hugging Face Hubから自動取得)を比較対象として使う。
 
 `tokenizer.json`(12.5MB)・`tokenizer_config.json`(92.7KB)はサイズの都合でこのリポジトリには
 含めていない。再現手順のコマンドで取得できる。
+
+## 人間のローカルPCでの独立検証(results.md 5節)
+
+人間のローカルPC(GPU搭載)で、本PRのLICENSE・config.json・トークナイザ比較・ベンチマーク表を
+独立に取得・再実行し、すべてバイト単位・数値単位で完全に一致することを確認した。また、PR記載時点
+では「見つからなかった」としていたGGUF量子化版が、後日のHugging Face Hub検索で新たに2件見つかった
+(`Baekpica/IQuest-Q1-Mixed-Quant-GGUF` 約88GB、`xhxlb/IQuest-Q1-GGUF` 約844GB)。最小構成の
+IQ2_XXS(約88GB)でもこのPCのVRAM(16GB)・RAM(30GB)には収まらないためフル推論は見送ったが、
+HTTPレンジリクエストでGGUFファイル先頭200MBのみ取得し、メタデータ(層数・エキスパート数・
+コンテキスト長等)が`config.json`と完全に一致することを確認した。詳細はresults.md 5節参照。
