@@ -190,7 +190,7 @@ historical正答率: 100%(n=12)</pre>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>一方、論文の見出しである「素朴なRaw-RAGが最強」は今回の縮小実装では再現しなかった(RawRAGはcurrent 25.00%・historical 33.33%で構造化メモリに劣った)。クロスエンコーダ再ランキング未実装・会話規模が20〜25ターンと小さいことが原因と分析している(詳細はresults.md)。</p>
+    <p>論文の見出しである「素朴なRaw-RAGが最強」は今回の縮小実装(TF-IDFのみ)では再現しなかった(RawRAGはcurrent 25.00%・historical 33.33%で構造化メモリに劣った)。ローカルGPUで密検索+クロスエンコーダ再ランキングに実装し直すとoverall 29.17%→83.33%まで改善し、構造化メモリの最高値(AppendOnlyMemory)と同じ数値まで追いついた。ただし「上回る」までは再現していない(詳細はresults.md)。</p>
   </div>
 
   <footer>
