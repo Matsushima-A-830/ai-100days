@@ -1,0 +1,136 @@
+=== メモリ構築 ===
+[conv_001_aki] turns=25 | Mutating build=4.822ms storage=47chars | AppendOnly build=0.281ms storage=103chars | RawRAG build=0.540ms storage=1280chars
+[conv_002_ben] turns=23 | Mutating build=0.293ms storage=55chars | AppendOnly build=0.231ms storage=83chars | RawRAG build=0.369ms storage=981chars
+[conv_003_chi] turns=20 | Mutating build=0.217ms storage=63chars | AppendOnly build=0.204ms storage=102chars | RawRAG build=0.236ms storage=828chars
+
+=== 質問ごとの採点 ===
+[conv_001_aki][home_city][current] Q: What city does Aki currently live in?
+  gold='Fukuoka'
+  Mutating -> 'Fukuoka' (OK)
+  AppendOnly -> 'Fukuoka' (OK)
+  RawRAG retrieved turns [4, 3, 8, 23, 11] (OK, query 0.054ms)
+[conv_001_aki][home_city][historical] Q: What was Aki's home city *before* the most recent change?
+  gold='Osaka'
+  Mutating -> 'Fukuoka' (MISS)
+  AppendOnly -> ['Osaka'] (OK)
+  RawRAG retrieved turns [4, 8, 11, 1, 24] (OK, query 0.043ms)
+[conv_001_aki][job][current] Q: Where/what is Aki's current job?
+  gold='product manager'
+  Mutating -> 'product manager' (OK)
+  AppendOnly -> 'product manager' (OK)
+  RawRAG retrieved turns [4, 8, 13, 9, 3] (MISS, query 0.032ms)
+[conv_001_aki][job][historical] Q: What was Aki's job *before* the most recent change?
+  gold='graphic designer'
+  Mutating -> 'product manager' (MISS)
+  AppendOnly -> ['graphic designer', 'UX researcher'] (OK)
+  RawRAG retrieved turns [8, 13, 1, 24, 4] (MISS, query 0.033ms)
+[conv_001_aki][job][historical] Q: What was Aki's job *before* the most recent change?
+  gold='UX researcher'
+  Mutating -> 'product manager' (MISS)
+  AppendOnly -> ['graphic designer', 'UX researcher'] (OK)
+  RawRAG retrieved turns [8, 13, 1, 24, 4] (MISS, query 0.055ms)
+[conv_001_aki][pet][current] Q: Where/what is Aki's current pet?
+  gold='two cats, Mochi and Tofu'
+  Mutating -> 'two cats, Mochi, Tofu' (MISS)
+  AppendOnly -> 'two cats, Mochi, Tofu' (MISS)
+  RawRAG retrieved turns [4, 8, 9, 3, 25] (MISS, query 0.048ms)
+[conv_001_aki][pet][historical] Q: What was Aki's pet *before* the most recent change?
+  gold='a cat named Mochi'
+  Mutating -> 'two cats, Mochi, Tofu' (MISS)
+  AppendOnly -> ['a cat named Mochi'] (OK)
+  RawRAG retrieved turns [8, 1, 24, 4, 21] (MISS, query 0.033ms)
+[conv_001_aki][favorite_food][current] Q: Where/what is Aki's current favorite food?
+  gold='udon'
+  Mutating -> 'udon' (OK)
+  AppendOnly -> 'udon' (OK)
+  RawRAG retrieved turns [8, 9, 4, 3, 25] (MISS, query 0.035ms)
+[conv_001_aki][favorite_food][historical] Q: What was Aki's favorite food *before* the most recent change?
+  gold='tonkotsu ramen'
+  Mutating -> 'udon' (MISS)
+  AppendOnly -> ['ramen'] (OK)
+  RawRAG retrieved turns [8, 9, 1, 24, 4] (OK, query 0.038ms)
+[conv_002_ben][home_city][current] Q: What city does Ben currently live in?
+  gold='Austin'
+  Mutating -> 'Austin' (OK)
+  AppendOnly -> 'Austin' (OK)
+  RawRAG retrieved turns [1, 2, 9, 23, 7] (MISS, query 0.046ms)
+[conv_002_ben][home_city][historical] Q: What was Ben's home city *before* the most recent change?
+  gold='Seattle'
+  Mutating -> 'Austin' (MISS)
+  AppendOnly -> ['Seattle'] (OK)
+  RawRAG retrieved turns [8, 2, 21, 15, 16] (OK, query 0.048ms)
+[conv_002_ben][job][current] Q: Where/what is Ben's current job?
+  gold='data engineer'
+  Mutating -> 'backend engineer' (MISS)
+  AppendOnly -> 'backend engineer' (MISS)
+  RawRAG retrieved turns [2, 11, 12, 17, 16] (MISS, query 0.030ms)
+[conv_002_ben][job][historical] Q: What was Ben's job *before* the most recent change?
+  gold='backend engineer at a logistics company'
+  Mutating -> 'backend engineer' (OK)
+  AppendOnly -> ['backend engineer'] (OK)
+  RawRAG retrieved turns [8, 2, 11, 21, 15] (MISS, query 0.031ms)
+[conv_002_ben][job][historical] Q: What was Ben's job *before* the most recent change?
+  gold='backend engineer at a fintech startup'
+  Mutating -> 'backend engineer' (OK)
+  AppendOnly -> ['backend engineer'] (OK)
+  RawRAG retrieved turns [8, 2, 11, 21, 15] (MISS, query 0.029ms)
+[conv_002_ben][pet][current] Q: Where/what is Ben's current pet?
+  gold='a dog named Biscuit'
+  Mutating -> 'a dog named Biscuit' (OK)
+  AppendOnly -> 'a dog named Biscuit' (OK)
+  RawRAG retrieved turns [2, 12, 17, 16, 8] (MISS, query 0.026ms)
+[conv_002_ben][favorite_food][current] Q: Where/what is Ben's current favorite food?
+  gold='grilled salmon'
+  Mutating -> 'grilled salmon' (OK)
+  AppendOnly -> 'grilled salmon' (OK)
+  RawRAG retrieved turns [17, 6, 2, 12, 16] (OK, query 0.031ms)
+[conv_002_ben][favorite_food][historical] Q: What was Ben's favorite food *before* the most recent change?
+  gold='pizza'
+  Mutating -> 'grilled salmon' (MISS)
+  AppendOnly -> ['pizza'] (OK)
+  RawRAG retrieved turns [6, 8, 17, 2, 21] (MISS, query 0.054ms)
+[conv_003_chi][home_city][current] Q: What city does Chi currently live in?
+  gold='Vancouver'
+  Mutating -> 'Vancouver' (OK)
+  AppendOnly -> 'Vancouver' (OK)
+  RawRAG retrieved turns [1, 12, 13, 5, 9] (MISS, query 0.047ms)
+[conv_003_chi][home_city][historical] Q: What was Chi's home city *before* the most recent change?
+  gold='Toronto'
+  Mutating -> 'Vancouver' (MISS)
+  AppendOnly -> ['Toronto'] (OK)
+  RawRAG retrieved turns [19, 12, 4, 15, 9] (MISS, query 0.030ms)
+[conv_003_chi][job][current] Q: Where/what is Chi's current job?
+  gold='pediatric nurse'
+  Mutating -> 'pediatrics specialist' (MISS)
+  AppendOnly -> 'pediatrics specialist' (MISS)
+  RawRAG retrieved turns [20, 15, 9, 14, 3] (MISS, query 0.025ms)
+[conv_003_chi][job][historical] Q: What was Chi's job *before* the most recent change?
+  gold='nurse at a downtown hospital'
+  Mutating -> 'pediatrics specialist' (MISS)
+  AppendOnly -> ['nurse'] (OK)
+  RawRAG retrieved turns [19, 15, 9, 14, 3] (OK, query 0.023ms)
+[conv_003_chi][pet][current] Q: Where/what is Chi's current pet?
+  gold='two rabbits, Pudding and Waffle'
+  Mutating -> 'two rabbits, Pudding, Waffle' (MISS)
+  AppendOnly -> 'two rabbits, Pudding, Waffle' (MISS)
+  RawRAG retrieved turns [20, 15, 9, 14, 3] (MISS, query 0.021ms)
+[conv_003_chi][pet][historical] Q: What was Chi's pet *before* the most recent change?
+  gold='a rabbit named Pudding'
+  Mutating -> 'two rabbits, Pudding, Waffle' (MISS)
+  AppendOnly -> ['a rabbit named Pudding'] (OK)
+  RawRAG retrieved turns [19, 15, 9, 14, 3] (MISS, query 0.022ms)
+[conv_003_chi][favorite_food][current] Q: Where/what is Chi's current favorite food?
+  gold='sushi'
+  Mutating -> 'sushi' (OK)
+  AppendOnly -> 'sushi' (OK)
+  RawRAG retrieved turns [6, 20, 15, 19, 9] (OK, query 0.059ms)
+
+=== 集計 ===
+[current] n=12 | Mutating acc=66.67% | AppendOnly acc=66.67% | RawRAG acc=25.00%
+[historical] n=12 | Mutating acc=16.67% | AppendOnly acc=100.00% | RawRAG acc=33.33%
+
+=== 構築コスト・ストレージサイズ合計 ===
+Mutating: build=5.331ms storage=165chars
+AppendOnly: build=0.715ms storage=288chars
+RawRAG: build=1.144ms storage=3089chars
+RawRAG average query time: 0.037ms (n=24 queries)
