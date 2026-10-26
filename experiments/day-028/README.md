@@ -39,3 +39,24 @@ python3 ablation_rag.py        # RawRAGの検索精度アブレーション
   考えられる(詳細は`results.md`の3節)。
 
 詳しい分析は `results.md` を参照。
+
+## ローカルGPUでの追加検証(results.md 4節)
+
+人間のローカルPC(GPU搭載)で、「クロスエンコーダ再ランキング未実装が原因では」という
+上記の考察を実際に検証した。`gpu_verification/dense_rag_memory.py`に、公開の無料埋め込み
+モデル(`sentence-transformers/all-MiniLM-L6-v2`)とクロスエンコーダ(`cross-encoder/
+ms-marco-MiniLM-L-6-v2`)を使う`DenseRAGMemory`を実装し、同じデータ・同じ質問24問で
+再比較した。
+
+```bash
+cd experiments/day-028/gpu_verification
+pip install sentence-transformers torch
+python3 run_dense_experiment.py   # top_k別の比較
+python3 run_dense_detailed.py     # 質問ごとの詳細ログ
+```
+
+結果、RawRAGMemory(TF-IDFのみ)のoverall正答率29.17%に対し、密検索+クロスエンコーダに
+置き換えるとoverall 83.33%まで改善し、**AppendOnlyMemory(構造化メモリで最も正答率が
+高かった手法)と完全に同じ数値まで到達した。** 考察の裏付けが取れた一方、「Raw-RAGが
+構造化メモリを上回る」という論文の見出しの結果そのものは今回も再現していない。詳細は
+`results.md` 4節参照。

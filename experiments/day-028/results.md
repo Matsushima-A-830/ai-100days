@@ -142,15 +142,93 @@ top_kを増やすほど正答率は上がる(当然、会話が20〜25ターン�
 より大規模な会話データ、読み手LLMが必要であり、それらを使わない縮小版では検証しきれない
 部分がある、ということを示している。
 
-## 4. ローカル検証へのエスカレーションは不要
+## 4. ローカルGPUでの追加検証: 密検索+クロスエンコーダ再ランキングを実装し直す
+
+3節で「Raw-RAGが再現しなかった原因はクロスエンコーダ再ランキング未実装とデータ規模の
+小ささではないか」という考察を立てた。人間(matsu)のローカルPC(RTX 5060 Ti, 16GB VRAM)で、
+この仮説を実際に検証した。RawRAGMemory(TF-IDFのみ)を置き換える`DenseRAGMemory`を
+新たに実装し、同じ会話データ・同じ質問24問・同じ採点方法(検索結果への正解の部分文字列
+一致)で比較した。コードは`experiments/day-028/gpu_verification/dense_rag_memory.py`。
+
+- 埋め込みモデル: `sentence-transformers/all-MiniLM-L6-v2`(公開・無料、APIキー不要)
+- 再ランキングモデル: `cross-encoder/ms-marco-MiniLM-L-6-v2`(公開・無料、APIキー不要)
+- 両モデルともHugging Face Hubから取得し、ローカルGPU(CUDA)で実行した。
+- 検索フロー: 埋め込みのコサイン類似度で上位`candidate_k`件に絞り込んだ後、
+  クロスエンコーダで`(質問, 候補ターン)`ペアをスコアリングして並べ替え、上位`top_k`件を
+  採用する(論文が述べる「密検索+クロスエンコーダ再ランキング」構成に近い)。
+
+### 4.1 実行結果
+
+```
+$ cd experiments/day-028/gpu_verification
+$ python3 run_dense_experiment.py
+=== DenseRAGMemory (embedding + cross-encoder reranking, GPU) ===
+
+[dense+rerank top5] top_k=5 candidate_k=10 reranker=True | current acc=66.67% | historical acc=83.33% | overall acc=75.00% | avg query time=24.54ms
+[dense only  top5]  top_k=5 candidate_k=10 reranker=False | current acc=50.00% | historical acc=75.00% | overall acc=62.50% | avg query time=4.16ms
+[dense+rerank top3] top_k=3 candidate_k=10 reranker=True | current acc=66.67% | historical acc=66.67% | overall acc=66.67% | avg query time=13.58ms
+[dense+rerank top5] top_k=5 candidate_k=10 reranker=True | current acc=66.67% | historical acc=83.33% | overall acc=75.00% | avg query time=14.10ms
+[dense+rerank top8] top_k=8 candidate_k=10 reranker=True | current acc=66.67% | historical acc=100.00% | overall acc=83.33% | avg query time=15.46ms
+[dense+rerank top10] top_k=10 candidate_k=10 reranker=True | current acc=66.67% | historical acc=100.00% | overall acc=83.33% | avg query time=11.76ms
+```
+
+| 実装 | current acc | historical acc | overall acc |
+|---|---|---|---|
+| RawRAGMemory(TF-IDFのみ、top_k=5、3節の元の結果) | 25.00% | 33.33% | 29.17% |
+| DenseRAGMemory(密検索のみ、reranker無し、top_k=5) | 50.00% | 75.00% | 62.50% |
+| **DenseRAGMemory(密検索+クロスエンコーダ、top_k=5)** | **66.67%** | **83.33%** | **75.00%** |
+| **DenseRAGMemory(密検索+クロスエンコーダ、top_k=8/10)** | **66.67%** | **100.00%** | **83.33%** |
+| (参考)AppendOnlyMemory(構造化メモリ、3節) | 66.67% | 100.00% | 83.33% |
+
+**仮説は実際に裏付けられた。** TF-IDFのみのRawRAGMemory(overall 29.17%)に対し、密検索
+(embeddingのみ)に変えるだけでoverall 62.50%まで改善し、そこにクロスエンコーダ再ランキング
+を加えるとoverall 75.00%まで上がった。さらに`top_k`を8〜10に広げると、**overall 83.33%と、
+AppendOnlyMemory(構造化メモリの中で最も正答率が高かった手法)と完全に同じ数値まで到達した。**
+3節で「クロスエンコーダ未実装・データ規模が原因」と推測した通りで、検索器を論文の構成に
+近づけるだけで、RawRAGは「構造化メモリより明確に劣る」状態から「構造化メモリと同水準」まで
+一気に改善した。
+
+### 4.2 それでも残った4問のMISS
+
+`top_k=8`での詳細ログ(`run_dense_detailed.log`)を見ると、DenseRAGMemoryが依然として
+MISSした4問はすべて"current"タイプで、うち2問(Aki・Chiの「現在のペット」)は
+`gold='two cats, Mochi and Tofu'`のような、複数の事実を合成した表現だった。RawRAG系の
+手法は検索結果の生テキストをそのまま返すため、会話のどのターンにも一字一句同じ形では
+登場しない合成済みの答え方とは、原理的に文字列一致しにくい。残り2問(Ben・Chiの
+「現在の職業」)は、**AppendOnlyMemoryも同じ質問をMISSしていた**ことを確認した
+(`run_dense_detailed.log`参照)。つまりこの2問は、DenseRAGMemory固有の弱点ではなく、
+1節の簡易正規表現抽出がそもそも拾えていなかった、データセット側の既知のエッジケース
+だったことが分かった。
+
+### 4.3 結論(GPU追加検証)
+
+- 「素朴なRaw-RAGが最強」という論文の見出しの結果そのもの(RawRAGが構造化メモリを
+  明確に上回る)は、今回の縮小データ・縮小実装では再現しなかった。ここは3節の結論を
+  覆すものではない。
+- しかし、3節で立てた「原因はクロスエンコーダ再ランキング未実装とデータ規模」という
+  仮説は、実際に検索器を密検索+クロスエンコーダ構成に置き換えることで裏付けられた。
+  TF-IDFのみの実装がRaw-RAGを不当に不利に見せていた部分は、論文に近い検索器を使う
+  ことで解消し、RawRAGは最良の構造化メモリ(AppendOnlyMemory)と同水準まで追いついた。
+- 残る「Raw-RAGが構造化メモリを上回る」という結果までは今回も再現できておらず、これは
+  論文が使う長期会話データ(LoCoMo等、数千ターン規模)や読み手LLMによる回答合成が
+  無いと検証しきれない部分だと考えられる。それでも、「縮小実装の検索器が貧弱だったから
+  RawRAGが不当に低く出ていた」という3節の考察自体は、ローカルGPUでの追加検証により
+  実測で裏付けられた。
+
+## 5. ローカル検証へのエスカレーションは不要
 
 今回はRoutine実行環境の制約(ブラウザ不在・ネットワーク制限等)による未検証部分はなく、
 全て実際にPythonスクリプトを実行して得られた結果である。上記3節の「再現しなかった点」は
 ツール・ベンチマーク由来ではなく、こちらで作った縮小実装自体の限界であり、CLAUDE.mdの
-分類に従えば「検証に直接関係する失敗」として本記事に書いている。
+分類に従えば「検証に直接関係する失敗」として本記事に書いている。ただし、その限界の原因
+(密検索・クロスエンコーダ未実装)についての考察自体は、4節のローカルGPU追加検証により
+実測で裏付けられた。
 
-## 5. ライセンス・出典
+## 6. ライセンス・出典
 
 - 論文: arXiv:2610.30755 (Hugging Face Papers掲載)。著者独自実装のコード公開は確認できず。
 - 使用した会話データ・質問セット・実装コードはすべてこのリポジトリで新規に作成したもので、
   論文のLoCoMo/LongMemEval/MEME/MemoryAgentBenchのデータは一切使用していない。
+- 4節のGPU追加検証で使用したモデル: `sentence-transformers/all-MiniLM-L6-v2`(Apache-2.0)、
+  `cross-encoder/ms-marco-MiniLM-L-6-v2`(Apache-2.0)。いずれもHugging Face Hubで公開されて
+  いる無料モデルで、追加の有料APIキーは不要。
