@@ -1,0 +1,140 @@
+=== メモリ構築 (DenseRAGMemory: embedding + cross-encoder reranking, GPU) ===
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|██████████| 103/103 [00:00<00:00, 2337.89it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|██████████| 105/105 [00:00<00:00, 2383.15it/s]
+[conv_001_aki] turns=25 | DenseRAG build=621.500ms storage=1280chars
+[conv_002_ben] turns=23 | DenseRAG build=10.861ms storage=981chars
+[conv_003_chi] turns=20 | DenseRAG build=7.405ms storage=828chars
+
+=== 質問ごとの採点 (DenseRAGMemory, top_k=8) ===
+[conv_001_aki][home_city][current] Q: What city does Aki currently live in?
+  gold='Fukuoka'
+  Mutating -> 'Fukuoka' (OK)
+  AppendOnly -> 'Fukuoka' (OK)
+  DenseRAG retrieved turns [3, 23, 13, 21, 5, 15, 11, 25] (OK, query 250.429ms)
+[conv_001_aki][home_city][historical] Q: What was Aki's home city *before* the most recent change?
+  gold='Osaka'
+  Mutating -> 'Fukuoka' (MISS)
+  AppendOnly -> ['Osaka'] (OK)
+  DenseRAG retrieved turns [21, 11, 23, 13, 25, 3, 15, 19] (OK, query 15.500ms)
+[conv_001_aki][job][current] Q: Where/what is Aki's current job?
+  gold='product manager'
+  Mutating -> 'product manager' (OK)
+  AppendOnly -> 'product manager' (OK)
+  DenseRAG retrieved turns [23, 5, 13, 15, 3, 21, 11, 1] (OK, query 12.663ms)
+[conv_001_aki][job][historical] Q: What was Aki's job *before* the most recent change?
+  gold='graphic designer'
+  Mutating -> 'product manager' (MISS)
+  AppendOnly -> ['graphic designer', 'UX researcher'] (OK)
+  DenseRAG retrieved turns [23, 5, 13, 21, 15, 25, 3, 11] (OK, query 10.482ms)
+[conv_001_aki][job][historical] Q: What was Aki's job *before* the most recent change?
+  gold='UX researcher'
+  Mutating -> 'product manager' (MISS)
+  AppendOnly -> ['graphic designer', 'UX researcher'] (OK)
+  DenseRAG retrieved turns [23, 5, 13, 21, 15, 25, 3, 11] (OK, query 9.519ms)
+[conv_001_aki][pet][current] Q: Where/what is Aki's current pet?
+  gold='two cats, Mochi and Tofu'
+  Mutating -> 'two cats, Mochi, Tofu' (MISS)
+  AppendOnly -> 'two cats, Mochi, Tofu' (MISS)
+  DenseRAG retrieved turns [7, 11, 17, 23, 21, 13, 25, 5] (MISS, query 11.478ms)
+[conv_001_aki][pet][historical] Q: What was Aki's pet *before* the most recent change?
+  gold='a cat named Mochi'
+  Mutating -> 'two cats, Mochi, Tofu' (MISS)
+  AppendOnly -> ['a cat named Mochi'] (OK)
+  DenseRAG retrieved turns [17, 7, 11, 25, 19, 21, 23, 13] (OK, query 13.851ms)
+[conv_001_aki][favorite_food][current] Q: Where/what is Aki's current favorite food?
+  gold='udon'
+  Mutating -> 'udon' (OK)
+  AppendOnly -> 'udon' (OK)
+  DenseRAG retrieved turns [9, 19, 11, 21, 25, 23, 3, 1] (OK, query 16.167ms)
+[conv_001_aki][favorite_food][historical] Q: What was Aki's favorite food *before* the most recent change?
+  gold='tonkotsu ramen'
+  Mutating -> 'udon' (MISS)
+  AppendOnly -> ['ramen'] (OK)
+  DenseRAG retrieved turns [9, 19, 11, 25, 17, 21, 23, 1] (OK, query 17.479ms)
+[conv_002_ben][home_city][current] Q: What city does Ben currently live in?
+  gold='Austin'
+  Mutating -> 'Austin' (OK)
+  AppendOnly -> 'Austin' (OK)
+  DenseRAG retrieved turns [1, 11, 9, 19, 23, 3, 13, 15] (OK, query 14.919ms)
+[conv_002_ben][home_city][historical] Q: What was Ben's home city *before* the most recent change?
+  gold='Seattle'
+  Mutating -> 'Austin' (MISS)
+  AppendOnly -> ['Seattle'] (OK)
+  DenseRAG retrieved turns [11, 1, 9, 21, 19, 23, 15, 7] (OK, query 10.168ms)
+[conv_002_ben][job][current] Q: Where/what is Ben's current job?
+  gold='data engineer'
+  Mutating -> 'backend engineer' (MISS)
+  AppendOnly -> 'backend engineer' (MISS)
+  DenseRAG retrieved turns [11, 3, 13, 1, 19, 9, 23, 15] (MISS, query 14.100ms)
+[conv_002_ben][job][historical] Q: What was Ben's job *before* the most recent change?
+  gold='backend engineer at a logistics company'
+  Mutating -> 'backend engineer' (OK)
+  AppendOnly -> ['backend engineer'] (OK)
+  DenseRAG retrieved turns [21, 11, 3, 23, 19, 13, 9, 1] (OK, query 15.572ms)
+[conv_002_ben][job][historical] Q: What was Ben's job *before* the most recent change?
+  gold='backend engineer at a fintech startup'
+  Mutating -> 'backend engineer' (OK)
+  AppendOnly -> ['backend engineer'] (OK)
+  DenseRAG retrieved turns [21, 11, 3, 23, 19, 13, 9, 1] (OK, query 14.818ms)
+[conv_002_ben][pet][current] Q: Where/what is Ben's current pet?
+  gold='a dog named Biscuit'
+  Mutating -> 'a dog named Biscuit' (OK)
+  AppendOnly -> 'a dog named Biscuit' (OK)
+  DenseRAG retrieved turns [5, 1, 15, 19, 9, 11, 23, 3] (OK, query 16.706ms)
+[conv_002_ben][favorite_food][current] Q: Where/what is Ben's current favorite food?
+  gold='grilled salmon'
+  Mutating -> 'grilled salmon' (OK)
+  AppendOnly -> 'grilled salmon' (OK)
+  DenseRAG retrieved turns [17, 15, 7, 9, 19, 1, 23, 5] (OK, query 9.015ms)
+[conv_002_ben][favorite_food][historical] Q: What was Ben's favorite food *before* the most recent change?
+  gold='pizza'
+  Mutating -> 'grilled salmon' (MISS)
+  AppendOnly -> ['pizza'] (OK)
+  DenseRAG retrieved turns [17, 7, 15, 19, 23, 9, 5, 11] (OK, query 14.009ms)
+[conv_003_chi][home_city][current] Q: What city does Chi currently live in?
+  gold='Vancouver'
+  Mutating -> 'Vancouver' (OK)
+  AppendOnly -> 'Vancouver' (OK)
+  DenseRAG retrieved turns [1, 11, 3, 13, 15, 9, 5, 17] (OK, query 19.665ms)
+[conv_003_chi][home_city][historical] Q: What was Chi's home city *before* the most recent change?
+  gold='Toronto'
+  Mutating -> 'Vancouver' (MISS)
+  AppendOnly -> ['Toronto'] (OK)
+  DenseRAG retrieved turns [1, 11, 9, 15, 13, 3, 5, 17] (OK, query 15.027ms)
+[conv_003_chi][job][current] Q: Where/what is Chi's current job?
+  gold='pediatric nurse'
+  Mutating -> 'pediatrics specialist' (MISS)
+  AppendOnly -> 'pediatrics specialist' (MISS)
+  DenseRAG retrieved turns [11, 13, 9, 3, 1, 15, 5, 17] (MISS, query 9.390ms)
+[conv_003_chi][job][historical] Q: What was Chi's job *before* the most recent change?
+  gold='nurse at a downtown hospital'
+  Mutating -> 'pediatrics specialist' (MISS)
+  AppendOnly -> ['nurse'] (OK)
+  DenseRAG retrieved turns [9, 13, 11, 15, 3, 1, 5, 17] (OK, query 9.207ms)
+[conv_003_chi][pet][current] Q: Where/what is Chi's current pet?
+  gold='two rabbits, Pudding and Waffle'
+  Mutating -> 'two rabbits, Pudding, Waffle' (MISS)
+  AppendOnly -> 'two rabbits, Pudding, Waffle' (MISS)
+  DenseRAG retrieved turns [1, 5, 17, 13, 11, 9, 3, 15] (MISS, query 8.474ms)
+[conv_003_chi][pet][historical] Q: What was Chi's pet *before* the most recent change?
+  gold='a rabbit named Pudding'
+  Mutating -> 'two rabbits, Pudding, Waffle' (MISS)
+  AppendOnly -> ['a rabbit named Pudding'] (OK)
+  DenseRAG retrieved turns [17, 5, 13, 9, 15, 1, 11, 3] (OK, query 9.135ms)
+[conv_003_chi][favorite_food][current] Q: Where/what is Chi's current favorite food?
+  gold='sushi'
+  Mutating -> 'sushi' (OK)
+  AppendOnly -> 'sushi' (OK)
+  DenseRAG retrieved turns [19, 7, 17, 5, 15, 1, 9, 3] (OK, query 8.581ms)
+
+=== 集計 ===
+[current] n=12 | DenseRAG(top_k=8) acc=66.67%
+[historical] n=12 | DenseRAG(top_k=8) acc=100.00%
+[overall] n=24 | DenseRAG(top_k=8) acc=83.33%
+
+=== DenseRAGがMISSした質問 ===
+  [conv_001_aki][pet][current] Where/what is Aki's current pet? (gold='two cats, Mochi and Tofu')
+  [conv_002_ben][job][current] Where/what is Ben's current job? (gold='data engineer')
+  [conv_003_chi][job][current] Where/what is Chi's current job? (gold='pediatric nurse')
+  [conv_003_chi][pet][current] Where/what is Chi's current pet? (gold='two rabbits, Pudding and Waffle')

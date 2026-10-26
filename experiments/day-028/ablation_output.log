@@ -1,0 +1,9 @@
+=== RawRAG 検索方式のアブレーション ===
+[baseline (speaker label入り, stemなし)] current acc=25.00% | historical acc=33.33%
+[speaker label除去] current acc=25.00% | historical acc=25.00%
+[speaker label除去 + 簡易stem] current acc=33.33% | historical acc=25.00%
+[speaker label入り + 簡易stemのみ] current acc=33.33% | historical acc=33.33%
+[baseline, top_k=3] current acc=8.33% | historical acc=25.00%
+[baseline, top_k=5] current acc=25.00% | historical acc=33.33%
+[baseline, top_k=8] current acc=33.33% | historical acc=66.67%
+[baseline, top_k=10] current acc=41.67% | historical acc=75.00%
