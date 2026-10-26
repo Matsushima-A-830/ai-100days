@@ -1126,3 +1126,39 @@
 - 検証難易度: 中(論文の著者コードは未公開〈採択後公開予定とのみ記載〉。フル再現にはGPT-5.6-Sol等への有料API課金が必要だが、本リポジトリの方針に沿い、Claude Code自身に「個別には問題ない」複数の架空文書〈例: 医療・セキュリティ分野の断片情報〉を与え、組み合わせた結論を開示するかどうかを確認する縮小版の概念実証に絞れば追加APIキー不要で検証可能)
 - 見栄え: 「個々の情報は無害でも組み合わせると機密になる」という具体的な失敗例を自作のダミー文書で再現し、実際にClaude Codeが開示してしまうかどうかを見せるBefore/After的なデモは説得力がある。本チャレンジで既に扱ったHexStrike AI・SkillSpector・security-audit-skill等の「攻撃的/監査的セキュリティ」系とは異なり、「エージェントが意図せず機密を漏らす」という防御的データプライバシーの切り口で差別化できる。
 - 状態: 未選択
+
+### [2026-10-26] Nutlope/hallmark — Claude Code/Cursor/Codex向け「アンチAIスロップ」デザインスキル(本日GitHub Trending全言語で2位級、+2,235star/日)
+
+- 出典: https://github.com/Nutlope/hallmark
+- 概要: Claude Code/Cursor/Codex/OpenCode向けのデザインスキル(MIT)。プロジェクトの目的に応じて48種のテーマから1つを選び、生成したWebページを「スロップテストゲート」と呼ぶ静的チェック+自己批評に通すことで、AI生成特有の定型的な見た目(通称AIスロップ)を避けて作る。build/audit/redesign/studyの4モードを持つ。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(fyve.co.jp等の日本語企業ブログによる紹介記事はあるが、実際に動かして比較検証した日本語の一次記事は検索した範囲では未検出)
+- 検証難易度: 低(MIT。`npx skills add nutlope/hallmark`で導入でき追加の有料APIキー不要。Claude Code自身をモデルとして使えば追加コストなし。ブラウザでの静的チェックにはPuppeteer/Chromeを使うが、無くても一部チェックは動作する。GPU不要)
+- 見栄え: 同じプロンプトでhallmark導入前後にWebページを生成し、レイアウト・配色の多様性と「スロップ判定」結果をBefore/Afterで並べられる。「AIに作らせたサイトはどれも似て見える」という定番の不満に直接答える切り口で分かりやすい。
+- 状態: 未選択
+
+### [2026-10-26] mvanhorn/last30days-skill — Reddit/HN/GitHub等を横断し直近30日の話題を要約するClaude Code向けリサーチエージェントスキル(本日GitHub Trendingで急伸)
+
+- 出典: https://github.com/mvanhorn/last30days-skill
+- 概要: Reddit・Hacker News・GitHub・Polymarket・X・YouTube等を横断検索し、エンゲージメント(upvote・再生数・賭け率等)でランキングして直近30日の話題を要約するClaude Code向けAIエージェント・リサーチスキル(MIT)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 低(MIT。`/plugin marketplace add mvanhorn/last30days-skill`→`/plugin install last30days`で導入。README上「Reddit・HN・Polymarket・GitHubはゼロコンフィグで即動作」と明記されており、これらのソースに限定すれば追加の有料APIキー不要(X/YouTube/TikTok等の拡張ソースは別途キーが必要なため今回は対象外とする)。GPU不要)
+- 見栄え: 本リポジトリ自身の朝リサーチRoutine(本Routine)と同じ「海外の話題を巡回して要点をまとめる」作業を同じトピックでこのスキルにも依頼し、通常のWebSearch巡回による結果とBefore/After的に比較できる。本チャレンジの運用そのものをメタ的に検証できる珍しい切り口。
+- 状態: 未選択
+
+### [2026-10-26] eugeniughelbur/obsidian-second-brain — Claude Code等向け、Obsidian Vaultに知見をMarkdown永続化する「第二の脳」システム(本日GitHub Trending Pythonで急伸)
+
+- 出典: https://github.com/eugeniughelbur/obsidian-second-brain
+- 概要: Claude Code/Codex等7種のCLIコーディングエージェント向けに、知見・決定事項をObsidian Vault内のMarkdownとして永続化する「第二の脳」システム(MIT)。49種のスラッシュコマンドでハイブリッド検索・矛盾の洗い出し・定期メンテナンスエージェントを提供する。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(英語のObsidian×Claude Code連携記事は複数あるが、本リポジトリ名での日本語紹介記事は検索した範囲では未検出)
+- 検証難易度: 低(MIT。Claude Codeプラグインとして`/plugin marketplace add`→`/plugin install`で導入し`OBSIDIAN_VAULT_PATH`を設定するだけ。コア機能〈保存・検索・矛盾チェック等〉は「No API keys needed for the core vault commands」と明記されており追加キー不要。GPUも不要〈音声書き起こし等の一部オプション機能のみPyTorch/Ollamaを使うが必須ではない〉)
+- 見栄え: 本リポジトリは夜に`tools/sync-to-obsidian.ps1`で成果をObsidian Vaultへ手動同期する運用をしているため、「Routineの検証結果をこのツールのスラッシュコマンドで記録・検索させてみたら、手動同期スクリプトの運用とどう違うか」というBefore/After比較が作りやすく、本チャレンジの運用改善ネタとして直接語れる。
+- 状態: 未選択
+
+### [2026-10-26] Panniantong/Agent-Reach — ログイン必須ページや動画も有料API契約無しに読み取れるAIエージェント向けCLI(本日GitHub Trending Pythonで+723star/日)
+
+- 出典: https://github.com/Panniantong/Agent-Reach
+- 概要: Twitter/Reddit/YouTube/GitHub/Bilibili/小紅書など15以上のプラットフォームを、プラットフォームごとの有料API契約無しに1つのCLIから読み取り・検索できるようにする、AIエージェント向けの「インターネットへのアクセス」ツール(MIT)。読み取り専用で投稿・コメント等の書き込みは行わない設計。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(aipicks.jp等の日本語AIツール紹介メディアによる紹介はあるが、実際に動かして検証した日本語の一次記事は検索した範囲では未検出)
+- 検証難易度: 低〜中(MIT。多くのデフォルトチャンネル〈GitHub等〉は追加APIキー・ログイン不要と説明されているが、音声書き起こし〈YouTube等〉にはGroq/OpenAIキーが必要、Reddit/Twitter等ログイン前提のチャンネルはブラウザログインの再利用が必要でクラウド実行環境では制約がある見込み。キー/ログイン不要なチャンネルに絞れば6時間以内に検証可能。GPU不要)
+- 見栄え: 「エージェントが普段読めないログイン必須ページや動画の内容を、Agent-Reach経由でどこまで読めるようになるか」をBefore/Afterで見せられる。クラウド実行環境の制約でログイン系チャンネルが試せない場合はその旨を明記し、キー/ログイン不要なチャンネルのみの検証に絞る。
+- 状態: 未選択
