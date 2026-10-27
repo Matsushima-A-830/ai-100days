@@ -1,18 +1,18 @@
-# Day 029: Agent-Reach (Panniantong/Agent-Reach) — ローカル検証が必要(Routine実行環境でインストールがブロックされた)
+# Day 029: Agent-Reach (Panniantong/Agent-Reach)
 
 検証対象: https://github.com/Panniantong/Agent-Reach (MIT)
 
 今日のネタは `today.md` で matsu から直接指定された候補で、GitHub・Bilibili等の
 ログイン不要チャンネルに絞って Before/After 比較を行う計画だった(詳細は `today.md` 参照)。
-しかし、実装Routine(本セッション、人間不在の自動実行)の中では **`agent-reach` コマンド自体を
-一度も実行できなかった**。インストールの段階でこの実行環境のサンドボックス(自動モード分類器)に
-拒否され続け、`agent-reach doctor` すら試せていない。
 
-これは CLAUDE.md の「Routine環境の制約」(例: ブラウザが入っていない、自動ダウンロードが
-ブロックされる)に該当する問題だと判断し、記事・X投稿案・note原稿・シェアカードは作らず、
-このディレクトリの記録とPRでの引き継ぎのみとした。**ローカル検証が必要。**
+実装Routine(人間不在の自動実行)の中では、インストールの段階でこの実行環境のサンドボックス
+(自動モード分類器)に3つの方法すべてで拒否され、`agent-reach` コマンド自体を一度も実行
+できなかった。これはCLAUDE.mdの「Routine環境の制約」に該当する問題と判断し、ローカルPCへ
+引き継いだ。ローカルPCでは公式手順どおりインストールが一発で成功し、GitHub・V2EX・Bilibili
+の各ログイン不要チャンネルの動作確認、YouTube字幕取得でのレート制限の実機確認、GitHub issue
+ページを使ったBefore/After比較までを実際に完了した。詳細な実行ログは `results.md` 参照。
 
-## 確認できたこと(コードを読んだだけで、実行はしていない)
+## 確認できたこと
 
 - `Panniantong/Agent-Reach` は実在する活発な MIT ライセンスのOSS(直近コミット2026-10-25、
   CONTRIBUTING.md・SECURITY.md・Discordコミュニティあり)。2026-10-03のbacklog.mdに記載された
@@ -25,16 +25,22 @@
   (再現ログは `results.md` 参照)。これはプロジェクト自身の `docs/install.md` 1行目にも
   「⚠️ The PyPI package named `agent-reach` is NOT this project. Never install it from PyPI」
   と明記されており、今回の実機確認はこの警告が実際に正しいことを裏付けた。
-- ソースコード(`agent_reach/channels/github.py`, `v2ex.py`, `bilibili.py`)を読んだ限り、
-  GitHub検索/read、V2EX、Bilibiliのsearch/hot/video detailはログイン・Cookie不要で動く設計
-  (素のGitHub REST APIやgh CLI呼び出しのみ)。Xueqiuのコミュニティ系機能とBilibili字幕取得は
-  ブラウザCookie同期が必要。ここまではコードリーディングによる確認であり、**実行して確かめた
-  わけではない**。
+- GitHub・V2EX・Bilibiliのsearch/hot/read系アクションはログイン・Cookie不要で実際に動作した。
+  YouTube字幕取得は、実機検証中にYouTube側のレート制限(HTTP 429)に遭遇した。
+- README/`docs/install.md`が示す手順と実際のCLI文法には2点の食い違いがあった。
+  `agent-reach get github read ...`という表記にある`get`という動詞は存在せず、
+  正しくは`agent-reach github read ...`だった。また`github read`はissue/PRの参照に
+  `owner/repo#N`のような短縮形を受け付けず、フルURLが必要だった。いずれも`results.md`に
+  実際のエラー出力とともに記録した。
+- ヘルプ文言は`github read`を「issue / PR (with comments)」と説明しているが、実際に返る
+  のはissue本文1件とコメント**件数**のみで、コメント本文そのものは取得されない。これも
+  実機で発見した、ヘルプと実装の小さなギャップとして`results.md`に記録した。
 
-## 再現できなかったこと: インストールがすべて拒否された
+## 再現できなかったこと(Routine実行環境固有、Agent-Reach自体の問題ではない)
 
-公式ドキュメント(`docs/install.md`)が推奨する手順を含め、3つの方法を試したが、いずれも
-このRoutine実行環境のコマンド承認レイヤー(Claude Codeの「autoモード分類器」)に拒否された。
+実装Routineの中では、公式ドキュメント(`docs/install.md`)が推奨する手順を含め、3つの方法を
+試したが、いずれもこのRoutine実行環境のコマンド承認レイヤー(Claude Codeの「autoモード分類器」)
+に拒否された。
 
 ```bash
 # 方法1: cloneしたソースからpip install
@@ -57,30 +63,12 @@ $ uv tool install https://github.com/Panniantong/Agent-Reach/releases/latest/dow
 (パッケージ名によるPyPI標準インストール)は拒否されずに成功した。つまりこの拒否は
 「GitHubから取得した/ローカルにcloneした外部コードを実行すること」自体に対する、
 このセッション固有の安全装置であり、Agent-Reachというツール自体の欠陥ではないと判断した。
-意図的な回避(サンドボックスの裏をかくような実行方法)は試みていない。
 
-## 人間(matsu)にお願いしたいローカル再現手順
+ローカルPC(人間の通常のターミナル権限)で同じ`uv tool install`コマンドを実行したところ、
+一発で成功した。この結果は、拒否がRoutine実行環境固有の制約であったという上記の判断を
+裏付けている。詳細は `results.md` の §1参照。
 
-ローカルPC(通常のターミナル権限がある環境)で、公式手順どおりに:
+## ローカル検証の結果
 
-```bash
-# 0. uvが無ければ入れる
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# 1. インストール(PyPIの agent-reach ではなく、GitHub Releaseから。これが肝)
-uv tool install https://github.com/Panniantong/Agent-Reach/releases/latest/download/agent-reach.zip
-agent-reach setup
-
-# 2. ログイン不要チャンネルの動作確認
-agent-reach doctor
-agent-reach get github read yt-dlp/yt-dlp
-agent-reach get v2ex ...   # 詳細な引数は `agent-reach channels` / skill定義を参照
-agent-reach get bilibili search "大模型"
-
-# 3. (today.mdの計画どおり) 通常のWeb検索/curlでは読みにくい1〜2ページを選び、
-#    Agent-Reach経由で読めるかをBefore/Afterで比較する
-```
-
-結果(JSON出力・エラーメッセージ含む、成功/失敗問わずそのまま)を `results.md` に追記してほしい。
-その結果を受けて、記事(`articles/day-029-*.md`)・X投稿案・note原稿・シェアカード
-(`posts/cards/day-029.html`)を作成する。
+GitHub・V2EX・Bilibiliの各チャンネル、GitHub issueページでのBefore/After比較、YouTube字幕
+取得でのレート制限遭遇まで含めた全ての実行ログは `results.md` にまとめた。
