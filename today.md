@@ -2,17 +2,17 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 030
-- 選んだ候補(backlog.mdのタイトルかURL): heygen-com/hyperframes — https://github.com/heygen-com/hyperframes
+- Day: 031
+- 選んだ候補(backlog.mdのタイトルかURL): Memory Tax: Dissecting the Net Value of Agent Memory — https://huggingface.co/papers/2610.34073
 - 補足メモ(あれば):
-  - 出典: https://github.com/heygen-com/hyperframes (HeyGen社が2026年4月にOSS公開、本日GitHub Trending TypeScriptで言及)
-  - 概要: HTML/CSS/GSAPアニメーションをヘッドレスChrome+FFmpegで確定的にMP4動画へレンダリングするOSS(Apache-2.0)。コア機能は外部APIキー不要。Qiitaに導入記事1件あるが独自検証記事は未検出。
+  - 出典: https://huggingface.co/papers/2610.34073 (arXiv:2610.34073。清華大学・UIUC・人民大学・Waterloo大学・Verdent.ai等、Hugging Face Daily Papers 2026-10-28掲載)
+  - 概要: フラット型・階層型・グラフ型・学習済みポリシー型の10種のエージェントメモリシステムを、会話履歴に直接検索をかける素朴なRAGと比較し、多くのメモリシステムがRAGの素のスコアを下回ると報告した論文。メモリがRAGの取りこぼしに答えられる「利益」と、RAGが答えられる設問にメモリが負ける「税(tax)」に分解し、税の原因を構築時の忠実性・検索のしやすさ・バックボーン変更への頑健性の3観点で分析している。
   - 検証スコープの指示:
-    1. 自作のHTML/CSS/GSAPアニメーションを1つ以上用意し、`npx hyperframes init`等で導入してMP4へレンダリングする。
-    2. 同じ入力から複数回レンダリングして出力が確定的(毎回同じ)であることを確認する。
-    3. 本リポジトリのX投稿用シェアカード(`posts/cards/day-NNN.html`)をベースに、静止画カードと動画版のBefore/After比較ができると見栄えが良い。
-    4. HeyGen社の生成AIメディア連携(オプション機能)は有料APIキーが必要な可能性があるため、今回はコアのHTML→MP4レンダリング機能のみを検証対象とする。
-    5. Routine実行環境にヘッドレスブラウザ(Chromium)が無く動作しない場合は、CLAUDE.mdの「Routine環境の制約」エスカレーションルールに従い、PR本文冒頭に「ローカル検証が必要」と明記し再現手順を添える。
-  - 日本語記事件数: Zenn 0件 / Qiita 1件 / note 0件(2026-10-27時点、backlog.md参照)。
+    1. 著者コードの公開は確認できていないため、フル再現はしない。論文の「利益 vs 税」という分解の考え方だけを借りて、Claude Code自身で縮小版の概念実証を組む。
+    2. 自作の小規模な会話履歴(複数セッション分の架空の会話ログ)を用意する。
+    3. 「履歴全文から素朴に検索して答える(RAG相当)」と「要約・独自メモリ構造を介して答える(メモリ相当)」の2パターンをClaude Code自身で実装し、同じ設問セットに答えさせる。
+    4. RAG側が正しく答えられる設問に対してメモリ側がむしろ誤答する「税」が実際に起きるかどうかを比較し、件数・具体例を記録する。精度が同等以上だった場合も正直にその通り書く。
+    5. 追加の有料APIキー・GPUは不要。Claude Code自身をモデルとして使う想定。
+  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-10-28時点、backlog.md参照)。
 
 状態: 設定済み
