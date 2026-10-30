@@ -2,21 +2,27 @@
 
 出典: https://github.com/KeygraphHQ/shannon (AGPL-3.0)
 
-**状態: ローカル検証が必要。** 詳細な経緯は [results.md](./results.md) を参照。
+**状態: ローカル検証実施済み(2026-10-30)。詳細は [results.md](./results.md) を参照。**
+reconフェーズの再現性あるバグにより、実際の脆弱性スキャン結果までは到達できなかったが、
+その過程で得られたツールの挙動(ドキュメント不備・Docker構成依存のバグ・ローカルモデルでの
+破綻パターン)を検証結果として記録した。
 
 ## 要約
 
 today.mdの指示どおり、検証対象はローカルに自分で立てたOWASP Juice Shop(意図的に脆弱なデモアプリ)
 のみとし、第三者が運用するサイトには一切向けていない。
 
-- Docker・Juice Shopのローカル起動・Juice Shopソースの取得までは本Routineのクラウド実行環境で確認できた。
-- Shannon自体のコマンド(`npx @keygraph/shannon@latest setup` / `start`)は、このクラウド実行環境の
-  自動実行(auto mode)に組み込まれている安全装置(「外部パッケージを人間不在のまま実行しようとした」
-  ことに対するブロック)により実行がブロックされ、試せなかった。これはShannon・Juice Shopいずれの
-  性質でもなく、本Routine実行環境固有の制約であるため、記事・X投稿案・note原稿・シェアカードは
-  **作成していない**。
+- Routineのクラウド実行環境: Docker・Juice Shopのローカル起動・Juice Shopソースの取得までは確認できたが、
+  Shannon自体のコマンドはクラウド実行環境の自動実行(auto mode)に組み込まれている安全装置
+  (「外部パッケージを人間不在のまま実行しようとした」ことに対するブロック)により実行がブロックされ、
+  試せなかった。これはRoutine実行環境固有の制約であり、ローカル検証にエスカレーションした。
+- ローカル検証(人間のWindows + WSL2環境): Docker Desktopへの切り替え、READMEの誤り修正(後述)を経て
+  Shannonの起動自体には成功し、pre-reconフェーズは完全に成功したが、reconフェーズで再現性のある
+  バグに遭遇し、実際の脆弱性スキャン・エクスプロイトまでは到達できなかった。無料のOllama
+  (ローカルモデル)への切替も試したが、小型モデルでは構造化出力が破綻することを確認した。
+  詳細は [results.md](./results.md) の「3. ローカル検証」を参照。
 
-## ローカル検証をお願いしたい内容(matsu氏向け)
+## ローカル検証の記録(matsu氏による実施)
 
 ### 事前準備で分かっていること
 
@@ -49,14 +55,29 @@ npx @keygraph/shannon@latest setup
 # → 既存のAnthropic/OpenAIキー、またはOllama/LM Studio等のローカルモデルを選択
 
 # 4. ローカルのJuice Shopに対してのみ実行する
+# 注意: localhost ではなく host.docker.internal を使うこと。
+# Shannon自体がDockerコンテナ内で動くため、localhost はコンテナ自身を指してしまい
+# InvalidTargetError になる(README初版はこれで一度失敗した。results.md 3-2(a)参照)。
 npx @keygraph/shannon@latest start \
-  -u http://localhost:3000 \
+  -u http://host.docker.internal:3000 \
   -r ./juice-shop
 
 # 5. 終了したらJuice Shopを止める
 docker stop juice-shop
 ```
 
-README記載では1回のフルスキャンは1〜1.5時間程度。結果(検出された脆弱性・PoCの有無・実行ログ)が
-出たら `experiments/day-032/results.md` に追記し、その内容を元に記事・X投稿案・note原稿・
-シェアカードを作成する。
+README記載では1回のフルスキャンは1〜1.5時間程度。
+
+**重要な注意点(results.mdに詳細記録)**:
+- WSL2環境でDockerをsnapパッケージ版のまま使うと、Shannon起動時にread-onlyマウントエラーで
+  失敗する可能性がある。Docker Desktop(WSL2バックエンド)への切り替えで解消した。
+- reconフェーズの終盤で`AGENT_EXECUTION_FAILED`になる再現性のあるバグに遭遇した。
+  `-w <workspace名>`で同じworkspace名を指定すればresumeでき、完了済みフェーズ
+  (pre-recon等)の再実行・再課金は避けられる。
+- Ollama等の無料ローカルモデルに切り替える場合、`host.docker.internal`がWSL2側と
+  Windowsネイティブ側のどちらのOllamaを指すか(Docker Desktopの構成による)を事前に
+  確認すること。また小型モデル(7B程度)では脆弱性検証エージェントの構造化出力が
+  破綻し、スキャンが完走しない可能性が高い。
+
+結果(検出された脆弱性・PoCの有無・実行ログ)はすべて `experiments/day-032/results.md` に
+記録した。
