@@ -1,0 +1,77 @@
+{
+  "source_repo_commit": "see git -C <repo> log -1",
+  "rows": [
+    {
+      "tag": "qwen2.5-coder:3b-instruct-q2_K",
+      "quant": "q2_K",
+      "smoke15_pass": 0,
+      "full164_pass": 0
+    },
+    {
+      "tag": "qwen2.5-coder:3b-instruct-q3_K_S",
+      "quant": "q3_K_S",
+      "smoke15_pass": 0,
+      "full164_pass": 0
+    },
+    {
+      "tag": "qwen2.5-coder:3b-instruct-q3_K_M",
+      "quant": "q3_K_M",
+      "smoke15_pass": 0,
+      "full164_pass": 0
+    },
+    {
+      "tag": "qwen2.5-coder:3b-instruct-q3_K_L",
+      "quant": "q3_K_L",
+      "smoke15_pass": 0,
+      "full164_pass": 0
+    },
+    {
+      "tag": "qwen2.5-coder:3b-instruct-q4_0",
+      "quant": "q4_0",
+      "smoke15_pass": 15,
+      "full164_pass": null
+    },
+    {
+      "tag": "qwen2.5-coder:3b-instruct-q4_K_S",
+      "quant": "q4_K_S",
+      "smoke15_pass": 15,
+      "full164_pass": null
+    },
+    {
+      "tag": "qwen2.5-coder:3b-instruct-q4_K_M",
+      "quant": "q4_K_M",
+      "smoke15_pass": 15,
+      "full164_pass": null
+    },
+    {
+      "tag": "qwen2.5-coder:3b-instruct-q5_K_S",
+      "quant": "q5_K_S",
+      "smoke15_pass": 15,
+      "full164_pass": null
+    },
+    {
+      "tag": "qwen2.5-coder:3b-instruct-q5_K_M",
+      "quant": "q5_K_M",
+      "smoke15_pass": 15,
+      "full164_pass": null
+    },
+    {
+      "tag": "qwen2.5-coder:3b-instruct-q6_K",
+      "quant": "q6_K",
+      "smoke15_pass": 15,
+      "full164_pass": null
+    },
+    {
+      "tag": "qwen2.5-coder:3b-instruct-q8_0",
+      "quant": "q8_0",
+      "smoke15_pass": 15,
+      "full164_pass": null
+    },
+    {
+      "tag": "qwen2.5-coder:3b-instruct-fp16",
+      "quant": "fp16",
+      "smoke15_pass": 15,
+      "full164_pass": null
+    }
+  ]
+}
