@@ -1270,3 +1270,30 @@
 - 検証難易度: 中(Docker・Node.js 18+・AIプロバイダの認証情報が必要。第三者の許可を得る必要がなく自己責任で検証できるよう、ローカルで自分で立てたOWASP Juice Shop等の意図的に脆弱なデモアプリのみを対象にする。モデルは既存のAnthropicキーまたはローカルOllama等を利用できる見込みで追加の有料APIキーは必須ではない。README記載で1回のフルスキャンは1〜1.5時間程度のため6時間以内に収まる。GPU不要)
 - 見栄え: 「ソースコードから攻撃経路を見つけ、実際にPoCを取る」様子を、意図的に脆弱なデモアプリ相手に再現し、検出されたPoCのログをそのまま見せられる。本チャレンジでは新しい切り口である「AIエージェントによる攻撃的セキュリティ検証」として差別化できる。検証対象は必ず自分でローンチしたローカルの脆弱デモアプリのみとし、第三者のサイトには向けない。
 - 状態: 採用済み(day-032)。Routine実行環境の制約(自動実行モードの安全装置がnpx経由の外部パッケージ実行をブロック)でShannon本体の実行には進めず、ローカル検証待ち。詳細は`experiments/day-032/`参照。
+
+### [2026-10-30] lightpanda-io/browser — Chromium/WebKitに依存せずゼロから書かれた、AIエージェント専用ヘッドレスブラウザ(本日GitHub Trending Zigで言及)
+
+- 出典: https://github.com/lightpanda-io/browser (本日GitHub Trending Zigで+652star/日、総スター数は約38.3k)
+- 概要: ChromiumやWebKitのフォークではなく、AIエージェント・自動化向けにゼロから書かれたヘッドレスブラウザ。JS実行にV8、HTML解析にhtml5everを使いつつDOM・ネットワーク・レイアウトは自前実装。CDP/WebDriver BiDi/MCPサーバー/内蔵エージェントモードで操作でき、公式ベンチマークではヘッドレスChrome比で約16倍少ないメモリ・約9倍速い実行を主張(AGPL-3.0)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(dev.to等の英語記事・ブログは複数あるが日本語の紹介・検証記事は検索した範囲では未検出)
+- 検証難易度: 低〜中(Linux/macOS向けビルド済みバイナリ・Dockerイメージあり。コア機能〈ブラウジング・CDP/MCPサーバー〉は有料APIキー不要。`lightpanda agent`機能のみ有料LLMプロバイダのAPIキーか、Ollama/llama.cppでのローカルモデルで代替可能。GPU不要。ライセンスがAGPL-3.0のため検証内容を記事にする際は利用条件を明記すること)
+- 見栄え: 「本当にヘッドレスChromeより軽い/速いのか」をメモリ使用量・実行時間の実測比較で見せられる。本リポジトリが過去(day-012)に直面した「Routine実行環境にブラウザが無い」制約への代替策候補としても自己言及的な意味を持つ。
+- 状態: 未選択
+
+### [2026-10-30] Broken on Arrival — 公開モデルレジストリ上で「中身は壊れていないのにタスクを解けない」量子化LLMアーティファクトの実態調査と検出ツール(論文, arXiv:2609.05881)
+
+- 出典: https://arxiv.org/abs/2609.05881 (現行タイトルは"Non-Functional Quantized LLM Artifacts in Public Model Registries and How to Catch Them"。コード・データ: https://github.com/aditi-p31/quantcheck 〈v3.4〉。Hugging Face Daily Papers掲載)
+- 概要: Ollama公式ライブラリ305件+Hugging Face上の人気コミュニティ量子化GGUFアーティファクト22件、計327件に対しHumanEval+ベースの機能検査(`quantcheck`)を実行。164タスクのフル実行では、Ollama公式タグのうち7件(`qwen2.5-coder:3b-instruct`のq2_K/q3_K_S/q3_K_M/q3_K_L、`phi3.5:3.8b-mini-instruct-q2_K`、`llama3.2:1b-instruct`のq2_K/q3_K_S)が164問中0〜6問しか解けない「機能しない」状態だったと報告。**ただし初版(v1)が主張した「サイレントな欠陥〈壊れたファイル〉」という診断はv3で訂正されている。** Qwen2.5-Coder-3B系・phi3.5系はオリジナルのチェックポイントから著者が再ビルドしてもビット単位で一致する正規の(無calibrationの)低bit量子化であり、ファイル自体は壊れていない。むしろ「無calibrationの低bit量子化によって性能が実質ゼロまで崩壊する」現象であり、importance matrix(calibration)を使った量子化に変えると同じ3Bモデルの一部タグで0→76〜113問(164問中)まで回復したという。phi3.5の欠陥主張自体は2026-09-10付でOllama側Issue(ollama/ollama#18252)上で撤回されている。llama3.2-1B系2タグは再ビルド検証が未実施で原因未特定のまま「機能しない」。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語記事は未検出)
+- 検証難易度: 低〜中(`quantcheck`はMITライセンスのPythonツール〈Python 3.9+、ローカルOllama、EvalPlus 0.3.1が必要〉、監査データセットはCC BY 4.0。追加の有料APIキー不要。論文が指摘した具体的なタグ〈3Bクラス〉をOllamaから実際にpullして`quantcheck`のスモークテスト〈15タスク〉を回すだけなら、GPU無し・CPU推論でも6時間以内に再現可能)
+- 見栄え: 「ダウンロードもロードもトークン生成もできるのに、実質タスクを解けないモデルを掴んでしまう」という具体的なタグ名を挙げて実際に再現できれば読者への実利が大きい。かつ「壊れたファイルだと思ったら実は無calibration量子化の性能崩壊だった」という訂正の経緯自体が、検証記事にそのまま使える誠実な「失敗から学ぶ」ストーリーになる。記事化の際は撤回済みの「サイレントな欠陥(壊れたファイル)」という初版の診断を事実として書かないこと。
+- 状態: 採用済み(day-033)
+
+### [2026-10-30] CopilotKit/OpenBot — 「各エージェントに自分専用のコンピュータを持たせる」ガバナンス付きAIコワーカー基盤(本日GitHub Trending TypeScriptで言及、要有料APIキー)
+
+- 出典: https://github.com/CopilotKit/OpenBot (本日GitHub Trending TypeScriptで+707star/日、総スター数は約8.8k。CopilotKit公式、ベータ版)
+- 概要: LangGraph/Mastra/CrewAI/Pydantic AI/Google ADK等、AG-UI対応の任意のフレームワークで作ったエージェントを「コワーカー」として受け入れ、各コワーカーに専用のブラウザ・ファイル・ツールを与え、ツール実行をポリシーゲートウェイが実行前に許可判断・実行後に記録するセルフホスト型プラットフォーム(MIT)。「プロダクトではなくテンプレート」として、General Assistant/Knowledge/Risk Analystの3種のコワーカー例を同梱。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語記事は未検出)
+- 検証難易度: 高・**有料APIキー必須**(クイックスタートで`OPENAI_API_KEY`が必須〈LangGraphエージェントはAnthropic/Googleキーでも代替可〉。加えてCopilotKit Intelligenceのプロジェクト/ライセンス〈無料枠ありだがセルフホストも要設定〉、Docker、Bun 1.4+、PostgreSQLが必要で、セットアップが重い。本リポジトリの方針〈当面は有料APIキー必須の候補をtoday.mdでは選ばない〉により、現時点では選択しない)
+- 見栄え: 「各コワーカーが専用のブラウザ・権限を持ち、ツール実行がポリシーゲートウェイに記録される」様子はデモ映えするが、上記の理由で当面は見送り候補。将来、有料APIキー運用方針を変更する場合の候補として記録のみ残す。
+- 状態: 未選択
