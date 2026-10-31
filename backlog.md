@@ -1280,14 +1280,14 @@
 - 見栄え: 「本当にヘッドレスChromeより軽い/速いのか」をメモリ使用量・実行時間の実測比較で見せられる。本リポジトリが過去(day-012)に直面した「Routine実行環境にブラウザが無い」制約への代替策候補としても自己言及的な意味を持つ。
 - 状態: 未選択
 
-### [2026-10-30] Broken on Arrival — 公開モデルレジストリに潜む「サイレントに壊れた」量子化LLMアーティファクトの実態調査と検出ツール(論文, arXiv:2609.05881)
+### [2026-10-30] Broken on Arrival — 公開モデルレジストリ上で「中身は壊れていないのにタスクを解けない」量子化LLMアーティファクトの実態調査と検出ツール(論文, arXiv:2609.05881)
 
-- 出典: https://arxiv.org/abs/2609.05881 (Hugging Face Daily Papers掲載〈関連タイトルで上位ランクイン〉。関連解説: https://groundy.com/articles/how-to-catch-broken-llm-quants-in-model-registries-before-deploying/)
-- 概要: Ollama公式ライブラリ305件+Hugging Face上の人気コミュニティ量子化GGUFアーティファクト22件、計327件を実際にダウンロード・ロードして実行検証したところ、Ollama公式ライブラリのうち5件(Qwen2.5-Coder-3B系4件・phi3.5-mini系1件、約1.6%)が、ダウンロード・ロード・トークン生成は正常に見えるのに実質機能しない「サイレントな欠陥」を抱えていたと報告。検出ツール`quantcheck`と欠陥アーティファクトの開示レポートを公開している。
+- 出典: https://arxiv.org/abs/2609.05881 (現行タイトルは"Non-Functional Quantized LLM Artifacts in Public Model Registries and How to Catch Them"。コード・データ: https://github.com/aditi-p31/quantcheck 〈v3.4〉。Hugging Face Daily Papers掲載)
+- 概要: Ollama公式ライブラリ305件+Hugging Face上の人気コミュニティ量子化GGUFアーティファクト22件、計327件に対しHumanEval+ベースの機能検査(`quantcheck`)を実行。164タスクのフル実行では、Ollama公式タグのうち7件(`qwen2.5-coder:3b-instruct`のq2_K/q3_K_S/q3_K_M/q3_K_L、`phi3.5:3.8b-mini-instruct-q2_K`、`llama3.2:1b-instruct`のq2_K/q3_K_S)が164問中0〜6問しか解けない「機能しない」状態だったと報告。**ただし初版(v1)が主張した「サイレントな欠陥〈壊れたファイル〉」という診断はv3で訂正されている。** Qwen2.5-Coder-3B系・phi3.5系はオリジナルのチェックポイントから著者が再ビルドしてもビット単位で一致する正規の(無calibrationの)低bit量子化であり、ファイル自体は壊れていない。むしろ「無calibrationの低bit量子化によって性能が実質ゼロまで崩壊する」現象であり、importance matrix(calibration)を使った量子化に変えると同じ3Bモデルの一部タグで0→76〜113問(164問中)まで回復したという。phi3.5の欠陥主張自体は2026-09-10付でOllama側Issue(ollama/ollama#18252)上で撤回されている。llama3.2-1B系2タグは再ビルド検証が未実施で原因未特定のまま「機能しない」。
 - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語記事は未検出)
-- 検証難易度: 低〜中(`quantcheck`やHumanEval+等の評価コードは公開されており追加の有料APIキー不要。論文が指摘した具体的な欠陥モデル〈小型・軽量〉をOllama/Hugging Faceから実際にダウンロードして`quantcheck`または簡易なコード生成テストを回すだけなら、GPU無し・CPU推論でも6時間以内に再現可能)
-- 見栄え: 「見た目は動くのに実は壊れているモデルを掴んでしまう」という具体的な欠陥モデル名を挙げて実際に再現できれば読者への実利が大きい。ただしOllama公式ライブラリ側が論文公開後に該当モデルを差し替えている可能性があるため、検証時点での実際の状態(修正済みか否か)を確認した上で記事に書くこと。
-- 状態: 未選択
+- 検証難易度: 低〜中(`quantcheck`はMITライセンスのPythonツール〈Python 3.9+、ローカルOllama、EvalPlus 0.3.1が必要〉、監査データセットはCC BY 4.0。追加の有料APIキー不要。論文が指摘した具体的なタグ〈3Bクラス〉をOllamaから実際にpullして`quantcheck`のスモークテスト〈15タスク〉を回すだけなら、GPU無し・CPU推論でも6時間以内に再現可能)
+- 見栄え: 「ダウンロードもロードもトークン生成もできるのに、実質タスクを解けないモデルを掴んでしまう」という具体的なタグ名を挙げて実際に再現できれば読者への実利が大きい。かつ「壊れたファイルだと思ったら実は無calibration量子化の性能崩壊だった」という訂正の経緯自体が、検証記事にそのまま使える誠実な「失敗から学ぶ」ストーリーになる。記事化の際は撤回済みの「サイレントな欠陥(壊れたファイル)」という初版の診断を事実として書かないこと。
+- 状態: 採用済み(day-033)
 
 ### [2026-10-30] CopilotKit/OpenBot — 「各エージェントに自分専用のコンピュータを持たせる」ガバナンス付きAIコワーカー基盤(本日GitHub Trending TypeScriptで言及、要有料APIキー)
 
