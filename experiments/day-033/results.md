@@ -172,9 +172,70 @@ Wilson score intervalの計算結果が一致した(小数点以下の丸めの�
 - 監査データセット(トップレベルのJSON/JSONLファイル群、`results*/`, `rerun-2026-10/`含む):
   CC BY 4.0(README.md `## License`節で明記)
 
-## ローカル検証待ちの部分
+## 6. ローカル検証(人間のPC、実際のOllama推論で再現、2026-10-31)
 
-Routine環境の制約により未検証、ローカル検証待ち: `ollama pull`でのモデル取得と
-実際のOllama推論によるタグの再現(`ollama.com`/`registry.ollama.ai`への接続が
-本Routine実行環境のネットワークポリシーで拒否された)。README.mdの「ローカル検証が必要な部分」
-に再現コマンドを記載した。
+Routine環境では`ollama.com`/`registry.ollama.ai`への接続がネットワークポリシーで
+拒否されたため未実施だった部分を、人間のPC(WSL2、Ollama v0.35.1)で実行した。
+
+```
+$ ollama --version
+ollama version is 0.35.1
+$ ollama pull qwen2.5-coder:3b-instruct-q2_K
+pulling 14c4247b8ce4: 100% ▕████████████████▏ 1.3 GB/1.3 GB
+pulling 66b9ea09bd5b: 100% ▕████████████████▏   68 B
+verifying sha256 digest
+writing manifest
+success
+$ ollama pull qwen2.5-coder:3b-instruct-q4_K_M
+pulling 1e65450c3067: 100% ▕████████████████▏ 1.6 KB
+pulling 45fc3ea7579a: 100% ▕████████████████▏ 7.4 KB
+verifying sha256 digest
+writing manifest
+success
+```
+
+`evalplus`(pip, venv経由)から`HumanEval/3`の正確なプロンプトを取得し、
+`harness/audit.py`と同じ`INSTRUCTION`文言・メッセージ形式(`/api/chat`, temperature=0,
+seed=0, num_predict=512)で両タグに同一プロンプトを投げた。実行スクリプトは
+`/tmp/run_ollama_cliff.py`(本リポジトリには同梱していない、使い捨てスクリプト)。
+
+`qwen2.5-coder:3b-instruct-q2_K`の実際の生成(自分のPC・実際の推論、Ollama公式タグそのもの):
+
+```
+ program, program9 thrift {
+ program; program9 thrift, program
+ program
+ program
+ program
+ program
+(以下「 program」の繰り返しが512トークン分、quantcheckの生ログと同種の崖崩壊パターン)
+```
+
+`qwen2.5-coder:3b-instruct-q4_K_M`の実際の生成(同一プロンプト、同条件):
+
+```python
+from typing import List
+
+
+def below_zero(operations: List[int]) -> bool:
+    """ You're given a list of deposit and withdrawal operations on a bank account that starts with
+    zero balance. Your task is to detect if at any point the balance of account fallls below zero, and
+    at that point function should return True. Otherwise it should return False.
+    >>> below_zero([1, 2, 3])
+    False
+    >>> below_zero([1, 2, -4, 5])
+    True
+    """
+    balance = 0
+    for operation in operations:
+        balance += operation
+        if balance < 0:
+            return True
+    return False
+```
+
+論文・quantcheckの生ログが報告した崖現象を、自分のPCで実際にOllama公式タグをpull・推論して
+再現できた。q2_Kはquantcheckの保存ログと同種の単語繰り返し("program"の反復)に陥り、
+q4_K_Mは一発で正しいコードを生成した。ダウンロード・読み込み自体は両タグとも正常に完了しており、
+推論エラーで落ちているわけではない。これは「論文の著者が公開したログの再集計」の範囲を超えて、
+独立した環境・独立した推論実行でも同じ機能崩壊が起きることを確認したものである。

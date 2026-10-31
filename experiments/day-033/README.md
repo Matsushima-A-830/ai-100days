@@ -61,19 +61,11 @@ python3 -I experiments/day-033/scripts/show_transcript.py \
   /tmp/quantcheck/results/transcripts/qwen2.5-coder_3b-instruct-q4_K_M.jsonl HumanEval/3
 ```
 
-### ローカル検証が必要な部分(Routine環境のネットワーク制約で未実施)
+### ローカル検証(実施済み、2026-10-31)
 
-人間(matsu)のローカルPCでは`ollama.com`/`registry.ollama.ai`に到達できるはずなので、
-以下を実行すれば「論文が報告した現象をOllama公式タグで自分の環境から再現する」ところまで
-確認できる。今回クラウドRoutine環境ではこのステップだけ実行できなかった。
-
-```bash
-ollama --version  # 論文はv0.32.6で検証
-ollama pull qwen2.5-coder:3b-instruct-q2_K   # 機能しないと報告されたタグ
-ollama pull qwen2.5-coder:3b-instruct-q4_K_M # 比較対象(健全なタグ)
-ollama run qwen2.5-coder:3b-instruct-q2_K "Write a Python function below_zero(operations: List[int]) -> bool ..."
-# quantcheckのharness/audit.pyでスモーク評価する場合は、READMEのSetup節に従って
-# EvalPlus 0.3.1等の依存関係をインストールしてから実行する。
-```
-
-結果は`results.md`の末尾に追記してください。
+人間(matsu)のローカルPC(WSL2、Ollama v0.35.1)で`ollama pull`・実際の推論による再現を実施した。
+`qwen2.5-coder:3b-instruct-q2_K`/`-q4_K_M`の両タグをpullし、`harness/audit.py`と同じ
+プロンプト形式・パラメータで`HumanEval/3`に対して推論させたところ、q2_Kはquantcheckの
+生ログと同種の"program"繰り返しに崩壊し、q4_K_Mは正しいコードを一発で生成した。
+論文・quantcheckが報告した崖現象を、独立した環境・実際のOllama推論で再現できた。
+詳細な実行ログは`results.md`の「6. ローカル検証」節を参照。
