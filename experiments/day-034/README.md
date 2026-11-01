@@ -38,7 +38,7 @@
    echo $?   # => 0 (findings 0件)
    ```
 
-4. (ローカル検証待ち・ネットワーク必要) エージェント向けスキル一覧・導入コマンドを試す場合:
+4. (ローカル検証実施済み、2026-11-01) エージェント向けスキル一覧・導入コマンド:
 
    ```bash
    npx --yes impeccable@latest help
@@ -46,8 +46,10 @@
    ```
 
    Routineのクラウド実行環境ではimpeccable.styleへの通信がネットワークポリシーでブロックされ、
-   `Could not fetch command list from impeccable.style. Check your network connection.` というエラーになった。
-   ローカルPC(ネットワーク制限なし)で再実行して結果を確認してほしい。
+   `Could not fetch command list from impeccable.style. Check your network connection.` というエラーになったが、
+   人間のローカルPC(ネットワーク制限なし)では両コマンドとも正常に完了し、25個のスラッシュコマンド一覧の
+   取得と、検出したAIハーネス向けへのスキル導入が実際に行われることを確認した。詳細は`results.md`の
+   「6. ローカル検証」節を参照。
 
 ## 使った色のコントラスト比計算スクリプト
 

@@ -93,10 +93,39 @@ Could not fetch command list from impeccable.style. Check your network connectio
 
 Routine実行環境のエージェントプロキシのステータス確認で、`impeccable.style:443`へのCONNECTがゲートウェイに403で拒否されていることを確認した(`connect_rejected`、`gateway answered 403 to CONNECT`)。これはRoutine環境のネットワーク制限によるものであり、ツール自体の不具合ではない。
 
-- Routine環境の制約により未検証、ローカル検証待ち: `impeccable help` / `impeccable install`(エージェント向けスキル・スラッシュコマンド群の導入、`critique`/`polish`等)の動作確認。
-- 再現手順: ローカルPCで `npx --yes impeccable@latest help` および `npx --yes impeccable@latest install` を実行し、インストールされるスキル一覧とその内容を確認する。
+本日の検証の主軸(`detect`によるコントラスト検出・Before/After修正)はネットワーク不要で完全に完結しており、上記は「可能であれば」の追加確認項目(優先度低)だった。
 
-本日の検証の主軸(`detect`によるコントラスト検出・Before/After修正)はネットワーク不要で完全に完結しており、上記は「可能であれば」の追加確認項目(優先度低)。
+## 6. ローカル検証(人間のPC、2026-11-01)
+
+人間のPC(WSL2、Node v22.23.4)では`impeccable.style`に問題なく到達でき、Routine環境でブロックされていた`help`/`install`を両方実行できた。
+
+```
+$ npx --yes impeccable@latest help
+  Impeccable Skills & Commands
+  ...
+  25 commands available. Run /<command> in your AI harness.
+$ echo $?
+0
+```
+
+`help`はimpeccable.styleから25個のスラッシュコマンド一覧(`/critique`, `/polish`, `/audit`, `/typeset`など)を取得できた。
+続けて`install`も実行し、検出したAIハーネス(このケースでは`.github`ディレクトリの存在からGitHub Copilotと自動検出された)向けにスキル・エージェント定義・フックを実際にダウンロード・配置できることを確認した。
+
+```
+$ npx --yes impeccable@latest install
+Detected harnesses:
+  GitHub Copilot  /tmp/day-034-verify/.github
+Downloading impeccable skills...
+Installed impeccable into: .github (project)
+Installed impeccable engine v0.1.18 (linux-x64) into: .github/skills/impeccable/scripts/bin/linux-x64/impeccable
+Installed GitHub Copilot agents into: .github/agents
+Installed hooks into: .github
+$ echo $?
+0
+```
+
+これはRoutine実行環境のネットワーク制約が原因で起きていた失敗であり、ツール自体の不具合ではなかったことをローカルで確認した。
+今回`install`で生成された`.github/`配下のファイルは、本PRの検証対象(シェアカードのコントラスト検出)とは無関係な導入物のため、リポジトリにはコミットせず動作確認後に削除した。
 
 ## まとめ
 
