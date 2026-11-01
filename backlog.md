@@ -1341,7 +1341,7 @@
 - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲。英語のdev.to記事や中国語ミラー(Gitee)は複数あるが日本語の紹介・検証記事は未検出)
 - 検証難易度: 低。Claude Code自体の認証以外に追加のAPIキー・GPUは不要。ただしフルのゲーム開発サイクルは6時間に収まらないため、`/setup-engine godot`等で環境を作った上で1〜2個のスキル(例: `/brainstorm`、`/skill-test static`)に絞って動かすスコープが必要。
 - 見栄え: 本リポジトリ自体がClaude Code Routineで運用されているという自己言及的な文脈に合う。49エージェント・74スキルという大規模な構成を実際に動かし、ログやスクリーンショットをそのまま見せられる。
-- 状態: 未選択
+- 状態: 採用済み(day-035)
 
 ### [2026-11-01] AiSOC — ローカルLLM(Ollama)で動く自己ホスト型AI Security Operations Center(本日GitHub Trending Pythonで言及)
 
