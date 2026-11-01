@@ -1333,3 +1333,48 @@
 - 検証難易度: 低〜中。無料クレジットまたはローカルOpenAI互換エンドポイント(Ollama等)を使えば追加の有料APIキー無しで6時間以内に検証可能。GPU不要(ローカルモデル使用時はそのモデル側の要件に依存)。パッケージ版はサインイン必須な点に留意。
 - 見栄え: 「Commanderが目標をどう分解し、どの専門エージェントに何を振るか」を実際のログで見せられる。直近数日(claude-mem、superpowers、KeygraphHQ/shannon、nightly-labs/openbot等)でエージェントオーケストレーション系ツールが連続しているため、採用する場合はローカルファースト・無料クレジットでの検証という切り口での差別化を明記した方がよい。
 - 状態: 未選択
+
+### [2026-11-01] Claude Code Game Studios — Claude Codeを49体のAIエージェント・74スキルによる「ゲーム開発スタジオ」に変える構成テンプレート(本日GitHub Trendingで言及)
+
+- 出典: https://github.com/Donchitos/Claude-Code-Game-Studios (MIT。本日GitHub Trending Shellで言及)
+- 概要: Claude Codeの1セッションを、Director/部門リーダー/専門職の3階層・49体のエージェント、74個のスラッシュコマンド形式スキル、15個のフック(自動検証)、14個のパス限定ルール、62個のドキュメントテンプレートからなる「ゲーム開発スタジオ」として動かすMITライセンスのテンプレート。Godot 4/Unity/Unreal Engine 5に対応し、`/start`で状況を聞かれてワークフローに誘導される。README自身が「パースチェックは実行確認ではない」「画面の変化を伴う修正は、実際にゲームを起動しスクリーンショットを`production/qa/evidence/`に残すまで完了としない」と強く検証を要求している点が特徴。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲。英語のdev.to記事や中国語ミラー(Gitee)は複数あるが日本語の紹介・検証記事は未検出)
+- 検証難易度: 低。Claude Code自体の認証以外に追加のAPIキー・GPUは不要。ただしフルのゲーム開発サイクルは6時間に収まらないため、`/setup-engine godot`等で環境を作った上で1〜2個のスキル(例: `/brainstorm`、`/skill-test static`)に絞って動かすスコープが必要。
+- 見栄え: 本リポジトリ自体がClaude Code Routineで運用されているという自己言及的な文脈に合う。49エージェント・74スキルという大規模な構成を実際に動かし、ログやスクリーンショットをそのまま見せられる。
+- 状態: 未選択
+
+### [2026-11-01] AiSOC — ローカルLLM(Ollama)で動く自己ホスト型AI Security Operations Center(本日GitHub Trending Pythonで言及)
+
+- 出典: https://github.com/beenuar/AiSOC (MIT。Cyble社の資金提供で公開)
+- 概要: セキュリティテレメトリを取り込み、7,015件中2,534件が実行可能な検知ルールでアラートを相関・インシデント化し、AIエージェントが推論過程・ツール呼び出しを全てログに残しながら調査、最終的な対応は人間が承認するセルフホスト型AI SOC。MCPサーバーも同梱。既定では追加の有料APIキー不要で、CPU専用推論向けにサイズ調整された約2GBのローカルモデル(Ollamaの`llama3.2:3b-instruct-q4_K_M`)が同梱される。README自身が「ベンチマーク数値はライブなエージェント精度ではなく基盤の自己一貫性の指標」「既定では自律動作しない」「SIEMの代替ではない」と明記している。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲)
+- 検証難易度: 低〜中。Docker Compose v2(Dockerに8GBメモリ・20GB空き容量)+Python 3.9+のみで、`make up`→`make smoke`(パイプライン全体を1イベントで通し10/10 PASSのログが出る)→サンプルデータ投入まで一通り確認できる。追加APIキー不要・GPU不要(CPU専用)。
+- 見栄え: `make smoke`のPASS/FAILログと、サンプルインシデントに対するAIエージェントの調査過程(監査可能なInvestigation Ledger)を具体的に見せられる。セキュリティ運用×AIエージェントという切り口で直近のdefensive security文脈にも合う。
+- 状態: 未選択
+
+### [2026-11-01] shiyu-coder/Kronos — 金融ローソク足(K-line)データ専用のOSS基盤モデル(本日GitHub Trending Pythonで言及、元論文はAAAI 2026採択)
+
+- 出典: https://github.com/shiyu-coder/Kronos (MIT。元論文: arXiv:2508.02739「Kronos: A Foundation Model for the Language of Financial Markets」、AAAI 2026採択。本日GitHub Trending Pythonで+611star/日)
+- 概要: 価格変動と取引活動の両方を保持する専用トークナイザでOHLCVデータを離散トークン化し、45の取引所から集めた120億件超のK-lineで自己回帰的に事前学習したデコーダのみの基盤モデル群(mini 4.1M/small 24.7M/base 102.3Mはオープン、largeは非公開)。Hugging Face Hubから`NeoQuasar/Kronos-small`等をロードするだけで推論でき、著者らは既存のTSFM(時系列基盤モデル)比でRankICが93%向上したと報告している。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲。英語論文・海外プラットフォームの紹介は複数あるが日本語記事は未検出)
+- 検証難易度: 低。`pip install`後、Hugging Face Hubからsmall/baseモデルをロードして`predict`するだけで追加APIキー不要・GPU不要(CPUで動作、GPUは任意)。ただしREADME付属のサンプルCSV(`./data/XSHG_5min_600977.csv`)はリポジトリに同梱されていないため、自前で株価・為替・暗号資産等の実際のOHLCV CSVを用意する必要がある。
+- 見栄え: 自分で用意した実際の相場データに対する予測チャートと、ground truth(実際の値動き)を重ねたBefore/Afterが分かりやすい。直近のエージェント系候補に偏っていたため、純粋な時系列基盤モデルとして多様性を持たせられる。投資助言ではなく検証目的であることを明記する必要あり。
+- 状態: 未選択
+
+### [2026-11-01] Co-Design Bench — 画像・音声・文書など実際のマルチモーダル依頼に対するコーディングエージェントの対応力を測るベンチマーク(論文, arXiv:2610.35138)
+
+- 出典: https://arxiv.org/abs/2610.35138 (Fudan大学・Alibaba Token Hub・上海交通大学ら。データセット: https://huggingface.co/datasets/Wiselnn/Co-Design-Bench〈Parquet, testスプリット96件+ルーブリック521件〉。プロジェクトページ: https://codesignbench.github.io/)
+- 概要: 37,463件の実クエリ・26,314件の実セッションから抽出した273タスク(本リポジトリで確認できた公開データセットはそのサブセットの96件)で、ローカライズされた編集+画像/音声/動画/文書等の添付ファイルを伴う「Multimodal Editing」と複数ファイルに渡る「Repository Editing」の2トラックを評価するベンチマーク。各タスクに隠された専門家作成の採点基準(合計2,331件)を用意し、LLMが採点した上で別のLLMが過大判定を検証する「judge-then-refute」方式を採用。著者らの実験では最良のモデルでも採点基準の平均69.9%しか満たせず、タスク完全成功率は26.4%に留まったと報告している。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲)
+- 検証難易度: 中〜高。テストタスクとルーブリックはHugging Face上にParquetで公開されているが、論文の評価ハーネス(judge-then-refuteの実装)自体のコードは検索した範囲では見つからず、フル再現は不可。縮小版として、96件から1〜2タスクを選びClaude Code自身に解かせ、付随するルーブリックを人力で採点するという概念実証なら追加APIキー・GPU不要で6時間以内に可能。
+- 見栄え: 画像・文書等の添付ファイルを伴う実際のWeb開発依頼にエージェントがどこまで応えられるかを、具体的な1タスクのBefore/Afterで見せられる。
+- 状態: 未選択
+
+### [2026-11-01] WorkFactory / WorkPilot — 職業タスクをエージェント訓練用の実行可能タスクに変換するフレームワーク(論文, arXiv:2610.37161。要追加調査・見送り推奨)
+
+- 出典: https://arxiv.org/abs/2610.37161 (Zhejiang大学・人民大学ら。コード: https://github.com/IQuestLab/WorkFactory, Apache-2.0)
+- 概要: 専門職の依頼(プロフェッショナルインテント)から、必要な情報とその情報が置かれるべき場所を対応付ける「情報レベルの計画」を作り、実際に実行してみて環境の不備を見つけ、意図した作業内容を変えずに修復するWorkFactoryフレームワークを提案。612職種・112,686タスクを構築し、教師の実行軌跡でQwenベースのWorkPilotファミリー(4B/27B/35B-A3B)をファインチューンしたところ、いずれもベースモデルを上回り、WorkPilot-35B-A3BはGDPval-AA v2.1のEloが879から1565に上昇したと報告している。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲)
+- 検証難易度: 高・要追加調査(現時点では見送り推奨)。GitHubリポジトリにはLICENSE以外の実体がなく、タスクデータ・WorkPilotモデル重みへの具体的なダウンロードURL・実行コマンドが見当たらない(確認した範囲ではHugging Face上の実体を別途探す必要がある)。着手前にモデル重みの有無・サイズ・GPU要否を確認しないと6時間以内に収まるか判断できない。
+- 見栄え: 「職業タスクをそのままエージェント訓練データに変換する」という切り口自体は面白いが、再現可能性の不確実性が高く、今回は参考記録として残すのみとする。
+- 状態: 未選択
