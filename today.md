@@ -2,19 +2,18 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 035
-- 選んだ候補(backlog.mdのタイトルかURL): Claude Code Game Studios — https://github.com/Donchitos/Claude-Code-Game-Studios
+- Day: 036
+- 選んだ候補(backlog.mdのタイトルかURL): Heretic — https://github.com/p-e-w/heretic
 - 補足メモ(あれば):
-  - 出典: https://github.com/Donchitos/Claude-Code-Game-Studios (MIT。本日GitHub Trending Shellで言及)
-  - 概要: Claude Codeの1セッションを、Director/部門リーダー/専門職の3階層・49体のエージェント、74個のスラッシュコマンド形式スキル、15個のフック(自動検証)、14個のパス限定ルール、62個のドキュメントテンプレートからなる「ゲーム開発スタジオ」として動かすMITライセンスのテンプレート。Godot 4/Unity/Unreal Engine 5に対応し、`/start`で状況を聞かれてワークフローに誘導される。README自身が「パースチェックは実行確認ではない」「画面の変化を伴う修正は、実際にゲームを起動しスクリーンショットを`production/qa/evidence/`に残すまで完了としない」と強く検証を要求している点が特徴。追加APIキー・GPU不要(Claude Code自体の認証のみ)。
+  - 出典: https://github.com/p-e-w/heretic (AGPL-3.0-or-later。2026-11-02時点でGitHub Trending Pythonで+404star/日。PyPI: https://pypi.org/project/heretic-llm/)
+  - 概要: 「拒否挙動は内部活性化空間の単一方向に強く媒介される」というAbliteration理論(Arditi et al., 2024)に基づき、OptunaのTPEベース最適化で拒否率と元モデルからのKL発散を同時最小化するパラメータを自動探索し、再学習なしでLLMの拒否挙動(検閲/安全性アラインメント)を解除するPython製CLIツール。`pip install -U heretic-llm`後に`heretic <model-id>`のように対象モデル名を渡すだけで動作し、量子化(`bnb_4bit`)にも対応する。README記載の参考値はRTX 3090でQwen3-4B-Instruct-2507を20〜30分。APIキーは不要。
   - 検証スコープ・手順:
-    1. リポジトリをクローンし、`experiments/day-035/`配下にテンプレートを展開してプロジェクトルートでClaude Codeを起動する(サブフォルダから起動するとhooks・denyルール・ask-firstパーミッションがスキップされる旨がREADMEに明記されているため注意)。
-    2. `/start`を実行し、どのような質問・ワークフロー誘導をされるかをそのままresults.mdに記録する。
-    3. 全49エージェント・74スキルを使ったフルのゲーム開発サイクルは6時間に収まらないため、スコープを絞る: `/setup-engine godot 4.7`等でエンジンをセットアップし、`/brainstorm`のような企画系スキルを1〜2個実行して、どのエージェントが呼ばれ、どんな出力(ドキュメント・コード等)が生成されるかを記録する。
-    4. `/skill-test static`または`/skill-test audit`を実行し、スキル/エージェント構成の構造チェック結果(カバレッジ等)をresults.mdに記録する。
-    5. 可能であれば小さな1画面程度のプロトタイプを実際に生成させ、README自身の検証ルールに従って実際にゲームを起動・動作確認し、スクリーンショットを`production/qa/evidence/`相当の場所に残す。
-    6. 実行コマンド・ログ・エラーはすべてそのままresults.mdに記録する(失敗した場合も正直に書く)。`npx`/Claude Code自体のネットワーク通信がRoutine実行環境の制約で行えない場合は「Routine環境の制約」として記事には書かず、results.mdに1〜2行だけ残してローカル検証にエスカレーションする。
-  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-11-01時点、backlog.md参照)。
-  - 記事化の切り口: 本リポジトリ自体がClaude Code Routineで運用されているという自己言及的な文脈に合わせ、49エージェント・74スキルという大規模な構成を実際に動かしたログ・生成物・スクリーンショットをそのまま見せる。
+    1. `pip install -U heretic-llm`でインストールし、`heretic --help`等でCLIの基本挙動・設定可能パラメータ(Optunaの試行数、評価用プロンプト数、量子化設定等)を確認してresults.mdに記録する。
+    2. 本検証はAbliterationという技術の挙動を定量的に観察することが目的であり、実際に無害化・脱検閲されたモデルの有害な出力を引き出したり公開したりすることはしない。「アライメント手法がどれだけ脆いか」という研究的フレーミングを徹底する。
+    3. Routine実行環境にGPUがあるか確認する(`nvidia-smi`等)。GPUが無い、またはCPU推論で最小構成のモデル(Qwen3-0.6B-Instruct等のREADME動作確認済みモデルの中で最小のもの)でも1回の最適化が6時間の作業枠を大きく超えると判断した場合は、「GPU不足はRoutine環境の制約」として記事には書かず、results.mdに「Routine環境の制約により未検証、ローカル検証待ち」と1〜2行だけ残し、PR本文冒頭に「ローカル検証が必要」と明記した上で再現コマンド(使用した`heretic <model-id>`のコマンドラインとconfig)を添えてローカル検証にエスカレーションする。
+    4. 6時間以内に完走できると判断できた場合は、Optunaの試行数や評価セットを設定ファイルで絞った「スモーク実行」を1モデルに対して実施し、実行前後の拒否率(README記載のベンチマーク手法に準拠した、意図的に拒否されやすいが実際には無害な質問セット)とKL発散の変化を数値で記録する。
+    5. 実行コマンド・ログ・エラー・所要時間はすべてそのままresults.mdに記録する(失敗した場合も正直に書く)。
+  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-11-02時点、backlog.md参照。GIGAZINE・weel.co.jp等のニュース解説記事はあるが一次検証記事は無し)。
+  - 記事化の切り口: 「アライメント(安全性調整)はどれくらい堅牢なのか」を自分の手で定量的に確かめる、という研究的な切り口で書く。Meta社から法的通知を受けた経緯(2026年5月)等の話題性にも触れつつ、実際に生成した無検閲モデルの出力そのものを記事の主役にはせず、拒否率・KL発散というメトリクスのBefore/Afterを主役にする。
 
 状態: 設定済み
