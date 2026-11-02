@@ -22,29 +22,23 @@ grep -c '\.sh"' .claude/settings.json  # hooksブロック内の登録数を目�
 検証後、クローンはサードパーティのネストしたgitリポジトリをそのままコミットするのは適切でないため
 `rm -rf experiments/day-035/template` で削除済み(ライセンス・出典はこのREADME/results.mdに明記)。
 
-## ローカル検証が必要(人間による追加確認をお願いします)
+## ローカル検証: `/start`から`/dev-story`まで実際に動かした
 
-このRoutine実行環境では、クローンしたテンプレート自身のコード(`.claude/hooks/*.sh`の直接実行、
+Routine実行環境では、クローンしたテンプレート自身のコード(`.claude/hooks/*.sh`の直接実行、
 および `claude -p "/start" --dangerously-skip-permissions` のようなネストしたClaude Codeセッションの
 起動)が、実行環境側の自動モード分類器によって `[Code from External]` / `[Create Unsafe Agents]` という
 理由でブロックされ、実行できなかった(Routine環境固有の制約。detailsはresults.md参照)。
 
-したがって、このテンプレートの核心である「`/start`→`/setup-engine`→`/brainstorm`→`/create-stories`→
-`/dev-story`という49エージェント・74スキルの実際のワークフロー」はローカルでの再現確認が必要です。
+そのためローカル(手元のPC、通常の対話的 `claude` セッション)で改めてクローンし
+(`experiments/day-035/ccgs-trial/`)、`/start` → `/brainstorm` → `/setup-engine` →
+`/create-stories` → `/dev-story` × 6 → `/story-done` × 6 という一連のワークフローを実際に最後まで
+動かして、衛星リレー局修理ゲーム「Signal Lost」(Unity, C#)を実際にプレイできる状態まで作った。
 
-ローカルでの再現コマンド(手元のPCで、通常の対話的 `claude` セッションとして):
-
-```bash
-git clone https://github.com/Donchitos/Claude-Code-Game-Studios.git ccgs-trial
-cd ccgs-trial
-claude
-# セッション内で:
-/start
-# Phase 2で A) No idea yet / B) Vague idea / C) Clear concept / D) Existing work を聞かれる想定
-# 続けて /setup-engine godot 4.7 、 /brainstorm などを試す
-```
+- 生成した設計書・ストーリーファイル・コード本体: `signal-lost-game/`
+- 途中で遭遇した詰まりどころ(WSL上でUnityエディタがプロジェクトを開けなかった件、Playモード
+  突入時のドメインリロードでスプライト参照が消えた件など)を含む全記録: `results.md` §4
 
 ## 見つけたこと(詳細はresults.md)
 
-このRoutine環境でテンプレート自体のコード実行がブロックされたため、構造の検証と、作業中に偶然観測した
-Claude Code自体の「CLAUDE.md自動検出」の挙動が今回の主な検証結果になった。
+§1-3はRoutine環境での構造検証とClaude Code自体の「CLAUDE.md自動検出」の挙動、§4がローカルでの
+実際のワークフロー検証(今回の検証の本題)。

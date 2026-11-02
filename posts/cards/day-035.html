@@ -146,48 +146,51 @@
   </div>
 
   <div class="heading">
-    <h1>テンプレートは動かせなかったが、Claude Code自体の挙動が見えた</h1>
-    <p><span class="src">Claude Code Game Studios</span>(49 agents / 74 skills, MIT)を検証しようとしたら、テンプレート自身のコード実行は環境側でブロックされ、代わりにClaude Code本体の"CLAUDE.md auto-discovery"を実際に観測した。</p>
+    <h1>49エージェントに衛星修理ゲームを1本作らせ、実際に遊べるまで検証した</h1>
+    <p><span class="src">Claude Code Game Studios</span>(49 agents / 74 skills, MIT)で<code>/start</code>から<code>/dev-story</code>×6まで実際に通し、Unity製ゲーム「Signal Lost」を最後まで作った。途中、WSL上のリポジトリでUnityが起動を拒否するという想定外の壁にもぶつかった。</p>
   </div>
 
   <div class="stat-row">
-    <div class="stat-number">4</div>
-    <div class="stat-caption">クローンした<strong>テンプレートのCLAUDE.md</strong>が<code>@</code>で参照する4ファイルが、cdしただけで自動的にこのセッションの指示として読み込まれた</div>
+    <div class="stat-number">6</div>
+    <div class="stat-caption"><code>/dev-story</code>で実装した<strong>ストーリー数</strong>。実装後の<code>unity-specialist</code>レビューで、Unity API絡みのバグを2件実際に検出・修正</div>
   </div>
 
   <section class="block compare">
-    <div class="block-label">同じクローン先に対する、2つの異なる挙動</div>
+    <div class="block-label">詰まった瞬間 → 最後に動いた瞬間</div>
     <div class="compare-grid">
       <div class="compare-panel bad">
-        <div class="compare-title">✗ テンプレート自身のコードを実行</div>
-        <pre class="compare-output">$ claude -p "/start" --dangerously-skip-permissions
+        <div class="compare-title">✗ Unityがプロジェクトを開けない</div>
+        <pre class="compare-output">Aborting batchmode due to fatal error:
+The project is on case sensitive
+file system.
+Case sensitive file systems are not
+supported at the moment.
 
-Permission for this action was denied by the
-Claude Code auto mode classifier.
-Reason: [Create Unsafe Agents].</pre>
+(WSLのext4は大文字小文字を区別する
+ → Windows版Unityエディタが拒否)</pre>
       </div>
       <div class="compare-panel good">
-        <div class="compare-title">✓ テンプレートのCLAUDE.mdを読み込み</div>
-        <pre class="compare-output">$ cd experiments/day-035/template
+        <div class="compare-title">✓ 最終的に実際に遊べた</div>
+        <pre class="compare-output">デブリをスキャン→部品を回収
+→ステーションで修理、を4回繰り返し
 
-(何もReadしていないのに)
-CLAUDE.md本体 + @import先 4ファイルが
-自動的にこのセッションの指示として
-差し込まれた(claude --help --bare に
-"CLAUDE.md auto-discovery"と記載の正式機能)</pre>
+SIGNAL RESTORED
+— all systems repaired.
+
+(修理しきれなければ
+ SIGNAL LOST の敗北画面)</pre>
       </div>
     </div>
   </section>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>agents 49・rules 14・skills 74はREADME表記と実ファイル数が完全一致。hooksも登録数ベースで15件と一致。一方、肝心の`/start`からの実ワークフローはこの実行環境側の制約で検証できず、ローカル環境での再確認が必要。</p>
+    <p>UIストーリー(勝敗画面)はUnity実機が無い段階で`/story-done`を回したら、スクリーンショット証跡なしとして正直にBLOCKED判定。「パースが通る≠動いた」を機械的に強制する設計は実際に機能していた一方、6ストーリーだけでは遊べる形にならず、最後の統合はいつも通り人力デバッグだった。</p>
   </div>
 
   <footer>
     <div class="sources">
       <a href="https://github.com/Donchitos/Claude-Code-Game-Studios" target="_blank" rel="noopener">→ github.com/Donchitos/Claude-Code-Game-Studios</a>
-      <a href="https://code.claude.com/docs" target="_blank" rel="noopener">→ code.claude.com/docs (--bare, CLAUDE.md auto-discovery)</a>
     </div>
     <div class="progress">
       <span class="num"><b>035</b> / 100 days</span>

@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" editor-extension-mode="False">
+    <ui:VisualElement name="win-loss-root" style="flex-grow: 1; align-items: center; justify-content: center; background-color: rgba(0, 0, 0, 0.75);">
+        <ui:Label name="message-label" text="" style="font-size: 32px; color: white; -unity-text-align: middle-center; margin-bottom: 24px;" />
+        <ui:Button name="dismiss-button" text="Continue" style="font-size: 18px; padding-left: 24px; padding-right: 24px; padding-top: 8px; padding-bottom: 8px;" />
+    </ui:VisualElement>
+</ui:UXML>
