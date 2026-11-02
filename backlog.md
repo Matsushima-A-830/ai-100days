@@ -1378,3 +1378,39 @@
 - 検証難易度: 高・要追加調査(現時点では見送り推奨)。GitHubリポジトリにはLICENSE以外の実体がなく、タスクデータ・WorkPilotモデル重みへの具体的なダウンロードURL・実行コマンドが見当たらない(確認した範囲ではHugging Face上の実体を別途探す必要がある)。着手前にモデル重みの有無・サイズ・GPU要否を確認しないと6時間以内に収まるか判断できない。
 - 見栄え: 「職業タスクをそのままエージェント訓練データに変換する」という切り口自体は面白いが、再現可能性の不確実性が高く、今回は参考記録として残すのみとする。
 - 状態: 未選択
+
+### [2026-11-02] Heretic — Optunaでパラメータを自動探索し再学習なしでLLMの拒否挙動(検閲)を取り除くツール(本日GitHub Trending Pythonで言及)
+
+- 出典: https://github.com/p-e-w/heretic (AGPL-3.0-or-later。本日GitHub Trending Pythonで+404star/日。PyPI: https://pypi.org/project/heretic-llm/)
+- 概要: 「拒否挙動は内部活性化空間の単一方向に強く媒介される」というAbliteration理論(Arditi et al., 2024)に基づき、OptunaのTPEベース最適化で拒否率と元モデルからのKL発散を同時最小化するパラメータを自動探索し、再学習なしでLLMの検閲(安全性アラインメント)を解除するPython製CLIツール。`pip install -U heretic-llm`後に`heretic Qwen/Qwen3-4B-Instruct-2507`のように対象モデル名を渡すだけで動作し、量子化(`bnb_4bit`)にも対応する。2026年5月にMeta社から法的通知を受けたことが話題になった経緯もある。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(GIGAZINE・weel.co.jp等のニュース解説記事はあるが、Zenn/Qiita/noteでの一次検証記事は検索した範囲では未検出)
+- 検証難易度: 中(APIキー不要。GPU推奨〈README記載のRTX 3090で4Bモデル20〜30分〉だが`bnb_4bit`量子化でVRAM削減可能。GPUが無い場合はCPU推論になり時間がかかる見込みのため、小型モデル〈Qwen3-4B等〉かつ試行数を絞るなどの工夫で6時間以内に収める必要がある)
+- 見栄え: 処理前後の拒否率・KL発散の変化を数値で定量的に示せる。ただし悪用目的ではなく「アライメント手法がどれだけ脆いかを調べる研究的検証」であることを明記し、生成された無検閲モデル自体やその出力を無差別に公開しないなど、取り扱いに注意が必要。
+- 状態: 未選択
+
+### [2026-11-02] OpenMontage — Claude Code/Cursor等をAPIキー無しでも動画制作スタジオ化するエージェント型動画生成システム(本日GitHub Trending Pythonで言及)
+
+- 出典: https://github.com/calesthio/OpenMontage (AGPL-3.0。本日GitHub Trending Pythonで+742star/日)
+- 概要: Claude Code・GitHub Copilot・Cursor等のAIコーディングエージェントを、解説動画・トーキングヘッド・画面デモ・予告編等11種類の制作パイプラインと49個のツールを持つ動画制作スタジオに変えるOSSシステム。有料APIキーはすべて任意で、無料経路(Piper TTSによるナレーション+Pexels/Pixabayの無料ストック画像+Remotionによるアニメーション合成+FFmpegでのレンダリング)だけでも実際に動画を1本作れるとREADMEに明記されている。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(knightli.com等の多言語解説記事〈2026年6月〉はあるが、Zenn/Qiita/noteでの検証記事は検索した範囲では未検出)
+- 検証難易度: 低〜中(Python 3.10+・FFmpeg・Node.js 18+が前提、`make setup`で導入。無料経路なら追加の有料APIキー無しで検証可能。GPU不要〈ローカルAI動画生成を使う場合のみGPU任意〉)
+- 見栄え: Claude Codeに自然言語で指示するだけで実際に短い動画が1本完成する過程をログとともに示せ、最終的な動画そのものを成果物として見せられる点でデモ映えが非常に良い。人間が夜に動画ファイルを再生して確認する前提で、シェアカードには完成動画のサムネイルやパイプラインの流れを載せるとよい。
+- 状態: 未選択
+
+### [2026-11-02] last30days-skill — 直近30日間の話題をReddit/Hacker News/GitHub等から横断調査し根拠付きブリーフを作るClaude Codeスキル(本日GitHub Trending Pythonで言及)
+
+- 出典: https://github.com/mvanhorn/last30days-skill (MIT。本日GitHub Trending Pythonで+141star/日)
+- 概要: Reddit・X・YouTube・TikTok・Hacker News・Polymarket・GitHub等の直近30日間の情報を横断的に調べ、upvote数・いいね数・視聴数・予測市場のオッズ等のエンゲージメント指標でスコアリングした上で、出典付きの1本のブリーフにまとめるClaude Code向けエージェントスキル(`/plugin marketplace add mvanhorn/last30days-skill`→`/plugin install last30days`で導入)。Reddit・Hacker News・GitHub・Polymarket・StockTwitsは追加キー無しで動作し、X・TikTok等の追加ソースのみ有料キーが必要。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲)
+- 検証難易度: 低(MIT。無料ソースのみでも動作確認可能でAPIキー不要・GPU不要)
+- 見栄え: 本リポジトリ自体が毎朝sources.mdに沿って海外AIネタをWebSearch/WebFetchで巡回するリサーチRoutineであるという自己言及的な文脈に合う。実際に`/last30days`でAIトピックを検索させ、今回人力(WebSearch巡回)で見つけた候補とどれだけ重なるか・どんな差分が出るかを比較するBefore/After的な見せ方ができる。
+- 状態: 未選択
+
+### [2026-11-02] OmniRoute — 90以上の無料枠プロバイダーを含む200超のAIプロバイダーをOpenAI互換の1エンドポイントに束ねる自己ホスト型AIゲートウェイ(本日GitHub Trending TypeScriptで言及)
+
+- 出典: https://github.com/cheaper-inference/OmniRoute (MIT。本日GitHub Trending TypeScriptで+390star/日)
+- 概要: 複数のAIプロバイダー(サブスクリプションアカウント・APIキー・無料枠)をOpenAI互換の単一エンドポイントの背後にまとめ、利用可能なクォータ・コスト・レイテンシ・ヘルスステータスに応じて自動でモデルを切り替える自己ホスト型AIゲートウェイ。クォータ切れやプロバイダー障害時に次のモデルへ自動フォールバックする「コンボ」機能やサーキットブレーカーを備え、Claude Code・Codex・Cursor・Cline等から利用できる。ゲートウェイ自体が無料クレジットを生み出すわけではなく、各アップストリームプロバイダーの登録・料金・レート制限に従う点に注意。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(braindetox.kr・knightli.com等の日本語解説記事〈2026年7月〉はあるが、Zenn/Qiita/noteでの検証記事は検索した範囲では未検出)
+- 検証難易度: 低(MIT。無料枠を持つプロバイダー〈90以上〉を1つ以上接続するだけでローカルにOpenAI互換エンドポイントが立ち上がり、追加の有料APIキー無しで検証可能。GPU不要)
+- 見栄え: 複数プロバイダーを登録した状態で、クォータ切れ・エラー発生時に自動フォールバックする様子を実際のリクエストログで具体的に示せる。ルーティング/フォールバックの挙動そのものがBefore/After的な見せ方になる。
+- 状態: 未選択
