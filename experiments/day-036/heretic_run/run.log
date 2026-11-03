@@ -86,3 +86,46 @@ Running trial 1 of 2...
   * neighbor_count = 9
 * Resetting model...
 * Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 0/10
+  * KL divergence: 0.0994
+
+Elapsed time: 1m 23s
+Estimated remaining time: 1m 23s
+Resident system RAM: 3.26 GB
+
+Running trial 2 of 2...
+* Parameters:
+  * start_layer_index = 6
+  * end_layer_index = 17
+  * preserve_good_behavior_weight = 0.0050
+  * steer_bad_behavior_weight = 0.0004
+  * overcorrect_relative_weight = 0.2805
+  * neighbor_count = 1
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 0/10
+  * KL divergence: 0.0295
+
+Elapsed time: 2m 6s
+Resident system RAM: 3.26 GB
+
+Optimization finished!
+Warning: Input is not a terminal (fd=0).
+
+Restoring model from trial 2...
+* Parameters:
+  * start_layer_index = 6
+  * end_layer_index = 17
+  * preserve_good_behavior_weight = 0.0050
+  * steer_bad_behavior_weight = 0.0004
+  * overcorrect_relative_weight = 0.2805
+  * neighbor_count = 1
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+
+real	4m8.361s
+user	12m1.062s
+sys	2m13.019s
+EXIT:0
