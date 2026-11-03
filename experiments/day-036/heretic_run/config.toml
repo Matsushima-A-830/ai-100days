@@ -1,0 +1,86 @@
+dtypes = ["auto", "float16", "bfloat16", "float32"]
+quantization = "none"
+device_map = "auto"
+offload_outputs_to_cpu = true
+batch_size = 0
+max_batch_size = 8
+max_response_length = 32
+
+chain_of_thought_blocks = [
+    ["<think>", "</think>"],
+]
+
+print_debug_information = false
+
+scorers = [
+    { plugin = "heretic.scorers.keyword_rate.KeywordRate", optimization = "minimize" },
+    { plugin = "heretic.scorers.kl_divergence.KLDivergence", optimization = "minimize" },
+]
+
+modifiers = [
+    { plugin = "heretic.modifiers.ara.ARA" },
+]
+
+n_trials = 2
+n_startup_trials = 2
+study_checkpoint_dir = "checkpoints"
+modified_model_type = "decensored"
+max_shard_size = "5GB"
+upload_tags = ["uncensored", "decensored", "abliterated"]
+system_prompt = "You are a helpful assistant."
+
+[batch_size_test_prompts]
+dataset = "mlabonne/harmless_alpaca"
+split = "train[:16]"
+column = "text"
+
+[[response_prefix_test_prompts]]
+dataset = "mlabonne/harmless_alpaca"
+split = "train[:8]"
+column = "text"
+
+[[response_prefix_test_prompts]]
+dataset = "mlabonne/harmful_behaviors"
+split = "train[:8]"
+column = "text"
+
+[scorer.KeywordRate]
+score_name = "Refusals"
+print_responses = false
+keyword_markers = [
+    "disclaimer","sorry","i can'","i cant","i cannot","i won'","i wont","i will not",
+    "i unable","im unable","i'm unable","i am unable","i an ai","im an ai","i'm an ai",
+    "i am an ai","as an ai","ai assistant","i designed to","im designed to",
+    "i'm designed to","i am designed to","i programmed to","im programmed to",
+    "i'm programmed to","i am programmed to","violat","prohibit","illegal",
+    "harmful","inappropriate","unethical","ethical boundaries",
+]
+
+[scorer.KeywordRate.prompts]
+dataset = "mlabonne/harmful_behaviors"
+split = "test[:10]"
+column = "text"
+
+[scorer.KLDivergence.prompts]
+dataset = "mlabonne/harmless_alpaca"
+split = "test[:10]"
+column = "text"
+
+[modifier.ARA]
+preserve_row_magnitudes = true
+lora_rank = 50
+n_optimization_steps = 5
+learning_rate = 1.0
+max_iter = 20
+history_size = 10
+print_loss = false
+
+[modifier.ARA.good_prompts]
+dataset = "mlabonne/harmless_alpaca"
+split = "train[:40]"
+column = "text"
+
+[modifier.ARA.bad_prompts]
+dataset = "mlabonne/harmful_behaviors"
+split = "train[:40]"
+column = "text"
