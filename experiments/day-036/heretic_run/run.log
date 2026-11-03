@@ -1,0 +1,131 @@
+Failed to load CPU gemm_4bit_forward from kernels-community: Cannot find a build variant for this system in kernels-community/quantization-bitsandbytes (revision: a99e5bb6a4c835bdc676a3044f45c716fd605bf4):
+
+torch211-cpu-x86_64-linux: Torch version (2.11) does not match environment Torch version (2.15)
+torch215-cpu-x86_64-linux: backend (cpu) does not match selected backend (cu132)
+torch210-cpu-x86_64-linux: Torch version (2.10) does not match environment Torch version (2.15)
+torch213-cpu-x86_64-linux: Torch version (2.13) does not match environment Torch version (2.15)
+torch212-cpu-x86_64-linux: Torch version (2.12) does not match environment Torch version (2.15)
+torch214-cpu-x86_64-linux: Torch version (2.14) does not match environment Torch version (2.15). Please make sure you already `pip install kernels` and the kernels >= 0.11.1
+█░█░█▀▀░█▀▄░█▀▀░▀█▀░█░█▀▀  v2.0.0
+█▀█░█▀▀░█▀▄░█▀▀░░█░░█░█░░  https://heretic-project.org
+▀░▀░▀▀▀░▀░▀░▀▀▀░░▀░░▀░▀▀▀  https://github.com/p-e-w/heretic
+
+No GPU or other accelerator detected. Operations will be slow.
+
+Loading model Qwen/Qwen3-0.6B...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+* Trying dtype auto...
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights:  67%|██████▋   | 208/311 [00:00<00:00, 2078.96it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 2444.66it/s]
+* Transformer model with 28 layers
+* Modifiable components:
+  * attn.o_proj: 28 modules total
+  * mlp.down_proj: 28 modules total
+
+Resident system RAM: 3.01 GB
+
+Loading batch size test prompts from mlabonne/harmless_alpaca...
+* 16 prompts loaded
+
+Determining optimal batch size...
+* Trying batch size 1... Ok (14 tokens/s)
+* Trying batch size 2... Ok (21 tokens/s)
+* Trying batch size 4... Ok (37 tokens/s)
+* Trying batch size 8... Ok (68 tokens/s)
+* Chosen batch size: 8
+
+Loading response prefix test prompts from [mlabonne/harmless_alpaca, 
+mlabonne/harmful_behaviors]...
+Generating train split:   0%|          | 0/416 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 416/416 [00:00<00:00, 29467.51 examples/s]
+Generating test split:   0%|          | 0/104 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 104/104 [00:00<00:00, 43146.15 examples/s]
+* 16 prompts loaded
+
+Checking chat template for a closed Chain-of-Thought block or an initializer...
+* None found
+
+Checking for common response prefix...
+* Prefix found: '<think>\nOkay, the user'
+* Closed Chain-of-Thought block: '<think></think>'
+* Rechecking with prefix...
+* Extended prefix found: '<think></think>\nOkay,'
+
+Loading and initializing scorers...
+* Loaded: KeywordRate
+* Loaded: KLDivergence
+
+Loading Refusals evaluation prompts from mlabonne/harmful_behaviors...
+* 10 prompts loaded
+
+Loading KL divergence evaluation prompts from mlabonne/harmless_alpaca...
+* 10 prompts loaded
+* Obtaining baseline first-token probability distributions...
+
+Getting baseline scores...
+* Baseline Refusals: 2/10
+* Baseline KL divergence: 0 (by definition)
+
+Loading and initializing modifiers...
+* Loaded: ARA
+
+Loading good prompts from mlabonne/harmless_alpaca...
+* 40 prompts loaded
+
+Loading bad prompts from mlabonne/harmful_behaviors...
+* 40 prompts loaded
+
+Obtaining module I/O for good prompts...
+
+Obtaining module I/O for bad prompts...
+
+Running trial 1 of 2...
+* Parameters:
+  * start_layer_index = 8
+  * end_layer_index = 28
+  * preserve_good_behavior_weight = 0.5706
+  * steer_bad_behavior_weight = 0.0835
+  * overcorrect_relative_weight = 0.7338
+  * neighbor_count = 9
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 0/10
+  * KL divergence: 0.0994
+
+Elapsed time: 1m 23s
+Estimated remaining time: 1m 23s
+Resident system RAM: 3.26 GB
+
+Running trial 2 of 2...
+* Parameters:
+  * start_layer_index = 6
+  * end_layer_index = 17
+  * preserve_good_behavior_weight = 0.0050
+  * steer_bad_behavior_weight = 0.0004
+  * overcorrect_relative_weight = 0.2805
+  * neighbor_count = 1
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 0/10
+  * KL divergence: 0.0295
+
+Elapsed time: 2m 6s
+Resident system RAM: 3.26 GB
+
+Optimization finished!
+Warning: Input is not a terminal (fd=0).
+
+Restoring model from trial 2...
+* Parameters:
+  * start_layer_index = 6
+  * end_layer_index = 17
+  * preserve_good_behavior_weight = 0.0050
+  * steer_bad_behavior_weight = 0.0004
+  * overcorrect_relative_weight = 0.2805
+  * neighbor_count = 1
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+
+real	4m8.361s
+user	12m1.062s
+sys	2m13.019s
+EXIT:0
