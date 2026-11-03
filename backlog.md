@@ -1414,3 +1414,30 @@
 - 検証難易度: 低(MIT。無料枠を持つプロバイダー〈90以上〉を1つ以上接続するだけでローカルにOpenAI互換エンドポイントが立ち上がり、追加の有料APIキー無しで検証可能。GPU不要)
 - 見栄え: 複数プロバイダーを登録した状態で、クォータ切れ・エラー発生時に自動フォールバックする様子を実際のリクエストログで具体的に示せる。ルーティング/フォールバックの挙動そのものがBefore/After的な見せ方になる。
 - 状態: 未選択
+
+### [2026-11-03] Yuan1z0825/nature-skills — Nature誌の論文作法に合わせた学術執筆・図表作成スキル集(本日GitHub Trending Pythonで言及)
+
+- 出典: https://github.com/Yuan1z0825/nature-skills (Apache-2.0。本日GitHub Trending Pythonで+167star/日。note.comの紹介記事によれば既に20,000 star超)
+- 概要: 研究者が日常的に行う細かいが品質に直結する作業(論文品質の図表作成・Nature流への文章磨き・模擬ピアレビュー・査読対応レター作成・文献検索・参考文献検証・統計・データ可用性声明等)を、Claude Code/Codex等のエージェント向けSkill群(`SKILL.md`+補助スクリプト)として切り出したリポジトリ。`npx skills add Yuan1z0825/nature-skills --skill <name>`のように必要なSkillだけを個別導入できる。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 1件(0xpanda alpha labによる紹介記事を確認。GitHub star数には触れているが著者自身による検証記事ではない)。検索した範囲では日本語の一次検証記事は未検出。
+- 検証難易度: 低〜中(Apache-2.0。コア機能〈`nature-figure`での図表生成、文章磨き等〉は追加の有料APIキー不要・GPU不要でClaude Code自身の機能で動作する見込み。ただし文献検索MCPサーバーは`PUBMED_EMAIL`設定が必要、Scopus/ScienceDirect等の有料プロバイダー連携や外部画像生成サービスを使う一部機能〈`nature-figure`の模式図ドラフト〉は追加キーが要る場合がある点に注意。1〜2個のSkill〈例: `nature-figure`で架空の実験データからNature風図表を作る〉に絞れば6時間以内に収まる見込み。
+- 見栄え: 自分で用意した簡単なダミーデータから「Nature論文品質」を謳う図表が実際にどの程度のクオリティで出てくるかをBefore(素のプロンプトでの作図)/After(nature-figure Skill適用後)で比較できる。Claude Code Routine自身が日々記事・figureを作る運用と相性が良い自己言及的な切り口も作れる。
+- 状態: 未選択
+
+### [2026-11-03] SJTU-DENG-Lab/WaveForcing — チャンク単位の因果アテンションでストリーミング動画生成を高速化する手法(本日HF Daily Papers上位掲載)
+
+- 出典: https://huggingface.co/papers/2611.00859 (コード: https://github.com/SJTU-DENG-Lab/WaveForcing, モデル重み: https://huggingface.co/SJTU-DENG-Lab/WaveForcing-1.3B, プロジェクトページ: https://sjtu-deng-lab.github.io/WaveForcing/)
+- 概要: Wan2.1-T2V-1.3Bをベースに、新しいチャンクが先行する「ノイズが除去済みの」チャンクを条件付けできるチャンク単位の因果アテンション(Wave Forcing)を導入し、推論ランタイム(Wave Runtime)でノイズ除去とキャッシュ更新を複数GPUレプリカに分散させることでストリーミング動画生成を高速化する手法。8台のH200で4ステップ構成で134.8FPSのエンドツーエンド処理を報告し、単一GPUのベースラインは約19FPSとしている。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では未検出。「Wave Forcing」で検索すると流体力学分野の重力波論文や既存の別手法Self-Forcing/WaveSpeedAIに関する記事が主にヒットし、本論文自体への言及は見当たらなかった)
+- 検証難易度: 高・GPU必須(コード・学習済み1.3Bモデル重みは公開済みでMIT等のライセンス表記は未確認〈GitHub/Hugging Face側で要確認〉。論文は単一GPUでの動作例〈約19FPS〉を比較対象として挙げているため単一GPUでの推論自体は可能と見られるが、具体的な最小VRAM要件は記載がなく、動画拡散モデルのため相当なVRAMを要する可能性が高い。Routine実行環境にGPUが無い場合は「Routine環境の制約」として、results.mdに1〜2行だけ残し、再現コマンド〈リポジトリのクイックスタート手順〉を添えてローカル検証にエスカレーションする方針で進めること。
+- 見栄え: 日本語記事が皆無の新しい動画生成高速化手法であり、生成された動画そのもの(Before: 通常のWan2.1推論 / After: Wave Forcing適用後)を並べて速度とクオリティを比較できればデモ映えは非常に良い。ただしGPU要件の見極めが最優先の確認事項。
+- 状態: 未選択
+
+### [2026-11-03] FlashML-org/FreeToken — 大規模MoEモデルをコンシューマGPUで動かすエッジ向け推論エンジン(本日GitHub Trending Pythonで言及、既に日本語記事多数あり)
+
+- 出典: https://github.com/FlashML-org/FreeToken (Apache-2.0。本日GitHub Trending Pythonで+689star/日。元論文: arXiv:2608.16157、UC Berkeley/UT Austin等の研究者が関与)
+- 概要: GPU・CPU・ホストメモリ・相互接続を1つの弾力的な推論基盤として扱い、DeepSeek-V4-Flash・Qwen3.6-35B-A3B・GLM-5.2等の大規模MoEモデルをコンシューマGPU(RTX 30/40/50シリーズ)上で動かすエッジネイティブな推論エンジン。CPU-GPU協調実行・エキスパートキャッシュ・独自の重みフォーマット(FTW)・VRAMのランタイム再割り当てなどを特徴とし、Anthropic/OpenAI互換APIを公開してコーディングエージェントからも利用できる。
+- 日本語記事件数: Zenn 8件以上 / Qiita 6件以上 / note 9件以上(検索した範囲。RTX 5090/5070/3060/3080等の実機検証記事、gpt-oss-120bやDeepSeek-V4.1-Flashのローカル実行記事など、公開〈2026年8月〉から既に多数の日本語一次検証記事が存在することを確認)
+- 検証難易度: 中〜高(Apache-2.0。追加APIキー不要だがCUDA対応GPU必須〈公式にmacOS非対応〉。小型モデル〈Qwen3.6-35B-A3B程度〉でもRTX 30系以上のVRAMを要し、Routine実行環境にGPUが無い場合は検証不可。GPUがあっても十分なホストRAM〈数十GB〉が必要になる点が複数の日本語記事で報告されている)
+- 見栄え: 既に多数の日本語検証記事が存在し先行者多数のため、差別化できる切り口〈例: Routine実行環境という特殊な制約下での検証、未検証モデルでの実測等〉が無い限り優先度は下げるべき候補。CLAUDE.mdの「既に多数の日本語記事がある場合は優先度を下げる」方針に従い参考記録として残す。
+- 状態: 未選択
