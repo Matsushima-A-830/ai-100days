@@ -20,14 +20,21 @@ heretic --model Qwen/Qwen3-0.6B --trial-index 0 --model-action ""
 ```
 
 `config.toml` は `tools/card-template.html` と同様にこのリポジトリにコミットしてあるため、
-そのままコピーして使えば同じ(ごく小規模な)設定で再実行できる。GPUが使える環境では
-`config.toml` を使わずに素の既定設定(`heretic Qwen/Qwen3-4B-Instruct-2507` など)を
-試すほうが、ツール本来の挙動(100試行のベイズ的最適化)を確認できる。
+そのままコピーして使えば同じ(ごく小規模な)設定で再実行できる。
+
+## ローカル検証(GPU、実施済み・2026-11-03)
+
+人間のGPU環境(RTX 5060 Ti, 16GB VRAM)で、`config.toml`を使わず素の既定設定のまま
+`heretic --model Qwen/Qwen3-4B-Instruct-2507 --trial-index 0 --model-action ""`を実行した。
+100試行の既定規模の探索が1時間35分で完走し、CPU実行時の推定(約25時間)やREADMEのRTX 3090
+参考値(30〜40分)と比較しても実用的な時間で完結することを確認した。詳細は`results.md`の
+「6. ローカル検証」節を参照。
 
 ## 実行ログ
 
-`heretic_run/run.log` に標準出力をそのまま保存している(`time` コマンドの実測時間を含む)。
-`heretic_run/checkpoints/` にはOptunaのstudy checkpoint(JSON Lines)が入っている。
+`heretic_run/run.log`(CPUでのスモーク実行)・`heretic_run_gpu/run.log`(GPUでの既定規模実行)
+に標準出力をそのまま保存している。各ディレクトリの`checkpoints/`にはOptunaのstudy checkpoint
+(JSON Lines)が入っている。
 
 ## 結果の詳細
 

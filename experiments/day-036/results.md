@@ -193,3 +193,53 @@ Restoring model from trial 2...
 - Optunaはわずか2試行でも、より狭いレイヤー範囲・より小さい重みで「拒否率を維持したまま
   KL発散(元モデルからの逸脱)を1/3程度に抑える」パラメータ(試行2)を試行1より優位な解として
   見つけた。
+
+## 6. ローカル検証(人間のGPU環境、2026-11-03)
+
+人間のPC(WSL2、NVIDIA GeForce RTX 5060 Ti、16GB VRAM、CUDA 13.2)で、`config.toml`を使わず
+素の既定設定のまま`Qwen/Qwen3-4B-Instruct-2507`(READMEが挙げている例と同じモデル)を実行した。
+
+```bash
+python3 -m venv heretic-venv && source heretic-venv/bin/activate
+pip install -U pip setuptools wheel
+pip install -U heretic-llm
+time timeout 7200 heretic --model Qwen/Qwen3-4B-Instruct-2507 --trial-index 0 --model-action ""
+```
+
+```
+Detected 1 CUDA device(s) (15.93 GB total VRAM)
+* CUDA 0: NVIDIA GeForce RTX 5060 Ti (15.93 GB)
+...
+Allocated GPU VRAM: 7.62 GB (4Bモデル、全試行を通じて一定)
+...
+Getting baseline scores...
+* Baseline Refusals: 100/100
+* Baseline KL divergence: 0 (by definition)
+...
+Running trial 1 of 100...
+...
+Running trial 100 of 100...
+Elapsed time: 1h 35m
+Optimization finished!
+Restoring model from trial 62...
+```
+
+既定設定(試行100回・評価各100件・応答長100トークン)の全100試行が、Optunaの最適化ループだけで
+**1時間35分**で完走した(モデルのダウンロード・読み込み・最終モデルの復元を含めた全体のwall clockは
+約1時間40分)。CPU実行時の実測値から外挿した推定値(約25時間、ただし対象モデルはCPU実行時の
+`Qwen3-0.6B`よりおよそ6倍大きい`Qwen3-4B-Instruct-2507`)や、READMEが挙げるRTX 3090の参考値
+(30〜40分)と比べると、RTX 5060 Tiでも実用的な時間で既定規模の探索が完走することを確認できた。
+(モデルサイズが異なるため直接比例計算はできないが、少なくとも「GPUなら6時間枠に収まる」という
+ことは実測で裏付けられた。)
+
+100試行の結果を独自に集計すると、拒否率0/100を達成したのは12試行、そのうち`--trial-index 0`
+(Pareto最適解の先頭)が選んだ試行62が、KL発散1.3763という値で他の0/100達成組(次点は試行29の
+11.4456)を大差で下回っていた。拒否率0/100以外の88試行の中にはKL発散が0.0159(試行17、拒否率
+89/100)まで小さいものもあり、「拒否率を完全に0にする」ことと「元モデルからの逸脱を最小にする」
+ことが強いトレードオフ関係にあることが、100試行規模のPareto frontを通じて具体的に見えた。これは
+スモーク実行(2試行)では確認できなかった、既定規模の探索でしか見えない情報である。
+
+GPU VRAM使用量は全100試行を通じて7.62GBで安定しており、メモリリークや断片化によるクラッシュは
+発生しなかった。実行ログは`experiments/day-036/heretic_run_gpu/run.log`に、Optunaのcheckpointは
+同ディレクトリの`checkpoints/`に保存した(改変後モデル自体は`--model-action ""`により保存・
+アップロードしていない)。
