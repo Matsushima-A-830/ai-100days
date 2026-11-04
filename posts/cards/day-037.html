@@ -146,8 +146,8 @@
   </div>
 
   <div class="heading">
-    <h1>ストリーミング動画生成を7倍速くするWave Forcing</h1>
-    <p>チャンク単位の因果アテンションでGPU間の逆方向依存を無くし、複数GPUへのパイプライン並列を可能にする手法。<span class="src">SJTU-DENG-Lab/WaveForcing</span>(Apache-2.0)のコード・論文を実際に読んで確認した。</p>
+    <h1>7倍速の動画生成、GPU8基の前に依存パッケージが無かった</h1>
+    <p>チャンク単位の因果アテンションでGPU間の逆方向依存を無くし、複数GPUへのパイプライン並列を可能にする手法。<span class="src">SJTU-DENG-Lab/WaveForcing</span>(Apache-2.0)のコード・論文を読み、GPU環境で実際にインストールも試みた。</p>
   </div>
 
   <div class="stat-row">
@@ -173,7 +173,7 @@
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>上記2つの数値はいずれも論文・README内の著者ら自身の実測値の引用。筆者は8×H200相当の環境を用意できておらず、本記事執筆時点では自分で動かした実測ではない。実機検証ができた時点で追記する。</p>
+    <p>上記2つの数値はいずれも論文・README内の著者ら自身の実測値の引用で、自分で動かした実測ではない。GPU環境で実際にインストールを試したところ、<code>uv sync</code>では推論ランタイム(sglang)が入らず、公開版を追加しても要求される<code>WanRollingForcingPipeline</code>がレジストリに無く<code>ValueError</code>。GPU基数以前に、著者の非公開フォークに依存していて公開材料だけでは動かせないことが分かった。</p>
   </div>
 
   <footer>

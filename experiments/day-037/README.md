@@ -71,6 +71,12 @@ python -m wave_rt \
 チャンク単位パイプライン化はほぼ機能しない退化的な構成になる点に注意。手元のGPU数・VRAM量に応じて、
 まずは`--num-frames`を小さくした短い生成が通るかどうかから試すのが安全。
 
-実行できたら、`outputs/quickstart/corgi/metrics.json`の内容(実測FPS・VRAM使用量)と、生成された
-`video.mp4`を本ディレクトリに追加し、`results.md`に実測値として追記する。可能であれば、単一GPUでの
-Wan2.1-T2V-1.3B素の推論(比較対象)との速度比較も試みる。
+## ローカル検証(実施済み・2026-11-04)
+
+**上記の手順は、GPU基数とは無関係に、現時点ではそのまま実行できない。** `uv sync`はPyPI公開版の
+`sglang`を一切インストールしない(`pyproject.toml`のコメントが参照する`sgl-dlab`という非公開フォーク
+がどこにもリンクされていない)。公開版`sglang`を別途インストールしても、`wave_rt`が要求する
+`WanRollingForcingPipeline`というパイプラインクラスがそのパッケージのレジストリに存在せず、
+`ValueError: Pipeline class 'WanRollingForcingPipeline' not found in registry`で失敗する。
+単一GPU向けの比較スクリプト`scripts/wrt_ref_single.py`も同じ理由で動かない(加えて公開版sglangとの
+APIの食い違いもある)。詳細な再現ログは`results.md`の「4. ローカル検証」を参照。

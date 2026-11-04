@@ -1,5 +1,5 @@
 ---
-title: "ストリーミング動画生成を7倍速くするWave Forcingを読んでみた"
+title: "7倍速の動画生成Wave Forcingは、GPU8基の前に依存パッケージが足りず動かなかった"
 emoji: "🌊"
 type: "tech"
 topics: ["ai", "llm", "videogeneration", "diffusionmodel", "gpu"]
@@ -15,9 +15,9 @@ published: false
 - 学習済み重み: https://huggingface.co/SJTU-DENG-Lab/WaveForcing-1.3B
 - プロジェクトページ: https://sjtu-deng-lab.github.io/WaveForcing/
 
-筆者が実際にリポジトリをcloneし、`LICENSE`・`README.md`・推論ランタイムのコード(`wave_rt/config.py`など)を読んで確認した内容を中心に書く。
-肝心の推論実行(実際に動画を生成してみる部分)は、著者らが前提にしているハードウェア(Hopperアーキテクチャの8基のGPU構成)が手元に無く、本記事執筆時点では未実施。
-現状は技術的な仕組みの解説にとどめ、実測できた時点で追記する。
+筆者が実際にリポジトリをcloneし、`LICENSE`・`README.md`・推論ランタイムのコード(`wave_rt/config.py`など)を読んで確認した内容と、実際にインストール・実行を試みてわかったことを書く。
+結論を先に書くと、GPUを8基用意できたとしても、現状このツールは動かせない。
+READMEのクイックスタートが依存している推論ランタイムの中核クラスが、公開されているパッケージのどこにも存在しないという、GPU基数とは無関係の依存関係の不備が見つかったためである。
 
 ## 背景: ストリーミング動画生成とパイプライン化の難しさ
 
@@ -68,8 +68,46 @@ READMEのQuick Startは、8基のGPUを使う「5+2」構成(5段のdenoisingス
 これらはあくまで論文・README内の著者らによる報告値であり、筆者自身がこの環境を再現して確認した数値ではない。
 そのため本記事では「動かしてみた」ではなく「読んでみた」というトーンにとどめている。
 
+## 実際にインストール・実行を試みてわかったこと
+
+GPUを用意できた段階で、READMEのクイックスタート通りに手を動かしてみた。
+最初の一歩である`uv sync`の時点で、想定と違う結果になった。
+
+```
+$ git clone https://github.com/SJTU-DENG-Lab/WaveForcing.git && cd WaveForcing
+$ uv sync
+# torch==2.11.0+cu128 などは入るが、sglangは一切インストールされない
+$ .venv/bin/python -c "import sglang"
+ModuleNotFoundError: No module named 'sglang'
+```
+
+`pyproject.toml`のコメントには「`sgl-dlab`という編集可能パッケージをインストールする」という記述があるが、`sgl-dlab`というディレクトリやパッケージはこのリポジトリのどこにも存在せず、READMEにも入手方法の説明がない。
+公開されているPyPI版の`sglang`を自分で追加インストールしてみたところ、`import`自体は通ったが、`wave_rt`が既定で要求する`WanRollingForcingPipeline`というパイプラインクラスを実際にロードしようとすると、次のように失敗した。
+
+```
+[rank0]: ValueError: Pipeline class 'WanRollingForcingPipeline' not found in registry.
+Available pipelines: ['ComfyUIFluxPipeline', ..., 'WanCausalDMDPipeline', 'WanDMDPipeline',
+'WanImageToVideoDmdPipeline', 'WanImageToVideoPipeline', 'WanPipeline', 'ZImagePipeline']
+```
+
+リポジトリ全体と、公開版`sglang`のソース全体の両方を検索しても、`RollingForcing`という文字列は`wave_rt/config.py`の既定値の文字列以外に一度も出てこない。
+つまり`WanRollingForcingPipeline`は、著者らが社内で使っている非公開フォーク(`sgl-dlab`)にしか存在しないクラスで、公開されている材料だけでは原理的に組み立てられない。
+
+README記載の「単一GPUベースライン(19.06 FPS)」に対応する比較スクリプト`scripts/wrt_ref_single.py`も試したが、こちらは別のAPIの食い違いにも遭遇した。
+
+```
+$ .venv/bin/python scripts/wrt_ref_single.py --num-frames 6 --out /tmp/wf-out
+TypeError: maybe_init_distributed_environment_and_model_parallel() got an
+unexpected keyword argument 'cfg_degree'
+```
+
+実際の関数には`cfg_degree`という引数は存在せず、`enable_cfg_parallel`という名前に変わっていた。
+これを直して再実行すると、今度は先ほどと同じ`WanRollingForcingPipeline not found in registry`で止まった。
+つまりAPIのズレを一つ直しても、根本原因である依存パイプラインの不在は変わらず、この比較スクリプトも完走しない。
+
 ## まとめ
 
 Wave Forcingは、ストリーミング動画生成のパイプライン並列化を妨げていた「チャンク間の逆方向依存」を、チャンク単位の因果アテンションという形で設計から取り除き、複数GPUへの分散を実際に機能させる、という方向性の提案だった。
-コード・重みともに公開されApache-2.0で使えることも確認できた一方、手法の効果を体感するには著者らと同等の複数GPU構成がほぼ前提になっている点は、試す前に把握しておく価値のある情報だと思う。
-実際の推論実行とそのログは、対応するハードウェアを用意できた時点で追記する。
+コード・重みともに公開されApache-2.0で使えることも確認できた一方、実際に手を動かしてみると、GPUを8基用意する以前の段階で止まることがわかった。
+`wave_rt`が要求する核心のパイプラインクラスが、著者らの非公開フォークにしか存在せず、公開されているREADME・`pyproject.toml`の指示だけでは原理的に再現できない。
+これはGPU環境を持たない実行環境固有の制約ではなく、リポジトリと依存関係の公開範囲が食い違っているという、ツール自体に直接関係する不具合として記録しておく。
