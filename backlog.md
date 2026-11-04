@@ -1441,3 +1441,48 @@
 - 検証難易度: 中〜高(Apache-2.0。追加APIキー不要だがCUDA対応GPU必須〈公式にmacOS非対応〉。小型モデル〈Qwen3.6-35B-A3B程度〉でもRTX 30系以上のVRAMを要し、Routine実行環境にGPUが無い場合は検証不可。GPUがあっても十分なホストRAM〈数十GB〉が必要になる点が複数の日本語記事で報告されている)
 - 見栄え: 既に多数の日本語検証記事が存在し先行者多数のため、差別化できる切り口〈例: Routine実行環境という特殊な制約下での検証、未検証モデルでの実測等〉が無い限り優先度は下げるべき候補。CLAUDE.mdの「既に多数の日本語記事がある場合は優先度を下げる」方針に従い参考記録として残す。
 - 状態: 未選択
+
+### [2026-11-04] NVIDIA Nemotron Labs/Dory1.0-4B — 同じ重みのままループ回数を変えるだけで推論時の精度と計算量をトレードオフできる4Bモデル(Hugging Face Daily Papers上位掲載)
+
+- 出典: https://huggingface.co/papers/2611.03998 (モデル重み: https://huggingface.co/collections/nvidia/nemotron-labs-dory 〈BF16/MXFP8/NVFP4/GGUF形式で公開〉。ライセンス: OpenMDW-1.1〈NVIDIA独自のオープンウェイトライセンス、Linux Foundation管理下でOSI承認審議中〉)
+- 概要: 8層の入力ブロック・20層の共有再帰ブロック・8層の出力ブロックという構成で、同一のチェックポイントのまま再帰ブロックのループ回数(1/2/4回)を切り替えることで、再学習無しに推論時の計算量と精度をトレードオフできる4Bパラメータの「ループ型」transformer。6兆トークンで事前学習、256Kコンテキスト対応。NVIDIAは12ベンチマーク平均で4ループ時40.60点(Qwen3.5-9Bの32.21点、Gemma 4 12Bの32.59点、Gemma 4 26B-A4Bの36.73点より高い)、SWE-bench Verifiedは1ループ50.3%→4ループ61.8%、かつ4ループはエージェントタスクで1ループより出力トークン数が1.3〜2.5倍少ないと報告している(いずれもNVIDIA自身の報告で第三者再現は未確認)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲)
+- 検証難易度: 低〜中。GGUF形式で公開され追加の有料APIキー不要・理論上CPUでも動作可能だが、ループ構造に対応したllama.cppのフォーク(GitHub Issue ggml-org/llama.cpp#30306相当)が必要でOllamaは未対応という情報があり、通常のOllama/素のllama.cppでは動かない可能性がある点を着手前に確認する必要がある。
+- 見栄え: 同一モデル・同一プロンプトに対しループ回数1と4を切り替え、出力トークン数・応答内容・所要時間を比較するBefore/After(表または簡易チャート)が作りやすい。
+- 状態: 未選択
+
+### [2026-11-04] 「You don't need long context」— 頻繁なコンテキスト圧縮(compaction)は精度をほとんど落とさずコストを大幅に下げられるという主張の論文(Hugging Face Daily Papers上位掲載)
+
+- 出典: https://huggingface.co/papers/2611.05306
+- 概要: 会話履歴を長く保持せず頻繁にコンテキストを圧縮(compaction)しても、フロンティアモデルの長期タスクでの精度はほとんど落ちないと主張する論文。GLM 5.2・Kimi K2.6・Qwen3 Coder Nextについて256Kコンテキストで提供する場合は16Kの場合に比べ出力トークン単価が3.6〜7倍高くなると指摘し、1アクションごとに圧縮を行ってもSWE-bench VerifiedはClaude Opus 4.5で70.0%→70.2%、GPT 5.6 Solで84.4%→82.4%とほぼ変わらず、ピークコンテキスト長の中央値は130〜200Kトークンから7〜9Kトークンまで下がったと報告している。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲)
+- 検証難易度: 中。論文自身の数値はClaude Opus/GPT等の有料APIを使って計測されたもので完全な再現には有料キーが必要だが、「頻繁な圧縮でも精度がほぼ落ちない」という主張自体は、無料のローカルモデル(Ollama等)やClaude Code自身の既存の圧縮機能を使い、自作の縮小版ベンチマーク(例: 複数ステップのタスクを圧縮あり/無しで実行し結果を比較)で検証する形なら追加の有料APIキー無しで6時間以内に収まる見込み。著者らによる評価コードの公開は確認できず(オープンソースの既存エージェントハーネス〈mini-swe-agent〉とオープンウェイトモデルを使ったと記載されているのみ)。
+- 見栄え: コンテキスト長とコスト(トークン単価)の関係を示すグラフ、または圧縮あり/無しでの精度比較のBefore/Afterチャートが作りやすい。
+- 状態: 未選択
+
+### [2026-11-04] NVIDIA/auto-ontology — 自然言語の質問をデータベース用SQLに変換するための「オントロジー層」を自動構築するOSSフレームワーク(本日GitHub Trending Pythonで言及)
+
+- 出典: https://github.com/NVIDIA/auto-ontology (Apache-2.0。本日GitHub Trending Pythonで+2,053star/日、累計4,670star)
+- 概要: PostgreSQL/MySQL/Snowflake/Databricks/DuckDB/SQLite等のデータベース上に、ビジネス用語・SQL属性・テーブル関係からなるセマンティックなオントロジー層を構築し、MCPサーバー・CLI・REST API経由でエージェントが自然言語の質問をSQLに変換できるようにするNVIDIA製OSS(Next.jsフロントエンド+FastAPIバックエンド+pgvectorで構成、Docker Compose/Helmでデプロイ)。README自体には定量的なベンチマーク数値は無く、別リポジトリ(ontology-sql-eval)でのBIRD text-to-SQL評価を参照する形になっている。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲)
+- 検証難易度: 中。既定ではbuild.nvidia.comの無料枠APIキー(`nvapi-...`)を使ったホスト型NIM推論を前提としており追加の有料APIキーは不要だが、外部キーの取得とDocker Compose環境構築(Postgres/pgvector含む)の手間がかかる。GPU不要(ホスト型推論を使う場合)。
+- 見栄え: 自分で用意した簡単なサンプルDBに対し、自然言語の質問→生成されたSQL→実行結果という一連の流れを具体的に見せられる。
+- 状態: 未選択
+
+### [2026-11-04] Thysrael/Horizon — Hacker News/Reddit/GitHub等を横断しAIがスコアリング・要約する個人向けAIニュースレーダー
+
+- 出典: https://github.com/Thysrael/Horizon (MIT)
+- 概要: RSS・Hacker News・Reddit・Telegram・X(Apify経由)・GitHub・金融ニュース(OpenBB)・GDELT・Google News等を横断的に取得し、LLMでスコアリング・フィルタリング・重複排除した上で英語/中国語バイリンガルの日次ブリーフィングを生成するOSSニュースアグリゲーター。CLI・Docker・MCPサーバー・セットアップウィザードを同梱し、Markdown/GitHub Pages/メール/Slack/Discord/webhook配信に対応。OpenAI/Gemini/Claude/DeepSeekに加えローカルのOllamaにも対応しており、無料かつGPU無しでも動作可能。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲。開発者自身によるDEV Community記事は確認できたが日本語記事は検索範囲では見当たらなかった)
+- 検証難易度: 低〜中。MIT。Ollama(ローカルの無料モデル)を使えば追加の有料APIキー無し・GPU不要で動作確認可能。
+- 見栄え: 本リポジトリ自体が毎朝sources.mdに沿って海外AIネタをWebSearch/WebFetchで巡回するリサーチRoutineであるという自己言及的な文脈に合う(2026-11-02に記録したlast30days-skillと切り口は似るが、あちらはClaude Codeのエージェントスキル、こちらは独立したニュースアグリゲーターのOSSプロジェクトであり対象が異なる)。生成された日次ブリーフィングのスクリーンショットを成果物として見せられる。
+- 状態: 未選択
+
+### [2026-11-04] SpecPilot — Claude Opusエージェントが自律的に投機的デコーディングの最適化を探索する手法(論文, データセンターGPU必須・見送り推奨)
+
+- 出典: https://huggingface.co/papers/2611.02501 (コード: https://github.com/StargazerX0/SpecPilot。ライセンス未確認)
+- 概要: Claude Code上のClaude Opus 5.5エージェントが自律的にループしてデプロイごとにロスレスな投機的デコーディングの最適化を探索する手法。12bit重みフォーマットや新しい検証/バッチング手法を発見し、単一リクエストでの高速化を4.46倍→10.87倍、バッチ処理時は1.94倍→3.93倍に向上させたと報告。H100・RTX PRO 6000上でQwen3.8-27B等を用いて評価し、最適化探索自体に530 GPU時間を要したとされる。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲)
+- 検証難易度: 高・見送り推奨。H100やRTX PRO 6000級のデータセンターGPUが前提でコンシューマGPU・CPUでの再現は見込めず、最適化探索ループ自体もClaude Opus(有料API)を利用している。CLAUDE.mdの「6時間以内に検証できるものを選ぶ」「有料APIキーが必須の候補を選ばない」方針のいずれにも合わないため、今回は参考記録として残すのみとする。
+- 見栄え: 再現できればBefore/Afterの高速化比較が分かりやすいが、GPU・APIキー要件のため今回のチャレンジの枠には合わない。
+- 状態: 未選択
