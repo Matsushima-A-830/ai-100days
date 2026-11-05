@@ -2,19 +2,18 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 038
-- 選んだ候補(backlog.mdのタイトルかURL): NVIDIA Nemotron Labs/Dory1.0-4B — https://huggingface.co/papers/2611.03998
+- Day: 039
+- 選んだ候補(backlog.mdのタイトルかURL): vercel-labs/agent-browser & agent-desktop — https://github.com/vercel-labs/agent-browser / https://github.com/vercel-labs/agent-desktop
 - 補足メモ(あれば):
-  - 出典: https://huggingface.co/papers/2611.03998 (モデル重み: https://huggingface.co/collections/nvidia/nemotron-labs-dory 〈BF16/MXFP8/NVFP4/GGUF形式で公開〉。ライセンス: OpenMDW-1.1〈NVIDIA独自のオープンウェイトライセンス、Linux Foundation管理下でOSI承認審議中〉)
-  - 概要: 8層の入力ブロック・20層の共有再帰ブロック・8層の出力ブロックという構成で、同一のチェックポイントのまま再帰ブロックのループ回数(1/2/4回)を切り替えることで、再学習無しに推論時の計算量と精度をトレードオフできる4Bパラメータの「ループ型」transformer。6兆トークンで事前学習、256Kコンテキスト対応。NVIDIAは12ベンチマーク平均で4ループ時40.60点(Qwen3.5-9Bの32.21点等より高い)、SWE-bench Verifiedは1ループ50.3%→4ループ61.8%、4ループはエージェントタスクで1ループより出力トークン数が1.3〜2.5倍少ないと報告している(いずれもNVIDIA自身の報告で第三者再現は未確認)。backlog.md記載時点(2026-11-04)で日本語記事はZenn/Qiita/note全て0件を確認済み。
+  - 出典: https://github.com/vercel-labs/agent-browser (Apache-2.0) / https://github.com/vercel-labs/agent-desktop (Apache-2.0)。本日(2026-11-05)GitHub Trendingでagent-desktopが新着ながら2,173star/日。
+  - 概要: スクリーンショットやピクセル認識ではなく、ブラウザ/OSのアクセシビリティツリーをテキスト/JSON化し、各要素に`@e1`のような参照(ref)を振ってAIエージェントに操作させるVercel Labs製のRust CLI。agent-browserはブラウザ操作用(Chrome DevTools Protocol経由、Playwright MCP比で約90%少ないトークン消費を主張)、agent-desktopはmacOS/Windows/Linuxのデスクトップ操作用(OSのアクセシビリティAPI経由)。どちらもAPIキー・GPU不要で、Claude Code自身をエージェント(ドライバー)として使える。backlog.md記載時点(2026-11-05)で日本語記事はZenn/Qiita/note全て0件を確認済み。
   - 検証スコープ・手順:
-    1. まずライセンス(OpenMDW-1.1)の実際の条文をHugging Face/GitHub双方で確認し、results.mdに記録する。
-    2. Hugging Face上のモデルカードに記載された推奨推論方法(`transformers`経由のサンプルコードがあるか、ループ回数を指定するパラメータがあるか)を最初に確認する。`transformers`経由で動く場合は、量子化された小さめの重み(BF16/MXFP8/NVFP4のうちCPUまたは手元のGPUで動かせるもの)を使い、同一プロンプトに対してループ回数1と4を切り替えて生成し、出力トークン数・生成時間・回答内容の違いをそのまま記録する(Before/After比較)。
-    3. `transformers`経由で動かない、GGUF+llama.cpp経由のみが前提という場合は、まず公式手順通り(通常のllama.cpp/Ollama)でのロードを試す。README等で言及されている「ループ構造に対応したllama.cppフォーク(ggml-org/llama.cpp#30306相当)が必要でOllamaは非対応」という情報が事実であれば、これは当チャレンジのGPU/環境制約ではなく、ツール自体が主要な推論エコシステム(Ollama・mainline llama.cpp)にまだ統合されていないという「検証に直接関係する失敗」に当たるため、エラーメッセージをそのまま記録し、6時間の枠内で収まる範囲でフォーク版のビルドを試す。
-    4. フォーク版のビルドも含めて6時間以内に動作確認ができなかった場合は、そのまま「公式の標準的な推論環境(Ollama/mainline llama.cpp)では動かなかった」という失敗として正直に記録し、記事の主役にしてよい(Routine環境のGPU不足ではなく、ツール自体の対応状況に起因する失敗のため、CLAUDE.mdの「書く(検証に直接関係する失敗)」に該当)。
-    5. 動作した場合は、ループ回数ごとの応答内容・生成速度・(可能なら)メモリ使用量を比較し、NVIDIA報告のベンチマーク数値とは別物(自分で測った参考値)であることを明記する。
-    6. 実行コマンド・ログ・エラー・所要時間はすべてそのままresults.mdに記録する。
-  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-11-04時点、backlog.md参照)。
-  - 記事化の切り口: 「同じ重みのままループ回数を変えるだけで推論時の精度と計算量をトレードオフできる」という新規性と、公式の標準的な推論環境(Ollama/mainline llama.cpp)でどこまで素直に動くか(動かない場合はその実態)を軸にする。動作した場合はループ回数1と4のBefore/After、動かなかった場合はどこで・なぜ止まったかを具体的に書く。
+    1. agent-browserをnpm等で導入し(`npm install -g agent-browser`→`agent-browser install`でChrome for Testingを取得。失敗する場合はこの実行環境に既に入っているPlaywright用Chromium〈/opt/pw-browsers/chromium〉を使う設定を試す)、Claude Code自身から`agent-browser open`→`agent-browser snapshot`→refを指定した操作、という一連のコマンドで実際のWebページ(検索・フォーム入力など)を操作する。
+    2. 同じページ操作をPlaywright(素のHTML取得や既存のPlaywright MCP)で行った場合と比べ、agentに渡すsnapshot/コンテキストの文字数・トークン数を具体的に測り、Vercel Labsの「約90%少ない」という主張に対する自分の実測値として記録する(公式ベンチマークとは別物と明記)。
+    3. agent-desktopは、まず導入と`agent-desktop status`でこの実行環境(ヘッドレスのクラウドコンテナ)のプラットフォーム判定・権限状況を確認する。ディスプレイ/ウィンドウマネージャが無いためアクセシビリティAPI経由の操作が動かない場合、これはCLAUDE.mdの「書かない(Routine環境の制約)」に該当するRoutine実行環境固有の制約なので、記事・X投稿案・note原稿では触れず、PRの説明文冒頭に「ローカル検証が必要」と明記し再現手順(インストール〜`agent-desktop status`〜簡単な操作コマンド)を添えてローカル検証にエスカレーションする。results.mdには「Routine環境の制約により未検証、ローカル検証待ち」と1〜2行だけ残す。
+    4. agent-desktopがこの環境のGUI無しでも動く部分(`agent-desktop status`でのプラットフォーム判定など)があれば、それは通常どおり実行・記録してよい。
+    5. 実行コマンド・出力・エラー・所要時間はすべてそのままresults.mdに記録する。
+  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-11-05時点、backlog.md参照)。
+  - 記事化の切り口: 「スクリーンショットではなくアクセシビリティツリーでAIエージェントがブラウザ/デスクトップを操作する」という新しいアプローチを、実際にClaude Code自身から動かして見せる。主役はagent-browserによるブラウザ操作のBefore/After(トークン消費量の実測比較)とし、agent-desktopのGUI操作部分がRoutine環境で検証できなかった場合はその旨を記事には書かず、ローカル検証の結果が出てから反映する。
 
 状態: 設定済み
