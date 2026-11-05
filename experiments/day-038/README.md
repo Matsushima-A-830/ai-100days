@@ -92,3 +92,10 @@ GPU(CUDA)がある場合はモデルカード記載の`-DGGML_CUDA=ON -DGGML_CUD
 ダウンロード済みのGGUFファイル(SHA-256: `96080be49ffd67b916018b7bdef8c484762576fb52780e10ab98ac4978a660e0`)はこのRoutine環境には残らないため、ローカルで再取得が必要。
 
 結果が出たら `results.md` と `articles/day-038-*.md` に反映する。
+
+## ローカル検証(実施済み・2026-11-05)
+
+人間のGPU環境(RTX 5060 Ti、CUDA 12.8)で上記(a)(b)を実際に試した。
+
+- **(a) `transformers`をGitHub mainから入れ直す**: `pip install -U git+https://github.com/huggingface/transformers.git`でインストールしたバージョン(5.23.0.dev0)でも`AutoConfig.from_pretrained`は`KeyError: 'dory'` → `ValueError: ... does not recognize this architecture`で同じく失敗した。エラーメッセージが案内する回避策自体が、本検証時点のmainブランチではまだ機能していない。
+- **(b) 専用フォーク版llama.cppのビルド**: `brianchmielNV/llama.cpp`のpin commitを`-DGGML_CUDA=ON`でビルドしたところ成功し、素のllama.cppでは失敗していた同じGGUFファイルのロードに成功した。ループ回数1と4のそれぞれでサーバーを起動し、同一プロンプト(算数の平均速度問題)で比較したところ、どちらも正解(60 km/h)にたどり着いたが、出力トークン数はほぼ同じ(1130 vs 1157)で、生成時間だけがループ回数4で約3.2倍(39.97秒→129.23秒)に伸びた。詳細は`results.md`の「6. ローカル検証」節を参照。

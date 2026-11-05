@@ -133,9 +133,78 @@ ValueError: Failed to load model from file: dory-q5_k_m.gguf
 - SWE-bench Verified: 1ループ 50.3 / 2ループ 59.5 / 4ループ 61.8
 - 出力トークン数(Table 3、1回の試行あたり): GDPval-AA v2 212k→85k(約2.5倍減)、Terminal-Bench v2.1 109k→54k(約2.0倍減)、SWE-bench Verified 33.6k→24.8k(約1.35倍減)、τ³-Banking 23.0k→17.6k(約1.3倍減)
 
+## 6. ローカル検証(人間のGPU環境、2026-11-05)
+
+検証環境: NVIDIA GeForce RTX 5060 Ti(16GB VRAM、Blackwell)、CUDA 12.8、torch 2.11.0+cu128。
+
+### 6-1. `transformers`をGitHub mainから入れ直す(モデルカード/エラーメッセージが案内する回避策(a))
+
+```
+$ pip install -U "git+https://github.com/huggingface/transformers.git"
+(インストール成功: transformers 5.23.0.dev0)
+
+$ python3 -c "
+from transformers import AutoConfig
+AutoConfig.from_pretrained('nvidia/NVIDIA-Nemotron-Labs-Dory1.0-4B-BF16')
+"
+```
+
+実際の出力(そのまま):
+
+```
+KeyError: 'dory'
+...
+ValueError: The checkpoint you are trying to load has model type `dory` but Transformers does not
+recognize this architecture. ...
+```
+
+**結論: GitHub mainからビルドした`transformers`(5.23.0.dev0、2026-11-05時点のmain)でも、`dory`アーキテクチャはまだ実装されていない。** エラーメッセージが案内する回避策どおりにしても解決しなかった、という回避策自体の不備である。これは本Routine環境の制約ではなく、手元のGPU環境で実際にmainブランチをビルドしてもなお再現する失敗であり、検証に直接関係する失敗として扱う。
+
+### 6-2. モデルカード記載のフォーク版llama.cppをビルドしてループ回数1/4のBefore/After比較(回避策(b))
+
+```
+$ REV=98a74c97ea09ac72f6ceda1559808fc0a2f447ce
+$ git clone https://github.com/brianchmielNV/llama.cpp.git llama.cpp-dory
+$ git -C llama.cpp-dory checkout --detach "$REV"
+$ cmake -S llama.cpp-dory -B llama.cpp-dory/build \
+    -DCMAKE_BUILD_TYPE=Release -DGGML_CUDA=ON -DGGML_CUDA_GRAPHS=ON -DCMAKE_CUDA_ARCHITECTURES=120
+$ cmake --build llama.cpp-dory/build --target llama-server --parallel
+(ビルド成功)
+```
+
+**結論: 専用フォーク版llama.cppはビルドに成功し、素のllama.cppでは`unknown model architecture: 'dory'`で失敗していたのと対照的に、同じGGUFファイル(SHA-256: `96080be4...a660e0`、モデルカード値と一致)を問題なくロードできた。** モデルカードの主張(専用フォークが必要)はこれで裏付けられた。
+
+続けてループ回数1と4でサーバーを別々に起動し、同一プロンプト(「電車が120kmを2時間、続けて180kmを3時間走った。全体の平均速度は?」の英語版、`--override-kv dory.num_loops=int:1|4,dory.recurrent_kv_cache_mode=str:per_loop`、`temperature=0`、`max_tokens=3000`)を投げて比較した。
+
+| | num_loops=1 | num_loops=4 |
+|---|---|---|
+| 応答 | 正解(60 km/h、結論のみ約1130トークン) | 正解(60 km/h、結論のみ約1157トークン) |
+| completion_tokens | 1130 | 1157 |
+| 所要時間(壁時計) | 39.97秒 | 129.23秒 |
+| トークン/秒 | 約28.3 tok/s | 約8.96 tok/s |
+
+実際の出力(抜粋、そのまま):
+
+```
+# num_loops=1
+**Step 1: Find the total distance traveled**
+...
+Average speed = Total distance ÷ Total time
+Average speed = 300 km ÷ 5 hours = 60 km/h
+
+# num_loops=4
+To find the average speed for the entire trip, use the formula:
+Average Speed = Total Distance / Total Time
+...
+Therefore, the train's average speed for the whole trip is 60 km/h.
+```
+
+**結論: 今回のような単純な算数問題では、ループ回数を1→4に増やしても出力トークン数は減らず(1130→1157でわずかに増加)、生成時間だけが約3.2倍に伸びた(39.97秒→129.23秒)。** 両方とも正解(60 km/h)には到達している。論文(5節参照)が報告する「出力トークン数の削減」はGDPval-AAやSWE-bench VerifiedのようなLLM自身が長い思考過程を必要とする難しいタスクでの効果であり、今回使った単純な算数問題のように元々の思考過程が短いタスクでは、ループを増やす効果(少ない出力で同じ精度に到達する)は現れず、むしろループ回数分だけ1トークンあたりの計算量が増えて生成が遅くなる、という素直な結果になった。
+
 ## まとめ
 
 - ライセンス(OpenMDW-1.1)は実質MIT相当で商用利用も含め問題なし。
 - モデルカードのサンプルコードをそのままコピーしても、2026-11-05時点のPyPI安定版`transformers`では`dory`アーキテクチャ未対応で**実際に失敗する**(確認済み)。
 - 標準的な(PyPI配布の)`llama-cpp-python`=素のllama.cppでも、GGUFのロード自体が`unknown model architecture: 'dory'`で**実際に失敗する**(確認済み、SHA-256でファイル同一性も確認済み)。
-- モデルカードが案内する回避策(transformers本家GitHub mainからのインストール、専用フォークのllama.cppビルド)は、本Routine環境の安全ポリシーにより試行できず、ローカル検証待ち。
+- ローカルのGPU環境で確認したところ、**GitHub mainから入れ直した`transformers`(5.23.0.dev0)でも`dory`アーキテクチャは未実装のままで、エラーメッセージが案内する回避策自体が機能しなかった。**
+- 一方、モデルカード記載の専用フォーク版llama.cpp(`brianchmielNV/llama.cpp`、pin commit)はビルド・ロードに成功し、ループ回数1と4のBefore/After比較まで実施できた。同じ平均速度算出問題では、ループ回数を増やしても出力トークン数は減らず、生成時間が約3.2倍に伸びるだけだった(単純なタスクでは論文が主張する「出力トークン削減」効果は現れない)。

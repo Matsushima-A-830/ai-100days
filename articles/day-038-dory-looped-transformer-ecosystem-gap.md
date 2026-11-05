@@ -131,7 +131,60 @@ GPUが無いから遅い、メモリが足りない、といった計算資源�
 モデルカードはこの先の回避策として、(1)`transformers`をGitHub本家リポジトリのmain branchから入れ直す、(2)専用フォークのllama.cpp(`brianchmielNV/llama.cpp`、特定コミットにpin)をビルドする、という2つの道を示している。
 筆者の作業環境(Claude Code Routineのクラウド実行環境)では、外部ソースから取得した未レビューのコードをビルド・インストールする操作自体がセキュリティポリシーでブロックされており、この2つの回避策を実際に試すことができなかった。
 ここは「動かした結果」ではなく「まだ試せていない」として正直に書く。
-ローカルPCでの再現手順は本検証のリポジトリに記録してあり、結果が出たら追記する。
+ローカルPCのGPU環境で両方を実際に試した結果を次節に書く。
+
+## ローカルPCで2つの回避策を実際に試した
+
+### transformersのGitHub mainは、まだ`dory`に対応していなかった
+
+エラーメッセージが案内するとおり、GitHub本家のmain branchから`transformers`を入れ直した。
+
+```
+$ pip install -U "git+https://github.com/huggingface/transformers.git"
+# インストール成功: transformers 5.23.0.dev0
+
+$ python3 -c "
+from transformers import AutoConfig
+AutoConfig.from_pretrained('nvidia/NVIDIA-Nemotron-Labs-Dory1.0-4B-BF16')
+"
+```
+
+結果は同じエラーだった。
+
+```
+KeyError: 'dory'
+...
+ValueError: The checkpoint you are trying to load has model type `dory` but Transformers does not
+recognize this architecture. ...
+```
+
+つまり、エラーメッセージ自身が案内する回避策が、少なくとも2026年11月5日時点のmain branchではまだ機能していない。
+`dory`アーキテクチャの実装はtransformers本体にはまだ入っていないということである。
+
+### 専用フォーク版llama.cppはビルドでき、ループ回数1と4を実際に比較できた
+
+もう一つの回避策、モデルカード記載の専用フォーク(`brianchmielNV/llama.cpp`、指定コミットにpin)をビルドした。
+
+```
+$ REV=98a74c97ea09ac72f6ceda1559808fc0a2f447ce
+$ git clone https://github.com/brianchmielNV/llama.cpp.git llama.cpp-dory
+$ git -C llama.cpp-dory checkout --detach "$REV"
+$ cmake -S llama.cpp-dory -B llama.cpp-dory/build \
+    -DCMAKE_BUILD_TYPE=Release -DGGML_CUDA=ON -DGGML_CUDA_GRAPHS=ON -DCMAKE_CUDA_ARCHITECTURES=120
+$ cmake --build llama.cpp-dory/build --target llama-server --parallel
+```
+
+ビルドは成功し、素のllama.cppでは`unknown model architecture: 'dory'`で止まっていた同じGGUFファイル(SHA-256一致済み)を、今度は問題なくロードできた。
+ループ回数1と4のそれぞれでサーバーを起動し、`--override-kv dory.num_loops=int:1,dory.recurrent_kv_cache_mode=str:per_loop`で切り替えながら、同一の算数問題(「電車が120kmを2時間、続けて180kmを3時間走った。全体の平均速度は?」)を`temperature=0`で投げて比較した。
+
+| | num_loops=1 | num_loops=4 |
+|---|---|---|
+| 応答 | 正解(60 km/h) | 正解(60 km/h) |
+| completion_tokens | 1130 | 1157 |
+| 所要時間(壁時計) | 39.97秒 | 129.23秒 |
+
+両方とも同じ正解(60 km/h)に到達したが、出力トークン数はほとんど変わらず(むしろ4ループの方が少し多い)、生成時間だけがループ回数4で約3.2倍に伸びた。
+論文がSWE-bench VerifiedやGDPval-AAのような難しいタスクで報告している「ループを増やすほど出力トークン数が減る」という効果は、今回使ったような元々思考過程が短い単純な算数問題では現れず、単純にループ回数分だけ1トークンあたりの計算が増えて遅くなる、という素直な結果になった。
 
 ## まとめ
 
@@ -139,5 +192,5 @@ GPUが無いから遅い、メモリが足りない、といった計算資源�
 - `config.json`から、backlog調査時点の「8層入力+20層再帰+8層出力」という構成を実機で確認した。
 - モデルカードの`transformers`サンプルコードは、2026年11月5日時点のPyPI安定版(5.22.1)では`dory`アーキテクチャ未対応のため実際に動かなかった。
 - モデルカードのGGUF版も、SHA-256まで一致する公式配布ファイルを使っても、素の`llama-cpp-python`では`unknown model architecture: 'dory'`で実際に動かなかった。
-- どちらも「公式サンプルコードのコピペ」という最も低いハードルの経路で確実に再現できる、現時点でのエコシステム対応状況の記録である。
-- ループ回数1と4のBefore/After比較そのものは、推奨される回避策(GitHub mainのtransformers、または専用フォークのllama.cpp)を使わないと到達できず、今回は確認できなかった。
+- ローカルPCのGPU環境で確認したところ、**GitHub mainから入れ直した`transformers`(5.23.0.dev0)でも`dory`はまだ実装されておらず、エラーメッセージが案内する回避策自体が機能しなかった。**
+- 一方、モデルカード記載の専用フォーク版llama.cppはビルド・ロードに成功し、ループ回数1と4のBefore/After比較まで実施できた。単純な算数問題では出力トークン数は減らず、生成時間が約3.2倍に伸びるだけだった。論文が報告する「出力トークン削減」効果は、より複雑な推論タスクでなければ現れないと考えられる。

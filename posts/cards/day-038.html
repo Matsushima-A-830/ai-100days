@@ -188,23 +188,27 @@ unknown model architecture:
   </section>
 
   <section class="block">
-    <div class="block-label">GGUFファイル検証</div>
+    <div class="block-label">ローカルGPU環境での回避策検証(RTX 5060 Ti)</div>
     <div class="terminal">
       <div class="term-row">
-        <span class="term-tag">sha256</span>
-        <span class="toks">96080be4...a660e0(モデルカード記載値と完全一致)</span>
+        <span class="term-tag">transformers</span>
+        <span class="toks">GitHub main(5.23.0.dev0)でも`KeyError: 'dory'`で未対応</span>
       </div>
       <div class="term-row">
-        <span class="term-tag">size</span>
-        <span class="toks">3,673,288,864 bytes / 3.41 GiB(Q5_K_M)</span>
+        <span class="term-tag">llama.cpp</span>
+        <span class="toks">専用フォーク(brianchmielNV)はビルド成功、GGUFロードも成功</span>
       </div>
-      <div class="term-foot">ファイル自体は壊れていない。止まっているのは推論エンジン側の`dory`アーキテクチャ対応。</div>
+      <div class="term-row">
+        <span class="term-tag">loop 1→4</span>
+        <span class="toks">completion_tokens 1130→1157 / 生成時間 39.97秒→129.23秒(約3.2倍)</span>
+      </div>
+      <div class="term-foot">同じ算数問題では両方とも60km/hで正解。出力トークン数は変わらず、生成時間だけ伸びた。</div>
     </div>
   </section>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>モデルカード案内の回避策(transformers本家GitHub mainからの再インストール、専用フォークllama.cppのビルド)は、筆者の実行環境(クラウド上の自動実行環境)のセキュリティポリシーにより試行できず、ローカル検証待ち。</p>
+    <p>論文が報告する「ループを増やすほど出力トークンが減る」効果は、SWE-bench Verifiedのような難しい推論タスク向け。今回のような単純な算数問題では現れなかった。</p>
   </div>
 
   <footer>
