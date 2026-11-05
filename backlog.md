@@ -1486,3 +1486,39 @@
 - 検証難易度: 高・見送り推奨。H100やRTX PRO 6000級のデータセンターGPUが前提でコンシューマGPU・CPUでの再現は見込めず、最適化探索ループ自体もClaude Opus(有料API)を利用している。CLAUDE.mdの「6時間以内に検証できるものを選ぶ」「有料APIキーが必須の候補を選ばない」方針のいずれにも合わないため、今回は参考記録として残すのみとする。
 - 見栄え: 再現できればBefore/Afterの高速化比較が分かりやすいが、GPU・APIキー要件のため今回のチャレンジの枠には合わない。
 - 状態: 未選択
+
+### [2026-11-05] vercel-labs/agent-browser & agent-desktop — スクリーンショットではなくアクセシビリティツリーでAIエージェントにブラウザ/デスクトップ操作をさせるCLI(本日GitHub Trendingで言及)
+
+- 出典: https://github.com/vercel-labs/agent-browser (Apache-2.0) / https://github.com/vercel-labs/agent-desktop (Apache-2.0)。本日GitHub Trending(Python/全言語)でagent-desktopが新着ながら2,173star/日を記録し上位掲載。姉妹ツールのagent-browserも既に45.8k star・3.1k forkまで伸びている。
+- 概要: Vercel LabsがRust製CLIとして公開した、AIエージェント向けのブラウザ操作・デスクトップ操作ツール。スクリーンショット/ピクセル認識ではなく、ブラウザのアクセシビリティスナップショット(agent-browser)やOSのアクセシビリティツリー(agent-desktop)をテキスト/JSONで返し、各要素に`@e1`のような参照(ref)を振ってエージェントに操作させる方式。Playwright MCP比で約90%少ないトークン消費を主張している。agent-browserは2026年1月公開の既存ツール(npm最新0.41.1)で、agent-desktop(npm最新1.0.2、直近コミット2026-10-30)がその姉妹ツールとして同系列で本日トレンド上位に入った。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲。日本語の個人技術ブログ〈azukiazusa.dev〉にagent-browserの解説記事1本はあるが、Zenn/Qiita/note本体への掲載は未検出)
+- 検証難易度: 低。npm/Homebrew等で導入でき追加の有料APIキーは不要(Claude Code自身をドライバーとして使える)。GPUも不要。agent-browser側はこのRoutine実行環境にインストール済みのChromiumで動作確認できる見込み。ただしagent-desktopはOSのデスクトップ環境・アクセシビリティAPIが前提のため、ヘッドレスのRoutine実行環境では動かない可能性が高く、その場合はagent-browser(ブラウザ操作)側のみRoutine環境で検証し、デスクトップ操作部分はローカルPCでの追加確認が必要になる見込み。
+- 見栄え: 「スクリーンショットではなくアクセシビリティツリーでAIエージェントがブラウザ/デスクトップを操作する」という新しいアプローチを、実際にClaude Code自身から動かして見せられる。Vercel公式発というニュース価値も高い。
+- 状態: 未選択
+
+### [2026-11-05] microsoft/Hybrid-Computer-Use — コーディングエージェントにAX(アクセシビリティ)/GUI操作を追加するMCPサーバー(本日Hugging Face Daily Papers掲載)
+
+- 出典: https://github.com/microsoft/Hybrid-Computer-Use (MIT。一部OSWorld-V2由来ファイルはApache-2.0)。論文: arXiv:2610.41432「Hybrid Computer Use: A Unified Programmatic, Semantic, and Visual Interface for General Agents」(Microsoft Research/復旦大学/清華大学。本日Hugging Face Daily Papers掲載、upvote 7件)。
+- 概要: Codex・Claude Code・Gemini CLI等のコーディングエージェントに、既存のシェル/ファイルツールに加えて`AX`(アクセシビリティツリー操作)と`GUI`(スクリーンショット+ポインタ/キーボード操作)という2つのMCPツールを追加し、Linux/macOS/Windowsのデスクトップをプログラム的・準視覚的・視覚的の3方式を組み合わせて操作させるMCPサーバー。OSWorld 2.0の108タスクでCUA Driverベースラインとの比較結果を報告している(いずれも開発元自身の報告で第三者再現は未確認)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲)
+- 検証難易度: 中。`claude mcp add`でClaude Code自身に直接組み込める設計で、追加の有料APIキー・GPUは不要。ただしLinux版のビルドにはGo 1.22+が必要で、`AX`/`GUI`操作の実機検証にはX11等の実デスクトップ環境が前提となるため、ヘッドレスのRoutine実行環境では動かない可能性が高い。ビルドとCLIの基本動作(`computer-use apps`等)まではRoutine環境で確認し、実際のGUI操作デモはローカルPCでの追加確認が必要になる見込み。
+- 見栄え: Microsoft Research公式発の論文+OSSで、「Claude Code自身にデスクトップ操作能力を追加する」という自己言及的な文脈に合う。同日トレンドのvercel-labs/agent-browser・agent-desktopと並べて「アクセシビリティツリー方式のコンピュータ操作エージェント」という切り口で比較できる。
+- 状態: 未選択
+
+### [2026-11-05] microsoft/VibeVoice — ASR-7B/Realtime-0.5Bが本日GitHub Trendingで言及(看板のTTSコードは誤用報告を受け削除済み)
+
+- 出典: https://github.com/microsoft/VibeVoice (MIT。ただしVibeVoice-TTS-1.5Bの推論コードは2025-09-05に誤用報告を受けてリポジトリから削除済みで「Quick Try: Disabled」表記)。関連論文: arXiv:2601.18184「VibeVoice-ASR Technical Report」。
+- 概要: Microsoft発の音声AIモデル群。本日GitHub Trending(Python)に掲載されたのは、60分の音声を一度に処理できる長尺音声認識モデルVibeVoice-ASR-7B(話者分離・タイムスタンプ付き、50言語超対応)と、リアルタイム音声合成向けの軽量モデルVibeVoice-Realtime-0.5B。CPU専用の圧縮版VibeVoice-ASR-BitNet(4.62GB→1.58GB、3スレッドでRTF<1、GPU不要)も公開済み。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲。ASR/Realtime版を扱った日本語記事は未検出。TTS版については別途日本語紹介記事があるが本検証対象ではない)
+- 検証難易度: 低〜中(APIキー不要)。ASR-BitNetはCPUのみで動作確認可能。**重要な注意**: 看板機能である長尺多人数TTS(VibeVoice-TTS-1.5B)自体は推論コードがリポジトリから削除されており検証不可。検証対象はASR系・Realtime-0.5Bに限定する必要がある。
+- 見栄え: 「誤用で一度機能削除されたOSS音声AIが、音声合成ではなく音声認識側で機能を広げている」という経緯自体が記事の切り口になる。日本語音声での認識精度(話者分離・タイムスタンプ)を試せば具体的なデモになる。
+- 状態: 未選択
+
+### [2026-11-05] D4Vinci/Scrapling — AIエージェント向けMCPサーバー・Agent Skillを備えた自己修復型スクレイピングフレームワーク(本日GitHub Trendingで言及、基本解説は既に日本語記事あり)
+
+- 出典: https://github.com/D4Vinci/Scrapling (BSD-3-Clause。本日GitHub Trending Python/全言語で言及、97.8k star)
+- 概要: セレクターの破損に追従するアダプティブ(自己修復型)スクレイピングを核に、MCPサーバー(Claude Code/Cursor等のAIエージェントがScrapling経由でブラウジング・抽出できる)、Agent Skill(エージェントに最新APIを教える)、LLMを介さないRAG向けMarkdown出力(`page.markdown()`)を備えるPython製スクレイピングフレームワーク。
+- 日本語記事件数: Zenn 0件 / Qiita 2件(インストール手順・アダプティブスクレイピングの紹介記事)/ note 0件(検索した範囲)。基本的な使い方の記事は既にあるため優先度を下げる。MCPサーバー/Agent Skill部分(AIエージェントからの利用)はQiita記事未カバーの切り口として残る。
+- 検証難易度: 低。pip installのみで追加の有料APIキー・GPUは不要。MCPサーバーをClaude Code自身に繋いで実際にエージェント経由でスクレイピングさせる部分が既存Qiita記事との差別化点になる。
+- 見栄え: 「セレクターを壊してもアダプティブに追従する」デモと、Claude Code自身がMCP経由でScraplingを操作する様子は見せやすい。ただしスクレイピング自体の基本解説はQiitaに既にあるため、記事化するなら差別化(MCP/Agent Skill軸)を明記する必要がある。
+- 状態: 未選択
