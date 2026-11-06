@@ -1467,7 +1467,7 @@
 - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲)
 - 検証難易度: 中。既定ではbuild.nvidia.comの無料枠APIキー(`nvapi-...`)を使ったホスト型NIM推論を前提としており追加の有料APIキーは不要だが、外部キーの取得とDocker Compose環境構築(Postgres/pgvector含む)の手間がかかる。GPU不要(ホスト型推論を使う場合)。
 - 見栄え: 自分で用意した簡単なサンプルDBに対し、自然言語の質問→生成されたSQL→実行結果という一連の流れを具体的に見せられる。
-- 状態: 未選択
+- 状態: 採用済み(day-040)
 
 ### [2026-11-04] Thysrael/Horizon — Hacker News/Reddit/GitHub等を横断しAIがスコアリング・要約する個人向けAIニュースレーダー
 
