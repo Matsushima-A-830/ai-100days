@@ -1,0 +1,28 @@
+- navigation
+  - link "Home" [ref=e13]
+  - link "About" [ref=e14]
+  - link "Contact" [ref=e15]
+- heading "agent-browser 検証用ページ" [level=1, ref=e12]
+- paragraph
+  - StaticText "これはDay039の検証のために用意したローカルページです。"
+- main
+  - heading "検索フォーム" [level=2, ref=e16]
+  - form
+    - LabelText
+      - StaticText "キーワード:"
+    - textbox "キーワード:" [ref=e18]
+    - button "検索" [ref=e19]
+  - heading "記事一覧" [level=2, ref=e17]
+  - list
+    - listitem [level=1]
+      - ListMarker "• "
+      - link "AIエージェントの最新動向" [ref=e20]
+    - listitem [level=1]
+      - ListMarker "• "
+      - link "アクセシビリティツリーとは何か" [ref=e21]
+    - listitem [level=1]
+      - ListMarker "• "
+      - link "ブラウザ自動化ツールの比較" [ref=e22]
+- contentinfo
+  - paragraph
+    - StaticText "© 2026 Day039 Test Page. For verification purposes only."
