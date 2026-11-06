@@ -263,3 +263,27 @@ agent-desktopが「ネイティブウィンドウだと証明する」ための�
 が異なることに起因する、再現性のある挙動である(同一エラーをChromiumの複数の起動設定・
 複数回の再起動で確認済み)。GNOME搭載の通常のLinuxデスクトップPCであれば、この制約には
 当たらない可能性が高い。
+
+### 5-3. 念のための再確認(検証用ページが実際に表示されている状態での再実行)
+
+上記5-2の最初の試行では、ローカルHTTPサーバーを`(python3 -m http.server &)`という形で
+バックグラウンド起動しており、プロセスが起動元のシェル終了と同時に落ちてしまう問題
+(別のWSL環境でも既知の問題)が後から判明した。Chromium側がこの切断に巻き込まれ
+「接続エラー画面」を表示していた可能性を排除するため、HTTPサーバーを正しい方法で
+起動し直し、検証用ページ(「検索フォーム」の見出しが見える状態)が実際に表示されている
+ことをスクリーンショットで確認した上で、`agent-desktop list-apps`を再実行した。
+
+```
+$ curl -s http://127.0.0.1:8932/ | wc -l    # サーバーが生きていることを確認
+52
+$ agent-desktop list-apps
+{"ok":false,"error":{"code":"ACTION_NOT_SUPPORTED",
+"message":"The native window type of accessibility frame owned by pid 94506
+could not be proven", ...}}
+```
+
+**実際にページが正しく表示されている状態でも、結果(`ACTION_NOT_SUPPORTED`・
+`native_window_unproven`)は変わらなかった。** 上記5-2の結論(WSLgの`Weston WM`とツール
+側のGNOME前提の不一致が原因)が、この再確認によって裏付けられた。Chromiumの初期化中の
+サインインダイアログや接続エラー画面が割り込んだことによる誤検出ではない、ということを
+確実にするための追加確認である。
