@@ -92,3 +92,20 @@ agent-desktop snapshot --app <適当なGUIアプリ名>
 agent-desktop find --text "<適当な文字列>"
 agent-desktop click @e1   # 等、実際の要素を操作
 ```
+
+## ローカル検証(実施済み・2026-11-06)
+
+人間のPC(Windows 11 + WSL2 + WSLg)で、上記のagent-desktop GUI検証と、
+agent-browserのバージョン問題のNode版違いによる再現確認を行った。
+
+- **npm installバージョン問題**: 同じNode v22.23.4で0.27.0が入ることを再現し、
+  Node 24系(v24.22.2)に切り替えると素直にlatestの0.41.2が入ることも確認した。
+  クラウドでの「Node 24未満なら誰でも再現する」という推測を、実際に2つのNode版の
+  切り替えで裏付けた。
+- **agent-desktop**: `agent-desktop status`の`accessibility.state`はクラウドの
+  `denied`から`granted`まで前進した(WSLgのAT-SPIバスが機能している)。しかし
+  実際のGUIアプリ(WSLg上のChromium)に対する`list-apps`/`list-windows`/
+  `launch --activate`は、いずれも`ACTION_NOT_SUPPORTED`(`native_window_unproven`)
+  で失敗した。原因はagent-desktop自身のLinux向けskillドキュメントに書かれている
+  「GNOMEで動作確認済み」という前提と、WSLgの実際のウィンドウマネージャ(`Weston WM`、
+  `xprop`で確認)が異なることだと特定した。詳細は`results.md`の「5. ローカル検証」節。

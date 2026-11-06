@@ -76,6 +76,9 @@ npm silly fetch manifest agent-browser@*
 Node 24は2026年時点でもまだ広く普及したバージョンとは言えず、Node 22や20を使っている読者は少なくないはずだ。
 **公式READMEの`npm install -g agent-browser`をそのまま実行すると、エラーも警告も出さずに古いバージョンが入ってしまう**ので、導入時は`npm install agent-browser@latest`のようにバージョンを明示することを勧める。
 
+ローカルPCでも同じNode v22.23.4で0.27.0が入ることを確認し、Node 24系(v24.22.2)に切り替えて同じコマンドを実行すると、今度は素直にlatestの0.41.2が入ることを確かめた。
+「Node 24未満なら誰でも引っかかる」という見立てを、実際に2つのNode版を切り替えて裏付けた。
+
 ## アクセシビリティツリーでの操作を実際に動かす
 
 このクラウド実行環境のネットワークポリシーでは一般的な外部サイト(`example.com`や`www.google.com`など)への接続が拒否されたため、ローカルに日本語のフォームとリンク一覧を持つ検証用ページを立てて操作した。
@@ -154,14 +157,42 @@ reduction: 48.6%
 公式の約90%とは前提が異なる(公式はPlaywright MCPの出力形式との比較であり、今回は生のHTMLレスポンスとの比較)うえ、検証ページも小さく実際のWebアプリよりずっと単純なので、この数字はあくまで参考値である。
 それでも「スタイルやタグ構造を削ぎ落とし、意味のある構造だけをテキスト化する」という方向性の効果自体は、この簡易な比較でも確認できた。
 
-## 検証できなかった部分: agent-desktop
+## 姉妹ツールagent-desktop: GUI操作はWSLgの壁にぶつかった
 
-姉妹ツールのagent-desktopも導入し、`status`コマンドでプラットフォーム判定までは確認できた(`"platform":"linux"`)。
-ただし実際のGUIアプリを操作する部分は**この検証環境では確認できておらず、ローカル検証が必要**。
-再現手順はPRの説明文と`experiments/day-039/README.md`にまとめてある。
+姉妹ツールのagent-desktopも導入した。
+クラウドの検証環境ではディスプレイ・AT-SPIバス自体が存在せず`accessibility.state: "denied"`だったが、GUIセッションを持つローカルPC(Windows 11 + WSL2 + WSLg)で試すと、まずそこは前進した。
+
+```
+$ agent-desktop status
+{"...":"...","data":{"permissions":{"accessibility":{"state":"granted"}, ...}}}
+```
+
+`accessibility.state`が`"granted"`になり、WSLgのAT-SPIバスが機能していることを確認できた。
+続けて、WSLg上でWindowとして表示したChromium(ローカルの検証用ページを開いた状態)に対して`list-apps`・`list-windows`・`launch --activate`を試したところ、どれも同じエラーで止まった。
+
+```
+$ agent-desktop list-apps
+{"ok":false,"error":{"code":"ACTION_NOT_SUPPORTED",
+"message":"The native window type of accessibility frame owned by pid 39494
+could not be proven","details":{"kind":"native_window_unproven"}}}
+```
+
+Chromiumの起動オプション(`--force-renderer-accessibility`、`--single-process`、プロファイルを分けた複数回の再起動)を変えても解消しなかった。
+agent-desktop自身が同梱しているLinux向けのskillドキュメント(`agent-desktop skills get platform`で読める)を確認すると、「GNOMEで動作確認済み」と明記されている。
+実際に本環境のウィンドウマネージャを調べると、GNOME/MutterではなくWestonベースの軽量なWMだった。
+
+```
+$ xprop -root _NET_SUPPORTING_WM_CHECK | grep -o '0x[0-9a-f]*' | head -1 \
+    | xargs -I{} xprop -id {} _NET_WM_NAME
+_NET_WM_NAME(UTF8_STRING) = "Weston WM"
+```
+
+つまりローカル検証の結論は「動いた」でも「動かなかった」でもなく、**accessibility権限とAT-SPIバスの接続自体はWSLgでも機能するが、そこから先の「ネイティブウィンドウだと証明する」チェックが、ツールが動作確認済みとするGNOMEとは異なるWSLgの軽量WMでは満たされない**、という一歩踏み込んだ結果だった。
+GNOMEを使う通常のLinuxデスクトップPCであれば、この制約には当たらない可能性が高い。
 
 ## まとめ
 
 - agent-browserは実際に`open`→`snapshot`→`fill`→`click`→`read`という一連の操作が問題なく動き、アクセシビリティツリーベースの操作性を確認できた。
-- 公式READMEのインストール手順(`npm install agent-browser`)は、Node 24未満の環境ではエラーも警告も出さずに古いバージョンが入ってしまう落とし穴がある。`@latest`を明示することを勧める。
+- 公式READMEのインストール手順(`npm install agent-browser`)は、Node 24未満の環境ではエラーも警告も出さずに古いバージョンが入ってしまう落とし穴がある。`@latest`を明示することを勧める。ローカルで実際にNode 22と24を切り替えて、この見立てを裏付けた。
 - トークン消費量の削減について、自分の簡易な比較では約48.6%(公式の約90%とは前提が異なる参考値)だったが、方向性自体は確認できた。
+- agent-desktopはローカルPC(WSLg)でaccessibility権限が`granted`になるところまで前進したが、実際のGUIアプリ操作は、ツールがGNOME向けに想定している「ネイティブウィンドウの証明」チェックがWSLgの軽量WM(Weston)では満たされず、`ACTION_NOT_SUPPORTED`で止まった。

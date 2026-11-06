@@ -176,3 +176,90 @@ interface."}
 ディスプレイ・ウィンドウマネージャ・AT-SPIアクセシビリティバスが存在せず、GUI操作系の
 コマンドは検証できない。`status`でのプラットフォーム判定("platform":"linux")自体は
 正常に動作した。)
+
+## 5. ローカル検証(人間のPC、2026-11-06)
+
+検証環境: Windows 11 + WSL2 (Ubuntu 24.04)、WSLg(GUIセッションあり、`DISPLAY=:0`)。
+
+### 5-1. `npm install agent-browser`のバージョン落とし穴を別Node版で再現
+
+まず本検証環境と同じNode(nvm経由、v22.23.4)で、クラウドでの発見を再現した。
+
+```
+$ node --version
+v22.23.4
+$ npm install agent-browser
+added 1 package in 1s
+$ grep '"version"' node_modules/agent-browser/package.json
+  "version": "0.27.0",
+```
+
+**同じNode v22.23.4で、同じく0.27.0(14バージョン古い版)が黙って入ることを確認した。**
+続けて同じ手順をNode 24系(v24.22.2、nvm install 24)に切り替えて試した。
+
+```
+$ nvm use 24 && node --version
+v24.22.2
+$ npm install agent-browser
+added 1 package in 2s
+npm warn install-scripts 1 package has install scripts not yet covered by allowScripts: ...
+$ grep '"version"' node_modules/agent-browser/package.json
+  "version": "0.41.2",
+```
+
+**Node 24系では、バージョン指定なしの`npm install agent-browser`でも`engines.node`要件
+(`>=24.0.0`)を満たすため、素直にlatestの0.41.2が入ることを確認した。** クラウドでの
+推測(「Node 24未満の環境で誰でも再現する」)が、実際に2つのNode版を切り替えての実測で
+裏付けられた。
+
+### 5-2. agent-desktopのGUI操作(accessibility権限とAT-SPI接続状況)
+
+```
+$ npm install agent-desktop@latest
+$ agent-desktop status
+{"...":"...","data":{"permissions":{"accessibility":{"state":"granted"}, ...},
+"platform":"linux","supported_surfaces":["window","sheet","alert","menu"], ...}}
+```
+
+**クラウド環境では`denied`(AT-SPIバス自体が無い)だったのに対し、ローカルのWSLg環境では
+`accessibility.state: "granted"`まで到達した。** AT-SPI(`at-spi2-core`)と
+アクセシビリティバスがWSLg上で動作していることを確認できた、という意味でクラウドより
+明確に前進した。
+
+続けて実際のGUIアプリ(WSLg経由でXウィンドウとして表示したChromium、ローカルの検証用
+ページを開いた状態)に対して`list-apps`・`list-windows`・`launch --activate`を試した。
+
+```
+$ GNOME_ACCESSIBILITY=1 chrome --no-sandbox --force-renderer-accessibility \
+    --user-data-dir=/tmp/chrome-profile http://127.0.0.1:8931/ &
+$ agent-desktop list-apps
+{"ok":false,"command":"list-apps","error":{"code":"ACTION_NOT_SUPPORTED",
+"message":"The native window type of accessibility frame owned by pid 39494
+could not be proven","details":{"kind":"native_window_unproven"}, ...}}
+```
+
+同じエラーが`list-windows`・`launch --activate`でも再現し、Chromiumの起動オプション
+(`--force-renderer-accessibility`単体、`--single-process`併用、プロファイルを分けた
+複数回の再起動)を変えても解消しなかった。agent-desktop自身が同梱する`skills`ドキュメント
+(`agent-desktop skills get platform`)を読むと、Linux版は「GNOMEで動作確認済み」と明記
+されており、Linuxの`native_window_unproven`エラーは「ディスプレイサーバが列挙中に
+ネイティブウィンドウの読み取りに応答しなかった」場合に出ると説明されている。
+
+実際にウィンドウマネージャを調べたところ、本検証環境(WSLg)が使っているのはGNOME/Mutter
+ではなく、Wayland合成に`Weston`ベースの軽量WMだった。
+
+```
+$ xprop -root _NET_SUPPORTING_WM_CHECK | grep -o '0x[0-9a-f]*' | head -1 \
+    | xargs -I{} xprop -id {} _NET_WM_NAME
+_NET_WM_NAME(UTF8_STRING) = "Weston WM"
+```
+
+**結論: ローカルのWSLg環境では、accessibility権限自体は`granted`まで到達し、AT-SPIバスが
+対象プロセス(Chromiumのpid)を認識するところまでは確認できた。しかしその先、
+agent-desktopが「ネイティブウィンドウだと証明する」ためのチェックが、WSLgの軽量な
+`Weston WM`では満たされず、`list-apps`・`list-windows`・`launch --activate`のいずれも
+`ACTION_NOT_SUPPORTED`(`native_window_unproven`)で失敗する。** これはツール自身が
+「GNOMEで動作確認済み」と明記している対象デスクトップと、WSLgの実際のウィンドウマネージャ
+が異なることに起因する、再現性のある挙動である(同一エラーをChromiumの複数の起動設定・
+複数回の再起動で確認済み)。GNOME搭載の通常のLinuxデスクトップPCであれば、この制約には
+当たらない可能性が高い。
