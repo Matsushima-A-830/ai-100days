@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>テスト用検索フォーム</title>
+<style>
+body { font-family: sans-serif; margin: 40px; }
+nav { background: #222; padding: 10px; }
+nav a { color: white; margin-right: 12px; text-decoration: none; }
+.hero { background: #f0f0f0; padding: 20px; margin: 20px 0; }
+footer { color: #888; font-size: 12px; margin-top: 40px; border-top: 1px solid #ccc; padding-top: 10px; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="#home">Home</a>
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+</nav>
+<div class="hero">
+  <h1>agent-browser 検証用ページ</h1>
+  <p>これはDay039の検証のために用意したローカルページです。</p>
+</div>
+<main>
+  <h2>検索フォーム</h2>
+  <form id="search-form">
+    <label for="q">キーワード:</label>
+    <input type="text" id="q" name="q" placeholder="検索語を入力">
+    <button type="submit" id="submit-btn">検索</button>
+  </form>
+  <p id="result" style="display:none;">検索結果: <span id="result-text"></span></p>
+
+  <h2>記事一覧</h2>
+  <ul>
+    <li><a href="#article1">AIエージェントの最新動向</a></li>
+    <li><a href="#article2">アクセシビリティツリーとは何か</a></li>
+    <li><a href="#article3">ブラウザ自動化ツールの比較</a></li>
+  </ul>
+</main>
+<footer>
+  <p>&copy; 2026 Day039 Test Page. For verification purposes only.</p>
+</footer>
+<script>
+document.getElementById('search-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  var q = document.getElementById('q').value;
+  document.getElementById('result-text').textContent = q;
+  document.getElementById('result').style.display = 'block';
+});
+</script>
+</body>
+</html>
