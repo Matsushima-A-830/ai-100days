@@ -1522,3 +1522,31 @@
 - 検証難易度: 低。pip installのみで追加の有料APIキー・GPUは不要。MCPサーバーをClaude Code自身に繋いで実際にエージェント経由でスクレイピングさせる部分が既存Qiita記事との差別化点になる。
 - 見栄え: 「セレクターを壊してもアダプティブに追従する」デモと、Claude Code自身がMCP経由でScraplingを操作する様子は見せやすい。ただしスクレイピング自体の基本解説はQiitaに既にあるため、記事化するなら差別化(MCP/Agent Skill軸)を明記する必要がある。
 - 状態: 未選択
+
+
+### [2026-11-06] google/skills — Google公式、Claude Code/Codex等のAIコーディングエージェント向けAgent Skills集(本日GitHub Trending TypeScriptで+532star/日)
+
+- 出典: https://github.com/google/skills (Apache-2.0。本日GitHub Trending言及、22.8k star/1.9k fork)
+- 概要: Google自身が公開した、AI/ML・GKE/Cloud Storage/Filestore等のインフラ・データベース・開発者ツール・セキュリティ(SecOps/IAM)・モニタリング・広告API・Analyticsなど幅広いGoogle Cloud関連領域をカバーするAgent Skills集(SKILL.md形式)。Claude Code/Codex/Antigravity CLI向けにMCPサーバーと組み合わせたプラグインも同梱し、`npx skills add google/skills`でインストールできる。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲。Claude Code Skills全般を扱う英語解説記事はあるが、本リポジトリ自体を扱った日本語記事は未検出)
+- 検証難易度: 低。追加の有料APIキー・GPU不要。Node.js(npx)のみでインストールでき、実際にGoogle Cloudリソースを操作しないスキル(ドキュメント生成・設定ファイルのレビュー等)であればGCP認証情報なしでも導入前後のClaude Codeの応答を比較できる。GCPリソースを実際に操作するスキルの検証にはGoogle Cloudアカウントが必要になる可能性がある。
+- 見栄え: 本リポジトリ自身がClaude Code Routineで運用されているという自己言及的な文脈に合い、「Google公式のAgent SkillsをClaude Codeに入れると応答がどう変わるか」というBefore/After比較が作りやすい。Google公式発というニュース価値も高い。
+- 状態: 未選択
+
+### [2026-11-06] NVIDIA/auto-ontology — エンタープライズデータの「セマンティックオントロジー」でAIエージェントのSQL生成を正確にするOSS
+
+- 出典: https://github.com/NVIDIA/auto-ontology (Apache-2.0。2026-11-01公開、本日GitHub Trending Pythonで+2,005star/日、8.9k star)
+- 概要: データベースのメタデータから用語・関係・レビュー済みSQL属性を含む「オントロジー」を生成し、AIエージェントが自然言語の質問を根拠(provenance)付きのSQLに翻訳できるようにするNVIDIA製フレームワーク。Web UI・MCPサーバー(9個の読み取り専用ツール)・CLI・REST APIを備え、PostgreSQL/Snowflake/DuckDB等10種のSQLエンジンに対応する。NVIDIAは社内検証で「オントロジー作成時間を90%削減」と主張(ベンダー自身の報告で第三者未検証)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲。英語・フランス語・スペイン語の紹介記事は複数あるが日本語記事は未検出)
+- 検証難易度: 中〜高。既定の推論はNVIDIA NIMのホスト型エンドポイント(`DEFAULT_MODELS_API_KEY`、build.nvidia.comの`nvapi-`キー)を使うため追加の有料APIキーが必要になりうる点に注意。OpenAI互換エンドポイントの指定もサポートされているため、無料枠や既存の検証用エンドポイントで代替できる可能性はある。Docker Compose(Next.js+FastAPI+PostgreSQL17/pgvector)が前提の構成で、環境構築自体に時間がかかる見込み。GPU要否の明記は無し。
+- 見栄え: 「AIエージェントが誤ったテーブル/カラムを参照してSQLを生成してしまう問題」をBefore/After(オントロジー無し vs 有り)で見せられ、NVIDIA公式発というニュース価値も高い。ただし環境構築の重さがあるため、6時間以内に収めるには構成を最小限(DuckDB等の軽量エンジン1つ)に絞る判断が必要。
+- 状態: 未選択
+
+### [2026-11-06] stablyai/orca — 複数のAIコーディングエージェント(Claude Code/Codex等)を並列実行するデスクトップ型オーケストレーター
+
+- 出典: https://github.com/stablyai/orca (MIT。本日GitHub Trending TypeScriptで+1,199star/日)
+- 概要: Stably AI製のオープンソースなエージェント開発環境(ADE)。Claude Code・Codex・Grok・Cursorなど25以上のコーディングエージェントに同じプロンプトを分散させ、各タスクを独立したgit worktree(専用ターミナル・ブラウザタブ・コンテキスト付き)で並列実行できる。差分レビューUI・Chromiumベースのデザインモード・CLIスクリプト化・リモートエージェント(SSH)対応・モバイル通知などを備える。利用には各エージェント自身のサブスクリプション/APIキーを持ち込む必要がある(Orca自体はモデル呼び出しをプロキシしない)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲。英語の紹介記事は複数あるが、Zenn/Qiita/noteでの一次検証記事は未検出)
+- 検証難易度: 高。macOS/Windows/Linux向けのデスクトップアプリ(GUIアプリ)が主な配布形態で、ヘッドレスなRoutine実行環境では起動・操作できない可能性が高い。CLIやSDK相当の機能があればRoutine環境でも一部検証できる可能性があるが、GUI主体の操作感(複数エージェントの並列実行・差分レビュー)の確認はローカルPCでの検証が前提になる見込み。Orca自体に追加の有料APIキーは不要(持ち込みのエージェントサブスクリプション次第)。GPU不要。
+- 見栄え: 「1つのプロンプトを複数のコーディングエージェントに分散させ、結果を比較する」というデモは見栄えが良く、Claude Code自身を一つのエージェントとして組み込める自己言及的な文脈にも合う。ただしGUI主体でRoutine環境の制約(ヘッドレス)に直撃する可能性が高く、採用する場合は冒頭からローカル検証中心の計画にするか、CLI/SDK部分に検証スコープを絞る判断が必要。
+- 状態: 未選択
