@@ -1467,7 +1467,7 @@
 - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲)
 - 検証難易度: 中。既定ではbuild.nvidia.comの無料枠APIキー(`nvapi-...`)を使ったホスト型NIM推論を前提としており追加の有料APIキーは不要だが、外部キーの取得とDocker Compose環境構築(Postgres/pgvector含む)の手間がかかる。GPU不要(ホスト型推論を使う場合)。
 - 見栄え: 自分で用意した簡単なサンプルDBに対し、自然言語の質問→生成されたSQL→実行結果という一連の流れを具体的に見せられる。
-- 状態: 採用済み(day-040、Routine環境の制約(Dockerデーモン非対応・LLM APIキー未設定)によりローカル検証待ち。詳細はexperiments/day-040/README.md参照)
+- 状態: 採用済み(day-040、ローカル検証完了。詳細はexperiments/day-040/results.md参照)
 
 ### [2026-11-04] Thysrael/Horizon — Hacker News/Reddit/GitHub等を横断しAIがスコアリング・要約する個人向けAIニュースレーダー
 
@@ -1540,7 +1540,7 @@
 - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲。英語・フランス語・スペイン語の紹介記事は複数あるが日本語記事は未検出)
 - 検証難易度: 中〜高。既定の推論はNVIDIA NIMのホスト型エンドポイント(`DEFAULT_MODELS_API_KEY`、build.nvidia.comの`nvapi-`キー)を使うため追加の有料APIキーが必要になりうる点に注意。OpenAI互換エンドポイントの指定もサポートされているため、無料枠や既存の検証用エンドポイントで代替できる可能性はある。Docker Compose(Next.js+FastAPI+PostgreSQL17/pgvector)が前提の構成で、環境構築自体に時間がかかる見込み。GPU要否の明記は無し。
 - 見栄え: 「AIエージェントが誤ったテーブル/カラムを参照してSQLを生成してしまう問題」をBefore/After(オントロジー無し vs 有り)で見せられ、NVIDIA公式発というニュース価値も高い。ただし環境構築の重さがあるため、6時間以内に収めるには構成を最小限(DuckDB等の軽量エンジン1つ)に絞る判断が必要。
-- 状態: 採用済み(day-040)。2026-11-04付の同一リポジトリのエントリと重複しているが、そちらも同時にday-040として状態更新済み(PR #136参照)。Routine環境の制約(Dockerデーモン非対応・LLM APIキー未設定)によりローカル検証待ち。詳細はexperiments/day-040/README.md参照。
+- 状態: 採用済み(day-040)。2026-11-04付の同一リポジトリのエントリと重複しているが、そちらも同時にday-040として状態更新済み(PR #136参照)。ローカル検証完了。詳細はexperiments/day-040/results.md参照。
 
 ### [2026-11-06] stablyai/orca — 複数のAIコーディングエージェント(Claude Code/Codex等)を並列実行するデスクトップ型オーケストレーター
 

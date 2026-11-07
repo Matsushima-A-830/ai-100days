@@ -3,6 +3,26 @@
 対象: https://github.com/NVIDIA/auto-ontology (Apache-2.0)
 確認したcommit: `git clone --depth 1` 時点のdefaultブランチ先頭(2026-11-07取得)。
 
+## ローカル検証(実施済み・2026-11-07)
+
+人間のローカルPCで、build.nvidia.comの無料枠nvapi-キーを使い、Docker Compose + DuckDB1
+エンジン構成でBefore/After比較を実施した。詳細は[results.md](./results.md)参照。
+
+- Docker Composeフルスタック(Postgres+pgvector、バックエンド、フロントエンド、
+  ingestion service)の起動に成功。
+- オントロジー生成(Semantic Compilation)は完走したが、サンプルDB(FK制約未宣言)では
+  semantic FK edgeが0件のまま終わった。
+- 素朴なtext-to-SQL(スキーマのみをLLMに渡す単発呼び出し)は1回で正しいSQL・正しい
+  答えに到達。
+- auto-ontology経由のChat UIは、最終的に同じ正しい答えにたどり着いたが、3回のSQL生成が
+  存在しない列名を参照して失敗し、自己修正ループで到達するまでに11分33秒かかった。
+- 既定モデル(`nvidia/nemotron-3.5-lightning-30b-a3b`)が`langchain_nvidia_ai_endpoints`
+  の構造化出力(`guided_json`)に対応しておらず、ほぼ全てのLLM呼び出しステップで
+  400エラー→リトライ→reasoning LLMへのフォールバック、というオーバーヘッドが発生し、
+  所要時間11分33秒の大半を占めた。
+
+以下はRoutine環境でのエスカレーション時点の記録(当時の制約の記述として残す)。
+
 today.mdの検証スコープ・手順(1〜5)のうち、**手順3「オントロジー生成〜MCPサーバー経由の
 自然言語→SQL変換」および手順4「Before/After比較」は、このRoutine無人実行環境固有の
 制約により実行できなかった。** 推測で結果を埋めることも「失敗」として書くこともせず、
