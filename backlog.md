@@ -1550,3 +1550,39 @@
 - 検証難易度: 高。macOS/Windows/Linux向けのデスクトップアプリ(GUIアプリ)が主な配布形態で、ヘッドレスなRoutine実行環境では起動・操作できない可能性が高い。CLIやSDK相当の機能があればRoutine環境でも一部検証できる可能性があるが、GUI主体の操作感(複数エージェントの並列実行・差分レビュー)の確認はローカルPCでの検証が前提になる見込み。Orca自体に追加の有料APIキーは不要(持ち込みのエージェントサブスクリプション次第)。GPU不要。
 - 見栄え: 「1つのプロンプトを複数のコーディングエージェントに分散させ、結果を比較する」というデモは見栄えが良く、Claude Code自身を一つのエージェントとして組み込める自己言及的な文脈にも合う。ただしGUI主体でRoutine環境の制約(ヘッドレス)に直撃する可能性が高く、採用する場合は冒頭からローカル検証中心の計画にするか、CLI/SDK部分に検証スコープを絞る判断が必要。
 - 状態: 未選択
+
+### [2026-11-07] milind-soni/OpenMausBot — Grok Botのオープンソース代替、Claude Code/Codex/Grok CLIをバックエンドに使うチャットアプリ(本日GitHub Trending TypeScriptで+1,986star/日、言及最多)
+
+- 出典: https://github.com/milind-soni/OpenMausBot (Apache-2.0。`enterprise/`配下のみ別のsource-availableライセンス)
+- 概要: xAIのGrok Botのクローズドソース・xAIモデル縛りを批判し、手元の`claude`/`codex`/`grok` CLI(既存ログイン・サブスクリプションを利用)を各ボットの実行基盤とするOSS版チャットアプリ。各ボットはクラウドVM・ローカルVM・自分のPCのいずれかで動き、トランスクリプトとキーは`~/.openmausbot`に保存される。2026-10-31頃から複数日連続でGitHub Trendingに掲載されている。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語の一次検証記事は未検出。中国語解説記事〈aitoolly.com〉は複数日分あり)
+- 検証難易度: 中(リリース済みインストーラまたは`npm install -g openmausbot`でCLIからも導入できるが、UIはTelegram風のElectronデスクトップアプリであり、GUI前提の可能性がある。本リポジトリの既存Claude Code CLIログインをそのまま使えるため追加の有料APIキーは不要・GPUも不要と見込まれるが、Routine実行環境でGUIが起動できない場合はCLAUDE.mdの手順に従いローカル検証にエスカレーションする)
+- 見栄え: 「このリポジトリ自身が使っているClaude Code CLIを、別のOSSチャットアプリのバックエンドとして動かす」という自己言及的な検証ができ、Before(Grok Bot的な閉じたUI)/After(手元のCLIエージェントで動く自作ボット群)の比較も作りやすい。
+- 状態: 未選択
+
+### [2026-11-07] jamiepine/voicebox — ローカルで動くOSSの音声クローン・音声スタジオ(本日GitHub Trending Pythonで言及、ElevenLabs代替として紹介)
+
+- 出典: https://github.com/jamiepine/voicebox (MIT)
+- 概要: 数秒の音声サンプルから声をクローンし、複数のTTSエンジン・23言語で読み上げを生成できるローカルファースト音声スタジオ。グローバルホットキーでの音声入力、REST API、MCPサーバー(AIエージェントがクローン音声で話せる)も備える。モデル・音声データは手元の端末に残る設計。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語の一次検証記事は未検出)
+- 検証難易度: 低〜中(MIT。Docker〈`docker compose up`〉で導入できる見込みだが、Linux向けビルド済みバイナリは無くソースからのビルド〈Bun/Rust/Python 3.12/Tauri前提〉が必要な場合がある。GPUは任意〈CPUのみでも動作、低速〉で有料APIキーは不要)
+- 見栄え: 自分の声または任意の音声サンプルをクローンし、実際に読み上げさせた音声ファイルを添付できる。音声というメディアの珍しさもあり見栄えが良い。
+- 状態: 未選択
+
+### [2026-11-07] awslabs/aidlc-workflows — AWS公式、Claude Code等のAIコーディングエージェントを構造化された開発プロセスに沿わせるワークフロー定型ルール「AI-DLC」
+
+- 出典: https://github.com/awslabs/aidlc-workflows (MIT-0)
+- 概要: 5フェーズ33ステージ・14エージェント・11ワークフロープロファイル・人間承認ゲート・監査証跡を備えた、Claude Code/Kiro CLI/Codex CLI/Cursor/opencode/GitHub Copilotなど複数のAIコーディングエージェントで共通利用できるアダプティブなワークフロー定型ルール集。インストールスクリプト導入後、各ハーネス内で`/aidlc`(Codex CLIは`$aidlc`)として呼び出す。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(site:検索での直接ヒットは無いが、speakerdeck.com〈v2.0解説スライド〉やzeli.appに日本語の紹介記事・スライドが既に存在する点に留意。Zenn/Qiita/note単体では未発信)
+- 検証難易度: 低(MIT-0。インストールスクリプト+`aidlc config --harness claude-code`程度で導入でき、本リポジトリで既に使っているClaude Code自体をハーネスにできるため追加の有料APIキー・GPU不要)
+- 見栄え: 「このリポジトリ自体の実装Routineの進め方〈ブランチ+PR+人間承認〉に、AI-DLCのフェーズ・承認ゲートの考え方を小さく当てはめてみる」という自己言及的な切り口が作れる。ただし既に日本語解説スライド等が存在するため、差別化〈実際に小タスクで動かした一次検証という点〉を明記する必要がある。
+- 状態: 未選択
+
+### [2026-11-07] anthropics/skills — Anthropic公式、Agent Skills(SKILL.md仕様・サンプルSkill・ドキュメント系Skill)の公開専用リポジトリ(本日GitHub Trending Pythonで+386star/日)
+
+- 出典: https://github.com/anthropics/skills (多くのSkillがApache-2.0。docx/pdf/pptx/xlsxのドキュメント系SkillもApache-2.0。リポジトリ全体のライセンスはSkillフォルダごとに要確認)
+- 概要: `SKILL.md`(YAMLフロントマター+指示文)という単一フォーマットでClaudeに機能を追加する「Agent Skills」の公式仕様(`spec/`)・サンプルSkill(`skills/`、創作・開発・業務連携系)・テンプレート(`template/`)をまとめた公式リポジトリ。Claude Code向けには`/plugin marketplace add anthropics/skills`→`/plugin install <plugin>@anthropic-agent-skills`で導入でき、Claude.ai・Claude APIからも利用できる。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(site:検索での直接ヒットは未検出。但しClaude Agent Skills機能自体は国内外で既に広く紹介されており〈the-decoder.com等〉、本リポジトリ単体への言及が少ないだけで機能自体の新規性は低い可能性がある点に留意)
+- 検証難易度: 低(本Claude Code Routine環境自体がClaude Codeで動いているため、サンプルSkillの導入・呼び出しを追加の有料APIキー・GPU無しで確認できる)
+- 見栄え: 「このRoutine自身がClaude Codeで動いている」という自己言及的な文脈に合い、`template/`から自作Skillを1つ作ってみるBefore/After(Skill無し/有りでの応答の変化)も見せやすい。ただし機能自体は既知のため、「公式の単独リポジトリとして独立した」というニュース面の新しさを明記した方がよい。
+- 状態: 未選択
