@@ -1558,7 +1558,7 @@
 - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語の一次検証記事は未検出。中国語解説記事〈aitoolly.com〉は複数日分あり)
 - 検証難易度: 中(リリース済みインストーラまたは`npm install -g openmausbot`でCLIからも導入できるが、UIはTelegram風のElectronデスクトップアプリであり、GUI前提の可能性がある。本リポジトリの既存Claude Code CLIログインをそのまま使えるため追加の有料APIキーは不要・GPUも不要と見込まれるが、Routine実行環境でGUIが起動できない場合はCLAUDE.mdの手順に従いローカル検証にエスカレーションする)
 - 見栄え: 「このリポジトリ自身が使っているClaude Code CLIを、別のOSSチャットアプリのバックエンドとして動かす」という自己言及的な検証ができ、Before(Grok Bot的な閉じたUI)/After(手元のCLIエージェントで動く自作ボット群)の比較も作りやすい。
-- 状態: 未選択
+- 状態: 採用済み(day-041)
 
 ### [2026-11-07] jamiepine/voicebox — ローカルで動くOSSの音声クローン・音声スタジオ(本日GitHub Trending Pythonで言及、ElevenLabs代替として紹介)
 
