@@ -42,3 +42,13 @@ npx openmausbot run MausBot "何か指示文"  --wait job --timeout 50s
    今回検証した機能はいずれも`enterprise/`を使わないOSS部分。
 
 詳細な実行ログ・所見は `results.md` を参照。
+
+## ローカル検証(実施済み・2026-11-08)
+
+人間のPCで、GUI(ブラウザUI)側の確認カードの挙動を実際に確認した。
+
+- GUIでも既定設定(bot設定「Before MausBot acts」= Just do it)では確認カードは出ず、CLIと同じく即実行された。原因はCLI/GUIの違いではなく、新規botの承認レベルが既定で「Full access」相当であること。
+- 承認レベルを明示的に「Ask me first」に変更しても確認カードは表示されず、必須のMCPツール(`mcp__ogb__approve`)が未登録のため`claude`プロセスがエラー終了するだけだった(2回再現)。
+- 別の安全機構として、botのシェルは専用の作業ディレクトリにサンドボックス化されており、承認レベルに関わらずその外側への書き込みは拒否されることも確認した。
+
+詳細は`results.md`の「8. ローカル検証」節を参照。

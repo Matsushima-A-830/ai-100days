@@ -156,10 +156,63 @@ claude CLIを裏で呼び出し、1往復(起動〜応答〜終了)が約2.8秒�
 検証後、`serve` プロセス(親・子2プロセス)を停止し、`/tmp/ombot-test/` と作業用の `sandbox/` ディレクトリを削除した。
 `experiments/day-041/` にはこの `results.md` と `README.md` のみを残している(node_modules等はコミットしていない)。
 
+## 8. ローカル検証(人間のPC、2026-11-08、GUI/ブラウザUIでの確認)
+
+検証環境: WSL2(Ubuntu 24.04.5)、Node.js v24.22.2(nvm)、Playwrightで操作したChromium(WSLg経由でGUI表示を目視確認)。
+
+### 8-1. GUI(ブラウザUI)の実体とペアリング
+
+`openmausbot serve --no-open --local`でサーバーを起動し、`openmausbot pair`で発行したペアリングコード(`http://127.0.0.1:8799/pair#code=...`)をブラウザで開いて「オーナー」としてペアリングした。OpenMausBotの「GUI」はElectronデスクトップアプリではなく、同じサーバーが配信するブラウザ向けチャットUIだった(`--no-open`を付けなければ自動的にこのページが開く)。
+オンボーディングを経て、既定のbot「MausBot」(Chief of Staff、モデル: Claude Sonnet 5)を作成した。
+
+### 8-2. 既定の承認レベル(Just do it)でのGUI確認: カードは出ない
+
+ブラウザのチャット欄から、CLIと同じ内容の依頼(シェルコマンドによるファイル削除)を送った。
+
+```
+依頼: Run the shell command 'rm /tmp/ombot-gui-test/victim.txt' to delete that file.
+応答: That file doesn't exist — /tmp/ombot-gui-test/victim.txt wasn't found, so there was nothing to delete.
+```
+
+**GUIでも確認カードは表示されず、即座に実行(試行)された。** bot設定パネル(歯車アイコン→Bot settings)を見ると、「Before MausBot acts」の項目が既定で「Just do it」になっていた。CLIのログに出ていた`local requests: owner trust`という理由付けは、実はこの挙動の直接の原因ではなく、**新規に作成したbotの承認レベル自体が、ライブラリのソース(`shared/approval-mode.ts`)で`DEFAULT_APPROVAL_MODE = "full"`と既定されている**ことが本当の原因だと分かった。CLI/GUIどちらの経路でも、botの承認レベルを変えない限りは確認なしで実行される。
+
+### 8-3. 承認レベルを「Ask me first」に変更: カードの代わりにエラーで停止
+
+Bot settingsで「Before MausBot acts」を「Ask me first」に切り替え、同様の依頼(今度はファイル作成)を送った。
+
+```
+依頼: Run the shell command 'touch /home/<user>/day041-work/risky_test.txt' to create that file.
+```
+
+**結果は確認カードの表示ではなく、エラーによる処理停止だった。** 同じ依頼を2回試し、どちらも同一のエラーで再現した。
+
+```
+That couldn't be found. It may have been removed.
+Details: claude exited 1 before result: Error: MCP tool mcp__ogb__approve
+(passed via --permission-prompt-tool) not found. Available MCP tools: none
+```
+
+OpenMausBotは、Claude Code CLIの`--permission-prompt-tool`機構(ツール実行前に外部MCPツールへ可否を問い合わせる仕組み)を使って確認カードを実装しているとみられるが、問い合わせ先の`mcp__ogb__approve`というMCPツール自体が登録されておらず(`Available MCP tools: none`)、claude CLIプロセスが確認を求める前に`exit 1`で終了していた。実際に`risky_test.txt`が作成されていないことも確認した(そもそもclaude CLIプロセスが即終了しているため、ツール呼び出し自体に到達していない)。
+
+つまり今回判明したのは、「確認カードはCLI経路では出ず、GUI経路でだけ出る」という単純な話ではなく、**「Ask me first」に切り替えても、Claude Code CLIをエンジンにした今回のセットアップでは確認カードの仕組み自体が機能していない**、という、より具体的な実際の挙動だった。
+
+### 8-4. 別の安全機構: botのシェルはtask-workspaceにサンドボックス化されている
+
+承認レベルを「Just do it」に戻した状態で、OpenMausBotの作業ディレクトリの外側(`/home/<user>/day041-work/`)にファイルを作らせようとすると、今度は明示的に拒否された。
+
+```
+I can't run that — my Bash tool is sandboxed to this Windows/WSL environment's
+working folders and has no permission to write to /home/<user>/day041-work/
+(got "Permission denied" creating /home). That path isn't reachable from here.
+```
+
+bot自身のシェルツールは`~/.openmausbot/task-workspaces/<id>/`という専用ディレクトリに閉じ込められており、承認レベルが「Just do it」でもその外側への書き込みは拒否される。読み取り系(8-2の`rm`の対象ファイル確認など)は、エラーにはならず「ファイルが存在しない」という扱いになっていた。クラウドRoutine環境でのCLI検証(`/tmp/ombot-test/victim.txt`の削除に成功)との違いは、実行ユーザーやサンドボックス設定の違いによるものと考えられるが、詳細な原因切り分けはできていない。
+
 ## まとめ
 
 - Node 24+ が前提条件(デフォルトのNode 22では動かない)という点以外、実際の動作は特に詰まらず完走した。
 - 新しいAPIキーを一切追加せず、既にログイン済みのClaude Code CLIをOpenMausBotのエンジンとして
   そのまま認識・実行できた(ファイル作成・シェルコマンド実行・簡単な応答の3種類で確認)。
-- 許可/拒否カードはCLI単体のオーナー実行では提示されず、確認なしに実行された点は、
-  想定(today.mdのメモ)と異なる実際の挙動として記録しておく。
+- **ローカルのGUI(ブラウザUI)で確認したところ、許可/拒否カードはCLIと同じく既定設定では出なかった。** 原因はCLI/GUIの違いではなく、新規botの承認レベルが既定で「Full access」相当であること。
+- 承認レベルを明示的に「Ask me first」へ変更しても、確認カードは表示されず、必須のMCPツール(`mcp__ogb__approve`)が未登録のため`claude`プロセスがエラー終了するだけだった(2回再現)。
+- これとは別に、botのシェルは専用の作業ディレクトリにサンドボックス化されており、承認レベルに関わらずその外側への書き込みは拒否される、という独立した安全機構があることも確認できた。

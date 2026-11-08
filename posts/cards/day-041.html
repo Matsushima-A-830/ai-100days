@@ -177,17 +177,18 @@
       </div>
       <div class="compare-panel good">
         <div class="compare-title">✓ OpenMausBot + 既存claude CLI</div>
-        <pre class="compare-output">$ openmausbot run MausBot "rmでファイル削除"
-Done: MausBot finished
-削除しました: victim.txt
-(owner trust: 確認カードなしで即実行)</pre>
+        <pre class="compare-output">CLI/GUIどちらも既定(Just do it)で
+確認カードなしに即実行
+「Ask me first」に変えても…
+MCP tool mcp__ogb__approve not found
+→claude exited 1(カードの仕組み自体が未配線)</pre>
       </div>
     </div>
   </section>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>「危険な操作は許可/拒否カードで確認」という説明を事前に読んでいたが、セルフホスト・オーナー本人としてCLIで実行する今回の経路では確認は出ず、即座に実行された(起動ログの owner trust 表示どおり)。GUI側の挙動は未確認。</p>
+    <p>ローカルPCでGUI(ブラウザUI)も実際に確認。既定でもカードなし、明示的に「Ask me first」にしてもカードは出ず、必須MCPツール未登録でエラー終了するだけだった。承認レベルの表示を鵜呑みにしない方がよさそう。</p>
   </div>
 
   <footer>
