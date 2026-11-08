@@ -1586,3 +1586,39 @@
 - 検証難易度: 低(本Claude Code Routine環境自体がClaude Codeで動いているため、サンプルSkillの導入・呼び出しを追加の有料APIキー・GPU無しで確認できる)
 - 見栄え: 「このRoutine自身がClaude Codeで動いている」という自己言及的な文脈に合い、`template/`から自作Skillを1つ作ってみるBefore/After(Skill無し/有りでの応答の変化)も見せやすい。ただし機能自体は既知のため、「公式の単独リポジトリとして独立した」というニュース面の新しさを明記した方がよい。
 - 状態: 未選択
+
+### [2026-11-08] SWE-agent/mini-swe-agent — bashのみを武器にSWE-bench Verifiedで70%超を叩き出す「100行のAIエージェント」(本日GitHub Trending Pythonで言及)
+
+- 出典: https://github.com/SWE-agent/mini-swe-agent (MIT。Princeton/StanfordのSWE-bench・SWE-agentチームによる、SWE-agent本家の後継プロジェクト)
+- 概要: ツールをbashのみに絞り、`subprocess.run`での逐次実行と完全に線形な履歴だけを持つ、コア実装約100行の最小構成AIソフトウェアエンジニアリングエージェント。README記載ではSWE-bench Verifiedで70%台後半のスコアを報告し、開発リソースの大部分がSWE-agent本家からこちらに移っているとされる。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語の紹介・検証記事は未検出)
+- 検証難易度: 低(MIT。`pip install uv && uvx mini-swe-agent`または`pip install mini-swe-agent`で導入でき、litellm経由で任意のモデルプロバイダーを使える。モデル自体はClaude Code自身の既存契約〈本Routineが使っているもの〉を指定すれば追加の有料APIキー無しで検証できる見込み。GPU不要)
+- 見栄え: 「コア実装100行」という極端なミニマリズムとSWE-bench高スコアの対比がわかりやすく、実際に小さなGitHub issueやバグを与えて解決させる様子(エージェント無しでの手作業手順 vs mini-swe-agentでの自動化)を見せやすい。
+- 状態: 未選択
+
+### [2026-11-08] ranxianglei/billion-context — どのコーディングエージェントにも挟み込める「文脈圧縮プロキシ」、長時間セッションを小さいコンテキスト窓に収める(本日GitHub Trending TypeScriptで+460star/日)
+
+- 出典: https://github.com/ranxianglei/billion-context (MIT License。ただしユーザー向けプロダクトでの表示にはbillion-context〈および該当する場合はacp-kernel〉へのクレジット表記を求める追加条項あり)
+- 概要: エージェントとモデルAPIの間に立つプロキシとして会話を逐次的・可逆的に圧縮し、プロンプトキャッシュを保ったまま小さいコンテキスト窓で長時間セッションを扱えるとするツール。モデル自身が何を・いつ圧縮するか判断する設計(ハード切り捨てではない)で、`compress`/`decompress`/`search_context`/`acp_status`の4ツールを注入する。README自身の計測ではContextBenchで約58%、LongMemEval-Sで約71%のコスト削減を主張。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語の紹介・検証記事は未検出)
+- 検証難易度: 低〜中(npmで`npm install -g billion-context --prefix=~/.local`→`bili claude`のようにClaude Code CLI自体をラップして起動できる設計。Node.js 20+が前提。モデル呼び出しは既存のClaude Code契約をそのまま使う想定で追加の有料APIキー不要、GPU不要。ただし「圧縮によるコスト削減率」を自分の環境で正確に再現するには圧縮あり/無しの長時間セッションを両方走らせて比較する必要があり、6時間に収まるかはタスクの切り方次第)
+- 見栄え: 本Routine自身が使っているClaude Code CLIをそのままラップし、長い検証セッションの中でコンテキスト圧縮の効果(トークン数・応答の一貫性)をBefore/Afterで見せられる自己言及的な検証がしやすい。「エージェントの記憶・コンテキスト圧縮」という本チャレンジで頻出のテーマだが、既存エージェントに後付けできる実用プロキシという切り口は新しい。
+- 状態: 未選択
+
+### [2026-11-08] snarktank/ralph — PRDが尽きるまでClaude Code/Ampを自動ループさせる「オートノマス開発ループ」(本日GitHub Trending TypeScriptで言及、22.2k star)
+
+- 出典: https://github.com/snarktank/ralph (MIT。Geoffrey HuntleyのRalphパターンがベース)
+- 概要: `/prd`スキルでPRD(要件定義)を生成し`/ralph`スキルで`prd.json`に変換した後、`ralph.sh --tool claude`のようにClaude Code(またはAmp)を繰り返し起動して、未完了の優先ストーリーを1つずつ実装・テスト・コミットし、全ストーリーが`passes: true`になるまで自律的に回すループ。各イテレーションは毎回クリーンな文脈で始まり、継続性はgit履歴・`progress.txt`・`prd.json`で保たれる。
+- 日本語記事件数: Zenn 1件(babushkai氏、2026-01-25付で基本的な使い方を紹介する記事。詳細な検証ログではなく紹介止まり)/ Qiita 0件 / note 0件(検索した範囲)
+- 検証難易度: 低(MIT。Claude Code自身〈本Routineが使っているもの〉をバックエンドに指定できるため追加の有料APIキー不要、GPU不要。`jq`とgitリポジトリのみが前提。小さめのPRDで1〜数イテレーション走らせるだけなら6時間以内に収まる)
+- 見栄え: 本Routine自身がClaude Codeで動いているという自己言及的な文脈に合い、「小さなPRDを渡して自動ループでどこまで進むか」を実況できる。既存Zenn記事が紹介止まりのため、実際にPRDを最後まで回した詳細ログ(イテレーション数・コミット内容・失敗時のリトライ挙動)を見せれば差別化できる。
+- 状態: 未選択
+
+### [2026-11-08] Random Is Almost Enough? Stable and Low-Cost Benchmark Compression via BestRand — 少数の「プローブモデル」だけでベンチマークの縮小サブセットを安定に選ぶ手法(論文, arXiv:2611.00883, Hugging Face Daily Papers上位掲載)
+
+- 出典: https://arxiv.org/abs/2611.00883 (コード: https://github.com/George-Ling3/BestRand, MIT License)
+- 概要: ランダムサンプリングによるベンチマーク縮小は平均的には効率的だが「稀に大きく外れる」テールリスクを持つことを理論的に示し、5体のプローブモデルで128個の候補サブセットをスコアリングして母集団平均に最も近いものを選ぶ「BestRand」を提案。既存手法比で高誤差リスクを50.2%、推定誤差を16.4%削減しつつ構築コストは51.3%に抑えたと報告。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語の紹介・検証記事は未検出)
+- 検証難易度: 低(MIT。GPQA/MMLU/GSM8K/HellaSwagなど12ベンチマークの実測スコア行列〈約86MiB〉がリポジトリに同梱されており、`pip install -r requirements.txt`→`python run.py --preset quick`だけでCPU上・追加の有料APIキー・モデルダウンロード無しで論文の主張を再現できる。自分のベンチマーク・モデルに適用する場合はプローブモデルのスコア行列を別途用意する必要があるが、同梱データでの再現自体は数時間以内に収まる)
+- 見栄え: 「ランダムに少数問選ぶだけで本当に十分か」という直感に反する問いに対し、同梱データでの再現結果(BestRand vs 単純ランダム抽出の誤差分布)をグラフで見せやすい。CPUのみ・追加キー不要という点で「当面有料APIキー必須の候補は選ばない」方針とも相性がよい。
+- 状態: 未選択
