@@ -1,0 +1,119 @@
+[
+  {
+    "turn": 5,
+    "cost_usd": 0.526648,
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 17957,
+      "cache_read_input_tokens": 115866,
+      "output_tokens": 142,
+      "output_tokens_details": {
+        "thinking_tokens": 138
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 17957,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "global",
+      "iterations": [
+        {
+          "input_tokens": 4,
+          "output_tokens": 142,
+          "cache_read_input_tokens": 115866,
+          "cache_creation_input_tokens": 17957,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 17957
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard",
+      "fallback_credit": null
+    },
+    "result": "OK"
+  },
+  {
+    "turn": 6,
+    "cost_usd": 0.6813088,
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 36642,
+      "cache_read_input_tokens": 80448,
+      "output_tokens": 4,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 36642,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "global",
+      "iterations": [
+        {
+          "input_tokens": 4,
+          "output_tokens": 4,
+          "cache_read_input_tokens": 80448,
+          "cache_creation_input_tokens": 36642,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 36642
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard",
+      "fallback_credit": null
+    },
+    "result": "OK"
+  },
+  {
+    "turn": "acp_status_2",
+    "cost_usd": 0.7170849000000001,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 999,
+      "cache_read_input_tokens": 234281,
+      "output_tokens": 834,
+      "output_tokens_details": {
+        "thinking_tokens": 0
+      },
+      "server_tool_use": {
+        "web_search_requests": 0,
+        "web_fetch_requests": 0
+      },
+      "service_tier": "standard",
+      "cache_creation": {
+        "ephemeral_1h_input_tokens": 999,
+        "ephemeral_5m_input_tokens": 0
+      },
+      "inference_geo": "global",
+      "iterations": [
+        {
+          "input_tokens": 2,
+          "output_tokens": 800,
+          "cache_read_input_tokens": 117191,
+          "cache_creation_input_tokens": 898,
+          "cache_creation": {
+            "ephemeral_5m_input_tokens": 0,
+            "ephemeral_1h_input_tokens": 898
+          },
+          "type": "message"
+        }
+      ],
+      "speed": "standard",
+      "fallback_credit": null
+    },
+    "result": "ACTIVE SURFACE: pack=default | host=billion-context 0.1.213 (133f3525c)\n\nCONTEXT BREAKDOWN\n  473 tool (1%) | 76.3K text (99%) | 299 summaries (0%)\n  Top tools: text (99%), mcp__bili__acp_status (1%)\n\nCOMPRESSED BLOCKS — 1 active (299 summary, 17.2K original)\n\n  b1 (T1)  17.2K→299  4 msgs  \"preflight overflow compress\"\n\nTip: call again with scope:\"uncompressed\", view:\"messages\", tool:\"text\" for a per-message listing\n\nBILLED INPUT (upstream usage): 117195 tok · est-view total 100411 tok · ratio 1.2×\n\nNudge: idle — growth 311 < floor 22500, ready: T1 62341\n\nCompressible ranges (2, oldest first):\n  m00001–m00007  7 msgs  22.4K [tool 0% | text 100%] · 5 user msgs\n  m00012–m00018  7 msgs  39.9K [tool 29% | text 71%] · 2 user msgs\n\nSTORAGE — storage: full (unified-first reads, dual-write)\n\nPCK SELF-STAMPING OFF BY DEFAULT (instance-level, #5079): bili no longer adds OpenAI's prompt_cache_key to requests on its own. If your upstream routes prefix cache by this key (relays such as workbuddy panel/hub, account pools), turn it back on: set \"promptCache\": {\"routing\": \"auto\"} in billion-context.json or use the web UI switch (or ACP_PROMPT_CACHE_ROUTING=auto) — otherwise traffic may route randomly and miss the prefix cache. Direct official-API users can ignore this.\n\nUNRECOGNIZED PATHS (instance-level): 1 request(s) to 1 path(s) matched no known protocol (/chat/completions, /llm_raw_chat, /v1/messages, /responses, …) since instance start — they were relayed byte(s)-for-byte and CANNOT be compressed (/bili/https://api.anthropic.com/v1/code/agent-proxy/ca-cert×1). If you expected compression here, that endpoint's path is not in bili's protocol table. Exact per-path counts: the unrecognizedPaths field of GET /__bili/stats."
+  }
+]
