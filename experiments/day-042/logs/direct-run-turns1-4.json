@@ -1,0 +1,42 @@
+[
+  {
+    "turn": 1,
+    "session_id": "8086f372-ebf2-4bc8-8332-e119155ff916",
+    "cost_usd": 0.1313307,
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 32150,
+    "cache_read_input_tokens": 26867,
+    "output_tokens": 4,
+    "result": "OK"
+  },
+  {
+    "turn": 2,
+    "session_id": "8086f372-ebf2-4bc8-8332-e119155ff916",
+    "cost_usd": 0.23640329999999998,
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 24977,
+    "cache_read_input_tokens": 51166,
+    "output_tokens": 4,
+    "result": "OK"
+  },
+  {
+    "turn": 3,
+    "session_id": "8086f372-ebf2-4bc8-8332-e119155ff916",
+    "cost_usd": 0.31274159999999995,
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 17169,
+    "cache_read_input_tokens": 76143,
+    "output_tokens": 4,
+    "result": "OK"
+  },
+  {
+    "turn": 4,
+    "session_id": "8086f372-ebf2-4bc8-8332-e119155ff916",
+    "cost_usd": 0.3907248,
+    "input_tokens": 4,
+    "cache_creation_input_tokens": 17151,
+    "cache_read_input_tokens": 93312,
+    "output_tokens": 4,
+    "result": "1488"
+  }
+]
