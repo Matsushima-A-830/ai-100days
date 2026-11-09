@@ -2,20 +2,23 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 042
-- 選んだ候補(backlog.mdのタイトルかURL): ranxianglei/billion-context — https://github.com/ranxianglei/billion-context
+- Day: 043
+- 選んだ候補(backlog.mdのタイトルかURL): ZhuLinsen/daily_stock_analysis — https://github.com/ZhuLinsen/daily_stock_analysis
 - 補足メモ(あれば):
-  - 出典: https://github.com/ranxianglei/billion-context (MIT License。ただしユーザー向けプロダクトでの表示にはbillion-context〈および該当する場合はacp-kernel〉へのクレジット表記を求める追加条項あり。2026-11-08付でGitHub Trending TypeScriptで+460star/日)。本エントリはbacklog.md側では2026-11-08付研究PR(#143、本記事作成時点で未マージ)に記載されている。backlog.mdへの反映が先にマージされていなくても、本todayエントリの情報だけで検証に着手できるよう以下に詳細を再掲する。
-  - 概要: 既存のコーディングエージェントとそのモデルAPIの間に立つプロキシとして会話を逐次的・可逆的に圧縮し、プロンプトキャッシュを保ったまま小さいコンテキスト窓で長時間セッションを扱えるとするツール。ハード切り捨てではなく、モデル自身が何を・いつ圧縮するか判断する設計で、`compress`/`decompress`/`search_context`/`acp_status`の4ツールを注入する。README自身の計測ではContextBenchで約58%、LongMemEval-Sで約71%のコスト削減、圧縮自体のコストはキャッシュ健全性の2%以下、健全なセッションでは95〜97%のプレフィックスキャッシュヒット率を維持すると主張している。
-  - 導入方法の選択肢: (1) `npm install -g billion-context --prefix=~/.local` でグローバル導入し`bili`コマンドを使う(Node.js 20以上、組み込みSQLiteエンジンにはNode 22以上が必要)、(2) ネイティブプラグインとして`bili plugin install <client>`(pi/omp/opencode/dsh/kimi/hermes/zcode等に対応)、(3) ランチャーとして`bili claude`のように対象CLIをラップしてプロキシと同時起動、(4) 手動でプロキシだけ起動(`bili`、デフォルトポート8787)し、クライアント側のbase URLを`http://localhost:8787/bili/`に向ける。Dockerイメージも用意されているが、コンテナに認証機能が無い旨の注意書きがあるため信頼できるネットワーク内でのみ使う。
-  - APIキー・前提条件についての方針: モデル呼び出し自体はプロキシを挟むだけで、本Routine環境が既に持っているClaude Code CLIの契約をそのまま使う想定のため追加の有料APIキーは不要、GPUも不要。`bili claude`で本Routine自身が使っているClaude Code CLIを直接ラップできるかを最初に試す、自己言及的な検証にする。
+  - 出典: https://github.com/ZhuLinsen/daily_stock_analysis (MIT License。2026-11-09付でGitHub Trending Pythonで+505star/日、累計約5.6万star。最新リリースは情報源によりv3.25.0〈2026-07-03〉またはv3.31.0〈2026-08-23〉)。本エントリはbacklog.md側では2026-11-09付研究PR(#146、本記事作成時点で未マージ)に記載されている。backlog.mdへの反映が先にマージされていなくても、本todayエントリの情報だけで検証に着手できるよう以下に詳細を再掲する。
+  - 概要: 中国A株・香港・米国・日本・韓国・台湾の株式/ETFをLLMで分析し、「買い/様子見/売り」の判定・スコア・トレンド・センチメント・リスク要因・ニュースをまとめた「決定ダッシュボード」をWeChat Work/Feishu/Telegram/Discord/Slack/メールに自動配信するOSS。株価データ自体はAkShare/Baostock/YFinance等の無料ソースで取得し、LLMで判定文を生成する構成。
+  - 導入方法の選択肢: (1) ローカル実行: リポジトリをclone→`pip install -r requirements.txt`→`.env.example`を`.env`にコピーしてLLMキー等を設定→`python main.py --dry-run`で試す(`--stocks`で対象銘柄指定、`--webui`でWeb UI〈http://127.0.0.1:8000〉起動)。(2) Docker(バックエンドと構築済みWebUIを1イメージに同梱)。(3) GitHub Actionsでの定期実行(フォークしてSecrets設定、デフォルトは平日18時〈北京時間〉)。
+  - APIキー・前提条件についての方針: 株価データは追加キー不要の無料ソース(AkShare/Baostock/YFinance)で、ゼロコストと言えるのは主にこの部分。LLM呼び出しにはGemini/Claude/OpenAI互換サービスまたはローカルOllamaのいずれかのキー・モデルが必要。CLAUDE.mdの「当面は有料APIキー必須の候補を選ばない」方針に沿い、無料枠のLLM(例: Gemini無料枠)またはローカルOllamaモデルを使う前提で検証する。ニュース検索プロバイダは任意(無料枠ありのものを使う)。GPU不要(ローカルOllama利用時はモデルサイズに応じたローカルスペックに依存)。
   - 検証スコープ・手順:
-    1. 本Routine実行環境のNode.jsバージョンを確認し、`npm install -g billion-context --prefix=~/.local`(または通常のグローバルインストール)でインストールできるか確認する。
-    2. `bili claude` で本Routine自身が使っているClaude Code CLIをラップしてプロキシ経由に起動できるか試す。うまくいかない場合は(3)の手動方式(`bili`でプロキシだけ起動し、`curl http://localhost:8787/__bili/health`で稼働確認後、base URLを向けた簡易スクリプトで同じモデルを呼ぶ)を試す。
-    3. 起動できた場合、意図的に長い複数ターンの会話(同じ大きめのファイル・ログを読み込ませた上で質問を繰り返すなど)をプロキシ経由/直接の両方で実行し、`acp_status`や`__bili/health`から取得できるトークン数・キャッシュヒット率等の指標を比較する。README自身が主張する「5倍のトークン削減」「ContextBench約58%・LongMemEval-S約71%のコスト削減」は大規模ベンチマーク前提の数値のため、完全な再現は目指さず、自作の縮小版シナリオでの概念実証(圧縮あり/無しでのトークン数・応答の一貫性のBefore/After比較)に絞る。
-    4. もし(a)ネストしたCLI起動やローカルプロキシのポート開放がこのRoutine実行環境固有の制約(ネットワーク制限・プロセス権限等)で失敗する、または(b)Node.jsバージョンが要件を満たせない場合は、CLAUDE.mdの「書かない(Routine環境の制約)」に該当するため記事等には書かず、PRの説明文冒頭に「ローカル検証が必要」と明記し、再現手順(上記npm/bili/curlコマンド)を添えてローカル検証にエスカレーションする。results.mdには「Routine環境の制約により未検証、ローカル検証待ち」と1〜2行だけ残す。
-    5. 実行コマンド・出力・エラー・所要時間はすべてそのままresults.mdに記録する。失敗した場合も、それがツール自体に起因する失敗なのかRoutine環境固有の制約なのかを区別した上で正直に書く。
-  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-11-08時点、backlog.md参照。検索した範囲では日本語の紹介・検証記事は未検出)。
-  - 記事化の切り口: 本Routine自身が使っているClaude Code CLIをそのままラップし、長い検証セッションの中でコンテキスト圧縮の効果(トークン数・応答の一貫性)をBefore/Afterで見せる自己言及的な検証。「エージェントの記憶・コンテキスト圧縮」という本チャレンジで頻出のテーマだが、既存エージェントに後付けできる実用プロキシという切り口で差別化する。
+    1. Routine実行環境のPythonバージョンを確認し、リポジトリをclone、`pip install -r requirements.txt`を実行する。
+    2. `.env`に無料枠LLM(Gemini無料枠など)のキー、またはローカルOllama利用設定を記入し、日本株を含む数銘柄を`--stocks`で指定して`python main.py --dry-run`を実行、決定ダッシュボードが生成されるか確認する。
+    3. 生成された判定(買い/様子見/売り)・スコア・根拠(ニュース・センチメント・リスク要因等)を、同時点の実際の株価・ニュースと比較し、判定の妥当性・一貫性を検証する。可能であれば`--webui`でWeb UIを起動し、生成されたダッシュボードのスクリーンショットを取得する。
+    4. もし(a)株価データ取得や無料枠LLM APIへの到達がRoutine実行環境固有のネットワーク制限で失敗する、または(b)無料枠LLMのレート制限等で検証が完結しない場合は、CLAUDE.mdの「書かない(Routine環境の制約)」に該当する範囲は記事等に書かず、PRの説明文冒頭に「ローカル検証が必要」と明記し再現手順(上記pip/env/pythonコマンド)を添えてローカル検証にエスカレーションする。results.mdには「Routine環境の制約により未検証、ローカル検証待ち」と1〜2行だけ残す。
+    5. 実行コマンド・出力・エラー・所要時間はすべてそのままresults.mdに記録する。失敗した場合も、それがツール自体(無料枠LLMの判定精度・データ欠損等)に起因する失敗なのかRoutine環境固有の制約なのかを区別した上で正直に書く。
+  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-11-09時点、backlog.md参照。海外ブログの日本語訳記事〈knightli.com/ja〉が1件確認できたが、Zenn/Qiita/note上の記事は未検出)。
+  - 記事化の切り口: 日本株を対象に実際に判定ダッシュボードを生成し、その判定・根拠が実データと比較して妥当かをBefore/After的に検証する。「コーディングエージェント」系が続いていた本チャレンジの中で、「LLMが実データに基づいて投資判断の下書きを作る」実用ツールという異なるテーマで多様性を出す。本ツールの出力は投資助言ではなく学習・研究目的である旨を記事にも明記し、CLAUDE.mdの「転載ではなく自分の検証結果を主役にする」方針に沿って検証結果(判定の妥当性・限界)を主役に書く。
+
+注意:
+  - backlog.mdへの反映元であるPR #146はまだマージされていない。順序としては先にPR #146をマージすることを推奨するが、today.mdの内容はPR #146の有無に関わらず実装Routineが参照できる。
 
 状態: 設定済み
