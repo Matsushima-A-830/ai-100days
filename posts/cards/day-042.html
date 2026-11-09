@@ -214,7 +214,7 @@
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>biliのログは claude-sonnet-5-5 の model window を200,000としていたが、Claude Code CLI側のusage.modelUsageはcontextWindow:1000000を報告していた。内部モデルレジストリの食い違いが早期圧縮の一因かもしれない。6ターンの規模では圧縮の正味の得(安く読み返すフェーズ)までは確認できていない。</p>
+    <p>biliのログは claude-sonnet-5-5 の model window を200,000としていたが、Claude Code CLI側のusage.modelUsageはcontextWindow:1000000を報告していた。内部モデルレジストリの食い違いが早期圧縮の一因かもしれない。6ターンの規模では圧縮の正味の得(安く読み返すフェーズ)までは確認できていない。ローカルPCで追試し、圧縮後に同じ質問を再度投げたところ、303トークンの要約からでも正しく元の数値(1488)を回答できることを確認した。</p>
   </div>
 
   <footer>

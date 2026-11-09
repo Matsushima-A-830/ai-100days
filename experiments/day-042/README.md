@@ -62,3 +62,13 @@ python3 scripts/continue_bili.py <bili-runのsession_id>       # bili系をさ�
 - 今回の圧縮発動は「モデルが`compress`ツールを明示的に呼んだ」のではなく、biliが文脈窓の
   上限に迫ったと判断して自動で行う「preflight overflow compress」だった。モデル主導の
   `compress`呼び出しそのものを明示的に誘発する再現は今回は行っていない。
+
+## ローカル検証(実施済み・2026-11-09)
+
+人間のPCで、Routine環境では未確認だった2点を確認した。
+
+- `npm install -g billion-context`はローカルでは問題なく成功した(Routine環境固有の承認ポリシーが原因だったことを裏付け)。
+- 同じBefore/After(直接 vs bili)のパターンと圧縮の自動発動は、別環境・`claude-sonnet-5-5`を明示指定した状態でも再現した。
+- 元のPRで「未検証」としていた「圧縮後に古い情報を正しく思い出せるか」について、圧縮ブロックに含まれていたLOG-00001の値を圧縮後に再度尋ねたところ、正しく`1488`と回答した。
+
+詳細は`results.md`の「6. ローカル検証」節を参照。
