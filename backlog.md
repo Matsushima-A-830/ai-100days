@@ -1622,3 +1622,39 @@
 - 検証難易度: 低(MIT。GPQA/MMLU/GSM8K/HellaSwagなど12ベンチマークの実測スコア行列〈約86MiB〉がリポジトリに同梱されており、`pip install -r requirements.txt`→`python run.py --preset quick`だけでCPU上・追加の有料APIキー・モデルダウンロード無しで論文の主張を再現できる。自分のベンチマーク・モデルに適用する場合はプローブモデルのスコア行列を別途用意する必要があるが、同梱データでの再現自体は数時間以内に収まる)
 - 見栄え: 「ランダムに少数問選ぶだけで本当に十分か」という直感に反する問いに対し、同梱データでの再現結果(BestRand vs 単純ランダム抽出の誤差分布)をグラフで見せやすい。CPUのみ・追加キー不要という点で「当面有料APIキー必須の候補は選ばない」方針とも相性がよい。
 - 状態: 未選択
+
+### [2026-11-09] opensandbox-group/OpenSandbox — Dockerで動く、AIエージェント向けの安全な実行サンドボックス(Alibaba発、AAIFプロジェクト入り)
+
+- 出典: https://github.com/opensandbox-group/OpenSandbox (本日GitHub Trending Pythonで+159star/日。元はalibaba/OpenSandboxで、2026-10-22付でAgentic AI Foundation(AAIF)のホストプロジェクトとなり現リポジトリに移動。星数は情報源により1.1万〜1.7万と差がある)
+- 概要: AIエージェントがコード実行・コマンド実行・ファイル操作・ブラウザ/デスクトップ操作を安全な隔離環境(ローカルはDocker、本番はKubernetes。gVisor/Kata/Firecracker等の分離方式を選択可能)で行えるサンドボックスランタイム(Apache-2.0)。アプリとサンドボックスが共通のAPIで対話できる「Sandbox Protocol」をOpenAPI仕様として`specs/`ディレクトリに定義している点が特徴。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲。韓国語のPyTorchコミュニティ解説記事はあるが日本語は未検出)
+- 検証難易度: 低(Apache-2.0。`uvx opensandbox-server init-config ~/.sandbox.toml --example docker`→`uvx opensandbox-server`でローカルにサーバーを起動し、`opensandbox` SDKでサンドボックス作成・コマンド実行を試せる。追加の有料APIキー不要、GPU不要。Docker必須)
+- 見栄え: 「意図的に破壊的なコマンドをサンドボックス内で実行→隔離されて外部に影響が出ないことを確認する」というBefore/After的なセキュリティデモが作りやすい。
+- 状態: 未選択
+
+### [2026-11-09] kortix-ai/CompanyOS — 複数のAIエージェントが並行して働き人間が変更を承認する「会社のOS」(Elastic License 2.0、公開ソースだが非OSS)
+
+- 出典: https://github.com/kortix-ai/CompanyOS (本日GitHub Trending TypeScriptで言及、累計約2万star)
+- 概要: カスタムのAIエージェントをクラウド上で動かす「クラウドネイティブなエージェントハーネス」。各セッションが専用のクラウドコンピュータを持ち、複数のエージェントが並行して会社のメモリを共有しながら動作し、`main`への変更は人間が承認する仕組み(Kortix Cloudまたは自前インフラで実行可能)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語記事は未検出)
+- 検証難易度: 中。ライセンス注意: リポジトリのLICENSEファイルは**Elastic License 2.0**であり、OSI承認のオープンソースではないソースアベイラブルライセンス(ホスト型/マネージドサービスとして第三者に提供することを禁止する条項あり)。自分で動かして検証する用途(セルフホスト)自体は許されるが、記事では「OSSではなくソースアベイラブル」と明記する必要がある。`kortix self-host start`で自前ホスト可能(初回セットアップにモデルキーは不要、GitHub連携とモデルキーは後から設定)だが、実際にエージェントを動かすにはClaude/ChatGPTのサブスクリプションか別途モデルAPIキーが必要。GPU不要。
+- 見栄え: READMEのGIFにある「エージェントが自社のサンプルデータから売上ダッシュボードを自動生成する」デモや、"Summarize this week's commits and open a change request" → `kortix cr ls`で変更承認フローを見せるデモは分かりやすい。
+- 状態: 未選択
+
+### [2026-11-09] ZhuLinsen/daily_stock_analysis — 日本株含む多市場をLLMで分析し売買判断ダッシュボードを自動配信するOSS
+
+- 出典: https://github.com/ZhuLinsen/daily_stock_analysis (本日GitHub Trending Pythonで+505star/日。MIT。最新リリースは情報源によりv3.25.0〈2026-07-03〉またはv3.31.0〈2026-08-23〉)
+- 概要: 中国A株・香港・米国・日本・韓国・台湾の株式/ETFをLLMで分析し、「買い/様子見/売り」の判定・スコア・トレンド・センチメント・リスク要因・ニュースをまとめた「決定ダッシュボード」をWeChat Work/Feishu/Telegram/Discord/Slack/メールに自動配信するシステム。株価データ自体はAkShare/Baostock/YFinance等の無料ソースで追加キー不要だが、LLM呼び出しにはGemini/Claude/OpenAI互換サービスまたはローカルOllamaのいずれかのキー・モデルが必要(無料枠または無料のローカルモデルで代替可能)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲。海外ブログの日本語翻訳版記事〈knightli.com/ja〉が1件確認できたが、Zenn/Qiita/note上の記事は未検出)
+- 検証難易度: 低〜中(`pip install -r requirements.txt`→`.env`設定→`python main.py --dry-run`等でローカル実行可能。Docker・GitHub Actionsでの自動実行にも対応。無料枠のLLM〈Gemini等〉またはローカルOllamaを使えば有料APIキー不要、GPU不要〈Ollama利用時はローカルモデルの要求スペックに依存〉)
+- 見栄え: 日本株を対象に実際にダッシュボードを生成し判定・根拠が妥当か検証するBefore/After(「分析前の生データ」→「LLMが出した判断ダッシュボード」)が作りやすく、WebUI(`--webui`)のスクリーンショットも見栄えがよい。
+- 状態: 未選択
+
+### [2026-11-09] homeassistant-ai/ha-mcp — Claude/ChatGPTでHome Assistantを設定・自動化できるMCPサーバー(87種のツールを提供)
+
+- 出典: https://github.com/homeassistant-ai/ha-mcp (本日GitHub Trending Pythonで言及。MIT)
+- 概要: AIアシスタント(Claude、ChatGPT等)からHome Assistant(スマートホームOSS)のオートメーション・スクリプト・ダッシュボード・ヘルパー・バックアップ・トレースなどを操作できるMCPサーバー。87種類のツールを提供し、HACS経由の統合インストール・Docker/uvx・stdio等複数の起動方法に対応する。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語記事は未検出。類似の別プロジェクトhass-mcp/aha-mcpと混同しないよう注意)
+- 検証難易度: 低〜中。注意点: 本番運用にはHome Assistantの既存インスタンス(長期アクセストークン発行)が前提だが、本リポジトリはホスト済みのデモ環境に繋げる「デモモード」を提供しており、自前のHome Assistant環境を用意しなくても一本のインストーラーで体験できる。Claude Code経由の利用には有料Claudeプランが必要な旨の記載があるが、Claude Desktop(無料アカウント)でも試せるとのこと。追加の有料APIキー不要、GPU不要。
+- 見栄え: 「ポーチの照明を日没時に点灯するオートメーションを作って」のような自然言語指示→実際に生成されたオートメーション設定、というBefore/Afterが分かりやすく、スマートホームというテーマは一般読者にも伝わりやすい。
+- 状態: 未選択
