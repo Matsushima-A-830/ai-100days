@@ -1648,7 +1648,7 @@
 - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲。海外ブログの日本語翻訳版記事〈knightli.com/ja〉が1件確認できたが、Zenn/Qiita/note上の記事は未検出)
 - 検証難易度: 低〜中(`pip install -r requirements.txt`→`.env`設定→`python main.py --dry-run`等でローカル実行可能。Docker・GitHub Actionsでの自動実行にも対応。無料枠のLLM〈Gemini等〉またはローカルOllamaを使えば有料APIキー不要、GPU不要〈Ollama利用時はローカルモデルの要求スペックに依存〉)
 - 見栄え: 日本株を対象に実際にダッシュボードを生成し判定・根拠が妥当か検証するBefore/After(「分析前の生データ」→「LLMが出した判断ダッシュボード」)が作りやすく、WebUI(`--webui`)のスクリーンショットも見栄えがよい。
-- 状態: 未選択
+- 状態: 採用済み(day-043)。ローカル検証完了。詳細はexperiments/day-043/results.md参照。
 
 ### [2026-11-09] homeassistant-ai/ha-mcp — Claude/ChatGPTでHome Assistantを設定・自動化できるMCPサーバー(87種のツールを提供)
 
