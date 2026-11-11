@@ -183,3 +183,138 @@ $ curl -o /dev/null -w "%{http_code}\n" https://cdn-lfs.huggingface.co    # 000 
 - `kittentts`(KittenML/kitten-tts-mini-0.8)はこのリポジトリのモデル設定上はgatedでもHFトークン
   必須でもない(= 重みのライセンス自体は緩やかと見られる)が、今回はネットワーク制約により
   実際の重みのライセンス条文までは確認できなかった。
+
+## ローカル検証(人間のPC、2026-11-11)
+
+検証環境: WSL2(Ubuntu 24.04)、Docker、CPU推論(GPU未使用)。人間(matsu)の明示的な同意を得た上で、
+以下2件のモデルライセンスを受理した。
+
+- `k2-fsa/OmniVoice`(CC-BY-NC、非商用限定、商用推論"restricted")
+- `eustlb/higgs-audio-v2-tokenizer`(`NOASSERTION`、ライセンスカテゴリ"unknown"。アップストリーム
+  のHugging Face上でライセンスが明記されていない)
+
+### 1. GHCR経由のイメージ取得は、ローカルでは問題なく成功した
+
+```
+$ docker pull ghcr.io/debpalash/voicestudio:stable
+Digest: sha256:65f1305c749c759d3656fed5f12623a98aff11e5f326d28bf7095cb57f3a9e0b
+```
+
+Routine環境でブロックされていたGHCR経路(`ghcr.io`)は、ローカルでは何の問題もなく取得できた。
+取得したダイジェストはRoutineがDocker Hubミラーから取得したものと完全に一致しており、Routine環境の
+ネットワークポリシーに起因する制約だったことを裏付けた。
+
+### 2. ライセンス受理後、本命のOmniVoiceエンジンで生成を試みると、未知のバグに遭遇した
+
+ライセンス受理(`POST /models/licenses/accept`)は2件とも成功したが、実際に`/generate`を呼ぶと、
+今度はネットワーク制約とは別の、**VoiceStudioのDockerイメージ自体に含まれるバグ**に遭遇した。
+
+```
+{"detail":"VoiceStudio hit an internal error; check the backend log for details.",
+ "error_class":"NETWORK_ERROR","error_type":"OmniVoiceModelAssetError"}
+```
+
+コンテナログを遡ると、実際の原因は次の通りだった。
+
+```
+TypeError: process() takes no keyword arguments
+```
+
+これは`eustlb/higgs-audio-v2-tokenizer`のモデル設定ファイル(`config.json`)をHugging Faceから
+ダウンロードする際、サーバーがBrotli圧縮(`Content-Encoding: br`)で応答し、それをイメージに
+同梱されたHTTPクライアント(`httpx2`というパッケージ)が解凍しようとした箇所で発生していた。
+
+```python
+# /opt/conda/lib/python3.11/site-packages/httpx2/_decoders.py
+decompressed = self._decompress(data, output_buffer_limit=output_buffer_limit)
+```
+
+イメージに同梱されている`brotli`パッケージの実体を調べると、`Decompressor().process()`メソッドは
+単一の位置引数(`string`)しか受け付けず、`output_buffer_limit`というキーワード引数には対応していない
+バージョンだった。
+
+```
+$ docker exec omnivoice python3 -c "import brotli; help(brotli.Decompressor().process)"
+Signature: decompress(string)
+```
+
+つまり、**`httpx2`が前提とするBrotliパッケージのAPIと、イメージに実際に同梱されているBrotli
+パッケージのバージョンが食い違っている**、という依存関係の不整合だった。手元で直接`curl -L`で
+同じURLを叩くと正常に取得できることからも、ネットワーク到達性自体の問題ではないことを確認した。
+
+この不整合により、OmniVoiceエンジンは**Brotli圧縮で応答するHugging Face上のアセット(今回は
+音声トークナイザーの設定ファイル)を一つでも必要とすると、ダウンロードの時点で必ず失敗する**
+状態だった。これはRoutine環境・ローカル環境を問わず、`:stable`タグのこのイメージを素のまま
+使う限り誰でも再現する、ツール自体の不具合だと判断した。
+
+### 3. 該当箇所を1行パッチして生成に成功した
+
+このバグを回避するため、コンテナ内の該当ファイルを1行だけ書き換え(`output_buffer_limit`
+キーワード引数を外す)、コンテナを再起動(`docker restart`、書き込み層は保持される)した。
+
+```bash
+docker exec omnivoice sed -i \
+  's/self._decompress(data, output_buffer_limit=output_buffer_limit)/self._decompress(data)/; \
+   s/self._decompress(b"", output_buffer_limit=output_buffer_limit)/self._decompress(b"")/' \
+  /opt/conda/lib/python3.11/site-packages/httpx2/_decoders.py
+docker restart omnivoice
+```
+
+これで`/generate`が実際に成功するようになった。
+
+```
+INFO: 172.17.0.1:35360 - "POST /generate HTTP/1.1" 200 OK
+render trace {'total_seconds': 37.82, 'stages': {'synthesis': {'seconds': 31.90},
+'watermark': {'seconds': 5.80}}, 'outcome': 'complete'}
+```
+
+### 4. 実際に生成した音声を聴いた評価(人間による)
+
+同梱デモ音声(`demo0001`)を参照音声に、英語・日本語・フランス語の3言語でクローン生成を行った
+(いずれもCPU推論で約30〜38秒)。生成した音声を人間(matsu)が実際に聴いて評価した。
+
+- **英語(`cloned_en.wav`)**: 「ほとんど同じ話者に聞こえた」。参照音声とは異なる文章を読ませても、
+  話者の同一性は保たれていた。
+- **日本語(`cloned_ja.wav`)**: 「話者は同じように思えるが、日本語に慣れている外国人の話す発音に
+  近い雰囲気を感じ、日本語ネイティブぽさはあまり感じられなかった。ただ、問題なく聞き取れるくらい
+  発音は自然だった。」話者の同一性は維持されつつ、アクセントには英語話者由来と思われる訛りが
+  残っている、という評価だった。
+- **フランス語(`cloned_fr.wav`)**: 生成自体は成功し、追加の参考として残した(詳細な聴感評価は
+  英語・日本語の2件を優先した)。
+
+補足として、簡易な音響特徴(ピッチの基本周波数・スペクトル重心)を機械的に比較した。
+
+| | 平均基本周波数 | スペクトル重心(平均) |
+|---|---|---|
+| ref(参照音声) | 215.3 Hz | 1762 Hz |
+| cloned_en | 204.6 Hz | 3243 Hz |
+| cloned_ja | 222.8 Hz | 3038 Hz |
+
+ピッチ(声の高さ)は3者とも近い値に収まっており、人間の聴感評価(「同じ話者に聞こえる」)と
+方向性は一致する。一方でスペクトル重心(音色の明るさの目安)はクローン後の2つが参照音声よりかなり
+高く出ており、ウォーターマーク処理や生成過程での音色変化が影響している可能性がある。この数値
+だけで声質の同一性を判定することはできず、あくまで人間の聴感評価を補足する参考情報である。
+
+### 5. 648言語対応という主張について
+
+```
+$ curl .../engines/tts | ... supported_language_names の件数
+648
+```
+
+today.md/backlog.mdが引用していた「646言語対応」という数字とは完全には一致しないが、近い値
+(648件、日本語・フランス語・韓国語を含む)であることを確認した。また、`omnivoice`以外にも
+`cosyvoice`/`kittentts`/`mlx-audio`/`voxcpm2`等、合計18種類のTTSエンジンバックエンドがこの
+イメージに同梱されていることも分かった。
+
+### まとめ(ローカル検証)
+
+- RoutineのGHCRブロックは環境固有の制約で、ローカルでは問題なく再現しなかった。
+- ライセンス受理は人間(matsu)の明示的な同意を得て実施した。2件のうち1件(音声トークナイザー)は
+  アップストリームでライセンスが明記されていない("NOASSERTION")という、より不明確なケースだった。
+- ライセンス受理後に遭遇したエラーは、ネットワーク制約ではなく、イメージに同梱された`httpx2`と
+  `brotli`パッケージのバージョン不整合という、ツール自体の不具合だった。1行のパッチで回避でき、
+  実際に音声生成まで到達した。
+- 生成した英語・日本語のクローン音声を人間が聴いて評価した結果、話者の同一性は両言語とも維持
+  されていたが、日本語は「ネイティブぽさに欠ける、外国語訛りに近い」発音だった。
+- 648言語対応という主張は、today.md記載の646という数字とは完全一致しないが近い値として確認できた。

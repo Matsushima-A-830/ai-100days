@@ -1675,7 +1675,7 @@
 - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では未検出。独語・英語・中国語のニュースまとめ記事〈aitoolly.com等〉は複数あるが日本語の一次検証記事は無し)
 - 検証難易度: 中(アプリ本体はAGPL-3.0。本来はElectronデスクトップアプリだが`ghcr.io/debpalash/voicestudio:stable`のDockerイメージを使えばヘッドレスにWeb UI〈localhost:3900〉として起動できる。ローカル利用に追加の有料APIキーは不要〈アカウント制のVoiceStudio Cloudは別物で未提供〉。GPUが無くてもCPUで動作するが低速。Routine実行環境でDockerが使えるか、ヘッドレスブラウザ〈Playwright等〉でのスクリーンショット取得が可能かを事前に確認する必要がある)
 - 見栄え: 短い参照音声をアップロードしてボイスクローンを行い、同じ声で別のテキストを読ませる音声デモが分かりやすく、646言語対応という規模感もアピールしやすい。AGPL-3.0のライセンス条件(改変・ホスト提供時の開示義務)にも記事内で触れる必要がある。
-- 状態: 未選択
+- 状態: 採用済み(day-044)。ローカル検証完了。詳細はexperiments/day-044/results.md参照。
 
 ### [2026-11-10] SWE-rebench/Longtail-SWE — 低リソース13言語を対象にしたリポジトリレベルのIssue解決ベンチマーク(論文, Hugging Face Daily Papers上位掲載)
 
