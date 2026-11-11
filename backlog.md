@@ -1694,3 +1694,48 @@
 - 検証難易度: 低(MIT。`npm install @astryxdesign/core @astryxdesign/theme-neutral @stylexjs/stylex`等で導入し、CLIでテンプレートを生成するだけで試せる。GPU・追加の有料APIキー不要)
 - 見栄え: AIコーディングエージェントにAstryxのCLI・コンポーネントを使ってUIを組んでもらい、ガイドライン通りに仕上がるかを見るBefore/After的なデモが作りやすい。ただし公開から約4ヶ月半が経過しており海外では紹介記事も複数出ているため、「直近の話題性」という観点では他候補より優先度を一段下げるのが妥当。
 - 状態: 未選択
+
+### [2026-11-11] GBrain — YC CEO Garry Tan作、Markdownベースのナレッジグラフ型AIエージェント用メモリ層
+
+- 出典: https://github.com/garrytan/gbrain (本日GitHub Trending TypeScriptで+225star/日。MIT。2026年4月にオープンソース化され直近の新規リポジトリではないが、本日のGitHub Trendingで急浮上)
+- 概要: Y Combinator CEOのGarry Tan自身が自分のAIエージェント〈OpenClaw/Hermes〉の本番運用メモリとして作ったOSS。Markdownファイルをgitで管理しPostgres(pgvector)でハイブリッド検索インデックスを張ることで、自己リンクするナレッジグラフを構築する。キーワード検索+セマンティック検索+リランキングに加え、オプションの統合レイヤーが出典付きの回答("分からないこと"も明示)を返す点を特徴として打ち出す。
+- 日本語記事件数: Zenn 1件(gbrainリポジトリを読んでAgent memory基盤の作り方を学ぶ趣旨の記事。本リポジトリ自体の動作検証ではない) / Qiita 0件 / note 0件(検索した範囲。aipicks.jpなどのツール紹介ページはあるが日本語の一次検証記事は未検出)
+- 検証難易度: 低〜中(MIT。Bun 1.4.4+が前提。`bun install -g github:garrytan/gbrain#stable`→`gbrain init --pglite --no-embedding`でAPIキー不要のキーワード検索のみのキーレス起動が可能。セマンティック検索・統合レイヤーを試す場合は既定がVoyageの有料API〈`VOYAGE_API_KEY`〉だが、Embeddingプロバイダに"Ollama (local)"を選べばローカルモデルのみで追加の有料APIキー無しで完結できる見込み。GPU不要〈CPU可、埋め込みモデルが小さければ十分〉)
+- 見栄え: 「キーワード検索のみ(Before)」と「ナレッジグラフ+セマンティック検索+出典付き統合回答(After)」のBefore/After比較が作りやすい。YC CEO自身が自分のエージェント運用の生産ラインに使っているという文脈も話題性がある。Remory・Hindsight・Mem++等、本チャレンジで既に扱ってきた「エージェントメモリ」テーマの類似系だが、「開発者個人が自分用に作って公開した実運用ツール」という切り口で差別化できる。
+- 状態: 未選択
+
+### [2026-11-11] The Surprising Effectiveness of Deleting Weights in LLM Post-Training(Deletion Tuning / Bit-Mask Tuning, 論文)
+
+- 出典: https://huggingface.co/papers/2611.10866 (Hugging Face Daily Papers本日のトレンド上位。コード: https://github.com/agentic-learning-ai-lab/deleting-weights 、プロジェクトページ: https://agenticlearning.ai/deleting-weights/ 、学習済みマスク: https://huggingface.co/Jacklu0831/deletion-tuning-masks 。著者: Jack Lu, Zhenbang Yang, Mike Lasby, Tejas Pote, Yani Ioannou, Mengye Ren。NeurIPS/ICML 2026にも掲載)
+- 概要: 事前学習済みLLMにどれだけ変更を加えれば新しい能力を獲得できるかを問い、Transformerブロックのgate projection上にバイナリマスクを学習して全体の0.05%未満の重みを0にするだけ(他の変更なし)で、強化学習(RLVR)・SFT・on-policy distillationにおいてフルファインチューニングと同等の性能になることを示した論文。学習後のマスクはフルファインチューニング済みチェックポイントより数百〜数千倍小さく、継続学習で重要な「忘却の少なさ」でもLoRAやランダムスパースファインチューニングより優れる(RLでは旧タスク精度がベースモデル付近を維持する一方、フルFT/LoRA/ランダムスパースFTは最大5.4ポイント低下)と報告。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では、関連手法〈ShortGPT等〉やpruning全般の記事はあるが本論文〈Deletion Tuning/Bit-Mask Tuning〉自体の日本語紹介記事は未検出)
+- 検証難易度: 中(コード・学習済みマスク公開済み。公開されている学習済みマスクを小型オープンモデルに適用し、フルファインチューニング/LoRA/ベースモデルとの応答比較を行う範囲であればAPIキー不要・CPUまたは小規模GPUで6時間以内に完結できる見込み。マスクの学習自体〈RLVR等〉をフル再現するのは大型モデル・GPU前提で難しいため、公開済みマスクの適用・評価に絞るのが現実的)
+- 見栄え: 「フルファインチューニング後のモデル」vs「0.05%未満の重みを0にしただけのDeletion Tuningモデル」の応答比較・パラメータサイズ比較(チェックポイントサイズが数百〜数千倍小さい)というBefore/After構成が作りやすく、数値も論文内で明確。
+- 状態: 未選択
+
+### [2026-11-11] WikiTrace — 根拠(出典)付きレッスンでLLMエージェントの「メモリによる劣化」を抑える手法(論文)
+
+- 出典: https://huggingface.co/papers/2611.14320 (Hugging Face Daily Papers本日のトレンド上位。コード: https://github.com/yukyeongleee/wikitrace)
+- 概要: 過去の行動履歴を"レッスン"に要約して外部メモリとして与えるLLMエージェントは、メモリなしでは解けていたタスクを誤ったレッスンに従って失敗する「メモリによる劣化」を起こすことがある。これは、レッスンが成功/失敗のラベルだけから抽出され元の行動履歴(トレース)が無いためエージェントが検証できないことが原因だとし、各レッスンに「なぜ成功/失敗したかの要約」と「元のトレース」へのリンクを持たせるWikiTraceを提案。新規タスクでレッスンが不完全・矛盾・失敗起源に見える場合はリンクを辿って詳細を確認・修正できるようにし、5つのエージェントベンチマーク(8スイート)で既存のメモリ手法や「出典リンクなしで同じレッスンを与えたベースライン」を上回りつつメモリによる劣化を削減したと報告。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では未検出。Devin・Mastra Memory等、エージェントメモリ全般の記事はあるがWikiTrace自体の日本語紹介記事は未検出)
+- 検証難易度: 中(コード公開済み。論文のフルベンチマーク8スイート再現は負荷が高いため、本リポジトリの方針に沿うなら小規模な自作タスクで「レッスンのみ(Before)」vs「出典リンク付きレッスン〈WikiTrace〉(After)」の疑似再現に絞るのが現実的。LLM呼び出しにClaude自身の機能を使えば追加の有料APIキー不要の見込み。GPU不要)
+- 見栄え: Remory(day-candidate済み、未選択)等と同じ「エージェントメモリ」テーマだが、「出典に戻って検証・修正できるか」という具体的な失敗シナリオ(誤ったレッスンを踏襲して本来解けるタスクに失敗する例)を自作し、WikiTrace方式で防げるかを見せるBefore/After実験は分かりやすい。
+- 状態: 未選択
+
+### [2026-11-11] ha-mcp — Home AssistantをClaude等のAIアシスタントから自然言語で構築・操作するMCPサーバー
+
+- 出典: https://github.com/homeassistant-ai/ha-mcp (本日GitHub Trending Pythonで+640star/日。MIT)
+- 概要: Claude・ChatGPT等のAIアシスタントからHome Assistant(スマートホームプラットフォーム)をMCP経由で操作・構築できるOSS。単にデバイスを操作するだけでなく、オートメーション・スクリプト・ダッシュボードの作成、トレース/ログの読み取り、ヘルパー・エリア・バックアップの管理まで、約87種のツールで「スマートホームを組み立てて保守する」ところまでAIエージェントに任せられる点を特徴とする。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では未検出。Home Assistant本体やhass-mcp等類似プロジェクトの記事はあるが本プロジェクト名での一次検証記事は未検出)
+- 検証難易度: 中(MIT。Home Assistant自体はDocker〈`ghcr.io/home-assistant/home-assistant:stable`等〉でシミュレート可能な"demo"統合〈実機材不要の仮想デバイス〉を使えば実機なしで検証できる見込み。MCPクライアントはClaude Code自身を使えば追加の有料APIキー不要。長期アクセストークンの発行など、Home Assistant側の初期セットアップに手間がかかる点が難易度を中程度に上げている)
+- 見栄え: 「自然言語でスマートホームのオートメーションを組んでもらう」というデモは一般読者にも分かりやすい。Claude Code自身をMCPクライアントとして使い、実際に仮想デバイスのオートメーションを自然言語指示で作成・実行させるBefore/After(手動設定 vs 自然言語指示)が作りやすい。
+- 状態: 未選択
+
+### [2026-11-11] Codex Security — OpenAI製、脆弱性の発見・検証・修正を行うAIセキュリティスキャナーCLI/SDK(参考・優先度低)
+
+- 出典: https://github.com/openai/codex-security (本日GitHub Trending TypeScriptで+20star/日。Apache-2.0。2026年3月にリサーチプレビューとして発表、2026年7月29日にCLI/SDKをオープンソース化)
+- 概要: OpenAIが公開した、リポジトリ全体・差分・指定パスの脆弱性を発見・検証し、パッチ生成やSECURITY.md起草、SARIF/JSON/CSV出力まで行うエージェント型セキュリティスキャナー。CLI(`@openai/codex-security`)・TypeScript SDK・GitHub Action・Codexプラグインとして提供。
+- 日本語記事件数: Zenn/Qiita個別件数は検索範囲では確認できなかったが、gihyo.jp・weel.co.jp(2記事)・ai.giftx.co.jp・labmemo.co等、日本語の技術メディアによる紹介記事が複数本日時点で既に存在する(件数自体は多くないが一次検証記事に近い解説記事が複数出ている状態)。
+- 検証難易度: 低だが制約あり(スキャン実行には`OPENAI_API_KEY`等の有料APIキーが必須で、本リポジトリの「当面は有料APIキー必須の候補を選ばない」方針に抵触する。GPU不要)
+- 見栄え: 「AIエージェントによる脆弱性スキャン→自動パッチ生成」のBefore/Afterは見栄えが良いが、上記の理由(有料APIキー必須・日本語解説記事が複数既出)から今回は優先度を下げる。無料枠や代替の無料プロバイダ〈例: 一部のOpenRouter無料モデル〉で動作確認できる場合は再検討の価値あり。
+- 状態: 未選択
