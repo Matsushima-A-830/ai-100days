@@ -1739,3 +1739,39 @@
 - 検証難易度: 低だが制約あり(スキャン実行には`OPENAI_API_KEY`等の有料APIキーが必須で、本リポジトリの「当面は有料APIキー必須の候補を選ばない」方針に抵触する。GPU不要)
 - 見栄え: 「AIエージェントによる脆弱性スキャン→自動パッチ生成」のBefore/Afterは見栄えが良いが、上記の理由(有料APIキー必須・日本語解説記事が複数既出)から今回は優先度を下げる。無料枠や代替の無料プロバイダ〈例: 一部のOpenRouter無料モデル〉で動作確認できる場合は再検討の価値あり。
 - 状態: 未選択
+
+### [2026-11-12] NVIDIA/SkillSpector — Claude Code/Codex/MCPの「Agent Skill」を導入前にスキャンするセキュリティツール
+
+- 出典: https://github.com/NVIDIA/SkillSpector (Apache-2.0。本日GitHub Trending Pythonで言及。スター数約25.7k・フォーク約2.3k、2026年6月頃公開)
+- 概要: Claude Code・Codex・MCPの「Agent Skill」(SKILL.md等)を実行・導入する前に、プロンプトインジェクション・データ漏洩・権限昇格・サプライチェーンリスクなど16カテゴリ64パターンの脆弱性を検出するNVIDIA製スキャナー。正規表現・Python AST解析・YARAルール・OSV.dev照会による静的解析に加え、任意でLLMによるセマンティックレビューも行い、0〜100のリスクスコアと導入可否の推奨を出力する。背景研究としてarXiv:2601.10338で3万件超の公開Skillを調査し相当数に脆弱性が見つかったことを報告している。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では本ツール名でのZenn/Qiita/note記事は未検出。類似の日本語記事としてClassmethod社の技術ブログ〈dev.classmethod.jp〉がSkillSpectorとCisco Skill Scannerを比較検証した記事が既に存在するが、Zenn/Qiita/note上の記事ではない)
+- 検証難易度: 低(Apache-2.0。`uv tool install git+https://github.com/NVIDIA/skillspector.git`で導入可能。`--no-llm`オプションで静的解析のみなら追加のAPIキー不要・GPU不要。LLMによるセマンティックレビューは既定でNVIDIA製クラウドAPIキーが必要だがローカルのOllama等にも切り替え可能なため、静的解析のみに絞れば本リポジトリの「有料APIキー必須の候補を選ばない」方針に抵触しない)
+- 見栄え: 本リポジトリ自身がClaude Code Routineで運用されているため、`tools/card-template.html`のような実在のSKILL.md相当ファイルや、意図的に脆弱性を仕込んだサンプルSkillを用意してスキャンし、「安全なSkill」と「脆弱なSkill」のスキャン結果・リスクスコアを比較するBefore/After実験が作りやすい。読者もClaude Codeユーザーが多く見込まれ、自分の導入しているSkillを同じ手順でスキャンできる実用性がある。
+- 状態: 未選択
+
+### [2026-11-12] CopilotKit/OpenBot — 専用の「コンピュータ」を持つAI「同僚」を自前ホストできるOSSプラットフォーム
+
+- 出典: https://github.com/CopilotKit/OpenBot (アプリケーションテンプレート部分はMIT。本日GitHub Trending TypeScriptで+291star/日。2026年11月1日に発表されたばかりでスター数は既に3,500超)
+- 概要: CopilotKitが公開した、AIエージェント(「Bot」)1体ごとに専用のブラウザ・ファイルストレージ・ツール群を持つ「コンピュータ」を割り当て、組織内に自前ホストして「AIの同僚」として運用するためのプラットフォーム。行動は「実行前に決定され、実行後に記録される」設計で、ガバナンス(承認フロー・ログ)を重視する。BotはAG-UIプロトコルに対応していればどの実装でも接続できる。デスクトップアプリ・Docker Compose・Helm(Kubernetes)の各導入方法を提供。
+- 日本語記事件数: Zenn 0件(CopilotKit自体を使ったエージェント構築記事は1件存在するが、OpenBotそのものを扱った記事ではない) / Qiita 0件 / note 0件(検索した範囲ではOpenBot自体を扱った日本語記事は未検出)
+- 検証難易度: 中、ただし制約あり。モデル呼び出しにOpenAI/Anthropic/Google等のAPIキーが必須な上、会話の永続化・メモリ・ガバナンス機能には別途「CopilotKit Intelligence」のライセンス(無料プランとローカル向けの選択肢があるとされるが詳細未確認)が必要。本リポジトリの「当面は有料APIキー必須の候補を選ばない」方針との整合性を検証前に確認する必要がある。GPU不要。
+- 見栄え: 「指示を与えてBotに専用コンピュータ上でタスクをこなしてもらう」デモは一般読者にも分かりやすく、ガバナンス機能(実行前承認・実行ログ)の有無でBefore/Afterを見せやすい。ただし有料要素の確認が済むまでは優先度を保留。
+- 状態: 未選択
+
+### [2026-11-12] rlaope/oh-my-hermes — Nous ResearchのHermes Agent向けに並列「同僚レーン」とタスクのDAG分解を追加する運用レイヤー
+
+- 出典: https://github.com/rlaope/oh-my-hermes (MIT。本日GitHub Trending TypeScriptで言及。スター数約5.6k)
+- 概要: Nous Research製の自律エージェント「Hermes Agent」の上に被せる運用レイヤー。`/dag-ulw`コマンドで1つの目標を小さなタスクのグラフ(DAG)に分解して並列実行し、別の検証ノードで結果をチェックする。作業カテゴリごとのモデルルーティング(Claude/GPT/GLM/Kimi/DeepSeek等、あるプロバイダが拒否すると次のモデルへ移る)、専門スキル、LSPベースのコードツール、長期プロジェクトメモリ、デスクトップアプリ(OMHER)を備える。Hermes Agent自体へのパッチは行わない設計。
+- 日本語記事件数: Zenn 0件 / Qiita 1件(Hermes Agent公式サイトへのリンクと「セットアップは数分で済むらしい」という短い所感のみで、oh-my-hermes自体や詳細な検証を含む記事ではない) / note 0件(検索した範囲)
+- 検証難易度: 中〜高(前提としてHermes Agent本体の導入が必要。モデルルーティングが複数の有料プロバイダ〈Claude/GPT/GLM/Kimi/DeepSeek〉を想定した設計になっており、無料枠・ローカルモデルのみで完結できるかは未確認。GPU要件の明記はないが、Hermes Agent本体の動作要件次第。検証前にHermes Agent自体の無料利用可否・API要件を確認する必要がある)
+- 見栄え: 「DAG分解による並列タスク実行→別ノードでの検証」という設計は、本チャレンジで既に扱ってきたマルチエージェント・オーケストレーション系の検証と比較しやすく、実際にDAGがどう分解されるかのログを見せるデモが作れる。ただし前提条件(Hermes Agent本体・複数プロバイダ想定)の確認が先に必要。
+- 状態: 未選択
+
+### [2026-11-12] PurpleDoubleD/locally-uncensored — チャット・画像生成・動画生成・コーディングエージェントを1つのデスクトップアプリでローカル完結させるOSS
+
+- 出典: https://github.com/PurpleDoubleD/locally-uncensored (AGPL-3.0-only。本日GitHub Trending TypeScriptで+217star/日。最新リリースv3.0.10は2026年11月付)
+- 概要: ローカルのチャット・画像生成・動画生成・コーディングエージェントを、Dockerもターミナルも使わずに1つのデスクトップアプリ(Windows/Linux/macOS Apple Silicon/Android)でまとめて動かすOSS。ローカルモードではデータを外部に送らない設計で、OpenAI/Anthropic等のクラウドプロバイダ利用は任意(自分のAPIキーを使う場合のみ)。README上は3Bモデルなら8GB RAMでGPU無しでも動作し、8Bモデルは6GB VRAMのGPUで動作するとされる。有料のホスト型クラウドサービス(LU Labs Cloud)も選択肢としてあるが必須ではない。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では本リポジトリ名・類似の日本語キーワードでの記事は未検出)
+- 検証難易度: 低〜中(AGPL-3.0のため改変・再配布時の開示義務に注意。ローカルモードのみなら追加の有料APIキー不要。3B程度の小型モデルでのチャットならGPU不要でCPU動作可能。画像・動画生成を試す場合はVRAM要件〈6〜12GB以上〉が上がるため、チャット+コーディングエージェント機能に絞れば6時間以内の検証が現実的)
+- 見栄え: 「クラウド無し・ローカル完結」という切り口でBefore(クラウドAPI経由の既存チャット)/After(本アプリでのローカルチャット・簡単なコーディングタスク)を比較できる。なお「uncensored(検閲なし)」という名称はコンテンツモデレーションを外したモデルを指すが、記事では検閲回避自体ではなく「ローカルで動く多機能デスクトップAIアプリ」としての技術的な検証を主役にし、AGPL-3.0のライセンス条件にも触れる必要がある。
+- 状態: 未選択
