@@ -156,3 +156,105 @@ template無し)で与え、貪欲復号(`do_sample=False`, `max_new_tokens=256`)
   (2/3)で、応答の構造も大きく破壊されていなかった。サンプル数が少なく定量的な性能主張はできない。
 - フルファインチューニング・GRPO学習自体の再現(verl/vLLM/flash-attentionが前提、GPU必須)は
   当初からスコープ外とした設計判断であり、今回の失敗ではない。
+
+## ローカル検証(人間のPC、GPU使用): モデルサイズを上げて再検証
+
+上記はRoutine実行環境(CPUのみ)の制約でQwen2.5-0.5B(0.5Bパラメータ)に絞った検証だった。
+人間(matsu)のローカルPC(NVIDIA GeForce RTX 5060 Ti、16GB VRAM)にはGPUがあるため、
+同じ`Jacklu0831/deletion-tuning-masks`リポジトリが公開している6倍大きい
+**`grpo/qwen2.5-3b-simplerl-zoo`**(ベースモデル`Qwen/Qwen2.5-3B`)に差し替えて、
+全く同じ手順(`apply_mask.py` → `verify_and_sizes.py` → `compare.py`)を再実行した。
+`Qwen/Qwen2.5-3B`はHugging Face上でゲート無し(ライセンスはApache-2.0ではなくQwenの
+独自ライセンス`license:other`だが、商用利用等の制限はなく重みのダウンロード・推論自体に
+API キーや同意は不要)。
+
+### 環境
+
+- OS: WSL2(Ubuntu)、Python 3.12、`torch==2.11.0+cu128`(CUDA 12.8)
+- GPU: NVIDIA GeForce RTX 5060 Ti(VRAM 16GB、空き約14.9GB)
+- 依存関係はRoutineと同じ(`torch transformers zstandard safetensors numpy`)
+
+### 手順1: ベースモデルとマスクの取得
+
+```
+$ curl -sSL "https://huggingface.co/Qwen/Qwen2.5-3B/resolve/main/model-00001-of-00002.safetensors" -o qwen3b-base/model-00001-of-00002.safetensors
+$ curl -sSL "https://huggingface.co/Qwen/Qwen2.5-3B/resolve/main/model-00002-of-00002.safetensors" -o qwen3b-base/model-00002-of-00002.safetensors
+$ curl -sSL "https://huggingface.co/Jacklu0831/deletion-tuning-masks/resolve/main/grpo/qwen2.5-3b-simplerl-zoo/config.json" -o mask_qwen3b/config.json
+$ curl -sSL "https://huggingface.co/Jacklu0831/deletion-tuning-masks/resolve/main/grpo/qwen2.5-3b-simplerl-zoo/model.safetensors" -o mask_qwen3b/model.safetensors
+```
+
+マスクに同梱の`config.json`(著者らの実測値、改変なし):
+
+```json
+{
+  "format": "packbits_zstd",
+  "total_params": 811597824,
+  "zero_params": 1173999,
+  "original_size_mb": 774.0,
+  "compressed_size_mb": 2.7242050170898438,
+  "sparsity_ratio": 0.0014465280281480892,
+  "compression_ratio": 284.11958539993896
+}
+```
+
+### 手順2: マスクの適用(`apply_mask.py`、パスの引数以外は無変更)
+
+```
+$ python apply_mask.py --base_model qwen3b-base --mask_dir mask_qwen3b --output_dir qwen3b-masked
+deleted 1,173,999 weights; saved to qwen3b-masked
+Loading weights: 100%|██████████| 434/434 [00:00<00:00, 1919.42it/s]
+Writing model shards: 100%|██████████| 1/1 [00:07<00:00, 7.70s/it]
+```
+
+3Bクラスでもマスク適用自体は10秒以内で完了した。
+
+### 手順3: マスクが実際に効いているか・ファイルサイズの検証(`verify_and_sizes.py`)
+
+```
+model.layers.0.mlp.gate_proj.weight: shape=(11008, 2048), total=22544384, zeroed_in_masked_but_nonzero_in_base=31563
+base all-zero count: 108, masked all-zero count: 31671
+parameter tensors that differ between base and masked: 36 / 434
+mask config.json: {'format': 'packbits_zstd', 'total_params': 811597824, 'zero_params': 1173999, 'original_size_mb': 774.0, 'compressed_size_mb': 2.7242050170898438, 'sparsity_ratio': 0.0014465280281480892, 'compression_ratio': 284.11958539993896}
+base model.safetensors: 6,171,926,992 bytes (5886.0 MB)
+masked (dense) model.safetensors: 6,171,927,112 bytes (5886.0 MB)
+released mask file (model.safetensors): 2,863,976 bytes (2.7313 MB)
+dense-checkpoint / mask-file size ratio: 2155.0x
+total base model parameters: 3,085,938,688
+zero_params (deleted) / total model params = 0.0380%
+```
+
+0.5Bと同様の構図が3Bでも確認できた。
+
+- 変更されたパラメータテンソルは434個中36個だけで、すべて`model.layers.{i}.mlp.gate_proj.weight`
+  (`num_hidden_layers=36`と一致)。他の重みは完全に無変更。
+- 削除された重みはモデル全体のパラメータ数(3,085,938,688個)の**0.0380%**で、論文の
+  「0.05%未満」という主張と一致する(0.5Bの実測0.0404%とほぼ同水準)。
+- 配布マスクファイル(2.73MB)は密なチェックポイント(5886.0MB)の**約2155分の1**。
+  モデルサイズが6倍になってもこの圧縮率はむしろ0.5Bの2042倍よりわずかに大きくなった。
+
+### 手順4: 応答の比較(Before/After、`compare.py`、GPU実行)
+
+GPU(RTX 5060 Ti)上でbf16で実行し、0.5Bと同じ3問のGSM8K形式の問題で比較した。
+
+| 問題 | 正解 | ベースモデル(3B) | マスク適用後(3B) |
+|---|---|---|---|
+| Natalia(クリップ販売) | 72 | 正解(72、4.4秒) | 正解(72、2.7秒) |
+| robe(繊維の本数) | 3 | 正解(3、2.6秒) | 正解(3、2.1秒) |
+| Weng(ベビーシッター時給) | 10 | 正解(10、7.6秒) | 正解(10、9.5秒) |
+
+3問とも、ベースモデルとマスク適用後モデルの両方が正解した。
+0.5Bでは3問中1問(Weng)が両方不正解だったが、3Bに上げるとベースモデル自体の推論力が
+上がり、マスク適用後も含めて3問とも正解に変わった。
+これはマスクの効果ではなくモデルサイズそのものの効果だが、モデルサイズを変えても
+「ベースモデルとマスク適用後モデルの出力が同程度の正答率を保つ」という傾向自体は
+0.5Bと3Bの両方で一貫して確認できた。
+
+### ローカル検証のまとめ
+
+- 論文の「0.05%未満の重みを消すだけ」「数百〜数千倍小さい」という主張は、Routine実行環境で
+  検証した0.5Bだけでなく、GPU上で動かした6倍大きい3Bでも同じ水準の実測値で確認できた
+  (削除割合0.0380% / 圧縮率2155倍)。
+- GSM8K形式3問の応答比較では、3Bスケールではベースモデルとマスク適用後モデルが3問とも
+  同じ判定(全問正解)で揺れが無く、0.5Bで見られた1問の不一致(方針は合っているが計算が崩れる挙動)
+  は再現しなかった。サンプル数が少ないため、これがモデルサイズの効果かマスクの効果かは
+  この検証だけでは切り分けられない。

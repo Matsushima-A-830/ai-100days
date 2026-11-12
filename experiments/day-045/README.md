@@ -10,6 +10,9 @@
 - ベースモデル: https://huggingface.co/Qwen/Qwen2.5-0.5B (Apache-2.0)
 
 詳しい結果と実行ログは[results.md](./results.md)を参照。
+人間(matsu)のローカルPC(GPU搭載)では、6倍大きい`Qwen/Qwen2.5-3B` +
+`grpo/qwen2.5-3b-simplerl-zoo`マスクでも同じ手順を再検証している
+(results.md「ローカル検証」節)。
 
 ## 再現手順
 
