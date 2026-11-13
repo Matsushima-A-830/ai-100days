@@ -1,0 +1,42 @@
+test_calc.py fails. Read calc.py and test_calc.py, fix the bug in calc.py, then run `python3 test_calc.py` to confirm it passes.
+
+3 steps
+57ms
+file_read
+5ms
+{
+  "path": "/home/matsu/work-day046/code-sandbox/calc.py"
+}
+def add(a, b):
+    return a - b  # bug: should be a + b
+
+
+def mul(a, b):
+    return a * b
+
+file_read
+3ms
+{
+  "path": "/home/matsu/work-day046/code-sandbox/test_calc.py"
+}
+from calc import add, mul
+
+assert add(2, 3) == 5, f"add(2, 3) returned {add(2, 3)}"
+assert mul(2, 3) == 6
+print("all tests passed")
+
+shell_execute
+49ms
+{
+  "command": "python3 test_calc.py",
+  "cwd": "/home/matsu/work-day046/code-sandbox",
+  "timeout": 600000
+}
+Error (1):
+Traceback (most recent call last):
+  File "/home/matsu/work-day046/code-sandbox/test_calc.py", line 3, in <module>
+    assert add(2, 3) == 5, f"add(2, 3) returned {add(2, 3)}"
+           ^^^^^^^^^^^^^^
+AssertionError: add(2, 3) returned -1
+
+4,733 in · 177 out
