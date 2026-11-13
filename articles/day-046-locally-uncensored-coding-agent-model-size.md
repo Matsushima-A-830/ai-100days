@@ -1,5 +1,5 @@
 ---
-title: "ローカル完結AIスタジオlocally-uncensoredのコーディングエージェントを3B/7B/14Bで試したら、直せたのは14Bだけだった"
+title: "locally-uncensoredのコーディングエージェントを3B/7B/14Bで試したら、直せたのは14Bだけだった"
 emoji: "🧑‍💻"
 type: "tech"
 topics: ["ai", "llm", "ollama", "localllm", "codingagent"]
