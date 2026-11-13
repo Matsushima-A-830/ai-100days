@@ -15,7 +15,7 @@
 3. `README.md` / `package.json` / `setup.sh` / `dev-server/` 配下を読んで構成を確認した
    (実行はしていない、静的に読んだだけ)。
    - デスクトップアプリ本体はTauri(Rust + React/Vite)。`npm run dev` でブラウザ向けの
-     開発モード(Vite、`localhost:5173`)が動き、`dev-server/` 配下のNodeサーバーが
+     開発モード(Vite、`localhost:5273`)が動き、`dev-server/` 配下のNodeサーバーが
      Ollama連携・ファイルアクセス・シェル実行などデスクトップ版相当のAPIをブラウザ向けに
      プロキシする構成になっている。
    - README上、チャット機能は3Bモデルなら8GB RAM・GPU無しで動作、8Bモデルは6GB VRAMの
@@ -84,7 +84,7 @@ $ curl -sS http://127.0.0.1:$PROXY_PORT/__agentproxy/status
 3. Linux/macOS: `./setup.sh`(対話式。Node/Git/Ollamaの確認、Ollamaの導入、小型モデル
    〈3B程度、例: `ollama pull llama3.2:3b` や `ollama pull qwen2.5:3b-instruct` 等〉の
    ダウンロード、`npm run dev` の起動まで一括で行う)。あるいは手動で
-   `ollama pull <3B程度のモデル>` → `npm run dev` → `http://localhost:5173` をブラウザで開く。
+   `ollama pull <3B程度のモデル>` → `npm run dev` → `http://localhost:5273` をブラウザで開く。
 4. チャットタブで3B程度の小型モデルに簡単な質問をして応答を確認する(CPUのみ・GPU無しでの
    動作時間も記録してもらえると記事に書ける)。
 5. Codeタブ(コーディングエージェント)で、小さなスクリプトの生成・修正を指示し、
