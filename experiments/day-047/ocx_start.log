@@ -1,0 +1,18 @@
+   outbound proxy: http://127.0.0.1:37619/
+🚀 opencodex proxy running on http://localhost:10100
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🔐 Claude intercept proxy active on http://127.0.0.1:10200 (CONNECT api.anthropic.com → local TLS)
+  ℹ️  Anonymous telemetry is awaiting human consent (run 'ocx telemetry status' or open the dashboard; disable anytime with 'ocx telemetry disable' or OCX_TELEMETRY=0).
+Codex home /home/user/ai-100days/experiments/day-047/ocx_home/.codex does not exist yet, so there is no config.toml to route. Start Codex once so it creates its home, then rerun 'ocx sync'. If Codex uses a different home, set CODEX_HOME to it.
+   Target Codex home: /home/[USER]/ai-100days/experiments/day-047/ocx_home/.codex
+Client startup work complete.
+[opencodex] upstream failure status=502
+[opencodex] upstream failure status=502 type=server_error
+[opencodex] upstream failure status=502
+[opencodex] upstream failure status=502 type=server_error
+
+🛑 Shutting down opencodex proxy...

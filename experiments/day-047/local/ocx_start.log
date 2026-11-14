@@ -1,0 +1,11 @@
+🚀 opencodex proxy running on http://localhost:10100
+   POST /v1/responses → provider translation
+   POST /v1/chat/completions → OpenAI-compatible clients
+   GET  /healthz      → health check
+   GET  /api/*        → management API
+   GET  /             → GUI dashboard
+🔐 Claude intercept proxy active on http://127.0.0.1:10200 (CONNECT api.anthropic.com → local TLS)
+  ℹ️  Anonymous telemetry is awaiting human consent (run 'ocx telemetry status' or open the dashboard; disable anytime with 'ocx telemetry disable' or OCX_TELEMETRY=0).
+Codex home /home/matsu/work-day047/home/.codex does not exist yet, so there is no config.toml to route. Start Codex once so it creates its home, then rerun 'ocx sync'. If Codex uses a different home, set CODEX_HOME to it.
+   Target Codex home: ~/work-day047/home/[USER]
+Client startup work complete.

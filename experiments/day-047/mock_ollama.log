@@ -1,0 +1,10 @@
+[mock-ollama] listening on http://localhost:11434
+[mock-ollama] POST /v1/chat/completions
+[mock-ollama] headers: {"accept-encoding":"identity","content-type":"application/json","connection":"keep-alive","user-agent":"Bun/1.4.4","accept":"*/*","host":"localhost:11434","content-length":"240"}
+[mock-ollama] body: {"model":"mock-model","messages":[{"role":"user","content":"こんにちは、opencodex経由でAnthropic Messages API形式のリクエストを送っています。"}],"stream":true,"max_tokens":64,"stream_options":{"include_usage":true}}
+[mock-ollama] POST /v1/chat/completions
+[mock-ollama] headers: {"content-type":"application/json","connection":"keep-alive","user-agent":"Bun/1.4.4","accept":"*/*","host":"localhost:11434","accept-encoding":"gzip, deflate, br, zstd","content-length":"141"}
+[mock-ollama] body: {"model":"mock-model","messages":[{"role":"user","content":"OpenAI Chat Completions形式で送信したテストです。"}],"stream":false}
+[mock-ollama] POST /v1/chat/completions
+[mock-ollama] headers: {"content-type":"application/json","connection":"keep-alive","user-agent":"Bun/1.4.4","accept":"*/*","host":"localhost:11434","accept-encoding":"gzip, deflate, br, zstd","content-length":"131"}
+[mock-ollama] body: {"model":"mock-model","messages":[{"role":"user","content":"Responses API形式で送信したテストです。"}],"stream":false}

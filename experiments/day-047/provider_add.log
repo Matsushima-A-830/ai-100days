@@ -1,0 +1,24 @@
+{
+  "action": "added",
+  "modelSelection": {
+    "provider": "my-ollama",
+    "afterLogin": false,
+    "requiresRunningProxy": true,
+    "commands": {
+      "list": "ocx models live --provider my-ollama",
+      "enable": "ocx models enable \"<model-id-from-list>\"",
+      "disable": "ocx models disable \"<model-id-from-list>\"",
+      "enableNative": "ocx models enable \"<model-id-from-list>\" --native",
+      "disableNative": "ocx models disable \"<model-id-from-list>\" --native",
+      "enableAll": "ocx models provider my-ollama on",
+      "disableAll": "ocx models provider my-ollama off"
+    }
+  },
+  "provider": "my-ollama",
+  "adapter": "openai-chat",
+  "baseUrl": "http://localhost:11434/v1",
+  "defaultModel": "mock-model",
+  "isDefault": true,
+  "source": "custom",
+  "needsSync": true
+}
