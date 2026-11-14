@@ -1,0 +1,7 @@
+run1  direct 5.708604s (32 tok)   via-opencodex 5.208805s (32 tok)
+run2  direct 5.226990s (32 tok)   via-opencodex 5.256594s (32 tok)
+run3  direct 5.304535s (32 tok)   via-opencodex 5.241122s (32 tok)
+--- ollama native eval rate (32B)
+eval 64 tok in 10.26s = 6.2 tok/s
+NAME                    ID              SIZE     PROCESSOR          CONTEXT    UNTIL              
+qwen2.5:32b-instruct    9f13ba1299af    21 GB    30%/70% CPU/GPU    4096       4 minutes from now    

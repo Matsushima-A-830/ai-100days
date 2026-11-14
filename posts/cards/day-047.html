@@ -157,63 +157,61 @@
   </div>
 
   <div class="heading">
-    <h1>3つのAPI形式を1つの<br>バックエンドに変換できるか</h1>
-    <p><span class="src">lidge-jun/opencodex</span>(MIT)は、コーディングエージェントと各AIプロバイダーの間に立つローカルプロキシ。Anthropic/OpenAI系3形式の相互変換を実際のリクエストで検証した。</p>
+    <h1>3つのAPI形式を<br>ローカルの32Bに通訳できるか</h1>
+    <p><span class="src">lidge-jun/opencodex</span>(MIT)を、手元のOllama+<span class="src">qwen2.5:32b-instruct</span>(このPCで載る最大サイズ)につないで検証した。</p>
   </div>
 
   <div class="stat-row">
     <div class="stat-number">3/3</div>
-    <div class="stat-caption">Anthropic Messages・OpenAI Chat Completions・OpenAI Responses、<strong>3つの受け口</strong>すべてで変換・転送に成功(SSE対応後)。</div>
+    <div class="stat-caption">Anthropic Messages・OpenAI Chat Completions・OpenAI Responses、<strong>3つの受け口</strong>すべてで200。ストリーミングとツール呼び出しも往復で変換できた。</div>
   </div>
 
-  <!-- パターンB: Before/After比較(非ストリーミングのモック vs SSE対応のモック) -->
-  <section class="block compare">
-    <div class="block-label">同じリクエストの結果比較(/v1/messages)</div>
-    <div class="compare-grid">
-      <div class="compare-panel bad">
-        <div class="compare-title">✗ Before(非ストリーミング応答)</div>
-        <pre class="compare-output">HTTP 502
-"The provider failed
-to complete the request."
-
-バックエンドへの転送時に
-opencodexが既定で
-stream:trueを要求していた</pre>
-      </div>
-      <div class="compare-panel good">
-        <div class="compare-title">✓ After(SSE対応に修正)</div>
-        <pre class="compare-output">HTTP 200
-role: "assistant"
-stop_reason: "end_turn"
-
-Anthropic形式の
-応答に正しく変換</pre>
-      </div>
-    </div>
-  </section>
-
   <section class="block">
-    <div class="block-label">3つの受け口すべてで同じバックエンドに変換</div>
+    <div class="block-label">qwen2.5:32b-instruct(21 GB, 30%/70% CPU/GPU)への変換結果</div>
     <div class="terminal">
       <div class="term-row">
         <span class="term-tag">Msg</span>
-        <span class="toks">POST /v1/messages (Anthropic) → 200(content配列・stop_reason)</span>
+        <span class="toks">POST /v1/messages → 200 / stream:true → message_start…message_stop</span>
       </div>
       <div class="term-row">
-        <span class="term-tag">Chat</span>
-        <span class="toks">POST /v1/chat/completions (OpenAI) → 200(choices[].message)</span>
+        <span class="term-tag">Tool</span>
+        <span class="toks">tool_use get_weather {"city":"Tokyo"} → tool_result → 「現在、東京の天気は雨で、気温は14℃です。」</span>
       </div>
       <div class="term-row">
         <span class="term-tag">Resp</span>
-        <span class="toks">POST /v1/responses (OpenAI Responses) → 200(output[].content)</span>
+        <span class="toks">POST /v1/responses → 200 / function_call get_weather</span>
       </div>
-      <div class="term-foot">同じ1つの<b>OpenAI Chat Completions互換バックエンド</b>に、3形式すべてが正しく変換・転送された。</div>
+      <div class="term-row">
+        <span class="term-tag">遅延</span>
+        <span class="toks">直接 5.23〜5.71s ・ 経由 5.21〜5.26s(32 tok × 3回)</span>
+      </div>
+      <div class="term-foot">プロキシを挟んでも<b>遅延は誤差の範囲</b>。生成自体は約6.2 tok/s。</div>
+    </div>
+  </section>
+
+  <section class="block compare">
+    <div class="block-label">Anthropic形式の応答の model フィールド</div>
+    <div class="compare-grid">
+      <div class="compare-panel bad">
+        <div class="compare-title">✗ my-ollama/qwen2.5:32b-instruct</div>
+        <pre class="compare-output">"model": "the requested model"
+
+モデル名チェックの正規表現が
+「:」を許可していない</pre>
+      </div>
+      <div class="compare-panel good">
+        <div class="compare-title">✓ my-ollama/qwen32b(別名)</div>
+        <pre class="compare-output">"model": "my-ollama/qwen32b"
+
+ollama cp でコロン無しの
+別名を作ると正しく返る</pre>
+      </div>
     </div>
   </section>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>実機のOllamaは検証環境のネットワーク制約で使えず、同条件(OpenAI Chat Completions互換)を満たす自作モックサーバーで代替した。実際のClaude Code/Codex製品ログインを通す検証はアカウントリスクを避けスコープ外とした。</p>
+    <p>Claude Code/Codexの製品アカウントは使わず、curlで各形式を直接送って確認した。ocx start は既定で api.anthropic.com 向けのintercept proxyも起動するため、HOMEを分離して実行した。</p>
   </div>
 
   <footer>

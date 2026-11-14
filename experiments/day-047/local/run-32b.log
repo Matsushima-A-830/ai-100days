@@ -1,0 +1,47 @@
+### 0. warm-up (direct Ollama, load model)
+  [time 14.13 s]
+qwen2.5:32b-instruct    9f13ba1299af    21 GB    30%/70% CPU/GPU    4096       4 minutes from now    
+
+### 1a. Anthropic Messages  POST /v1/messages
+{"id":"msg_af4dd030df7c485d9e35d08f0bcff579","type":"message","role":"assistant","content":[{"type":"text","text":"日本の首都は東京です。这是因为自1868年以来，东京都一直是日本的政治、经济和文化中心。不过，指示中要求用日语回答理由，因此正确的回答应该是：\n\n日本の首都は東京です。这是因为自1868年以来、東京都は日本の政治、経済、文化の中心地となっています。但正确地道出理由的日语句子应为：\n\n日本の首都は東京です。東京都は1868年以来、日本の政治、経済、文化の中心地となっています。"}],"model":"the requested model","stop_reason":"end_turn","stop_sequence":null,"usage":{"input_tokens":26,"output_tokens":116,"cache_read_input_tokens":24,"cache_creation_input_tokens":0}}
+HTTP_STATUS:200
+  [time 16.80 s]
+
+### 1b. OpenAI Chat Completions  POST /v1/chat/completions
+{"id":"chatcmpl-585","object":"chat.completion","created":1794621895,"model":"qwen2.5:32b-instruct","system_fingerprint":"fp_ollama","choices":[{"index":0,"message":{"role":"assistant","content":"日本の首都は東京です。これは、日本国憲法と国家の行政中心地であるという実情に基づいています。"},"finish_reason":"stop"}],"usage":{"prompt_tokens":50,"prompt_tokens_details":{"cached_tokens":49},"completion_tokens":29,"total_tokens":79}}
+HTTP_STATUS:200
+  [time 4.80 s]
+
+### 1c. OpenAI Responses  POST /v1/responses
+{"id":"resp_6cfa2c578c1449e68d03cfe2349f7c8a","object":"response","created_at":1794621913,"status":"completed","model":"qwen2.5:32b-instruct","output":[{"type":"message","id":"msg_a30434ad9d42487ab219e09da4c37c3b","role":"assistant","status":"completed","content":[{"type":"output_text","text":"日本の首都は東京です。これは、1868年からの歴史的経緯と政治、経済、文化の中心地としての役割が理由です。ただし、この回答は文の長さ制約により、完全な一文として詰め込みましたので、通常は理由部分をさらに簡素化することが推奨されます。より簡潔に言えば、「日本の首都は東京です。法律で定められているからです。」と答えられます。","annotations":[]}],"phase":"final_answer"}],"usage":{"input_tokens":50,"output_tokens":110,"total_tokens":160,"input_tokens_details":{"cached_tokens":49},"output_tokens_details":{"reasoning_tokens":0}}}
+HTTP_STATUS:200
+  [time 17.96 s]
+
+### 1d. direct Ollama /v1/chat/completions (no proxy, baseline)
+{"id":"chatcmpl-427","object":"chat.completion","created":1794621918,"model":"qwen2.5:32b-instruct","system_fingerprint":"fp_ollama","choices":[{"index":0,"message":{"role":"assistant","content":"日本の首都は東京です。这是因为東京作为政治、经济和文化的中心，拥有天皇的宫殿、国会以及大多数政府機関。"},"finish_reason":"stop"}],"usage":{"prompt_tokens":50,"prompt_tokens_details":{"cached_tokens":49},"completion_tokens":32,"total_tokens":82}}
+
+HTTP_STATUS:200
+  [time 5.25 s]
+
+### 2. Anthropic streaming (stream:true) — event types
+      9 event: content_block_delta
+      1 event: content_block_start
+      1 event: content_block_stop
+      1 event: message_delta
+      1 event: message_start
+      1 event: message_stop
+      1 event: ping
+1,2,3,4,5
+event: message_delta
+
+### 3a. Anthropic tool use: tools -> tool_use block
+{"id":"msg_9878c7545c714a8abbf04bc996dfc936","type":"message","role":"assistant","content":[{"type":"tool_use","id":"call_ddztmfzd","name":"get_weather","input":{"city":"Tokyo"}}],"model":"the requested model","stop_reason":"tool_use","stop_sequence":null,"usage":{"input_tokens":338,"output_tokens":21,"cache_read_input_tokens":3,"cache_creation_input_tokens":0}}
+tool_use id: call_ddztmfzd
+
+### 3b. Anthropic tool_result round trip
+{"id":"msg_13b63c6bb1dd4a9dafbae4c56e76582d","type":"message","role":"assistant","content":[{"type":"text","text":"現在、東京の天気は雨で、気温は14℃です。"}],"model":"the requested model","stop_reason":"end_turn","stop_sequence":null,"usage":{"input_tokens":39,"output_tokens":20,"cache_read_input_tokens":355,"cache_creation_input_tokens":0}}
+HTTP_STATUS:200
+
+### 3c. Responses API tool call (function tools)
+{"id":"resp_9a11ad6108c5439097d18576a108a868","object":"response","created_at":1794621932,"status":"completed","model":"qwen2.5:32b-instruct","output":[{"type":"function_call","id":"fc_0e59a8f441174487a1ae7b7ede4fea0b","call_id":"call_h96xqhfe","name":"get_weather","arguments":"{\"city\":\"東京\"}","status":"completed"}],"usage":{"input_tokens":334,"output_tokens":21,"total_tokens":355,"input_tokens_details":{"cached_tokens":269},"output_tokens_details":{"reasoning_tokens":0}}}
+HTTP_STATUS:200

@@ -199,3 +199,149 @@ HTTP_STATUS:200
 - `ocx claude`での実際のClaude Code/Codex製品ログインを通した検証(アカウントリスクを避けるため
   意図的にスコープ外とした。today.md記載の方針どおり)。
 - 複数プロバイダへのフェイルオーバー/重み付きラウンドロビン(「コンボ」)機能。
+
+---
+
+## ローカル検証(2026-11-14, 人間のPC・実機Ollama)
+
+Routine実行環境ではモックサーバーで代替した部分を、実機のOllamaで追試した。
+モデルは「このPCで動かせる最大サイズ」として `qwen2.5:32b-instruct`(Q4_K_M、19GB)を新規に取得して使った。
+
+### 環境
+
+- OS: Windows + WSL2 / CPU: AMD Ryzen 7 7700 / RAM 30GiB / GPU: RTX 5060 Ti 16GB
+- Node v26.8.2 / npm 11.19.1 / Ollama 0.35.1
+- opencodex 2.100.2(PRと同じバージョンを指定。npm上の最新は2.100.3だった)
+
+モデルサイズの選定: VRAM 16GB + RAM 30GiBでは、32BのQ4(約20GB)がVRAMとRAMに分割して載る上限。
+70B級(Q4で40GB超)はRAMにも収まらないため対象外とした。
+実際の配置は `ollama ps` で `21 GB  30%/70% CPU/GPU`、生成速度は約6.2 tok/s(Ollamaネイティブ計測)だった。
+
+### インストール(グローバルではなく作業ディレクトリにローカルインストール)
+
+```
+$ npm install --loglevel=error @bitkyc08/opencodex@2.100.2
+found 0 vulnerabilities
+elapsed 20.49 s
+$ ./node_modules/.bin/ocx --version
+opencodex 2.100.2
+```
+
+### HOMEを分離して起動した理由
+
+ソースを確認すると、opencodexにはClaude Code/Claude Desktop連携のために `~/.claude/settings.json` に
+`HTTPS_PROXY` / `NODE_EXTRA_CA_CERTS` を書き込む処理(`src/claude/desktop-system-proxy.ts` 等)や、
+Codexの `~/.codex/config.toml` を書き換える処理がある。
+また `ocx start` は既定で「Claude intercept proxy」(`127.0.0.1:10200`、`CONNECT api.anthropic.com → local TLS`)も起動する。
+このPCではClaude Codeを普段使いしているため、`HOME=~/work-day047/home` として隔離した状態でocxを実行した
+(設定は `~/work-day047/home/.opencodex/` に作られた。本物の `~/.claude/settings.json` のsha256が検証前後で変わっていないことも確認)。
+
+```
+$ HOME=$W/home ocx provider add my-ollama --adapter openai-chat --base-url http://localhost:11434/v1 \
+    --default-model qwen2.5:32b-instruct --allow-private-network --auth-mode local --set-default --json
+{ "action": "added", "provider": "my-ollama", "adapter": "openai-chat",
+  "baseUrl": "http://localhost:11434/v1", "defaultModel": "qwen2.5:32b-instruct", "isDefault": true, ... }
+
+$ HOME=$W/home ocx start
+🚀 opencodex proxy running on http://localhost:10100
+🔐 Claude intercept proxy active on http://127.0.0.1:10200 (CONNECT api.anthropic.com → local TLS)
+  ℹ️  Anonymous telemetry is awaiting human consent (run 'ocx telemetry status' or open the dashboard; disable anytime with 'ocx telemetry disable' or OCX_TELEMETRY=0).
+```
+
+匿名テレメトリは同意待ちの状態で起動し、同意はしていない。
+
+### 1. 3つの受け口すべてで実機Ollama(32B)に変換・転送(`local/run-32b.log`)
+
+質問: `日本の首都はどこですか?理由を1文で添えて、日本語で答えてください。`
+
+| 受け口 | HTTP | 応答の形式 | usage | 所要 |
+|---|---|---|---|---|
+| `POST /v1/messages`(Anthropic) | 200 | `content[].text`, `stop_reason:"end_turn"` | input 26 + cache_read 24 / output 116 | 16.80s |
+| `POST /v1/chat/completions`(OpenAI) | 200 | `choices[].message` | prompt 50 / completion 29 | 4.80s |
+| `POST /v1/responses`(Responses) | 200 | `output[].content[].output_text` | input 50 / output 110 | 17.96s |
+| (比較)Ollama直接 `/v1/chat/completions` | 200 | — | prompt 50 / completion 32 | 5.25s |
+
+- 所要時間の差は出力トークン数の差(29〜116トークン)による。
+- Anthropic形式では、Ollamaの `prompt_tokens_details.cached_tokens` が `cache_read_input_tokens` に変換されていた(26+24=50でOpenAI側のprompt 50と一致)。
+- 応答本文: Anthropic形式・Ollama直接の両方で、日本語の回答に中国語の文が混ざった(例: 「日本の首都は東京です。这是因为自1868年以来…」)。
+  プロキシを通さないOllama直接でも起きているので、Qwen2.5-32Bの出力の性質であり、opencodexの変換とは無関係。
+
+### 2. Anthropic形式のストリーミング(`local/anthropic_stream_32b.txt`)
+
+`"stream":true` で送ると、Anthropicの正規のSSEイベント列に変換されて返った。
+
+```
+      9 event: content_block_delta
+      1 event: content_block_start
+      1 event: content_block_stop
+      1 event: message_delta
+      1 event: message_start
+      1 event: message_stop
+      1 event: ping
+連結したtext: 1,2,3,4,5
+```
+
+### 3. ツール呼び出しの変換
+
+Anthropic形式の `tools`(`get_weather`)を付けて「東京の今の天気を調べて。」と送った。
+
+```
+{"type":"message","role":"assistant",
+ "content":[{"type":"tool_use","id":"call_ddztmfzd","name":"get_weather","input":{"city":"Tokyo"}}],
+ "stop_reason":"tool_use", ...}
+```
+
+この `tool_use` に対して `tool_result`(`{"city":"Tokyo","condition":"rain","temp_c":14}`)を返すと、結果を使った回答が返った。
+
+```
+{"content":[{"type":"text","text":"現在、東京の天気は雨で、気温は14℃です。"}],"stop_reason":"end_turn", ...}
+HTTP_STATUS:200
+```
+
+Responses API形式の `function` ツールでも `function_call` に変換された。
+
+```
+"output":[{"type":"function_call","call_id":"call_h96xqhfe","name":"get_weather","arguments":"{\"city\":\"東京\"}","status":"completed"}]
+```
+
+Anthropic形式のtool_use → OpenAI形式のtool_calls → Ollama、と、その逆方向の変換(tool_result → toolメッセージ)が往復で機能した。
+
+### 4. プロキシのオーバーヘッド(`local/overhead-32b.log`)
+
+temperature 0・max_tokens 32で同じリクエストを、Ollama直接とopencodex経由(どちらも `/v1/chat/completions`)で3回ずつ交互に送った。
+
+```
+run1  direct 5.708604s (32 tok)   via-opencodex 5.208805s (32 tok)
+run2  direct 5.226990s (32 tok)   via-opencodex 5.256594s (32 tok)
+run3  direct 5.304535s (32 tok)   via-opencodex 5.241122s (32 tok)
+--- ollama native eval rate (32B)
+eval 64 tok in 10.26s = 6.2 tok/s
+```
+
+差はばらつきの範囲内で、プロキシを挟むことによる遅延は測れるほどではなかった。
+
+### 5. Anthropic形式の応答で `model` が "the requested model" になる
+
+Anthropic形式の応答(非ストリーミング・ストリーミングの `message_start` とも)では、`model` フィールドが
+リクエストしたモデル名ではなく `"the requested model"` という文字列になっていた
+(Chat Completions・Responses形式では `qwen2.5:32b-instruct` が入っている)。
+
+```
+## model=my-ollama/qwen2.5:32b-instruct
+  model field: 'the requested model'
+## model=my-ollama/qwen32b            (ollama cp で作ったコロン無しの別名)
+  model field: 'my-ollama/qwen32b'
+```
+
+原因は `src/lib/error-destination.ts` の `clientFacingModelLabel` で、モデル名の検証用正規表現
+`/^[A-Za-z0-9][A-Za-z0-9._-]*(?:\/[A-Za-z0-9][A-Za-z0-9._-]*){0,3}$/` が `:` を許可していないため、
+Ollamaのタグ付きモデル名(`qwen2.5:32b-instruct`)はプレースホルダーに置き換えられる。
+Routine検証のモック(`mock-model`)はコロンを含まないため、この挙動は表に出なかった。
+応答本文やツール呼び出しには影響しないが、`model` を表示・記録するクライアントでは実際のモデル名が分からなくなる。
+
+### Routine検証(モック)との差分
+
+- 3形式すべてで200・各形式の正しい構造に変換される点は、実機Ollamaでも同じだった。
+- モックでは0だった `usage` に、実際のトークン数(キャッシュ分の内訳を含む)が入った。
+- モックでは見えなかった差分として、Anthropic形式の `model` フィールドの置き換え(上記5)が見つかった。
+- ストリーミング・ツール呼び出しの変換はRoutine検証では未確認だったが、実機で動作を確認した。
