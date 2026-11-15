@@ -1847,3 +1847,39 @@
 - 検証難易度: 中。AGPL-3.0のため改変・再配布時の開示義務に注意。`npm i -g @actalk/inkos`で導入でき、Node.js 22.16以上が前提。執筆機能にはOpenAI互換/Anthropic/Gemini/Moonshot等のプロバイダ設定が必要だが、ローカルのOllama/LM Studioも選べるため、ローカル小型モデルを使えば追加の有料APIキーは不要になる見込み(GPU必須ではないが、モデルサイズによってはCPU動作の速度・品質に制約が出る可能性がある)。
 - 見栄え: 「ローカル小型モデルだけで、章をまたいだ設定の矛盾をどこまで抑えて小説を書き進められるか」という定性的なBefore(単純な1エージェントのプロンプト)/After(10エージェントパイプライン)比較が作れる。AGPL-3.0のため、検証結果を記事として紹介する分にはコード自体を改変・再配布しない限り大きな制約にはならない点を事前に確認しておく。
 - 状態: 未選択
+
+### [2026-11-15] tashfeenahmed/freellmapi — 無料枠LLMプロバイダ群を1つの`/v1`エンドポイントに束ねるセルフホスト型ルーター
+
+- 出典: https://github.com/tashfeenahmed/freellmapi (MIT。本日GitHub Trending TypeScriptで+579star/日。スター数約52.9k)
+- 概要: OpenAI互換の単一`/v1`エンドポイントを立て、34種とされる無料枠LLMプロバイダへのリクエストを自動ルーティング・フェイルオーバーするセルフホスト型ルーター。プロバイダキーは暗号化してローカルDBに保存し、各キーの無料枠使用量を追跡する。llama.cpp/LM Studio/vLLM/Ollama等のカスタムOpenAI互換エンドポイントも追加できる。README上は「Personal experimentation only」と明記。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では本リポジトリ名でのZenn/Qiita/note記事は未検出。韓国語〈brunch.co.kr〉の紹介記事はある)
+- 検証難易度: 低(MIT。Dockerワンライナーまたは`npm install && npm run dev`で起動し、追加の有料APIキー不要で無料枠プロバイダのキーのみ使う設計。GPU不要。本リポジトリの「当面は有料APIキー必須の候補を選ばない」方針に正面から合致する)
+- 見栄え: OpenAI Python SDKから`http://localhost:3001/v1`に向けて実際にリクエストを送り、レスポンスヘッダでどのプロバイダ経由で処理されたかを確認できる。1つのプロバイダをレート制限/無効キーにしてフェイルオーバーが働く様子を見せるBefore/Afterデモが作りやすい。
+- 状態: 未選択
+
+### [2026-11-15] GoogleChrome/modern-web-guidance-src — Google Chrome公式、コーディングエージェントに最新のWebベストプラクティスを教えるAgent Skill
+
+- 出典: https://github.com/GoogleChrome/modern-web-guidance-src (Apache-2.0。本日GitHub Trending TypeScriptで+1220star/日)
+- 概要: Google Chromeチームが公開した、コーディングエージェントに約250のWeb機能・200の実利用ケースに関する「最新のベストプラクティス」を教えるAgent Skill群。CLIで現行の推奨APIやパフォーマンス・アクセシビリティの指針を返し、古いパターンをコードベースから検出する`legacy-scan`コマンドも備える。開発元ブログでは導入企業(note株式会社)のケースでガイドライン準拠率が61%→94%に向上したと報告されている(2026年11月10日付)。
+- 日本語記事件数: Zenn 1件(関連するモダンCSS記事での言及のみで本ツール自体の検証記事ではない) / Qiita 0件 / note 0件(note.comでの検証記事は未検出。なお@IT〈atmarkit.itmedia.co.jp〉に2026年7月付けの日本語紹介記事が1件ある)
+- 検証難易度: 低(Apache-2.0。`npx modern-web-guidance@latest install`の対話式ウィザードで導入可能。追加の有料APIキー・GPU不要。導入前後で同じフロントエンドタスク〈ダイアログやフォーム等〉をClaude Codeに指示し、応答がどう変わるかを比較すれば6時間以内に完結する)
+- 見栄え: 「Agent Skillを1つ追加するだけでコーディングエージェントの出力がどう変わるか」というBefore/After比較は分かりやすく、本リポジトリ自身がClaude Code Routineで運用されているという自己言及的な文脈にも合う。Google Chrome公式発というニュース価値も高い。
+- 状態: 未選択
+
+### [2026-11-15] andrewyng/openworker — Andrew Ng発、デスクトップで動く自律型AI「同僚」エージェント(OpenWorker)
+
+- 出典: https://github.com/andrewyng/openworker (MIT。本日GitHub Trending Pythonで+139star/日。スター数約19.3k)
+- 概要: Andrew Ng(Rohit Prasadと共同)が公開した、リサーチ・文書作成・コードレビュー・GitHub/Slack/メール/カレンダー連携タスクを代行するデスクトップ型AIエージェント「OpenWorker」。ツール呼び出しごとに人間の承認を求め、全操作を記録する設計。自作エージェント構築用のHarness SDK(TypeScript + 組み込みRustエンジン)も同梱する。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では本リポジトリ名でのZenn/Qiita/note記事は未検出。英語・韓国語の紹介記事は複数ある)
+- 検証難易度: 中(MIT。ローカルモデル〈Ollama/LM Studio/llama.cpp/vLLM〉を使えば追加の有料APIキー不要。GPU要件はドキュメント未記載のためリンク先のモデル設定docsで要確認。ソースから動かすにはPython 3.10+・Node 20+・Rustツールチェーンが必要で、セットアップに時間がかかる可能性がある。Slack/GitHub等の外部連携は別途認証情報が必要なため、検証範囲はローカルモデルでのデスクトップアプリ単体〈ファイル要約・下書き作成等〉に絞るのが現実的)
+- 見栄え: 「指示に対し承認プロンプトを経てファイル操作等を行う」様子を実際にスクリーンショットで見せられ、Anthropicの提唱する人間承認型エージェント運用とも比較しやすい。著名研究者の新プロジェクトというニュース性も高い。
+- 状態: 未選択
+
+### [2026-11-15] HKUDS/AutoSwarm — 複数のコーディングエージェント(Claude Code/Codex/Cursor等)を1つのチームとして協調動作させるオーケストレーションツール
+
+- 出典: https://github.com/HKUDS/AutoSwarm (MIT。本日GitHub Trending Pythonで+56star/日)
+- 概要: Claude Code/Codex/OpenCode/Cursor/GitHub Copilot CLI等、既存の複数のコーディング・リサーチエージェントを、能力に応じて選択・コンテキスト共有・並列実行・結果統合する形で協調動作させるオーケストレーション層。デスクトップアプリ・CLI・IDE拡張・Skill対応エージェント環境から利用できる。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語記事は未検出。なお同じHKUDS発の別プロジェクト「ClawTeam」に関する韓国語解説記事はあるが、本リポジトリAutoSwarmとは別物)
+- 検証難易度: 中、要注意点あり。`uv tool install`で導入自体はキー不要だが、協調動作させる各エージェント〈Claude Code/Codex等〉は既存のCLIログイン・認証情報を再利用する設計で、検証用の動作確認コマンド(`autoswarm doctor --probe`)は実際にモデル呼び出しを行うため使用量コストが発生する。本リポジトリの「当面は有料APIキー必須の候補を選ばない」方針との関係では、新規の有料APIキー契約は不要だが、Claude Code自身の既存利用枠を使う前提になる点を検証前に確認する必要がある。GPU不要。
+- 見栄え: 「Claude Codeと別のCLIエージェントに同じフォルダのドキュメント要約を分担させ、結果がどう統合されるか」というデモは、本リポジトリ自身がClaude Code Routineで運用されているという自己言及的な文脈に合う。マルチエージェント・オーケストレーション系の最新作として、既存候補(oh-my-hermes等)との比較観点も作れる。
+- 状態: 未選択
