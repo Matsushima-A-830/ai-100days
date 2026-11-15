@@ -1,0 +1,3 @@
+pillow>=11
+piper-tts>=1.3
+imageio-ffmpeg>=0.5   # ffmpeg fallback when no system ffmpeg

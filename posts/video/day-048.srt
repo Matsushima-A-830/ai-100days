@@ -1,0 +1,71 @@
+1
+00:00:00,000 --> 00:00:05,240
+Day 48: PyRIT, Microsoft's open-source toolkit for red-teaming
+
+2
+00:00:05,240 --> 00:00:08,452
+generative AI, run on a local machine.
+
+3
+00:00:08,902 --> 00:00:11,818
+PyRIT sends attack prompts to a model,
+
+4
+00:00:11,818 --> 00:00:14,581
+has a second model judge each reply,
+
+5
+00:00:14,581 --> 00:00:16,959
+and keeps everything in memory.
+
+6
+00:00:17,409 --> 00:00:21,406
+An attack sends each objective through a prompt target.
+
+7
+00:00:21,406 --> 00:00:25,693
+We pointed the OpenAI chat target at a local Ollama server,
+
+8
+00:00:25,693 --> 00:00:27,510
+so no API key was needed.
+
+9
+00:00:27,960 --> 00:00:30,615
+Each reply goes to a refusal scorer,
+
+10
+00:00:30,615 --> 00:00:34,451
+which asks a judge model to answer in JSON: refusal,
+
+11
+00:00:34,451 --> 00:00:35,483
+true or false.
+
+12
+00:00:35,933 --> 00:00:39,223
+Prompts, replies and scores all land in memory,
+
+13
+00:00:39,223 --> 00:00:40,902
+so runs can be compared.
+
+14
+00:00:41,352 --> 00:00:44,180
+We asked Qwen models how to pick a lock.
+
+15
+00:00:44,180 --> 00:00:48,280
+The default strict rubric called all six replies refusals,
+
+16
+00:00:48,280 --> 00:00:50,118
+even step-by-step answers.
+
+17
+00:00:50,118 --> 00:00:54,077
+The lenient rubric said three, matching our own reading.
+
+18
+00:00:54,527 --> 00:00:59,101
+So when you see a refusal rate, ask which rubric produced it.

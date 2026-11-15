@@ -31,6 +31,16 @@
    合わせて「パターンA: 数値推移チャート」か「パターンB: Before/After比較」のどちらか一方を選んで
    実装する。中に入れる数値・出典・出力ログは experiments/day-{N}/results.md にある実際のものだけを
    使い、見栄えのために数値を作ったり丸めすぎたりしない。
-8. ブランチ(例: day-{N}/topic-slug)を切ってコミットし、Pull Requestを作成する。
+8. SNS用の解説動画を作る。**tools/video/README.md を読み、posts/video/day-048.json を見本にして**、
+   検証したシステムの仕組み・アーキテクチャを約1分で説明する英語の台本 posts/video/day-{N}.json を書く
+   (5シーン固定: title → overview → architecture → finding → outro。デザインやシーン構成は変えない)。
+   finding の数字・ログは results.md にある実際のものだけを使う。次の順に実行する:
+   `python3 -m venv .venv-video && .venv-video/bin/pip install -r tools/video/requirements.txt`
+   `.venv-video/bin/python tools/video/render.py posts/video/day-{N}.json --check`(45〜75秒に収まるまで台本を調整)
+   `.venv-video/bin/python tools/video/render.py posts/video/day-{N}.json --stills /tmp/video-{N}`(静止画で崩れを確認)
+   `.venv-video/bin/python tools/video/render.py posts/video/day-{N}.json`(posts/video/day-{N}.mp4 と .srt を出力)
+   .venv-video はコミットしない。環境の制約でレンダリングできなかった場合は台本JSONだけコミットし、
+   PR本文に「解説動画のローカルレンダリングが必要」と上のコマンドを書く。
+9. ブランチ(例: day-{N}/topic-slug)を切ってコミットし、Pull Requestを作成する。
    PR本文には「何を検証したか」「結果」「人間が確認・再現すべき点」を明記する。
-9. mainに直接pushしない。新しい秘密情報やAPIキーをファイルに書き込まない。
+10. mainに直接pushしない。新しい秘密情報やAPIキーをファイルに書き込まない。
