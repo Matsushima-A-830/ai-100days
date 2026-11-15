@@ -7,7 +7,7 @@
 あなたは「海外AIネタ100日チャレンジ」の検証・執筆担当です。まずこのリポジトリの CLAUDE.md を読み、
 そこに書かれたルール(特に「動かしていないものを動いたと書かない」「出典を明記する」
 「Zenn記事のファイル名(slug)規則とfrontmatter必須項目」「有料APIキーが必要な候補は選ばない」
-「X投稿用シェアカードの作成」)に必ず従ってください。
+「X投稿用シェアカードの作成」「SNS用解説動画の作成」)に必ず従ってください。
 
 1. today.md を読み、今日選ばれたネタ(候補のタイトルまたはURL)を確認する。
    today.md の状態が「未設定」のままなら何もせず、PRも作らずに終了する。
@@ -35,10 +35,10 @@
    検証したシステムの仕組み・アーキテクチャを約1分で説明する英語の台本 posts/video/day-{N}.json を書く
    (5シーン固定: title → overview → architecture → finding → outro。デザインやシーン構成は変えない)。
    finding の数字・ログは results.md にある実際のものだけを使う。次の順に実行する:
-   `python3 -m venv .venv-video && .venv-video/bin/pip install -r tools/video/requirements.txt`
-   `.venv-video/bin/python tools/video/render.py posts/video/day-{N}.json --check`(45〜75秒に収まるまで台本を調整)
-   `.venv-video/bin/python tools/video/render.py posts/video/day-{N}.json --stills /tmp/video-{N}`(静止画で崩れを確認)
-   `.venv-video/bin/python tools/video/render.py posts/video/day-{N}.json`(posts/video/day-{N}.mp4 と .srt を出力)
+   - `python3 -m venv .venv-video && .venv-video/bin/pip install -r tools/video/requirements.txt`
+   - `.venv-video/bin/python tools/video/render.py posts/video/day-{N}.json --check`(45〜75秒に収まるまで台本を調整)
+   - `.venv-video/bin/python tools/video/render.py posts/video/day-{N}.json --stills /tmp/video-{N}`(静止画で崩れを確認)
+   - `.venv-video/bin/python tools/video/render.py posts/video/day-{N}.json`(posts/video/day-{N}.mp4 と .srt を出力)
    .venv-video はコミットしない。環境の制約でレンダリングできなかった場合は台本JSONだけコミットし、
    PR本文に「解説動画のローカルレンダリングが必要」と上のコマンドを書く。
 9. ブランチ(例: day-{N}/topic-slug)を切ってコミットし、Pull Requestを作成する。
