@@ -11,10 +11,11 @@
    その日やるネタを`today.md`に反映する。
 3. **昼(実装Routine, 自動)**: `today.md` を読み、`experiments/day-NNN/` で実際に検証コードを書いて実行し、
    Zenn記事下書き・X投稿案(`posts/x/day-NNN.md`)・note原稿(`posts/note/day-NNN.md`)・
-   X投稿用シェアカード(`posts/cards/day-NNN.html`)を作り、PRを出す。
+   X投稿用シェアカード(`posts/cards/day-NNN.html`)・SNS用の解説動画(`posts/video/day-NNN.*`)を作り、PRを出す。
 4. **夜(人間, 目安1時間)**: PRを見て自分の手元で再現・検証し、感想を足してマージ。
    Zennは `published: true` にして公開、`posts/cards/day-NNN.html` をブラウザで開いてスクリーンショットし、
-   その画像を添えてXに自分の言葉で投稿。
+   その画像を添えてXに自分の言葉で投稿。解説動画(`posts/video/day-NNN.mp4`)を確認し、SNSに投稿する
+   (字幕ファイル `posts/video/day-NNN.srt` も添付できる)。
    最後に `tools/sync-to-obsidian.ps1` を実行し、その日の成果をローカルのObsidian Vaultに蓄積する
    (このリポジトリ自体はクラウド上の履歴で、Obsidianは自分のPC上の恒久的な蓄積場所という役割分担)。
 
@@ -145,6 +146,22 @@ X投稿は画像付きの方が反応が良いため、実装Routineは毎回 `p
   HTML/CSS/JSとして構文的に破綻していないか目視で確認する)。
 - ファイルはPRに含めてコミットする。人間が夜にブラウザで開いてスクリーンショットし、X投稿に添付する。
 
+## SNS用解説動画(posts/video/day-NNN.*, 必須)
+
+検証したシステムの仕組み・アーキテクチャを約1分で解説する縦型動画(1080x1920、英語ナレーション+英語字幕)を毎回作る。
+**フォーマットは統一する。** デザイン・シーン構成(title → overview → architecture → finding → outro の5シーン固定)・
+声・フォントは `tools/video/render.py` に固定されており、日ごとに作るのは台本 `posts/video/day-NNN.json` だけ。
+台本の書き方は `tools/video/README.md`、見本は `posts/video/day-048.json`。
+
+- テキスト・ナレーションは英語。全体で45〜75秒(目安120〜150語)に収める。範囲外だとレンダラーがエラーで止まる。
+- 構成図はそのツールの仕組みを説明し、`finding` の数字・ログは `experiments/day-NNN/results.md` にある実際のものだけを使う。
+- 出典URLとライセンスを入れる。Routine環境の制約には触れない(記事等と同じルール)。
+- `render.py --check` で台本を検証し、`--stills` の静止画で崩れが無いことを確認してから本番をレンダリングする。
+- 成果物 `day-NNN.json`(台本)・`day-NNN.mp4`・`day-NNN.srt` をPRに含めてコミットする。
+- Routine環境でレンダリングできなかった場合(pip・声のダウンロードがブロックされる等)は、台本JSONだけをコミットし、
+  PR説明文の「人間が確認すべき点」に「解説動画のローカルレンダリングが必要」と再現コマンドを添えて書く
+  (他のRoutine環境の制約と同じく、記事等には書かない)。
+
 ## ディレクトリ構成
 
 ```
@@ -159,8 +176,10 @@ ai-100days/
 │   ├── x/day-NNN.md            # X投稿案3パターン
 │   ├── note/day-NNN.md         # note原稿(単日分の下書き)
 │   ├── note/weekly/day-NNN-NNN.md  # note複数日まとめ(週刊まとめなど)
-│   └── cards/day-NNN.html      # X投稿用シェアカード(tools/card-template.htmlから複製)
+│   ├── cards/day-NNN.html      # X投稿用シェアカード(tools/card-template.htmlから複製)
+│   └── video/day-NNN.{json,mp4,srt}  # SNS用解説動画(台本JSON・動画・字幕)
 ├── tools/card-template.html    # シェアカードの共通テンプレート(デザインの土台、直接編集しない)
+├── tools/video/                # 解説動画レンダラー(render.py・フォント・README。デザインの土台、日ごとに編集しない)
 └── tools/sync-to-obsidian.*    # Obsidian Vaultへの同期スクリプト
 ```
 
