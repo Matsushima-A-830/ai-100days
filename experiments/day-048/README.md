@@ -42,7 +42,7 @@ HF_HOME=/tmp/hf-cache /tmp/pyrit-venv/bin/python3 run_pyrit_experiment.py
 
 ```bash
 python3 -m venv venv && venv/bin/pip install pyrit==1.2.0   # torch不要
-ollama pull qwen2.5:7b-instruct qwen2.5:14b-instruct qwen2.5:32b-instruct
+for m in qwen2.5:7b-instruct qwen2.5:14b-instruct qwen2.5:32b-instruct; do ollama pull $m; done
 cd experiments/day-048/local
 # 攻撃対象(カンマ区切り) 判定役
 ../../../venv/bin/python run_pyrit_ollama.py qwen2.5:7b-instruct,qwen2.5:14b-instruct,qwen2.5:32b-instruct qwen2.5:14b-instruct
