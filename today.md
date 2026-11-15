@@ -2,21 +2,23 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 048
-- 選んだ候補(backlog.mdのタイトルかURL): microsoft/PyRIT — https://github.com/microsoft/PyRIT
+- Day: 049
+- 選んだ候補(backlog.mdのタイトルかURL): andrewyng/openworker — https://github.com/andrewyng/openworker
 - 補足メモ(あれば):
-  - 出典: https://github.com/microsoft/PyRIT (MIT。2024年2月公開だが、2026-11-13付研究PR〈#162〉で取り上げた時点で本日GitHub Trending Pythonに再浮上していた)。本エントリはbacklog.md側では2026-11-14付の記載(「microsoft/PyRIT — Microsoft製、生成AIの脆弱性を自動で突くレッドチーミングツールキット」)。
-  - 概要: Microsoft社内のAI Red Teamが実際に使っていたツールを公開した、生成AIシステムの脆弱性(ハルシネーション・バイアス・ハラスメント等の禁止コンテンツ生成)を自動で突くためのレッドチーミングフレームワーク。CLIスキャナー・ブラウザGUI(CoPyRIT)・Pythonフレームワーク(`PromptSendingOrchestrator`等)の3形態を持ち、OpenAI/Azure OpenAI/Anthropic/Hugging Face/Ollama/Groq/OpenRouter等の複数プロバイダや、HTTP/WebSocket/Playwright経由の任意エンドポイントに攻撃プロンプトを送れる。Microsoftは「人間によるレッドチームの代替ではない」と明記している。
-  - 検証スコープの絞り方と選定理由: 本リポジトリの「当面は有料APIキー必須の候補を選ばない」方針に沿い、攻撃対象(target)をクラウドAPIではなくローカルOllamaの小型モデルに設定して検証する。これにより追加の有料APIキーは不要。GPUも必須ではない(小型モデルであればCPUでも動作見込み)。
-  - APIキー・前提条件についての方針: `pip install pyrit`でインストール可能(Python 3.10〜3.13対応、公式ドキュメントより)。攻撃対象をローカルOllamaにする限り追加の有料APIキーは不要。MITライセンスのため再配布・改変の制約は軽い。
+  - 出典: https://github.com/andrewyng/openworker (MIT。2026-11-15付研究PR〈#167〉でbacklog.mdに追記。本日GitHub Trending Pythonで+139star/日、スター数約19.3k)。
+  - 概要: Andrew Ng(Rohit Prasadと共同)が公開した、リサーチ・文書作成・コードレビュー・GitHub/Slack/メール/カレンダー連携タスクを代行するデスクトップ型AIエージェント「OpenWorker」。ツール呼び出しごとに人間の承認を求め、全操作を記録する設計。自作エージェント構築用のHarness SDK(TypeScriptパッケージ`@openworkerai/harness-sdk` + 組み込みRustエンジン)も同梱する。
+  - 検証スコープの絞り方と選定理由: 本リポジトリの「当面は有料APIキー必須の候補を選ばない」方針に沿い、モデル接続はクラウドAPI(OpenAI/Anthropic/Gemini/OpenRouter)ではなくローカルOllamaの小型モデルに設定する。GitHub/Slack/メール/カレンダー等の外部連携コネクタは別途認証情報が必要なため、今回の検証スコープからは外し、「ローカルモデル+ローカルファイルを対象にしたリサーチ・要約タスクでの承認フロー・操作ログ」に絞る。デスクトップシェル(Tauri)はビルドにGUI向けシステムライブラリを要し、本番運用のデスクトップアプリとしての検証は対象外とし、ローカルエージェントサーバー(API/CLI経由)単体での動作確認に絞る。
+  - APIキー・前提条件についての方針: ローカルモデル(Ollama/LM Studio/llama.cpp/vLLM)を使う限り追加の有料APIキーは不要。GPU要件はREADMEに明記が無いため、小型モデル(7B程度以下)をCPUで動かせる範囲に絞って検証する。ソースから動かすにはPython 3.10+、Node 20+、Rustツールチェーン(rustup経由)が前提。MITライセンスのため再配布・改変の制約は軽い。
   - 検証スコープ・手順:
-    1. ローカルにOllamaを導入し、小型モデル(例: `qwen2.5:0.5b`や`llama3.2:1b`等)を`ollama pull`する。
-    2. `pip install pyrit`でPyRITを導入する(Python 3.10以上が前提)。
-    3. Pythonスクリプトで、Ollama向けのターゲットクラス(PyRITのバージョンによりクラス名が異なる可能性があるため、インストール後に`python -c "import pyrit; help(pyrit)"`やパッケージ内のtargetsモジュールを確認して正確なクラス名・引数を確認すること)を使い、`PromptSendingOrchestrator`に渡してローカルOllamaモデルへ攻撃プロンプト(例: PyRIT付属のデータセットにある軽微なjailbreakテンプレートや、自作の無害な「禁止コンテンツ風だが実際は無害なテストプロンプト」)を送る。
-    4. レスポンスをPyRITのスコアラー(`SelfAskRefusalScorer`等、スコアラー自体がLLM呼び出しを必要とする場合は同じローカルOllamaモデルをスコアラーにも流用する)で評価し、「拒否されたか/突破されたか」を記録する。スコアラーが別途APIキーを要求する設計になっている場合は、スコアラー呼び出しは省略し、人間目視でのレスポンス内容確認に代替する。
-    5. 実行コマンド・出力・エラー・所要時間はすべてそのままresults.mdに記録する。
-    6. PyRITのインストールやOllamaのモデルDLがRoutine実行環境のネットワーク制約でブロックされる場合、または公式ドキュメントサイト(microsoft.github.io/PyRIT, azure.github.io/PyRIT)がこの実行環境からDNS解決できず正確なAPI仕様を確認できない場合は、CLAUDE.mdの「書かない(Routine環境の制約)」に該当する可能性が高い。その場合は記事等には書かず、PRの説明文冒頭に「ローカル検証が必要」と明記し、再現手順(上記コマンドと、確認できなかったAPI仕様の詳細)を添えてローカル検証にエスカレーションする。results.mdには「Routine環境の制約により未検証、ローカル検証待ち」と1〜2行だけ残す。
-  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-11-14時点、backlog.md参照。検索範囲ではZenn/Qiita/noteでの紹介・検証記事は未検出。@IT〈atmarkit.itmedia.co.jp〉に2024年2月付けの日本語紹介記事が1件あるのみ)。
-  - 記事化の切り口: 「自分のローカルLLM(Ollama)に定型的な攻撃プロンプトを自動生成して送り、どこまで防御できるか」というBefore/After比較を主役にする。本チャレンジで既に扱ったAgent Skillのセキュリティスキャン系(SkillSpector等)とは異なり、「モデル自体への攻撃耐性」を評価する切り口であることを明記する。クラウドAPIではなくローカルモデルを対象にした理由(有料APIキー不使用の方針)も記事に正直に書く。
+    1. ローカルにOllamaを導入し、小型モデル(例: `qwen2.5:7b`や`llama3.2:3b`等)を`ollama pull`する。
+    2. リポジトリをclonseし、`packaging/`配下のbootstrapスクリプトで依存関係を導入する(Python 3.10+、Node 20+、Rustツールチェーンが前提。導入ログはそのまま記録する)。
+    3. ローカルエージェントサーバーを起動する(README記載のポート、デフォルトでは8765番とされる)。接続先モデルをクラウドAPIではなくローカルOllamaサーバーに向けて設定する。
+    4. デスクトップシェル(Tauri)のGUI起動が本実行環境(ヘッドレスコンテナ)で技術的に困難な場合は、サーバーAPI/CLI経由でのスモークテストに絞る。自作のテキストファイル(短いメモ数本)を対象に要約・下書き作成タスクを指示し、ファイル書き込み等の操作前に承認プロンプトが表示されること、操作ログが記録されることを確認する。
+    5. 可能であればHarness SDK(`@openworkerai/harness-sdk`)を使った最小限の自作エージェントも試し、ローカルモデルでの動作を確認する。
+    6. サーバー側のテスト(`pytest`)やGUI側のテスト(`npm test`)が動く場合は実行し、結果をそのまま記録する。
+    7. 実行コマンド・出力・エラー・所要時間はすべてそのままresults.mdに記録する。
+    8. Tauriデスクトップアプリのビルド・GUI起動がRoutine実行環境のシステムライブラリ制約(headlessコンテナにGUI関連ライブラリが無い等)でブロックされる場合は、CLAUDE.mdの「書かない(Routine環境の制約)」に該当する可能性が高い。その場合は記事等には書かず、PRの説明文冒頭に「ローカル検証が必要」と明記し、再現手順(上記コマンドと、どこで止まったか)を添えてローカル検証にエスカレーションする。results.mdには「Routine環境の制約により未検証、ローカル検証待ち」と1〜2行だけ残す。判断に迷う場合(ツール自体がGUI必須設計であり通常のサーバー環境でも同様に動かないのか、Routine環境固有の制約なのか区別できない場合)は、先にローカルで再現するかを確認してから分類する。
+  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-11-15時点、backlog.md参照。検索範囲ではZenn/Qiita/noteでの紹介・検証記事は未検出。英語・韓国語の紹介記事は複数ある)。
+  - 記事化の切り口: 「ローカルLLMだけでOpenWorkerの承認フロー・操作ログがどこまで機能するか」というBefore(単純な1ショットのローカルLLM応答)/After(承認プロンプトを経た操作実行)比較を主役にする。Anthropicの提唱する人間承認型エージェント運用とも比較しやすい点、著名研究者(Andrew Ng)の新プロジェクトというニュース性にも触れる。デスクトップGUI・外部連携コネクタ(Slack/GitHub等)は今回の検証範囲外である旨を正直に明記する。
 
 状態: 設定済み
