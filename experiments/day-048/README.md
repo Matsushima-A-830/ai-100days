@@ -37,3 +37,17 @@ HF_HOME=/tmp/hf-cache /tmp/pyrit-venv/bin/python3 run_pyrit_experiment.py
 `Qwen/Qwen2.5-0.5B-Instruct`(約1GB)がダウンロードされる。両モデルとも公開・非gatedモデル。
 
 詳細な実行ログ・つまずいた点・最終結果は `results.md` を参照。
+
+## ローカル再現(Ollama + Qwen2.5)
+
+```bash
+python3 -m venv venv && venv/bin/pip install pyrit==1.2.0   # torch不要
+ollama pull qwen2.5:7b-instruct qwen2.5:14b-instruct qwen2.5:32b-instruct
+cd experiments/day-048/local
+# 攻撃対象(カンマ区切り) 判定役
+../../../venv/bin/python run_pyrit_ollama.py qwen2.5:7b-instruct,qwen2.5:14b-instruct,qwen2.5:32b-instruct qwen2.5:14b-instruct
+# run-7b.log / run-14b-32b.log の応答を固定し、判定役×STRICT/LENIENTで各3回採点
+../../../venv/bin/python score_fixed_responses.py qwen2.5:7b-instruct,qwen2.5:14b-instruct 3
+```
+
+結果は `results.md` の「ローカル検証」節を参照。
