@@ -57,3 +57,21 @@ cd /tmp/openworker-src
 
 詳細な実行ログ・つまずいた点・最終結果は`results.md`を参照。生の出力・JSONログは
 `logs/`以下にまとめた。
+
+## ローカル再現(Ollama + Qwen2.5 7B/14B/32B)
+
+```bash
+git clone https://github.com/andrewyng/openworker ~/work-day049/src
+python3 -m venv ~/work-day049/venv && ~/work-day049/venv/bin/pip install ~/work-day049/src
+for m in qwen2.5:7b-instruct qwen2.5:14b-instruct qwen2.5:32b-instruct; do ollama pull $m; done
+
+# 1回の実行: run_local.sh <実行名> <モデル> <承認モード> <タイムアウト秒> <プロンプト>
+# (ワークスペースに notes1.md / notes2.md をコピーし、HOME を作業用フォルダに差し替えて --isolated で実行する)
+experiments/day-049/local/run_local.sh readme-14b-1 qwen2.5:14b-instruct bypass-approvals 900 \
+  "Read the meeting notes in this folder. Create a one-page brief with the key decisions, open questions and next steps. Save it as brief.md."
+
+~/work-day049/venv/bin/python experiments/day-049/local/inspect_run.py ~/work-day049/out/readme-14b-1   # ツール呼び出し・audit.db
+~/work-day049/venv/bin/python experiments/day-049/local/score_briefs.py ~/work-day049                   # brief.mdの7項目採点
+```
+
+結果は `results.md` の「ローカル検証」節、各実行の記録は `local/logs/`。

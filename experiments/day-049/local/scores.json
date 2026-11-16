@@ -1,0 +1,168 @@
+[
+ {
+  "run": "readme-14b-1",
+  "outcome": "completed",
+  "wall": 39.1,
+  "calls": [
+   "list_files",
+   "read_file",
+   "read_file",
+   "write_file"
+  ],
+  "brief": true,
+  "facts": "7/7"
+ },
+ {
+  "run": "readme-14b-2",
+  "outcome": "completed",
+  "wall": 16.8,
+  "calls": [
+   "list_files",
+   "read_file",
+   "read_file",
+   "todo_write"
+  ],
+  "brief": false,
+  "facts": "0/7"
+ },
+ {
+  "run": "readme-14b-3",
+  "outcome": "completed",
+  "wall": 40.9,
+  "calls": [
+   "list_files",
+   "read_file",
+   "read_file",
+   "write_file"
+  ],
+  "brief": true,
+  "facts": "7/7"
+ },
+ {
+  "run": "readme-14b-4",
+  "outcome": "completed",
+  "wall": 49.7,
+  "calls": [
+   "list_files",
+   "read_file",
+   "read_file",
+   "write_file"
+  ],
+  "brief": true,
+  "facts": "7/7"
+ },
+ {
+  "run": "readme-14b-5",
+  "outcome": "completed",
+  "wall": 32.1,
+  "calls": [
+   "list_files",
+   "grep",
+   "read_file",
+   "read_file"
+  ],
+  "brief": false,
+  "facts": "0/7"
+ },
+ {
+  "run": "readme-32b-1",
+  "outcome": "completed",
+  "wall": 67.1,
+  "calls": [
+   "list_files"
+  ],
+  "brief": false,
+  "facts": "0/7"
+ },
+ {
+  "run": "readme-32b-2",
+  "outcome": "completed",
+  "wall": 38.2,
+  "calls": [
+   "list_files"
+  ],
+  "brief": false,
+  "facts": "0/7"
+ },
+ {
+  "run": "readme-32b-3",
+  "outcome": "completed",
+  "wall": 153.4,
+  "calls": [
+   "list_files",
+   "read_file"
+  ],
+  "brief": false,
+  "facts": "0/7"
+ },
+ {
+  "run": "readme-32b-4",
+  "outcome": "completed",
+  "wall": 116.9,
+  "calls": [
+   "list_files",
+   "list_files"
+  ],
+  "brief": false,
+  "facts": "0/7"
+ },
+ {
+  "run": "readme-32b-5",
+  "outcome": "completed",
+  "wall": 51.0,
+  "calls": [
+   "list_files",
+   "list_files"
+  ],
+  "brief": false,
+  "facts": "0/7"
+ },
+ {
+  "run": "readme-7b-1",
+  "outcome": "completed",
+  "wall": 2.7,
+  "calls": [],
+  "brief": false,
+  "facts": "0/7"
+ },
+ {
+  "run": "readme-7b-2",
+  "outcome": "completed",
+  "wall": 3.3,
+  "calls": [],
+  "brief": false,
+  "facts": "0/7"
+ },
+ {
+  "run": "readme-7b-3",
+  "outcome": "completed",
+  "wall": 15.9,
+  "calls": [],
+  "brief": false,
+  "facts": "0/7"
+ },
+ {
+  "run": "readme-7b-4",
+  "outcome": "completed",
+  "wall": 18.5,
+  "calls": [
+   "grep",
+   "list_files",
+   "read_file",
+   "read_file",
+   "write_file"
+  ],
+  "brief": true,
+  "facts": "7/7"
+ },
+ {
+  "run": "readme-7b-5",
+  "outcome": "completed",
+  "wall": 3.5,
+  "calls": [
+   "grep"
+  ],
+  "brief": false,
+  "facts": "0/7"
+ }
+]

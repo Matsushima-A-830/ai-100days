@@ -1,0 +1,19 @@
+summary: {'outcome': 'completed', 'iterations': 3, 'tool_calls': 2, 'wall_seconds': 116.9}
+CALL list_files: {"pattern": "*meeting*.md", "path": "."}
+  -> []
+CALL list_files: {"path": "."}
+  -> ["notes1.md", "notes2.md"]
+FINAL: Gathering key points from the meeting notes to create a one-page brief.
+
+
+audit.db/audit_events (timestamp, tool, stage, status):
+   ('2026-11-16 13:58:15', '', 'usage', 'ok')
+   ('2026-11-16 13:58:15', 'list_files', 'proposed', '')
+   ('2026-11-16 13:58:15', 'list_files', 'started', '')
+   ('2026-11-16 13:58:15', 'list_files', 'finished', 'ok')
+   ('2026-11-16 13:58:26', '', 'usage', 'ok')
+   ('2026-11-16 13:58:26', 'list_files', 'proposed', '')
+   ('2026-11-16 13:58:26', 'list_files', 'started', '')
+   ('2026-11-16 13:58:26', 'list_files', 'finished', 'ok')
+   ('2026-11-16 13:59:40', '', 'usage', 'ok')
+answers.counts: {'cards_refused': 0, 'floors_cleared': 0, 'questions_answered': 0, 'directory_requests_declined': 0, 'tool_installs': 0}

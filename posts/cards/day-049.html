@@ -195,64 +195,69 @@
   </div>
 
   <div class="heading">
-    <h1>承認ゲートは本物だった。ローカルLLMの実力は別問題。</h1>
-    <p><span class="src">OpenWorker</span>(Andrew Ng発、MIT)の「承認がなければツールを実行しない」という主張を、クラウドAPIキーなし・ローカルのQwen2.5(llama.cpp)だけで検証した。</p>
+    <h1>承認ゲートは堅かった。<br>例題をやり切ったのは14Bだった</h1>
+    <p><span class="src">OpenWorker</span>(andrewyng/openworker、MIT)をOllama上のQwen2.5 7B/14B/32Bだけで動かし、承認ゲートとREADMEの例題「会議メモからbriefを作る」を各5回試した。</p>
   </div>
 
   <div class="stat-row">
-    <div class="stat-number">0/2</div>
-    <div class="stat-caption">Qwen2.5-3Bが行った<strong>read_file</strong>呼び出し2回のうち、実際に成功したのは0回(パスを間違え続けた)。それでも<code>brief.md</code>は書かれた。</div>
+    <div class="stat-number">0/5</div>
+    <div class="stat-caption">このPCで動かせる最大の<strong>Qwen2.5-32B</strong>が、メモ2本の7項目をすべて含むbrief.mdを書けた回数。14Bは<strong>3/5</strong>、7Bは<strong>1/5</strong>。</div>
   </div>
 
   <section class="block compare">
-    <div class="block-label">承認ゲート vs. タスク遂行(実際の挙動)</div>
+    <div class="block-label">同じ例題、同じbypass-approvals(実際のツール呼び出し)</div>
     <div class="compare-grid">
       <div class="compare-panel good">
-        <div class="compare-title">✓ 承認ゲート(ask, 端末なし)</div>
-        <pre class="compare-output">write_file: approval_resolved → denied
-reason: "no one is available to
-approve this (attendance: auto)"
-→ brief.md は作成されず</pre>
+        <div class="compare-title">✓ qwen2.5:14b(成功した回)</div>
+        <pre class="compare-output">list_files(".")
+ → notes1.md, notes2.md
+read_file(notes1.md)
+read_file(notes2.md)
+write_file(brief.md)
+ → 決定2・未決2・次の作業3
+   の7/7を記載</pre>
       </div>
       <div class="compare-panel bad">
-        <div class="compare-title">✗ タスク遂行(Qwen2.5-3B, bypass)</div>
-        <pre class="compare-output">list_files → notes1.md, notes2.md
-read_file(notes/notes1.md) → エラー
-read_file(notes/notes2.md) → エラー
-→ brief.md は "Placeholder Decision 1" 等の
-定型文で書かれた(内容未読)</pre>
+        <div class="compare-title">✗ qwen2.5:32b(5回中3回)</div>
+        <pre class="compare-output">list_files(pattern=
+  "meeting_notes*")
+ → []
+"No meeting notes files
+ found ... Could you please
+ confirm the location?"
+→ brief.md は作られず</pre>
       </div>
     </div>
   </section>
 
   <section class="block">
-    <div class="block-label">audit.db(SQLite監査ログ、ask実行分そのまま)</div>
+    <div class="block-label">承認ゲートとaudit.db(実測)</div>
     <div class="terminal">
       <div class="term-row">
-        <span class="term-tag">proposed</span>
-        <span class="toks">write_file /tmp/ow-workspace-ask/brief.md</span>
+        <span class="term-tag">ask</span>
+        <span class="toks">write_file → approval_resolved denied(端末なし)</span>
       </div>
       <div class="term-row">
-        <span class="term-tag">resolved</span>
-        <span class="toks">approval_resolved → denied</span>
+        <span class="term-tag">bypass</span>
+        <span class="toks">write_file → started → finished ok</span>
       </div>
       <div class="term-row">
-        <span class="term-tag">finished</span>
-        <span class="toks">denied</span>
+        <span class="term-tag">floor</span>
+        <span class="toks">外部パスへのwrite_file → finished denied</span>
       </div>
-      <div class="term-foot">tool_calls=1, tool_calls_denied=1, cards_refused=1 (<b>summary.json</b>実測値)</div>
+      <div class="term-foot">bypass-approvalsでも<b>ワークスペース外への書き込みは実行前に止まった</b>(7B・32Bで確認)</div>
     </div>
   </section>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>検証はサーバーエンジン+CLI(<code>openworker run --isolated</code>)単体に限定。デスクトップGUI・Slack/GitHub等の外部コネクタ・OpenShellサンドボックスは範囲外。Qwen2.5-3Bは非商用の研究ライセンス(1.5BはApache-2.0)。</p>
+    <p>15回の実行はすべて <code>outcome=completed</code>。OpenWorkerの「完了」はモデルがターンを終えたことを示すだけで、brief.mdができたかとは別。7Bの失敗3回は、システムプロンプトの例文を書き写してツール呼び出しを本文に書いて終わったもの。</p>
   </div>
 
   <footer>
     <div class="sources">
       <a href="https://github.com/andrewyng/openworker" target="_blank" rel="noopener">→ github.com/andrewyng/openworker</a>
-      <a href="https://github.com/ggml-org/llama.cpp" target="_blank" rel="noopener">→ github.com/ggml-org/llama.cpp</a>
+      <a href="https://ollama.com/library/qwen2.5" target="_blank" rel="noopener">→ ollama.com/library/qwen2.5</a>
     </div>
     <div class="progress">
       <span class="num"><b>049</b> / 100 days</span>

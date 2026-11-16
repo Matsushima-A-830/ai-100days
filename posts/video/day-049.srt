@@ -1,99 +1,83 @@
 1
-00:00:00,000 --> 00:00:03,762
-Day 49: OpenWorker, Andrew Ng's AI coworker,
+00:00:00,000 --> 00:00:04,622
+Day 49: OpenWorker, an AI coworker published on Andrew Ng's
 
 2
-00:00:03,762 --> 00:00:08,208
-run headless on a local model with no cloud API key.
+00:00:04,622 --> 00:00:08,382
+GitHub, run on local Qwen models through Ollama.
 
 3
-00:00:08,658 --> 00:00:13,104
-OpenWorker is a coworker agent that works in your files and
+00:00:08,832 --> 00:00:10,411
+It works in your files.
 
 4
-00:00:13,104 --> 00:00:13,556
-tools.
+00:00:10,411 --> 00:00:13,293
+Every tool call needs approval by default,
 
 5
-00:00:13,556 --> 00:00:16,720
-By design, every tool call needs approval,
+00:00:13,293 --> 00:00:15,764
+and every call is logged either way.
 
 6
-00:00:16,720 --> 00:00:19,583
-and every call gets logged either way.
+00:00:16,214 --> 00:00:20,863
+We ran the CLI headless and isolated from real settings,
 
 7
-00:00:20,033 --> 00:00:24,853
-We ran the CLI headless, isolated from any real settings,
+00:00:20,863 --> 00:00:24,766
+pointed at Ollama serving Qwen 2.5 at 7, 14 and
 
 8
-00:00:24,853 --> 00:00:29,249
-pointed at a local llama.cpp server serving Qwen2.5,
+00:00:24,766 --> 00:00:26,593
+32 billion parameters.
 
 9
-00:00:29,249 --> 00:00:31,109
-no cloud key involved.
-
-10
-00:00:31,559 --> 00:00:34,516
+00:00:27,043 --> 00:00:30,005
 When the model calls a tool like write_file,
 
+10
+00:00:30,005 --> 00:00:31,755
+the approval gate decides.
+
 11
-00:00:34,516 --> 00:00:36,263
-the approval gate decides:
+00:00:31,755 --> 00:00:33,708
+In ask mode with no terminal,
 
 12
-00:00:36,263 --> 00:00:38,817
-in ask mode with no terminal attached,
+00:00:33,708 --> 00:00:36,064
+the call is refused before it runs.
 
 13
-00:00:38,817 --> 00:00:40,766
-it is refused before it runs.
+00:00:36,514 --> 00:00:40,592
+Approved or denied, every call lands in a SQLite audit log.
 
 14
-00:00:41,216 --> 00:00:43,724
-Either way, approved or denied,
+00:00:40,592 --> 00:00:42,597
+Even with approvals bypassed,
 
 15
-00:00:43,724 --> 00:00:48,336
-the call lands in a SQLite audit log: proposed, resolved,
+00:00:42,597 --> 00:00:45,500
+writes outside the workspace were blocked.
 
 16
-00:00:48,336 --> 00:00:49,064
-finished.
+00:00:45,950 --> 00:00:50,790
+On the README task, turning two meeting notes into a brief,
 
 17
-00:00:49,514 --> 00:00:53,169
-In ask mode, a write_file call was denied and logged,
+00:00:50,790 --> 00:00:54,891
+14B succeeded three times out of five and 7B once.
 
 18
-00:00:53,169 --> 00:00:55,099
-with brief.md never created.
+00:00:54,891 --> 00:00:57,188
+The largest, 32B, never did:
 
 19
-00:00:55,099 --> 00:00:57,719
-With approvals bypassed, the call ran,
+00:00:57,188 --> 00:01:02,192
+it searched for files named meeting, found none, and gave up.
 
 20
-00:00:57,719 --> 00:01:01,788
-but a 3B model's two read_file calls both hit a wrong path,
+00:01:02,642 --> 00:01:05,039
+All fifteen runs reported completed.
 
 21
-00:01:01,788 --> 00:01:06,063
-and it wrote a placeholder brief without ever reading the real
-
-22
-00:01:06,063 --> 00:01:06,476
-notes.
-
-23
-00:01:06,926 --> 00:01:09,600
-The approval gate worked exactly as documented.
-
-24
-00:01:09,600 --> 00:01:13,126
-Whether the model behind it could be trusted with the task was
-
-25
-00:01:13,126 --> 00:01:14,264
-a separate question.
+00:01:05,039 --> 00:01:09,167
+The gate held; the outcome flag did not mean the job was done.

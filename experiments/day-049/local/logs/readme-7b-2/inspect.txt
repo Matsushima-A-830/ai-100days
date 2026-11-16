@@ -1,0 +1,7 @@
+summary: {'outcome': 'completed', 'iterations': 1, 'tool_calls': 0, 'wall_seconds': 3.3}
+FINAL: Checking what merged since yesterday's digest.
+
+todo_write({"todos":[ {"content":"Read meeting notes in the folder", "status":"in_progress"}, {"content":"Create a one-page brief with key decisions, open questions and next steps", "status":"pending"}, {"content":"Save the brief as brief.md", "status":"pending"} ]})
+audit.db/audit_events (timestamp, tool, stage, status):
+   ('2026-11-16 13:49:10', '', 'usage', 'ok')
+answers.counts: {'cards_refused': 0, 'floors_cleared': 0, 'questions_answered': 0, 'directory_requests_declined': 0, 'tool_installs': 0}

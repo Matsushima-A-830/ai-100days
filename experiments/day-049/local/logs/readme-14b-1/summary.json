@@ -1,0 +1,70 @@
+{
+ "run_id": "1b21d38e9ca4",
+ "outcome": "completed",
+ "reasoning_effort": "provider default (no reasoning-effort parameter sent)",
+ "reasoning_effort_detail": {
+  "provider": "ollama",
+  "model": "qwen2.5:14b-instruct",
+  "source": "OpenWorker defaults, no user setting",
+  "reasoning_effort": "not sent; provider default applies"
+ },
+ "error": null,
+ "wall_seconds": 39.1,
+ "iterations": 4,
+ "model_calls": 4,
+ "model_calls_with_usage": 4,
+ "tool_calls": 4,
+ "tool_results_bounded": 0,
+ "tool_calls_denied": 0,
+ "tool_calls_error": 0,
+ "continuations": 0,
+ "provider_retries": 0,
+ "answers": {
+  "cards_refused": 0,
+  "floors_cleared": 0,
+  "questions_answered": 0,
+  "directory_requests_declined": 0,
+  "tool_installs": 0
+ },
+ "tokens": {
+  "input": 4795,
+  "output": 496,
+  "cache_read": 13827,
+  "cache_write": 0
+ },
+ "cost_usd": null,
+ "args": {
+  "model": "ollama:qwen2.5:14b-instruct",
+  "model_as_given": "ollama:qwen2.5:14b-instruct",
+  "coworker": "cowork",
+  "approval_mode": "bypass-approvals",
+  "auto_answer": true,
+  "isolated": true,
+  "max_iterations": null,
+  "web_tools": true,
+  "max_output_tokens": null,
+  "reasoning_effort": null,
+  "compaction_cap_tokens": null,
+  "compaction_summary_max_tokens": null,
+  "tool_result_max_bytes": null,
+  "provider_order": null,
+  "timeout_seconds": 900.0,
+  "workspace": "/home/matsu/work-day049/ws/readme-14b-1",
+  "extra_dirs": [],
+  "mcp": false,
+  "mcp_config": null,
+  "scripted": false
+ },
+ "mcp_servers": [],
+ "isolation": {
+  "COWORKER_STATE_DIR": "/home/matsu/work-day049/out/readme-14b-1/state",
+  "COWORKER_SCRATCH_BASE": "/home/matsu/work-day049/out/readme-14b-1/scratch"
+ },
+ "context": {
+  "window": 16384,
+  "window_source": "matrix",
+  "compaction_trigger_tokens": 13107
+ },
+ "served_by": [],
+ "compactions": []
+}
