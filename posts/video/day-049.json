@@ -1,0 +1,155 @@
+{
+  "day": 49,
+  "project": "OpenWorker",
+  "slug": "openworker",
+  "tagline": "A governed AI coworker from Andrew Ng's GitHub, run on local Qwen models via Ollama",
+  "source_url": "github.com/andrewyng/openworker",
+  "license": "MIT",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 49: OpenWorker, an AI coworker published on Andrew Ng's GitHub, run on local Qwen models through Ollama."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "An agent that reads, writes and runs tools in your files",
+        "Every tool call is approval-gated by default",
+        "Every call is logged, approved or denied"
+      ],
+      "narration": "It works in your files. Every tool call needs approval by default, and every call is logged either way."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {
+          "id": "cli",
+          "label": "openworker run",
+          "sub": "--isolated --approval-mode",
+          "pos": [
+            0,
+            0
+          ],
+          "span": 2
+        },
+        {
+          "id": "engine",
+          "label": "Agent engine",
+          "sub": "coworker (Python)",
+          "pos": [
+            0,
+            1
+          ],
+          "span": 2
+        },
+        {
+          "id": "model",
+          "label": "Local model",
+          "sub": "Ollama: Qwen2.5 7B/14B/32B",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "id": "gate",
+          "label": "Approval gate",
+          "sub": "ask / bypass-approvals",
+          "pos": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "audit",
+          "label": "audit.db",
+          "sub": "SQLite, every call logged",
+          "pos": [
+            0,
+            3
+          ]
+        },
+        {
+          "id": "tools",
+          "label": "Tools",
+          "sub": "write_file, read_file",
+          "pos": [
+            1,
+            3
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "cli",
+          "to": "engine",
+          "label": "runs"
+        },
+        {
+          "from": "engine",
+          "to": "model",
+          "label": "chat"
+        },
+        {
+          "from": "model",
+          "to": "gate",
+          "label": "tool call"
+        },
+        {
+          "from": "gate",
+          "to": "tools",
+          "label": "if approved"
+        },
+        {
+          "from": "tools",
+          "to": "audit",
+          "label": "logged either way"
+        }
+      ],
+      "steps": [
+        {
+          "focus": [
+            "cli",
+            "engine",
+            "model"
+          ],
+          "narration": "We ran the CLI headless and isolated from real settings, pointed at Ollama serving Qwen 2.5 at 7, 14 and 32 billion parameters."
+        },
+        {
+          "focus": [
+            "model",
+            "gate",
+            "tools"
+          ],
+          "narration": "When the model calls a tool like write_file, the approval gate decides. In ask mode with no terminal, the call is refused before it runs."
+        },
+        {
+          "focus": [
+            "gate",
+            "audit",
+            "tools"
+          ],
+          "narration": "Approved or denied, every call lands in a SQLite audit log. Even with approvals bypassed, writes outside the workspace were blocked."
+        }
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "1 / 3 / 0",
+      "caption": "Runs out of 5 where 7B, 14B and 32B wrote a brief with all 7 facts from the meeting notes.",
+      "lines": [
+        "7B   1/5  narrated, then stopped",
+        "14B  3/5  read both notes, wrote brief",
+        "32B  0/5  searched 'meeting*', gave up"
+      ],
+      "narration": "On the README task, turning two meeting notes into a brief, 14B succeeded three times out of five and 7B once. The largest, 32B, never did: it searched for files named meeting, found none, and gave up."
+    },
+    {
+      "type": "outro",
+      "narration": "All fifteen runs reported completed. The gate held; the outcome flag did not mean the job was done."
+    }
+  ]
+}

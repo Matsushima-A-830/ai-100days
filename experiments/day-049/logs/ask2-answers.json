@@ -1,0 +1,18 @@
+{
+ "counts": {
+  "cards_refused": 1,
+  "floors_cleared": 0,
+  "questions_answered": 0,
+  "directory_requests_declined": 0,
+  "tool_installs": 0
+ },
+ "rows": [
+  {
+   "ts": 1794792118.4062853,
+   "stage": "approval_resolved",
+   "tool": "write_file",
+   "arguments": "{\"path\": \"/tmp/ow-workspace-ask/brief.md\", \"content\": \"This summary combines the main points from notes1.md and notes2.md:\\n\\n- Briefly mention notes1's key points\\n- Mention notes2's most important point(s)\\n\\nNotes1: [...]\\n\\nNotes2: [...]\\n\\n- Include any unique details or context from either that are not already covered\\n- Conclude with a clear action or next step based on the notes\\n- Format \u2026",
+   "reason": "refused: no one is available to approve this (attendance: auto)"
+  }
+ ]
+}
