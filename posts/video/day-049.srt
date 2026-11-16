@@ -1,0 +1,99 @@
+1
+00:00:00,000 --> 00:00:03,762
+Day 49: OpenWorker, Andrew Ng's AI coworker,
+
+2
+00:00:03,762 --> 00:00:08,208
+run headless on a local model with no cloud API key.
+
+3
+00:00:08,658 --> 00:00:13,104
+OpenWorker is a coworker agent that works in your files and
+
+4
+00:00:13,104 --> 00:00:13,556
+tools.
+
+5
+00:00:13,556 --> 00:00:16,720
+By design, every tool call needs approval,
+
+6
+00:00:16,720 --> 00:00:19,583
+and every call gets logged either way.
+
+7
+00:00:20,033 --> 00:00:24,853
+We ran the CLI headless, isolated from any real settings,
+
+8
+00:00:24,853 --> 00:00:29,249
+pointed at a local llama.cpp server serving Qwen2.5,
+
+9
+00:00:29,249 --> 00:00:31,109
+no cloud key involved.
+
+10
+00:00:31,559 --> 00:00:34,516
+When the model calls a tool like write_file,
+
+11
+00:00:34,516 --> 00:00:36,263
+the approval gate decides:
+
+12
+00:00:36,263 --> 00:00:38,817
+in ask mode with no terminal attached,
+
+13
+00:00:38,817 --> 00:00:40,766
+it is refused before it runs.
+
+14
+00:00:41,216 --> 00:00:43,724
+Either way, approved or denied,
+
+15
+00:00:43,724 --> 00:00:48,336
+the call lands in a SQLite audit log: proposed, resolved,
+
+16
+00:00:48,336 --> 00:00:49,064
+finished.
+
+17
+00:00:49,514 --> 00:00:53,169
+In ask mode, a write_file call was denied and logged,
+
+18
+00:00:53,169 --> 00:00:55,099
+with brief.md never created.
+
+19
+00:00:55,099 --> 00:00:57,719
+With approvals bypassed, the call ran,
+
+20
+00:00:57,719 --> 00:01:01,788
+but a 3B model's two read_file calls both hit a wrong path,
+
+21
+00:01:01,788 --> 00:01:06,063
+and it wrote a placeholder brief without ever reading the real
+
+22
+00:01:06,063 --> 00:01:06,476
+notes.
+
+23
+00:01:06,926 --> 00:01:09,600
+The approval gate worked exactly as documented.
+
+24
+00:01:09,600 --> 00:01:13,126
+Whether the model behind it could be trusted with the task was
+
+25
+00:01:13,126 --> 00:01:14,264
+a separate question.

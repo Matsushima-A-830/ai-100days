@@ -1,0 +1,73 @@
+{
+  "day": 49,
+  "project": "OpenWorker",
+  "slug": "openworker",
+  "tagline": "Andrew Ng's governed AI coworker, run on local models with no cloud key",
+  "source_url": "github.com/andrewyng/openworker",
+  "license": "MIT",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 49: OpenWorker, Andrew Ng's AI coworker, run headless on a local model with no cloud API key."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "An agent that reads, writes and runs tools in your files",
+        "Every tool call is approval-gated by default",
+        "Every call is logged, approved or denied"
+      ],
+      "narration": "OpenWorker is a coworker agent that works in your files and tools. By design, every tool call needs approval, and every call gets logged either way."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {"id": "cli", "label": "openworker run", "sub": "--isolated --approval-mode", "pos": [0, 0], "span": 2},
+        {"id": "engine", "label": "Agent engine", "sub": "coworker (Python)", "pos": [0, 1], "span": 2},
+        {"id": "model", "label": "Local model", "sub": "llama-server: Qwen2.5", "pos": [0, 2]},
+        {"id": "gate", "label": "Approval gate", "sub": "ask / bypass-approvals", "pos": [1, 2]},
+        {"id": "audit", "label": "audit.db", "sub": "SQLite, every call logged", "pos": [0, 3]},
+        {"id": "tools", "label": "Tools", "sub": "write_file, read_file", "pos": [1, 3]}
+      ],
+      "edges": [
+        {"from": "cli", "to": "engine", "label": "runs"},
+        {"from": "engine", "to": "model", "label": "chat"},
+        {"from": "model", "to": "gate", "label": "tool call"},
+        {"from": "gate", "to": "tools", "label": "if approved"},
+        {"from": "tools", "to": "audit", "label": "logged either way"}
+      ],
+      "steps": [
+        {
+          "focus": ["cli", "engine", "model"],
+          "narration": "We ran the CLI headless, isolated from any real settings, pointed at a local llama.cpp server serving Qwen2.5, no cloud key involved."
+        },
+        {
+          "focus": ["model", "gate", "tools"],
+          "narration": "When the model calls a tool like write_file, the approval gate decides: in ask mode with no terminal attached, it is refused before it runs."
+        },
+        {
+          "focus": ["gate", "audit", "tools"],
+          "narration": "Either way, approved or denied, the call lands in a SQLite audit log: proposed, resolved, finished."
+        }
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "0 / 2",
+      "caption": "Qwen2.5-3B's two read_file calls both failed on a wrong path, yet brief.md still got written.",
+      "lines": [
+        "ask, no terminal:  write_file -> denied",
+        "bypass-approvals:  write_file -> executed",
+        "3B model:  read_file x2 -> error"
+      ],
+      "narration": "In ask mode, a write_file call was denied and logged, with brief.md never created. With approvals bypassed, the call ran, but a 3B model's two read_file calls both hit a wrong path, and it wrote a placeholder brief without ever reading the real notes."
+    },
+    {
+      "type": "outro",
+      "narration": "The approval gate worked exactly as documented. Whether the model behind it could be trusted with the task was a separate question."
+    }
+  ]
+}
