@@ -1883,3 +1883,48 @@
 - 検証難易度: 中、要注意点あり。`uv tool install`で導入自体はキー不要だが、協調動作させる各エージェント〈Claude Code/Codex等〉は既存のCLIログイン・認証情報を再利用する設計で、検証用の動作確認コマンド(`autoswarm doctor --probe`)は実際にモデル呼び出しを行うため使用量コストが発生する。本リポジトリの「当面は有料APIキー必須の候補を選ばない」方針との関係では、新規の有料APIキー契約は不要だが、Claude Code自身の既存利用枠を使う前提になる点を検証前に確認する必要がある。GPU不要。
 - 見栄え: 「Claude Codeと別のCLIエージェントに同じフォルダのドキュメント要約を分担させ、結果がどう統合されるか」というデモは、本リポジトリ自身がClaude Code Routineで運用されているという自己言及的な文脈に合う。マルチエージェント・オーケストレーション系の最新作として、既存候補(oh-my-hermes等)との比較観点も作れる。
 - 状態: 未選択
+
+### [2026-11-16] kajisho5/ffmpeg-skill — クラウド不要・APIキー不要でFFmpegをラップするコーディングエージェント向け動画編集スキル
+
+- 出典: https://github.com/kajisho5/ffmpeg-skill (MIT。本日GitHub Trending Pythonで+475star/日。スター数約6.6k)
+- 概要: Claude Code/Cursor/Codex向けに、FFmpeg/FFprobeをラップした42種のツール(カット・結合・無音除去・字幕焼き込み・ラウドネス正規化・HDR→SDR変換・プラットフォーム別書き出し等)と機械可読な操作契約(`contract --json`)・MCPサーバーを提供するローカル動画編集スキル。READMEに「No cloud · No API keys · Python standard library」と明記。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(FFmpeg自体の解説記事はヒットするが本スキル自体の検証記事は未検出)
+- 検証難易度: 低。FFmpeg 6.1+とPython 3.10+のみが前提で、追加の有料APIキー・GPU不要(Apple Silicon向けVideoToolboxエンコードのみ任意でGPU活用)。`npx ffmpeg-skill`で導入、`npx ffmpeg-skill doctor`で動作確認できる。字幕用の音声認識は別途ローカルのエンジン導入が必要(オプション)。
+- 見栄え: 短い動画クリップに「16:9→9:16変換+字幕焼き込み+ラウドネス正規化」等を適用し、Before/Afterの動画やコンタクトシートで見せられる。本リポジトリ自身がSNS用解説動画(`tools/video/`)を毎回作っているという文脈とも自己言及的に絡めやすい。
+- 状態: 未選択
+
+### [2026-11-16] mvanhorn/last30days-skill — Reddit/HN/X/YouTube等を横断し直近30日の話題を出典付きで要約するリサーチスキル
+
+- 出典: https://github.com/mvanhorn/last30days-skill (MIT。GitHub Trendingで+122star/日、総計約68k star)
+- 概要: Claude Code等のコーディングエージェント向けに、Reddit・Hacker News・Polymarket・GitHub等を並行検索し、エンゲージメント(upvote・市場予測等)でスコアリングした上でAIエージェントが出典付き要約を生成するスキル。README記載の「Zero config. Reddit, HN, Polymarket, and GitHub work immediately」の範囲は追加キー不要で動作し、X/TikTok/Instagram等の一部ソースのみ別途有料API(無料枠あり)が必要。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(knightli.comに日本語の紹介記事〈使い方解説〉が1件あるが、検証記事ではなくZenn/Qiita/noteでもない)
+- 検証難易度: 低。Reddit・Hacker News・Polymarket・GitHubの無料ソースのみを使えば追加の有料APIキー不要で完結する。GPU不要。
+- 見栄え: 「このリポジトリの朝のリサーチRoutineがやっていること」そのものを汎用スキルとして動かし、実際の出典付き要約出力を見せられる、本チャレンジ自体をメタに検証できる珍しい切り口。
+- 状態: 未選択
+
+### [2026-11-16] isair/jarvis — クラウドAI不要・ローカルモデルのみで動く音声対応デスクトップAIアシスタント
+
+- 出典: https://github.com/isair/jarvis (個人利用は無料、商用利用は著者への連絡が必要なライセンス〈標準的なOSSライセンスではない。LICENSEファイル要確認〉。スター数約2.3k)
+- 概要: Ollama/LM Studio/llama.cpp等のローカルモデルサーバーのみで動く、音声対話(Whisperでの音声認識・Piperでの音声合成)・個人メモリ(ローカル日記+知識グラフ)・MCP連携を備えたデスクトップAIアシスタント。「No cloud AI service is required」「No subscription」とクラウド不要を明記。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件
+- 検証難易度: 中。追加の有料APIキーは不要(任意のBrave Search APIを使わない範囲)。Ollama経由の小型モデルであればGPU必須ではないが、音声認識・音声合成を伴うためCPU動作では速度面の制約が出る可能性がある。GUI・マイク入力を伴うデスクトップアプリのため、クラウドRoutine実行環境では画面操作・音声入力の確認が難しい可能性が高く、GUI/音声部分の動作確認はローカルPCへの切り出しが必要になる見込み。
+- 見栄え: 「クラウドAI無しでローカルモデルだけで音声アシスタントがどこまで動くか」は分かりやすいテーマだが、GUI/音声が主体のためクラウド実行環境では設定ファイルやCLI経由の挙動確認が中心になり、見栄えの良いデモ化にはローカル検証への切り出しが前提になりそうな点に注意。
+- 状態: 未選択
+
+### [2026-11-16] ifixai-ai/iFixAi — AIエージェントが「意図通りに動いているか」をモックモードから無料で監査できる独立監査ツール
+
+- 出典: https://github.com/ifixai-ai/iFixAi (Apache-2.0。GitHub Trendingで+313star/日、総計約46k star)
+- 概要: AIエージェントを模擬的なビジネス環境に置き、役割外の要求やプロンプトインジェクション等の現実的なリクエストを送った上で別のLLM(判定役)が応答を採点し、5つの評価軸(虚偽・誘導・欺瞞・不安定性・不透明性)でA〜Fグレードを出す独立監査ツール。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(英語圏の第三者レビューサイトでの紹介はあるが日本語記事・検証記事は未検出)
+- 検証難易度: 低〜中。README記載の`ifixai run --provider mock --eval-mode self --fixture reference.yaml`はREADME上「No API key needed」と明記されたモックデモで、缶詰の応答・採点を使い追加キー不要で動作する。実際のエージェントを判定役モデルで監査する本来の使い方には別プロバイダのAPIキーが必要なため、本リポジトリの方針(有料APIキー必須の候補を選ばない)に沿うならモックデモ範囲での検証に絞るのが現実的。GPU不要。
+- 見栄え: 「AIエージェントの安全性・忠実性を自動で採点する」というニュース性があり、A〜Fグレードや合否つきレポートをそのまま記事の図表に使える。本リポジトリ自身がClaude Code Routineで運用されているという自己言及的な文脈(「このRoutine自身をモックモードで監査してみた」)にも合わせやすい。
+- 状態: 未選択
+
+### [2026-11-16] google-research/paper-orchestra — Google Research発、生成AI論文の草稿を自動生成するマルチエージェントフレームワーク(参考・有料APIキー必須のため今回は選ばない)
+
+- 出典: https://github.com/google-research/paper-orchestra (Apache-2.0。Google非公式プロダクトと明記。関連論文: arXiv 2604.05018)
+- 概要: アイデアと実験ログからLaTeX原稿を生成する、文献調査・節ごとの執筆・図表生成を担当する複数エージェントからなるパイプライン。Google Research発というニュース性が高い。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(英語圏の紹介記事はあるが日本語記事は未検出)
+- 検証難易度: 高。READMEがVertex AI/GeminiキーまたはOpenAIキーのいずれかを必須としており、本リポジトリの「当面は有料APIキー必須の候補を選ばない」方針に反するため選ばない。
+- 見栄え: 高い(Google Research発のAI論文自動生成というテーマ自体が強い)が、有料APIキー必須の制約が解消されるか、無料枠の代替手段が見つかるまでは保留。
+- 状態: 未選択
