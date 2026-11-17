@@ -1,0 +1,87 @@
+1
+00:00:00,000 --> 00:00:04,772
+Day 50: Jarvis, a voice assistant that needs no cloud AI.
+
+2
+00:00:05,222 --> 00:00:07,254
+Jarvis runs only on local models.
+
+3
+00:00:07,254 --> 00:00:10,209
+It keeps two memories: a diary of what happened,
+
+4
+00:00:10,209 --> 00:00:12,733
+and a knowledge graph of what it learned.
+
+5
+00:00:13,183 --> 00:00:15,254
+A cheap local check first asks:
+
+6
+00:00:15,254 --> 00:00:18,526
+does the current conversation already cover this?
+
+7
+00:00:18,526 --> 00:00:19,929
+No model call needed.
+
+8
+00:00:20,379 --> 00:00:23,453
+If not, the diary searches past conversations,
+
+9
+00:00:23,453 --> 00:00:27,262
+while the graph holds durable facts under three branches:
+
+10
+00:00:27,262 --> 00:00:28,866
+user, directives, world.
+
+11
+00:00:29,316 --> 00:00:31,180
+Each branch grows as a tree.
+
+12
+00:00:31,180 --> 00:00:34,774
+Past fifteen hundred tokens, a model splits a node and
+
+13
+00:00:34,774 --> 00:00:36,572
+merges contradicting facts.
+
+14
+00:00:37,022 --> 00:00:40,965
+Results land straight in the system prompt for the next reply,
+
+15
+00:00:40,965 --> 00:00:42,618
+no extra tool call needed.
+
+16
+00:00:43,068 --> 00:00:46,589
+The test run threw 135 failures and 367 errors.
+
+17
+00:00:46,589 --> 00:00:49,212
+Every one traced back to speech and
+
+18
+00:00:49,212 --> 00:00:52,583
+vector-search packages we skipped on purpose,
+
+19
+00:00:52,583 --> 00:00:54,306
+not to the memory code.
+
+20
+00:00:54,756 --> 00:00:58,267
+Full breakdown and three no-mock demo scripts are in the Zenn
+
+21
+00:00:58,267 --> 00:00:58,727
+article.
+
+22
+00:00:58,727 --> 00:01:01,374
+Free for non-commercial use; source on GitHub.

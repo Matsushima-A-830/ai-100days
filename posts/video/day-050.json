@@ -1,0 +1,76 @@
+{
+  "day": 50,
+  "project": "Jarvis",
+  "slug": "jarvis-memory",
+  "tagline": "A cloud-free voice assistant's local knowledge graph and diary memory",
+  "source_url": "github.com/isair/jarvis",
+  "license": "Non-commercial use free",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 50: Jarvis, a voice assistant that needs no cloud AI."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "Desktop assistant run entirely on local models",
+        "Diary records what happened, a knowledge graph records what it learned",
+        "No tool calls needed: memory loads straight into the system prompt"
+      ],
+      "narration": "Jarvis runs only on local models. It keeps two memories: a diary of what happened, and a knowledge graph of what it learned."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {"id": "query", "label": "User query", "sub": "+ hot window", "pos": [0, 0], "span": 2},
+        {"id": "gate", "label": "Recall gate", "sub": "should_recall()", "pos": [0, 1]},
+        {"id": "diary", "label": "Diary", "sub": "SQLite + full-text search", "pos": [1, 1]},
+        {"id": "graph", "label": "Knowledge graph", "sub": "User / Directives / World", "pos": [0, 2], "span": 2},
+        {"id": "reply", "label": "Reply engine", "sub": "system prompt", "pos": [0, 3], "span": 2}
+      ],
+      "edges": [
+        {"from": "query", "to": "gate", "label": "check"},
+        {"from": "gate", "to": "diary", "label": "recall?"},
+        {"from": "gate", "to": "graph", "label": "recall?"},
+        {"from": "diary", "to": "reply", "label": "context"},
+        {"from": "graph", "to": "reply", "label": "context"}
+      ],
+      "steps": [
+        {
+          "focus": ["query", "gate"],
+          "narration": "A cheap local check first asks: does the current conversation already cover this? No model call needed."
+        },
+        {
+          "focus": ["gate", "diary", "graph"],
+          "narration": "If not, the diary searches past conversations, while the graph holds durable facts under three branches: user, directives, world."
+        },
+        {
+          "focus": ["graph"],
+          "narration": "Each branch grows as a tree. Past fifteen hundred tokens, a model splits a node and merges contradicting facts."
+        },
+        {
+          "focus": ["diary", "graph", "reply"],
+          "narration": "Results land straight in the system prompt for the next reply, no extra tool call needed."
+        }
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "5450 / 0",
+      "caption": "5,450 unit tests passed. Zero bugs found in the memory and knowledge-graph code itself.",
+      "lines": [
+        "135 failed + 367 errors: all missing deps",
+        "graph-only suite: 172 passed, 0 failed",
+        "should_recall(): matched its own spec"
+      ],
+      "narration": "The test run threw 135 failures and 367 errors. Every one traced back to speech and vector-search packages we skipped on purpose, not to the memory code."
+    },
+    {
+      "type": "outro",
+      "narration": "Full breakdown and three no-mock demo scripts are in the Zenn article. Free for non-commercial use; source on GitHub."
+    }
+  ]
+}
