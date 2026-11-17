@@ -1,0 +1,34 @@
+model=gemma4:e4b
+
+[2026-11-10] update_graph_from_dialogue -> stored=4 skipped=0 (2.0s)
+  + 'The user lives in Tokyo' -> User
+  + 'The user works as a backend engineer using Go' -> User
+  + 'The user prefers black coffee with no sugar' -> User
+  + 'Always answer in short bullet points' -> Directives
+graph now:
+- Root
+  - Directives: Always answer in short bullet points
+  - User: The user lives in Tokyo | The user works as a backend engineer using Go | The user prefers black coffee with no sugar
+  - World
+
+[2026-11-15] update_graph_from_dialogue -> stored=0 skipped=0 (1.7s)
+graph now:
+- Root
+  - User: The user lives in Osaka | The user works as a backend engineer using Go | The user drinks oat milk lattes
+  - Directives: Always answer in short bullet points
+  - World
+## runs 2-3 (graph lines only)
+##### run 2
+[2026-11-10] update_graph_from_dialogue -> stored=4 skipped=0 (1.8s)
+  - Directives: Always answer in short bullet points
+  - User: The user lives in Tokyo | The user works as a backend engineer using Go | The user prefers black coffee with no sugar
+[2026-11-15] update_graph_from_dialogue -> stored=0 skipped=0 (0.4s)
+  - User: The user lives in Osaka | The user works as a backend engineer using Go | The user drinks oat milk lattes
+  - Directives: Always answer in short bullet points
+##### run 3
+[2026-11-10] update_graph_from_dialogue -> stored=4 skipped=0 (1.7s)
+  - Directives: Always answer in short bullet points
+  - User: The user lives in Tokyo | The user works as a backend engineer using Go | The user prefers black coffee with no sugar
+[2026-11-15] update_graph_from_dialogue -> stored=0 skipped=0 (1.5s)
+  - User: The user lives in Osaka | The user works as a backend engineer using Go | The user drinks oat milk lattes
+  - Directives: Always answer in short bullet points
