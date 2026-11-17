@@ -24,34 +24,110 @@
       "type": "architecture",
       "heading": "How it works",
       "nodes": [
-        {"id": "query", "label": "User query", "sub": "+ hot window", "pos": [0, 0], "span": 2},
-        {"id": "gate", "label": "Recall gate", "sub": "should_recall()", "pos": [0, 1]},
-        {"id": "diary", "label": "Diary", "sub": "SQLite + full-text search", "pos": [1, 1]},
-        {"id": "graph", "label": "Knowledge graph", "sub": "User / Directives / World", "pos": [0, 2], "span": 2},
-        {"id": "reply", "label": "Reply engine", "sub": "system prompt", "pos": [0, 3], "span": 2}
+        {
+          "id": "query",
+          "label": "User query",
+          "sub": "+ hot window",
+          "pos": [
+            0,
+            0
+          ],
+          "span": 2
+        },
+        {
+          "id": "gate",
+          "label": "Recall gate",
+          "sub": "should_recall()",
+          "pos": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "diary",
+          "label": "Diary",
+          "sub": "SQLite + full-text search",
+          "pos": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "graph",
+          "label": "Knowledge graph",
+          "sub": "User / Directives / World",
+          "pos": [
+            0,
+            2
+          ],
+          "span": 2
+        },
+        {
+          "id": "reply",
+          "label": "Reply engine",
+          "sub": "system prompt",
+          "pos": [
+            0,
+            3
+          ],
+          "span": 2
+        }
       ],
       "edges": [
-        {"from": "query", "to": "gate", "label": "check"},
-        {"from": "gate", "to": "diary", "label": "recall?"},
-        {"from": "gate", "to": "graph", "label": "recall?"},
-        {"from": "diary", "to": "reply", "label": "context"},
-        {"from": "graph", "to": "reply", "label": "context"}
+        {
+          "from": "query",
+          "to": "gate",
+          "label": "check"
+        },
+        {
+          "from": "gate",
+          "to": "diary",
+          "label": "recall?"
+        },
+        {
+          "from": "gate",
+          "to": "graph",
+          "label": "recall?"
+        },
+        {
+          "from": "diary",
+          "to": "reply",
+          "label": "context"
+        },
+        {
+          "from": "graph",
+          "to": "reply",
+          "label": "context"
+        }
       ],
       "steps": [
         {
-          "focus": ["query", "gate"],
+          "focus": [
+            "query",
+            "gate"
+          ],
           "narration": "A cheap local check first asks: does the current conversation already cover this? No model call needed."
         },
         {
-          "focus": ["gate", "diary", "graph"],
+          "focus": [
+            "gate",
+            "diary",
+            "graph"
+          ],
           "narration": "If not, the diary searches past conversations, while the graph holds durable facts under three branches: user, directives, world."
         },
         {
-          "focus": ["graph"],
+          "focus": [
+            "graph"
+          ],
           "narration": "Each branch grows as a tree. Past fifteen hundred tokens, a model splits a node and merges contradicting facts."
         },
         {
-          "focus": ["diary", "graph", "reply"],
+          "focus": [
+            "diary",
+            "graph",
+            "reply"
+          ],
           "narration": "Results land straight in the system prompt for the next reply, no extra tool call needed."
         }
       ]
@@ -59,18 +135,18 @@
     {
       "type": "finding",
       "heading": "What we found",
-      "stat": "5450 / 0",
-      "caption": "5,450 unit tests passed. Zero bugs found in the memory and knowledge-graph code itself.",
+      "stat": "51 / 51",
+      "caption": "Knowledge-graph evals passed on gemma4:e4b, run locally with Ollama on one GPU.",
       "lines": [
-        "135 failed + 367 errors: all missing deps",
-        "graph-only suite: 172 passed, 0 failed",
-        "should_recall(): matched its own spec"
+        "Tokyo -> Osaka: old fact rewritten",
+        "Reported as stored=0 after rewrite",
+        "26 eval files: conftest import clash"
       ],
-      "narration": "The test run threw 135 failures and 367 errors. Every one traced back to speech and vector-search packages we skipped on purpose, not to the memory code."
+      "narration": "On a local GPU with Ollama, all fifty-one knowledge graph evals passed. When we said we moved from Tokyo to Osaka, the graph rewrote the old fact, yet reported zero facts stored."
     },
     {
       "type": "outro",
-      "narration": "Full breakdown and three no-mock demo scripts are in the Zenn article. Free for non-commercial use; source on GitHub."
+      "narration": "The Zenn article has the full logs and the no-mock demo scripts. Free for non-commercial use; source on GitHub."
     }
   ]
 }

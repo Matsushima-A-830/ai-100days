@@ -176,46 +176,47 @@
   </div>
 
   <div class="heading">
-    <h1>「135失敗+367エラー」の内訳を調べたら、知識グラフのバグはゼロだった</h1>
-    <p>クラウドAI不要を掲げる音声アシスタント<span class="src">isair/jarvis</span>の個人メモリ(日記+知識グラフ)バックエンドを、同梱テストと自作スクリプトで検証した。</p>
+    <h1>「大阪に引っ越した」と話したら、ローカルLLMが知識グラフの「東京」を書き換えた</h1>
+    <p>クラウドAI不要を掲げる音声アシスタント<span class="src">isair/jarvis</span>の個人メモリ(日記+知識グラフ)を、Ollama+gemma4:e4bと同梱の評価スイートで検証した。</p>
   </div>
 
   <div class="stat-row">
-    <div class="stat-number">0</div>
-    <div class="stat-caption"><strong>memory/配下</strong>のコードに見つかったバグの数(5,450件成功。135失敗+367エラーは全て未導入の音声/TTS/ベクトル依存が原因)</div>
+    <div class="stat-number">51/51</div>
+    <div class="stat-caption"><strong>知識グラフ関連の評価</strong>がgemma4:e4b(RTX 5060 Ti)ですべて成功(4件は大型ジャッジ専用でskip)。ただし評価スイート26ファイルはconftestのimport衝突で収集エラーになり、import行の修正が必要だった</div>
   </div>
 
   <section class="block compare">
-    <div class="block-label">pytest -m unit の結果をどう読むか</div>
+    <div class="block-label">update_graph_from_dialogue() をモック無しで2回実行</div>
     <div class="compare-grid">
       <div class="compare-panel bad">
-        <div class="compare-title">✗ 表面的な数字だけ見ると</div>
-        <pre class="compare-output">135 failed, 5450 passed,
-3 skipped, 190 deselected,
-367 errors in 209.45s</pre>
+        <div class="compare-title">2026-11-10 東京在住・ブラックコーヒー派</div>
+        <pre class="compare-output">stored=4 skipped=0 (2.0s)
+User: lives in Tokyo
+ | backend engineer using Go
+ | black coffee, no sugar</pre>
       </div>
       <div class="compare-panel good">
-        <div class="compare-title">✓ 内訳を調べた実態</div>
-        <pre class="compare-output">135failed/367errors は全て
-sounddevice/faster-whisper/
-chatterbox-tts/piper-tts/
-faiss-cpu 未導入が原因</pre>
+        <div class="compare-title">2026-11-15 大阪へ引っ越し・ラテに変更</div>
+        <pre class="compare-output">stored=0 skipped=0 (1.7s)
+User: lives in Osaka
+ | backend engineer using Go
+ | drinks oat milk lattes</pre>
       </div>
     </div>
   </section>
 
   <section class="block">
-    <div class="block-label">知識グラフ関連テストのみ(pytest -v)</div>
+    <div class="block-label">知識グラフ関連の評価スイート(実LLM)</div>
     <div class="terminal">
       <div class="term-row">
         <span class="term-tag">$ pytest</span>
-        <span class="toks">test_graph_memory.py test_graph_ops.py test_graph_memory_tools.py -m unit</span>
+        <span class="toks">evals/ 知識グラフ関連6ファイル (gemma4:e4b)</span>
       </div>
       <div class="term-row">
         <span class="term-tag">result</span>
-        <span class="toks">172 passed in 3.03s</span>
+        <span class="toks">51 passed, 4 skipped in 167.14s</span>
       </div>
-      <div class="term-foot">LLM無しで動く<b>recall_gate.should_recall()</b>も自作スクリプトで仕様どおりに動作確認。</div>
+      <div class="term-foot">中身は書き換わったのに<b>stored=0</b>。モデルが文言を言い換えた更新は「新規保存」に数えない作り。</div>
     </div>
   </section>
 

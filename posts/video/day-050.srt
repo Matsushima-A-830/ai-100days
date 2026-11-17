@@ -1,87 +1,91 @@
 1
-00:00:00,000 --> 00:00:04,772
+00:00:00,000 --> 00:00:04,969
 Day 50: Jarvis, a voice assistant that needs no cloud AI.
 
 2
-00:00:05,222 --> 00:00:07,254
+00:00:05,419 --> 00:00:07,441
 Jarvis runs only on local models.
 
 3
-00:00:07,254 --> 00:00:10,209
+00:00:07,441 --> 00:00:10,383
 It keeps two memories: a diary of what happened,
 
 4
-00:00:10,209 --> 00:00:12,733
+00:00:10,383 --> 00:00:12,896
 and a knowledge graph of what it learned.
 
 5
-00:00:13,183 --> 00:00:15,254
+00:00:13,346 --> 00:00:15,434
 A cheap local check first asks:
 
 6
-00:00:15,254 --> 00:00:18,526
+00:00:15,434 --> 00:00:18,735
 does the current conversation already cover this?
 
 7
-00:00:18,526 --> 00:00:19,929
+00:00:18,735 --> 00:00:20,149
 No model call needed.
 
 8
-00:00:20,379 --> 00:00:23,453
+00:00:20,599 --> 00:00:23,741
 If not, the diary searches past conversations,
 
 9
-00:00:23,453 --> 00:00:27,262
+00:00:23,741 --> 00:00:27,633
 while the graph holds durable facts under three branches:
 
 10
-00:00:27,262 --> 00:00:28,866
+00:00:27,633 --> 00:00:29,272
 user, directives, world.
 
 11
-00:00:29,316 --> 00:00:31,180
+00:00:29,722 --> 00:00:31,616
 Each branch grows as a tree.
 
 12
-00:00:31,180 --> 00:00:34,774
+00:00:31,616 --> 00:00:35,268
 Past fifteen hundred tokens, a model splits a node and
 
 13
-00:00:34,774 --> 00:00:36,572
+00:00:35,268 --> 00:00:37,094
 merges contradicting facts.
 
 14
-00:00:37,022 --> 00:00:40,965
+00:00:37,544 --> 00:00:41,691
 Results land straight in the system prompt for the next reply,
 
 15
-00:00:40,965 --> 00:00:42,618
+00:00:41,691 --> 00:00:43,431
 no extra tool call needed.
 
 16
-00:00:43,068 --> 00:00:46,589
-The test run threw 135 failures and 367 errors.
+00:00:43,881 --> 00:00:45,821
+On a local GPU with Ollama,
 
 17
-00:00:46,589 --> 00:00:49,212
-Every one traced back to speech and
+00:00:45,821 --> 00:00:48,911
+all fifty-one knowledge graph evals passed.
 
 18
-00:00:49,212 --> 00:00:52,583
-vector-search packages we skipped on purpose,
+00:00:48,911 --> 00:00:51,929
+When we said we moved from Tokyo to Osaka,
 
 19
-00:00:52,583 --> 00:00:54,306
-not to the memory code.
+00:00:51,929 --> 00:00:54,157
+the graph rewrote the old fact,
 
 20
-00:00:54,756 --> 00:00:58,267
-Full breakdown and three no-mock demo scripts are in the Zenn
+00:00:54,157 --> 00:00:56,385
+yet reported zero facts stored.
 
 21
-00:00:58,267 --> 00:00:58,727
-article.
+00:00:56,835 --> 00:00:59,295
+The Zenn article has the full logs and
 
 22
-00:00:58,727 --> 00:01:01,374
+00:00:59,295 --> 00:01:00,914
+the no-mock demo scripts.
+
+23
+00:01:00,914 --> 00:01:03,893
 Free for non-commercial use; source on GitHub.

@@ -79,6 +79,15 @@ QT_QPA_PLATFORM=offscreen PYTHONPATH=../../../jarvis-src/src \
 PYTHONPATH=../../../jarvis-src/src .venv/bin/python demo_recall_gate.py
 PYTHONPATH=../../../jarvis-src/src .venv/bin/python demo_graph_memory.py
 PYTHONPATH=../../../jarvis-src/src .venv/bin/python demo_diary_search.py
+# 7. ローカルLLM(Ollama)での検証(ローカルPCで実施)
+ollama pull gemma4:e4b && ollama pull nomic-embed-text
+#    v2.9.0は評価スイート26ファイルがconftestのimport衝突で収集エラーになるため、import行を置換する
+(cd ../../../jarvis-src && grep -rl "^from conftest import" evals | xargs sed -i 's/^from conftest import/from evals.conftest import/')
+(cd ../../../jarvis-src && EVAL_JUDGE_PROVIDER=ollama EVAL_JUDGE_MODEL=gemma4:e4b QT_QPA_PLATFORM=offscreen \
+  ../ai-100days/experiments/day-050/.venv/bin/python -m pytest -rA \
+  evals/test_knowledge_extraction.py evals/test_graph_extraction_json.py evals/test_merge_consolidation.py \
+  evals/test_graph_split_capacity.py evals/test_graph_branch_routing.py evals/test_recency_superseding.py)
+MODEL=gemma4:e4b PYTHONPATH=../../../jarvis-src/src .venv/bin/python demo_live_graph_update.py
 ```
 
 `jarvis-src/`(cloneしたリポジトリ本体)はこのディレクトリの外(`/tmp`)に置いており、
@@ -88,4 +97,6 @@ PYTHONPATH=../../../jarvis-src/src .venv/bin/python demo_diary_search.py
 
 - `results.md` — 検証結果の詳細(セットアップ・テスト結果の内訳・手動デモの出力・ローカル検証が必要な点)
 - `demo_recall_gate.py` / `demo_graph_memory.py` / `demo_diary_search.py` — モック無し・LLM無しの手動デモスクリプト
+- `demo_live_graph_update.py` — 実LLM(Ollama)で`update_graph_from_dialogue()`を呼ぶモック無しデモ
+- `logs_evals_graph_local.txt` / `logs_demo_live_graph_update.txt` — ローカル検証のログ
 - `logs_unit_tests.txt` — ユニットテスト実行のFAILED/ERROR全行+最終集計(504行、そのまま)
