@@ -2,21 +2,23 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 051
-- 選んだ候補(backlog.mdのタイトルかURL): jingyaogong/minimind — https://github.com/jingyaogong/minimind
+- Day: 052
+- 選んだ候補(backlog.mdのタイトルかURL): Weight-Space Programming Doesn't Need Transformers — https://huggingface.co/papers/2611.22055
 - 補足メモ(あれば):
-  - 出典: https://github.com/jingyaogong/minimind (2026-11-17付研究PR〈#174〉でbacklog.mdに追記。Apache-2.0。当日GitHub Trending Pythonで+188star/日、スター数65,881)。
-  - 概要: Tokenizer→Pretrain→SFT→LoRA/DPO/PPO/GRPO/CISPO→エージェント的RL→蒸留まで、LLM学習パイプライン全体を高レベルラッパーに頼らずPyTorchネイティブで実装したプロジェクト。「Train a 64M-parameter LLM from scratch in just 2h!」を掲げ、最小構成の「minimind-3(64M)」は公式リファレンス環境(RTX3090 1枚)でPretrain約1.21時間+SFT約1.10時間、合計2.3時間程度で学習できると主張している。
-  - 検証スコープの絞り方と選定理由: 公式のリファレンス環境はRTX3090 1枚だが、CUDA必須ではなくCPU/Apple MPSでも学習できると明記されている。クラウドRoutine実行環境にGPUが無い前提で、データセット規模・ステップ数を縮小したミニ構成(例: サンプル数・epoch数を絞ったpretrain+SFT)をCPU上で6時間以内に収まるように調整して実行する。フルスケールの「2時間でLLM」という主張そのものの再現はGPU前提のため今回のスコープ外とし、その旨を正直に記事に明記する(ツール自体のGPU前提は検証対象の性質なので「書く」失敗として扱ってよい)。
-  - APIキー・前提条件についての方針: 追加の有料APIキーは不要。モデル・データセットはHugging Face/ModelScopeから取得する(ネットワーク制限でダウンロードできない場合はRoutine環境の制約として扱い、ローカル検証にエスカレーションする)。実験管理用のwandb/SwanLabは任意・未使用で進める。
+  - 出典: https://huggingface.co/papers/2611.22055 (arXiv 2611.22055。2026-11-18付研究PR〈#178〉でbacklog.mdに追記。著者: Hyunjong Ok, Jaeho Lee〈POSTECH〉。コード: https://github.com/effl-lab/Weight-Space-Programming, MIT)。
+  - 概要: 勾配降下法を使わず、LLMに他モデルの重みを直接「書かせる」Weight-Space Programmingという手法を検証した論文。3つのフロンティアLLM(Claude Opus 5.5・GPT-6.1 Sol・GPT-6 Astra)にARCの多肢選択科学問題10例とサンドボックスを与え、固定アーキテクチャへの重み書き込みと、LLM自身にアーキテクチャ設計させる場合を比較した。設計を自由にすると3モデルともプレーンテキストの事実を疎なテーブルにコンパイルし固定の検索手順で読む構造に行き着き、最大54.4%のテスト精度を達成、あるモデルは同じLLMが書いた最も精度の高いTransformerを約1,800分の1のパラメータ数で上回った。勾配が無いためLLMは各エントリの意味を説明でき、誤答を1行に追跡・修正できる点を特徴としている。
+  - 検証スコープの絞り方と選定理由: 公開コードの`harness.run`はClaude Code CLIをサンドボックス(bubblewrap)内の「writer」として直接呼び出す設計になっている。これにより追加の有料APIキーを使わず、Claude Code自身をwriterとして動かして再現できる。公開済み言語モデルへのファインチューニング・速度比較の一部(`baselines.arc_released`等)はCUDA GPUが必須のため今回のスコープ外とし、CPU上で完結する「ARCタスク1〜2問に対してClaude Code自身にwriterとして重みを書かせ、スコアリングする」という中心的な実験に絞る。
+  - APIキー・前提条件についての方針: 追加の有料APIキーは不要(導入済みのClaude Code CLI自身をwriterとして使う)。ARCデータセット(`allenai/ai2_arc`)はHugging Face Hubから取得する(ネットワーク制限で取得できない場合はRoutine環境の制約として扱い、ローカル検証にエスカレーションする)。Linux環境でのbubblewrapによるサンドボックス実行が前提のため、Routine実行環境で動かない場合もRoutine環境の制約として扱う。
   - 検証スコープ・手順:
-    1. リポジトリをcloneし、Python仮想環境でrequirementsを導入する。導入ログをそのまま記録する。
-    2. 学習データセット(ミニ構成)をHugging Face/ModelScopeから取得する。取得できない場合はRoutine環境の制約として記録し、ローカル検証へエスカレーションする。
-    3. CPU上でpretrainを縮小構成(サンプル数・ステップ数を絞る)で実行し、loss推移をログに記録する。
-    4. 同様に縮小構成でSFTを実行し、学習前後で簡単な質問に対する生成結果がどう変わるかをBefore/Afterで比較する。
-    5. 実行時間・loss推移・生成サンプルをすべて`results.md`にそのまま記録する(動かなかった場合も失敗として正直に書く)。
-    6. GPU前提のフルスケール「2時間」主張を今回CPU縮小版では再現していない旨を記事・シェアカードに明記する。
-  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-11-17時点、backlog.md参照。検索範囲ではZenn/Qiita/noteでの紹介・検証記事は未検出)。
-  - 記事化の切り口: 「ゼロから自分で書いたわけではないが、公式スクリプトを使って実際に自作LLMを一から学習させ、学習曲線と生成結果がどう変化するかを手元で確認する」というBefore/After型の切り口。GPUが無い環境でどこまで縮小すれば現実的な時間で動くか、という制約込みの試行録にする。
+    1. リポジトリをcloneし、`requirements.txt`を導入する。導入ログをそのまま記録する。
+    2. オフラインの単体テスト(`pytest tests -q`)をCPU上で実行する。
+    3. ARCデータセット(`allenai/ai2_arc`)をHugging Face Hubから取得する。取得できない場合はRoutine環境の制約として記録し、ローカル検証へエスカレーションする。
+    4. 環境変数(`WSP_DATA_ROOT`・`HF_HOME`・`WSP_VENV`・`WSP_CLAUDE_BIN`・`WSP_CLAUDE_PROFILES`)を設定し、`WSP_CLAUDE_BIN`を導入済みのClaude Code CLIに向ける。
+    5. `python -m harness.run`で1つのARCタスクに対しClaude Code自身をwriterとして動かし、固定アーキテクチャへの重み書き込みと、可能であればLLM自身にアーキテクチャ設計させる場合の両方を試す。
+    6. 生成された重み(疎なテーブル等)の中身を実際に読み、どの事実がどう格納・解釈されているかを確認する。
+    7. スコアリング結果・ログ・生成された重みの中身をすべて`results.md`にそのまま記録する(動かなかった場合も失敗として正直に書く)。
+    8. GPU前提のファインチューニング・速度比較(`baselines.arc_released`等)は今回スコープ外とした旨を記事・シェアカードに明記する。
+  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-11-18時点、backlog.md参照。検索範囲ではこの論文・公開コード自体の日本語紹介・検証記事は未検出。元になったMIT CSAILの先行ブログ「Weight-space programming」自体を紹介する日本語記事〈企業メディア経由〉はある)。
+  - 記事化の切り口: 「LLMが勾配降下なしで他モデルの重みを直接書き換えて正解させる」という直感に反する現象を、実際にClaude Code自身をwriterとして動かし、生成された重み(疎なテーブル)の中身を覗いて見せる切り口。本チャレンジを運用しているClaude Code自身が検証対象の「writer」役を担うという自己言及的な構成にもできる。
 
 状態: 設定済み
