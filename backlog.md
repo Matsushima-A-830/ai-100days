@@ -1973,3 +1973,39 @@
 - 検証難易度: 中(コード〈レビュワー用チェックリスト・集計ユーティリティ〉は公開されているが516構成の全体再現は6時間では不可能。縮小版として、同じ呼び出し回数の予算を揃えた上で「単発1回」「同じモデルに同じプロンプトでN回サンプリングして多数決」「複数エージェントに役割分担させて協調」の3パターンを少数タスクで比較し、論文の主張〈予算を揃えると差が縮む〉がどこまで再現するか確認する想定。追加のAPIキーは使わずClaude Code自身の複数呼び出しで検証する方針)
 - 見栄え: 「エージェントを増やせば増やすほど賢くなるわけではない」という直感に反する結果を自分の手元の少数タスクでどこまで再現できるかというBefore/After比較が作りやすい。
 - 状態: 未選択
+
+### [2026-11-18] elementalsouls/Claude-BugHunter — バグバウンティ・外部レッドチーム向けAgent Skill 83個をまとめたClaude Code向けプラグイン
+
+- 出典: https://github.com/elementalsouls/Claude-BugHunter (コードはMIT、スキル手法・ワードリスト・正規表現カタログ等のコンテンツはCC BY 4.0。本日GitHub Trending Pythonで1位、+2,322star/日、累計11,191star)
+- 概要: Claude Code(OpenCode/OpenAI Codex CLI/Hermes Agent/Google AntiGravityにも対応)向けに、バグバウンティ・外部レッドチーム作業用のAgent Skill 83個とスラッシュコマンド15個をまとめたプラグイン。Webアプリ脆弱性クラス・SaaS/IDプラットフォーム診断・偵察・レポート作成までを対象とし、681件の公開バグバウンティレポートから抽出したパターン・24種の脆弱性クラスの知識を内包、Burp Suite MCP連携にも対応する。内部AD・C2・侵入後の横展開・検知回避は明示的にスコープ外としている。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲ではZenn/Qiita/noteでの紹介・検証記事は未検出。韓国語〈PyTorch Korea〉の紹介記事はある。似た「BugHunter」という呼称を使う別リポジトリ〈shuvonsec/claude-bug-bounty〉の日本語紹介記事〈innovatopia.jp〉が別途あるため、記事化する際は両者を混同しないよう注意)
+- 検証難易度: 低〜中。MIT/CC BY 4.0で追加の有料APIキー・GPU不要(導入先のClaude Code自身のモデルを使う)。`/plugin marketplace add elementalsouls/Claude-BugHunter`→`/plugin install claude-bughunter@elementalsouls`で導入できる。検証には自分がテスト許可を持つ対象(OWASP Juice Shop/DVWA等の意図的に脆弱なデモアプリをローカルに立てる)が必要で、実在の第三者サービスには絶対に向けない。
+- 見栄え: 「Agent Skill未導入のClaude Codeと導入後のClaude Codeで、同じ意図的に脆弱なデモアプリに対する診断の深さ・指摘内容がどう変わるか」というBefore/After比較が作りやすい。本チャレンジで既に多数扱ってきた「エージェント拡張スキル系」とは異なり、セキュリティ診断特化という切り口で差別化できる。
+- 状態: 未選択
+
+### [2026-11-18] Weight-Space Programming Doesn't Need Transformers — 勾配降下なしでLLMに他モデルの重みを直接書かせる手法(POSTECH発論文)
+
+- 出典: https://huggingface.co/papers/2611.22055 (arXiv 2611.22055。著者: Hyunjong Ok, Jaeho Lee〈POSTECH〉。コード: https://github.com/effl-lab/Weight-Space-Programming, MIT)
+- 概要: 勾配降下法を使わず、LLMに他モデルの重みを直接「書かせる」Weight-Space Programmingという手法を検証した論文。3つのフロンティアLLM(Claude Opus 5.5・GPT-6.1 Sol・GPT-6 Astra)にARCの多肢選択科学問題10例とサンドボックスを与え、固定アーキテクチャへの重み書き込みと、LLM自身にアーキテクチャ設計させる場合を比較した。設計を自由にすると3モデルともプレーンテキストの事実を疎なテーブルにコンパイルし固定の検索手順で読む構造に行き着き、最大54.4%のテスト精度を達成、あるモデルは同じLLMが書いた最も精度の高いTransformerを約1,800分の1のパラメータ数で上回った。勾配が無いためLLMは各エントリの意味を説明でき、誤答を1行に追跡・修正できる点を特徴としている。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では、元になったMIT CSAILの先行ブログ「Weight-space programming」自体を紹介する日本語記事〈企業メディア経由〉はあるが、この論文・公開コード自体の日本語紹介・検証記事は未検出)
+- 検証難易度: 中。MIT。GitHubの`harness.run`はClaude Code CLIをサンドボックス〈bubblewrap〉内の「writer」として直接呼び出す設計になっており、追加の有料APIキー不要でClaude Code自身を使って再現できる。CPU上の`pytest tests -q`(オフライン単体テスト)と1回のwriterセッション実行は本リポジトリのGPU無し方針に合う。公開済み言語モデルへのファインチューニング・速度比較の一部〈`baselines.arc_released`等〉はCUDA GPU必須のため、今回はCPUで再現可能な範囲(1〜2タスクのwriterセッションとスコアリング)に絞る。
+- 見栄え: 「LLMが勾配降下なしで他モデルの重みを直接書き換えて正解させる」という直感に反する現象を、実際にClaude Code自身をwriterとして動かし、生成された重み(疎なテーブル)の中身を覗いて見せられる。ニュース性・技術者向けの切り口として強い。
+- 状態: 未選択
+
+### [2026-11-18] IQuestLab/RepoFactory — リアルなGitHubリポジトリをコーディングエージェント訓練用の検証可能な環境に変換するパイプライン(論文)
+
+- 出典: https://huggingface.co/papers/2611.21152 (arXiv 2611.21152。著者: Yang Tian, Tianyu Zheng, Xiyuan Yang, Yaxin Du, Chengran Yang, Bo Zhao, Jian Yang, Bryan Dai。コード: https://github.com/IQuestLab/RepoFactory〈リポジトリにライセンス表記無し、使用前に要確認〉。データ: https://huggingface.co/datasets/IQuestLab/RepoFactory)
+- 概要: リアルなGitHubリポジトリを「言語仕様からプロジェクト全体を一から構築させる」コーディングエージェント向け訓練環境に変換するパイプライン。各環境はタスク仕様(`start.md`)・正解実装(oracle)・0〜1の報酬を返す検証器(verifier)を持つ。「Environment Evolution Loop」が妥当性・構造的結合度・実装スコープの複合目標を低コストな代理指標で最適化し、17分野・10,159環境を生成した。これでQwen3.5-35B-A3Bを訓練したRepoHorizen-35B-A3BはNL2Repo-Benchで+22.6点、5ベンチマーク平均で+8.5点(Environment Evolution Loop無しでは+17.5点・+6.4点)の向上を報告している。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 中(35Bモデルの訓練自体はGPU・時間の両面で本チャレンジの範囲外のため対象外とする。ただしDocker+Harborで環境を取得し、各環境のoracle実装が報酬1.0、`nop`〈何もしない〉が報酬0.0を返すかというパイプラインの検証ステップ自体はGPU不要・追加の有料APIキー不要〈エージェントにClaude Code自身を使える〉で実行できる。本チャレンジでは「環境生成パイプラインが本当に動くタスクを作れているか」という検証部分に絞る方針)
+- 見栄え: 「AIに訓練用の課題環境そのものを自動生成させる」という一段メタな切り口。生成された環境でClaude Code自身がoracle相当の実装をゼロから書けるか試す、という自己言及的なデモにもできる。リポジトリにライセンス表記が無い点は記事中で正直に明記する必要がある。
+- 状態: 未選択
+
+### [2026-11-18] google-labs-code/stitch-skills — Google公式デザインツールStitch向けAgent Skill集(参考・Stitch側で有料APIキーが必要なため今回は選ばない)
+
+- 出典: https://github.com/google-labs-code/stitch-skills (Apache-2.0。「Google非公式プロダクト」と明記。本日GitHub Trendingで言及、累計約10.4k star・1.4kフォーク)
+- 概要: GoogleのUIデザインツールStitch向けのMCPサーバーと連携するAgent Skill集。デザイン生成・コード→デザイン変換・デザインシステム管理・React/React Native/ダッシュボードコード生成等を、Claude Code/Codex/Cursor/Gemini CLI/Antigravity上でStitch MCP経由で実行できる。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(Stitchというツール自体を扱ったZennのスクラップ記事は1件あるが、このskillsリポジトリ自体を扱った日本語記事は未検出)
+- 検証難易度: 高。リポジトリ自体はApache-2.0で無料だが、前提となるStitch MCPサーバーの利用にはGoogle CloudのAPIキー〈X-Goog-Api-Key〉が必要で、公式の料金ページが確認できず課金対象になる可能性がある。本リポジトリの「当面は有料APIキー必須の候補を選ばない」方針に反するため、Stitch側が無料枠で確実に完結する方法が確認できるまでは選ばない。
+- 見栄え: 高い(Google公式デザインツール連携というニュース性)が、有料APIキー必須の制約が解消されるまで保留。
+- 状態: 未選択
