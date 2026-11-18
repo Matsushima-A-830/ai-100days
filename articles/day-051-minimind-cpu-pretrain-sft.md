@@ -1,5 +1,5 @@
 ---
-title: "「3090で約2.3時間」の64M LLM自作を、RTX 5060 Tiで公式手順どおり回したら7時間19分だった"
+title: "「3090で約2.3時間」の64M LLM自作を、RTX 5060 Tiで公式手順どおり動かしてみた"
 emoji: "🧩"
 type: "tech"
 topics: ["ai", "llm", "pytorch", "python", "opensource"]
