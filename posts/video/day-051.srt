@@ -1,0 +1,75 @@
+1
+00:00:00,000 --> 00:00:05,892
+Day 51: minimind, an open source pipeline that trains a 64M
+
+2
+00:00:05,892 --> 00:00:09,787
+parameter LLM from scratch, run on CPU.
+
+3
+00:00:10,237 --> 00:00:14,165
+minimind implements the full training pipeline, tokenizer,
+
+4
+00:00:14,165 --> 00:00:17,755
+pretraining, fine tuning, and reinforcement learning,
+
+5
+00:00:17,755 --> 00:00:20,802
+in pure PyTorch, with no high level wrappers.
+
+6
+00:00:21,252 --> 00:00:25,397
+We sliced the official dataset down to under half a percent,
+
+7
+00:00:25,397 --> 00:00:29,542
+and ran the stock pretrain script on four CPU cores, no GPU.
+
+8
+00:00:29,992 --> 00:00:32,925
+The SFT script loaded that checkpoint and
+
+9
+00:00:32,925 --> 00:00:36,216
+kept training on a small set of chat examples,
+
+10
+00:00:36,216 --> 00:00:37,503
+still on CPU only.
+
+11
+00:00:37,953 --> 00:00:41,603
+We then generated from both checkpoints with the same seed,
+
+12
+00:00:41,603 --> 00:00:45,005
+comparing raw text continuation against fine-tuned chat
+
+13
+00:00:45,005 --> 00:00:45,500
+replies.
+
+14
+00:00:45,950 --> 00:00:50,166
+Pretrain loss dropped from seven point four to four point one
+
+15
+00:00:50,166 --> 00:00:52,654
+over one thousand six hundred steps.
+
+16
+00:00:52,654 --> 00:00:56,456
+After SFT, the model gave a coherent self-introduction,
+
+17
+00:00:56,456 --> 00:00:59,220
+but factual questions stayed incoherent.
+
+18
+00:00:59,670 --> 00:01:04,050
+Full logs and code are on GitHub, Apache-2.0 licensed.
+
+19
+00:01:04,050 --> 00:01:05,835
+Write-up linked below.
