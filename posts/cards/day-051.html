@@ -181,8 +181,8 @@
   </div>
 
   <div class="stat-row">
-    <div class="stat-number">2h42m</div>
-    <div class="stat-caption">Pretrain 1 epoch(39,695 step)の実測時間(9,741秒)。公式READMEの<strong>RTX 3090での目安は約1.21時間</strong>で、約2.2倍かかった</div>
+    <div class="stat-number">7h19m</div>
+    <div class="stat-caption">Pretrain 2h42m(39,695 step)+ SFT 4h37m(56,608 step)の実測合計(26,349秒)。公式READMEの<strong>RTX 3090での目安は約2.31時間</strong>で、約3.2倍かかった</div>
   </div>
 
   <section class="block">
@@ -214,7 +214,7 @@
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>SFT(sft_t2t_mini全量、56,608 step)は学習中。11/18 23:59時点で17,000 step(約30%)、ログの残り時間見積もりは約193分。完走後の結果は別途まとめる。</p>
+    <p>SFT lossは2.23→1.69。SFT後はチャット形式・箇条書きで答えるが、光合成の「光反応」を「原子核反応」と説明するなど、64M・1 epochでは内容の正確さまでは届かなかった。</p>
   </div>
 
   <footer>

@@ -97,7 +97,8 @@ python ../ai-100days/experiments/day-051/gen_compare.py --weight_path out/full_s
 - `results.md` — 検証結果のまとめ(正直な記録)
 - `gen_compare.py` — Before/After生成比較スクリプト(ローカル検証時に追加)
 - `logs_gpu_small_*.txt` — ローカルGPUでの縮小データ再現ログ
-- `logs_gpu_full_pretrain.txt` — ローカルGPUでの公式mini版データ全量Pretrainログ
+- `logs_gpu_full_pretrain.txt` / `logs_gpu_full_sft.txt` — ローカルGPUでの公式mini版データ全量Pretrain / SFTログ
+- `logs_gpu_full_generation.txt` — 全量学習後のBefore/After生成結果(seed=42)
 
 モデルの重みファイル(`pretrain_768.pth` / `full_sft_768.pth`、各約131MB)は
 容量の都合でこのリポジトリにはコミットしていない。再現手順通りに実行すれば
