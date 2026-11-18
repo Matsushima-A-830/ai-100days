@@ -66,6 +66,25 @@ python gen_compare.py --weight_path ./out/full_sft_768.pth --is_pretrain 0 \
     --tokenizer_path ./model --seed 42
 ```
 
+### ローカルGPUでの検証(results.md 7節)
+
+```bash
+# torchはPyPIの既定wheel(2.15.0+cu132)。RTX 5060 Ti(sm_120)で動作確認
+# 縮小データ: 4・5の手順で --device cuda:0 に変えるだけ
+# 公式mini版データ全量・既定値で1 epochずつ(公式のRTX 3090目安: 1.21h + 1.10h)
+curl -L -o dataset/pretrain_t2t_mini.jsonl \
+  "https://huggingface.co/datasets/jingyaogong/minimind_dataset/resolve/main/pretrain_t2t_mini.jsonl"
+curl -L -o dataset/sft_t2t_mini.jsonl \
+  "https://huggingface.co/datasets/jingyaogong/minimind_dataset/resolve/main/sft_t2t_mini.jsonl"
+cd trainer
+python train_pretrain.py --epochs 1
+python train_full_sft.py --epochs 1
+# 生成比較(minimindのリポジトリ直下で)
+python ../ai-100days/experiments/day-051/gen_compare.py --weight_path out/full_sft_768.pth --is_pretrain 0
+```
+
+注意: `train_full_sft.py --from_weight` は `--save_dir` に関係なく `../out/` から重みを読む。
+
 `gen_compare.py` は公式の対話スクリプト`eval_llm.py`が`input()`による対話入力を
 要求する作りだったため、固定プロンプト4問に対して非対話でBefore/After比較できるよう
 今回書き下ろしたもの(モデル読み込み・生成ロジックは`eval_llm.py`と同じ構成)。
@@ -76,6 +95,9 @@ python gen_compare.py --weight_path ./out/full_sft_768.pth --is_pretrain 0 \
 - `logs_sft.txt` — SFTの全ログ(2 epoch、702 step)
 - `logs_generation.txt` — Before(pretrainのみ)/After(SFT後)の生成結果全文(seed=42で固定、再現可能)
 - `results.md` — 検証結果のまとめ(正直な記録)
+- `gen_compare.py` — Before/After生成比較スクリプト(ローカル検証時に追加)
+- `logs_gpu_small_*.txt` — ローカルGPUでの縮小データ再現ログ
+- `logs_gpu_full_pretrain.txt` — ローカルGPUでの公式mini版データ全量Pretrainログ
 
 モデルの重みファイル(`pretrain_768.pth` / `full_sft_768.pth`、各約131MB)は
 容量の都合でこのリポジトリにはコミットしていない。再現手順通りに実行すれば

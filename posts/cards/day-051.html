@@ -170,26 +170,26 @@
   <div class="eyebrow">
     <span>$ day-051</span>
     <span class="divider">/</span>
-    <span class="path">--topic minimind-cpu</span>
+    <span class="path">--topic minimind-gpu</span>
     <span class="divider">/</span>
     <span>海外AIネタ100日チャレンジ</span>
   </div>
 
   <div class="heading">
-    <h1>GPUなしで「64Mパラメータの自作LLM」を<br>Pretrain→SFTまで動かす</h1>
-    <p><span class="src">minimind</span>(GitHub Trending、65,881 star)の公式スクリプトを一切変えず、データ量だけ公式mini版の0.4〜0.5%まで削って、GPUなしのCPU 4コアでPretrain→SFTを最後まで走らせた。</p>
+    <h1>「3090で2時間」の自作LLMを<br>RTX 5060 Tiで公式手順どおりに回した</h1>
+    <p><span class="src">minimind</span>(GitHub Trending、65,881 star)の64Mモデルを、公式mini版データ全量・公式スクリプトの既定値のまま、16GBのRTX 5060 Ti 1枚で1 epochずつ学習させた。</p>
   </div>
 
   <div class="stat-row">
-    <div class="stat-number">63.91M</div>
-    <div class="stat-caption">実測パラメータ数。公式が主張する<strong>minimind-3「64M」</strong>と一致(hidden_size=768 × 8層、構成は変更なし)</div>
+    <div class="stat-number">2h42m</div>
+    <div class="stat-caption">Pretrain 1 epoch(39,695 step)の実測時間(9,741秒)。公式READMEの<strong>RTX 3090での目安は約1.21時間</strong>で、約2.2倍かかった</div>
   </div>
 
   <section class="block">
-    <div class="block-label">pretrain loss(全1,672 step中)</div>
+    <div class="block-label">pretrain loss(pretrain_t2t_mini全量、全39,695 step中)</div>
     <div class="chart-wrap">
       <svg class="chart" viewBox="0 0 580 220" role="img"
-           aria-label="Pretrainのlossがstep 20の7.42からstep 1672の4.05まで下がっていく様子">
+           aria-label="Pretrainのlossがstep 100の7.52からstep 39695の2.01まで下がっていく様子">
         <g id="grid"></g>
         <g id="plot"></g>
       </svg>
@@ -198,23 +198,23 @@
   </section>
 
   <section class="block">
-    <div class="block-label">Before/After 生成比較(seed=42固定)「你有什么特长？(得意なことは？)」</div>
+    <div class="block-label">同じ縮小データ(pretrain 6,685行・sft 2,805行)でCPUとGPUを比較</div>
     <div class="terminal">
       <div class="term-row">
-        <span class="term-tag">BEFORE</span>
-        <span class="toks">我很高兴去哪里餐厅？作为AI语言模型，我建议您咨询一些建议...(質問を無視してレストランの話を始める)</span>
+        <span class="term-tag">CPU</span>
+        <span class="toks">4コア: pretrain 約62分 + sft 約38分 = 約1時間40分</span>
       </div>
       <div class="term-row">
-        <span class="term-tag">AFTER</span>
-        <span class="toks">我是由jingyaogong创建的高效小参数AI模型，专注于提供精准、准确的信息和回答。(筋の通った自己紹介文で回答)</span>
+        <span class="term-tag">GPU</span>
+        <span class="toks">RTX 5060 Ti: pretrain 124.5秒 + sft 64.7秒 = 約3分10秒</span>
       </div>
-      <div class="term-foot">SFT後、頻出パターン(自己紹介)は改善。知識を要する質問は今回のデータ量では未改善(<b>results.md</b>に正直に記録)。</div>
+      <div class="term-foot">最終loss はCPU <b>4.05 / 3.51</b>、GPU <b>4.02 / 3.53</b>(pretrain / sft)でほぼ同じ。</div>
     </div>
   </section>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>公式が掲げる「RTX3090・2時間で自作LLM」というフルスケールの主張自体はGPU前提のため今回は検証対象外。データは公式mini版のさらに0.4〜0.5%(pretrain 6,685行・sft 2,805行)まで縮小している。</p>
+    <p>SFT(sft_t2t_mini全量、56,608 step)は学習中。11/18 23:59時点で17,000 step(約30%)、ログの残り時間見積もりは約193分。完走後の結果は別途まとめる。</p>
   </div>
 
   <footer>
@@ -248,27 +248,23 @@
   // 系列が1つしかない場合は 'b' 関連の行(path/points/end-label)を削除してよい。
   (function () {
     var data = [
-      { x: 20, a: 7.42 },
-      { x: 140, a: 6.60 },
-      { x: 260, a: 5.88 },
-      { x: 380, a: 5.83 },
-      { x: 500, a: 5.30 },
-      { x: 620, a: 5.35 },
-      { x: 740, a: 4.81 },
-      { x: 856, a: 4.37 },
-      { x: 976, a: 4.74 },
-      { x: 1096, a: 4.42 },
-      { x: 1216, a: 4.26 },
-      { x: 1336, a: 4.21 },
-      { x: 1456, a: 3.96 },
-      { x: 1576, a: 4.38 },
-      { x: 1672, a: 4.05 }
+      { x: '100', a: 7.52 },
+      { x: '4k', a: 2.80 },
+      { x: '8k', a: 2.61 },
+      { x: '12k', a: 2.40 },
+      { x: '16k', a: 2.33 },
+      { x: '20k', a: 2.17 },
+      { x: '24k', a: 2.12 },
+      { x: '28k', a: 1.90 },
+      { x: '32k', a: 2.06 },
+      { x: '36k', a: 2.16 },
+      { x: '39.7k', a: 2.01 }
     ];
     if (!data.length) return;
 
     var W = 580, H = 220, padL = 30, padR = 78, padT = 10, padB = 28;
     var plotW = W - padL - padR, plotH = H - padT - padB;
-    var yMax = 8; // lossの実測最大値(7.42)より少し大きい、きりのいい数
+    var yMax = 9; // lossの実測最大値(7.52)より大きく、3等分で整数になる数
 
     function x(i) { return padL + (plotW * i) / (data.length - 1); }
     function y(v) { return padT + plotH - (plotH * v) / yMax; }

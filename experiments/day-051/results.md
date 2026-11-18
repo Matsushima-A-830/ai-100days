@@ -191,3 +191,77 @@ lossは**4.99(step 20)→3.51(最終step)** まで下がった(ばらつきは�
 4. 公式が掲げる「GPU 1枚・2時間でLLMを作れる」という主張そのものはGPU前提であり、
    今回のCPU縮小版の結果からその主張の真偽を判断することはできない
    (今回はスコープ外として明記した通り)。
+
+## 7. ローカルGPU検証(2026-11-18〜19, matsu PC)
+
+環境: Windows + WSL2 (Linux 6.6), NVIDIA GeForce RTX 5060 Ti 16GB (driver 610.88), RAM 30GB, 16コア,
+Python 3.12.3 (uv venv), `torch==2.15.0+cu132`(Routine実行時と同じバージョン。`torch.cuda.is_available()` → `True`)。
+minimindは同じコミット`233d00fa`をcloneした。pip依存は1節と同じ。
+
+### 7-1. 縮小データでの再現(Routineと同じ引数、`--device cuda:0`のみ変更)
+
+データは2節と同じRange Requestで取得し、行数も同じ(pretrain 6,685行 / sft 2,805行)になった。
+
+| | CPU 4コア(Routine, 3〜4節) | RTX 5060 Ti(ローカル) |
+|---|---|---|
+| Pretrain 2 epoch / 1,672 step | 約62分 | **124.5秒** |
+| Pretrain loss(step 20 → 最終) | 7.4156 → 4.0453 | 7.4153 → 4.0189 |
+| SFT 2 epoch / 702 step | 約38分 | **64.7秒** |
+| SFT loss(step 20 → 最終) | 4.9916 → 3.5065 | 4.9991 → 3.5349 |
+| 合計 | 約1時間40分 | 約3分10秒 |
+
+全ログ: `logs_gpu_small_pretrain.txt` / `logs_gpu_small_sft.txt`(壁時計は`/usr/bin/time`の`WALL`行)。
+
+注意点(ツールの挙動): `train_full_sft.py`の`--from_weight`は`--save_dir`を参照せず、常に`../out/`から読む
+(`trainer_utils.init_model()`の`save_dir`既定値`'../out'`がそのまま使われる)。
+最初に`--save_dir ../out_small`で実行したところ`FileNotFoundError: ... '../out/pretrain_768.pth'`で止まった。
+3〜4節の手順は`--save_dir ../out`なので影響しない。
+
+### 7-2. 縮小データの重みでのBefore/After生成
+
+`gen_compare.py`(このディレクトリ。5節で使ったスクリプトがPRに含まれていなかったため、`eval_llm.py`と同じ
+読み込み・生成設定で書き直したもの。プロンプトごとに`setup_seed(42)`)で生成した。全文は`logs_gpu_small_generation.txt`。
+
+- CPUとGPUでは浮動小数点演算の結果が一致しないため、seed=42でも生成文はRoutine実行時と別の文になった。
+- 傾向は同じ: SFT後は「你有什么特长？」に`我是由jingyaogong创建的高效和高效的。...`と自己紹介で答える一方、
+  天空・光合成・料理の質問は内容が破綻したまま。
+- 生成速度(tok/s)は、7-3の学習と同時にGPUを使っていたため参考値にならない。
+
+補足: 5節では`eval_llm.py`は「非対話実行ができない」としたが、起動時の`[0] 自动测试`を選べば固定8問を自動で回す
+モードがあり、`echo 0 | python eval_llm.py --weight full_sft`で非対話実行できる(ただしプロンプトごとのseedは乱数)。
+
+### 7-3. 公式mini版データ全量・公式既定値での学習(公式主張の検証)
+
+公式READMEの主張(Training Cost表): RTX 3090 1枚で `pretrain_t2t_mini` 1 epoch ≈ 1.21h、`sft_t2t_mini` 1 epoch ≈ 1.10h、
+合計 ≈ 2.31h。これに合わせ、データ全量・スクリプト既定値のまま`--epochs 1`だけ指定した(既定は2 epoch)。
+
+```bash
+$ curl -L -o pretrain_t2t_mini.jsonl https://huggingface.co/datasets/jingyaogong/minimind_dataset/resolve/main/pretrain_t2t_mini.jsonl
+$ curl -L -o sft_t2t_mini.jsonl https://huggingface.co/datasets/jingyaogong/minimind_dataset/resolve/main/sft_t2t_mini.jsonl
+$ wc -l *.jsonl
+   1270238 pretrain_t2t_mini.jsonl   # 1,241,043,656 bytes
+    905718 sft_t2t_mini.jsonl        # 1,739,201,170 bytes
+$ cd trainer
+$ python train_pretrain.py --epochs 1 --data_path .../pretrain_t2t_mini.jsonl
+$ python train_full_sft.py --epochs 1 --data_path .../sft_t2t_mini.jsonl
+```
+
+既定値: pretrain = batch_size 32, accumulation_steps 8, max_seq_len 340, lr 5e-4, bfloat16 /
+sft = batch_size 16, max_seq_len 768, lr 1e-5, bfloat16。
+
+**Pretrain(完了)**: 2026-11-18 19:53:28 → 22:35:49
+
+```
+Epoch:[1/1](100/39695), loss: 7.5222, ... epoch_time: 186.0min
+Epoch:[1/1](39695/39695), loss: 2.0073, ...
+WALL 9741.46 s
+```
+
+- 39,695 step(1,270,238行 ÷ 32)、**9,741秒 = 2時間42分**。公式の3090目安1.21hの約2.2倍。
+- loss 7.52(step 100)→ 2.01(最終step)。4k stepごと: 2.80 / 2.61 / 2.40 / 2.33 / 2.17 / 2.12 / 1.90 / 2.06 / 2.16。
+- 学習中の`nvidia-smi`: GPU使用率99%、GPU使用メモリ約7.7GB(学習前の待機時0.9GBを含む)。
+- 全ログ: `logs_gpu_full_pretrain.txt`
+
+**SFT(学習中)**: 2026-11-18 22:35:49 開始。全56,608 step(905,718行 ÷ 16)。
+2026-11-18 23:59時点で17,000 step(約30%)、loss 2.23(step 100)→ 1.64(step 17,000)、ログの残り時間見積もり約193分。
+完走後に所要時間・最終loss・生成結果を追記する。
