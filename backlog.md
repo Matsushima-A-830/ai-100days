@@ -2009,3 +2009,48 @@
 - 検証難易度: 高。リポジトリ自体はApache-2.0で無料だが、前提となるStitch MCPサーバーの利用にはGoogle CloudのAPIキー〈X-Goog-Api-Key〉が必要で、公式の料金ページが確認できず課金対象になる可能性がある。本リポジトリの「当面は有料APIキー必須の候補を選ばない」方針に反するため、Stitch側が無料枠で確実に完結する方法が確認できるまでは選ばない。
 - 見栄え: 高い(Google公式デザインツール連携というニュース性)が、有料APIキー必須の制約が解消されるまで保留。
 - 状態: 未選択
+
+### [2026-11-19] awslabs/cli-agent-orchestrator — AWS公式、複数のAIコーディングCLIをtmux上で協調動作させるマルチエージェント・オーケストレーター
+
+- 出典: https://github.com/awslabs/cli-agent-orchestrator (Apache-2.0。本日GitHub Trending Pythonで言及、累計約1.6k star・337フォーク。AWS Open Source Blog発表記事: https://aws.amazon.com/blogs/opensource/introducing-cli-agent-orchestrator-transforming-developer-cli-tools-into-a-multi-agent-powerhouse)
+- 概要: AWS Labsが公開した、Claude Code・Codex CLI・Kiro CLI・GitHub Copilot CLI・Cursor CLI等、既に認証済みのAIコーディングCLIをプロバイダーとして束ね、supervisorエージェントが各CLIを独立したtmuxセッションで並列・直列に動かしてタスクを分担させるオーケストレーションフレームワーク。各エージェントは自身のネイティブな認証・機能を保ったまま、完全なCLIプロセスとして起動される。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語での一次検証記事は未検出。英語のDEV Community記事やAWS Open Source Blog本記事はある)
+- 検証難易度: 低(Apache-2.0。Python 3.11+・tmux 3.3+・uvを導入し、既に導入済みのClaude Code CLI自身をプロバイダーとして使えば追加の有料APIキー不要。GPU不要。`cao install code_supervisor`→`cao-server`→`cao launch`で6時間以内に完結可能)
+- 見栄え: 本チャレンジ自体がClaude Code Routineで運用されているため、「Claude Code自身をsupervisor配下のサブエージェントとして動かし、複数タスクを並列処理させる」という自己言及的な検証ができる。tmux画面の分割表示はスクリーンショット映えする。
+- 状態: 未選択
+
+### [2026-11-19] phone-harness/phone-harness — コーディングエージェントに実機のiPhone/Androidを操作させるオープンソースツール
+
+- 出典: https://github.com/phone-harness/phone-harness (MIT。本日GitHub Trending Pythonで言及、累計約5.1k star・529フォーク)
+- 概要: Claude CodeやCodex等のコーディングエージェントに、ジェイルブレイクやXcode・専用アプリ不要で実機のiPhone(macOSのiPhoneミラーリング経由)やAndroid(adb経由)を操作させるツール。スクロール・タップ・入力・画面読み取りをエージェントのツール呼び出しとして提供し、ラベルの無いUI要素はスクリーンショット+視覚対応モデルで判別する。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語での紹介・検証記事は未検出。英語のalphasignal.ai・runtimewire.com等の紹介記事はある)
+- 検証難易度: 高。ライセンス自体はMITで無料だが、検証には実機のiPhone(macOS 15+でのiPhoneミラーリング)またはadb接続したAndroid端末が必須で、Routine実行環境はもちろん人間のローカルPCでも対象の実機が無ければ検証できない。人間が検証用のスマートフォンを用意できるかに依存するため、採用する場合は事前確認が必要。
+- 見栄え: 非常に高い。「AIエージェントが実際のスマートフォンを自分で操作する」様子は動画・スクリーンショットで強いデモ映えがある。
+- 状態: 未選択
+
+### [2026-11-19] FlashML-org/FreeVideo — MiniMax H3動画生成モデルを民生GPU(VRAM 8GBから)で動かすローカル推論エンジン
+
+- 出典: https://github.com/FlashML-org/FreeVideo (コードはApache-2.0。モデル重みはMiniMax H3 Community Licenseで地域・用途制限あり。本日GitHub Trending Pythonで言及、累計約3.4k star・453フォーク)
+- 概要: OpenVDNのVDN-H3(8ステップ)モデルとVideo DeltaNetハイブリッドアテンションを用い、MiniMax H3動画生成モデルをComfyUIプラグインとして民生GPU上で動かすローカル推論エンジン。VRAM 8GB・RAM 16GBから動作し、GPU世代に応じて重み形式(int8/FP8)やアテンションカーネルを自動選択してVRAM・メモリ・ディスク使用量を抑える。Windows/macOS(Apple Silicon)/Linuxに対応。
+- 日本語記事件数: Zenn 0件 / Qiita 1件(MiniMax H3のウェイト公開時期に関する速報のみで、FreeVideo自体やComfyUIでの検証記事ではない) / note 0件
+- 検証難易度: 中〜高。追加の有料APIキーは不要だが、最低でもVRAM 8GBのGPUが前提。人間のローカルPCにGPUが無い、またはVRAMが足りない場合は「ローカルPCのスペック不足」として検証に直接関係する失敗として記事化できる。モデル重みのMiniMax H3 Community Licenseは地域・利用目的の制限があるため、記事では必ずライセンス条件(商用利用の収益閾値等)に触れる必要がある。
+- 見栄え: 高い。実際に生成された動画(Before/Afterやプロンプト別の比較)はSNSでの再生・注目を集めやすい。
+- 状態: 未選択
+
+### [2026-11-19] Thinking Harder Doesn't Lead to Better Choices — LLMショッピングエージェントは推論を増やしても正答率は上がらず自信度だけ上がる(論文)
+
+- 出典: https://huggingface.co/papers/2611.22033 (arXiv:2611.22033。著者: Adi Krishnamoorthy, X. Y. Han〈University of Chicago〉。公開コードなし)
+- 概要: WebShop・AmazonのSQID・WayfairのWANDSから構築した3つの商品選択ベンチマークで、フロンティア級LLM 10モデルに「どれだけ深く考えさせるか(推論努力量)」を変えて商品を選ばせたところ、推論努力を増やしても意思決定の質(正答率)は統計的に有意には改善せず、一方で自己申告の確信度だけが有意に上昇した。多くのモデルは全ての推論努力レベルでキャリブレーション(確信度と正答率の一致度)が悪く、複数モデルが同じ間違った商品を選ぶ誤り傾向の共有も確認された。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語での紹介・検証記事は未検出)
+- 検証難易度: 低。公開コードは無いが、追加の有料APIキー・GPUは不要(Claude Code自身をショッピングエージェントとして動かせば再現できる)。論文のフル再現ではなく、少数の商品候補(数件〜十数件)を自作し、Claude Codeに「推論努力を変えて」商品を選ばせ、選択結果と自己申告の確信度を比較する縮小版の概念実証として6時間以内に完結できる。
+- 見栄え: 中〜高。「AIに自信満々に間違った買い物をさせてみる」というBefore/After的な分かりやすさがあり、本チャレンジを運用するClaude Code自身を被験体にできる自己言及的な切り口も作れる。
+- 状態: 未選択
+
+### [2026-11-19] superdesigndev/treg — エージェント向けツールAPIの「OpenRouter」を名乗るプロキシ・レジストリ(参考・課金前提のため今回は選ばない)
+
+- 出典: https://github.com/superdesigndev/treg (Apache-2.0に追加条項。本日GitHub Trending Pythonで言及、累計約8.5k star・827フォーク)
+- 概要: エージェントが1つのベースURL・1つのトークンでSEO・データ収集・メディア生成等のサードパーティAPI群を呼べる、課金型のプロキシ・レジストリ。自前のAPIキー・OAuth接続・CLI・skillをチームで登録して認証情報を共有せずに使う機能もある。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語記事は未検出)
+- 検証難易度: 低〜中(セルフホストはPython/uv・Node 22.12+・tmux等で無料で動くが、カタログ上のサードパーティAPI呼び出しは「チームの前払い残高」への課金が前提で、本リポジトリの「当面は有料APIキー必須の候補を選ばない」方針に抵触する可能性がある。自前のAPIキーのみでプロキシ機構自体を検証する形に絞れば回避できるかもしれないが要確認)
+- 見栄え: 中。「OpenRouterのツール版」という分かりやすい比喩はあるが、課金前提の制約を解消できるか要確認のため保留。
+- 状態: 未選択
