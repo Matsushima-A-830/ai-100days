@@ -1,0 +1,87 @@
+1
+00:00:00,000 --> 00:00:04,483
+Day 52: Weight-Space Programming has a language model write
+
+2
+00:00:04,483 --> 00:00:08,509
+another model's weights by hand, no gradient descent,
+
+3
+00:00:08,509 --> 00:00:09,497
+MIT licensed.
+
+4
+00:00:09,947 --> 00:00:14,019
+Three frontier LLMs get only ten ARC science questions and
+
+5
+00:00:14,019 --> 00:00:16,265
+write a model's weights by hand.
+
+6
+00:00:16,265 --> 00:00:20,547
+Free to design, they all converge on a sparse fact table read
+
+7
+00:00:20,547 --> 00:00:22,021
+by a fixed procedure.
+
+8
+00:00:22,471 --> 00:00:26,403
+I took the writer's role myself, reading the same task,
+
+9
+00:00:26,403 --> 00:00:29,691
+and wrote 155 short science facts from memory,
+
+10
+00:00:29,691 --> 00:00:32,050
+nothing from the hidden test set.
+
+11
+00:00:32,500 --> 00:00:36,791
+Build.py turns each fact into an idf-weighted word vector.
+
+12
+00:00:36,791 --> 00:00:40,490
+Arch.py, a fixed tensor program with no branching,
+
+13
+00:00:40,490 --> 00:00:45,004
+compares each option against every fact by cosine similarity.
+
+14
+00:00:45,454 --> 00:00:50,112
+The repository's own scorer ran this on the real ARC test set,
+
+15
+00:00:50,112 --> 00:00:51,991
+3,530 held-out questions,
+
+16
+00:00:51,991 --> 00:00:54,997
+the exact code the paper's authors used.
+
+17
+00:00:55,447 --> 00:00:59,353
+A single hand-written pass scored 31.3 percent on the test
+
+18
+00:00:59,353 --> 00:01:01,305
+set, six points above chance,
+
+19
+00:01:01,305 --> 00:01:05,009
+from a weight table where only 2 percent of entries are
+
+20
+00:01:05,009 --> 00:01:05,548
+nonzero.
+
+21
+00:01:05,998 --> 00:01:09,047
+Full write-up in Japanese on Zenn.
+
+22
+00:01:09,047 --> 00:01:13,532
+Code is MIT licensed, the ARC dataset is CC BY-SA.

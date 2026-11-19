@@ -58,7 +58,7 @@
     {
       "type": "finding",
       "heading": "What we found",
-      "stat": "25% -> 31.3%",
+      "stat": "25 -> 31%",
       "caption": "Chance accuracy versus the hand-written model's real ARC test score (n=3,530).",
       "lines": [
         "CHANCE      25.0%",
