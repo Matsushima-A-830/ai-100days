@@ -1,14 +1,14 @@
 {
   "day": 52,
   "project": "Weight-Space Programming",
-  "slug": "weight-space-programming",
-  "tagline": "Having an LLM write another model's weights by hand, no gradient descent",
+  "slug": "weight-space",
+  "tagline": "Having an LLM write another model's weights directly, no gradient descent",
   "source_url": "github.com/effl-lab/Weight-Space-Programming",
   "license": "MIT",
   "scenes": [
     {
       "type": "title",
-      "narration": "Day 52: Weight-Space Programming has a language model write another model's weights by hand, no gradient descent, MIT licensed."
+      "narration": "Day 52: Weight-Space Programming has a language model write another model's weights directly, with no gradient descent. We ran the official harness locally."
     },
     {
       "type": "overview",
@@ -18,58 +18,135 @@
         "Ten example questions only",
         "The writer designs the architecture itself"
       ],
-      "narration": "Three frontier LLMs get only ten ARC science questions and write a model's weights by hand. Free to design, they all converge on a sparse fact table read by a fixed procedure."
+      "narration": "The writer sees only ten ARC science questions, then writes a model's weights by hand. The paper reports 50.8 percent for Claude Opus's first generation."
     },
     {
       "type": "architecture",
       "heading": "How it works",
       "nodes": [
-        {"id": "task", "label": "ARC task", "sub": "10 examples only", "pos": [0, 0], "span": 2},
-        {"id": "writer", "label": "Writer", "sub": "Claude Code (me)", "pos": [0, 1]},
-        {"id": "facts", "label": "Fact table", "sub": "155 hand-written facts", "pos": [1, 1]},
-        {"id": "bow", "label": "Bag-of-words", "sub": "idf-weighted, normalized", "pos": [0, 2]},
-        {"id": "arch", "label": "arch.py", "sub": "fixed tensor program", "pos": [1, 2]},
-        {"id": "score", "label": "Scorer", "sub": "wsp.free_model.run()", "pos": [0, 3]},
-        {"id": "test", "label": "ARC test set", "sub": "3,530 questions", "pos": [1, 3]}
+        {
+          "id": "task",
+          "label": "ARC task",
+          "sub": "10 examples only",
+          "pos": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "writer",
+          "label": "Writer",
+          "sub": "Opus 5.5 in bwrap",
+          "pos": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "arch",
+          "label": "arch.py",
+          "sub": "fixed tensor program",
+          "pos": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "kb",
+          "label": "Fact base",
+          "sub": "4,071 written lines",
+          "pos": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "score",
+          "label": "Scorer",
+          "sub": "harness.run",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "id": "test",
+          "label": "ARC test set",
+          "sub": "3,530 questions",
+          "pos": [
+            1,
+            2
+          ]
+        }
       ],
       "edges": [
-        {"from": "task", "to": "writer", "label": "prompt"},
-        {"from": "writer", "to": "facts", "label": "writes"},
-        {"from": "facts", "to": "bow", "label": "build.py"},
-        {"from": "bow", "to": "arch", "label": "vectors"},
-        {"from": "arch", "to": "score", "label": "logits"},
-        {"from": "score", "to": "test", "label": "compare"}
+        {
+          "from": "task",
+          "to": "writer",
+          "label": "TASK.md"
+        },
+        {
+          "from": "writer",
+          "to": "kb",
+          "label": "writes"
+        },
+        {
+          "from": "kb",
+          "to": "arch",
+          "label": "build.py"
+        },
+        {
+          "from": "arch",
+          "to": "score",
+          "label": "logits"
+        },
+        {
+          "from": "score",
+          "to": "test",
+          "label": "grade"
+        }
       ],
       "steps": [
         {
-          "focus": ["task", "writer", "facts"],
-          "narration": "I took the writer's role myself, reading the same task, and wrote 155 short science facts from memory, nothing from the hidden test set."
+          "focus": [
+            "task",
+            "writer"
+          ],
+          "narration": "The harness launches Claude Code inside a bubblewrap sandbox that cannot see the test data, the home folder, or any host but the API."
         },
         {
-          "focus": ["facts", "bow", "arch"],
-          "narration": "Build.py turns each fact into an idf-weighted word vector. Arch.py, a fixed tensor program with no branching, compares each option against every fact by cosine similarity."
+          "focus": [
+            "writer",
+            "kb",
+            "arch"
+          ],
+          "narration": "In 45 minutes, Opus wrote 4,071 lines of science facts and a retrieval procedure, using tensor operations with no branching."
         },
         {
-          "focus": ["arch", "score", "test"],
-          "narration": "The repository's own scorer ran this on the real ARC test set, 3,530 held-out questions, the exact code the paper's authors used."
+          "focus": [
+            "arch",
+            "score",
+            "test"
+          ],
+          "narration": "The harness then scored that model on the 3,530 held-out test questions."
         }
       ]
     },
     {
       "type": "finding",
       "heading": "What we found",
-      "stat": "25 -> 31%",
-      "caption": "Chance accuracy versus the hand-written model's real ARC test score (n=3,530).",
+      "stat": "50.79%",
+      "caption": "ARC test accuracy of the model Opus wrote, versus 50.8% in the paper. Chance is 25%.",
       "lines": [
-        "CHANCE      25.0%",
-        "MY MODEL    31.3%   (test, n=3530)",
-        "WEIGHTS     3,922 / 185,641 nonzero"
+        "PAPER     50.8%  (Opus, gen 1)",
+        "LOCAL     50.79% (n=3530)",
+        "SMALL     31.33% (155 facts)"
       ],
-      "narration": "A single hand-written pass scored 31.3 percent on the test set, six points above chance, from a weight table where only 2 percent of entries are nonzero."
+      "narration": "It scored 50.79 percent, matching the paper's 50.8. A smaller model written outside the harness, with only 155 facts, scored 31.3 percent."
     },
     {
       "type": "outro",
-      "narration": "Full write-up in Japanese on Zenn. Code is MIT licensed, the ARC dataset is CC BY-SA."
+      "narration": "Code is MIT licensed, the ARC dataset is CC BY-SA. Full write-up in Japanese on Zenn."
     }
   ]
 }

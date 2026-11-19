@@ -1,0 +1,113 @@
+# More chemistry and physics detail
+The periodic table arranges elements in rows called periods and columns called groups or families.
+Elements in the same group have the same number of valence electrons and similar chemical properties.
+Valence electrons are the electrons in the outermost shell of an atom; they determine how an atom bonds.
+Alkali metals such as sodium and potassium in group 1 are very reactive and react strongly with water.
+Alkaline earth metals such as calcium and magnesium are in group 2.
+Halogens such as fluorine and chlorine in group 17 are very reactive nonmetals.
+Noble gases such as helium, neon and argon in group 18 have full outer electron shells and rarely react.
+Neon is used in glowing signs.
+Transition metals such as iron, copper, gold and silver are in the middle of the periodic table.
+Metals tend to lose electrons; nonmetals tend to gain electrons.
+Atoms bond to become more stable by filling their outer electron shells.
+The atomic mass is about equal to the number of protons plus neutrons.
+The number of neutrons equals the mass number minus the atomic number.
+Hydrogen has one proton; helium has two protons; carbon has six protons; oxygen has eight protons.
+A water molecule has two hydrogen atoms and one oxygen atom.
+Glucose, C6H12O6, is a sugar made of carbon, hydrogen and oxygen.
+Carbon dioxide has one carbon atom and two oxygen atoms.
+The formula for table salt is NaCl.
+Ozone is a molecule of three oxygen atoms, O3.
+Oxygen gas is made of molecules of two oxygen atoms, O2.
+The photosynthesis equation: carbon dioxide plus water with light energy produces glucose and oxygen.
+The respiration equation: glucose plus oxygen produces carbon dioxide, water and energy.
+In a balanced chemical equation, the number of atoms of each element is the same on both sides.
+Reactants are the starting substances in a reaction; products are the new substances formed.
+A precipitate is a solid that forms from two liquids in a chemical reaction.
+Gas bubbles, color change, light, heat, odor and a precipitate are evidence of a chemical reaction.
+Temperature change alone may happen in either physical or chemical changes.
+Burning methane produces carbon dioxide and water.
+When hydrogen burns it combines with oxygen to form water.
+Electrolysis uses electricity to split water into hydrogen and oxygen gases.
+Mass is conserved when ice melts, when sugar dissolves and when a reaction occurs in a closed container.
+If a gas escapes from an open container during a reaction, the measured mass decreases.
+Concentration is the amount of solute dissolved in a given amount of solvent.
+A saturated solution cannot dissolve any more solute at that temperature.
+More solid solute can dissolve in hot water than in cold water.
+Gases such as carbon dioxide dissolve better in cold water; warm soda goes flat faster.
+Adding salt to water raises its boiling point and lowers its freezing point.
+Pure substances have definite melting and boiling points that can be used to identify them.
+Density can be used to identify a substance because each substance has its own density.
+The density of a substance does not depend on the size of the sample.
+A larger piece of the same material has more mass and more volume but the same density.
+Liquids of different densities form layers, with the densest at the bottom, such as honey, water and oil.
+Gold is very dense; a small gold bar has a large mass.
+Mercury is a metal that is liquid at room temperature.
+Bromine is a nonmetal that is liquid at room temperature.
+Carbon forms many compounds and is the basis of organic molecules in living things.
+Hydrocarbons such as methane, propane and octane in gasoline are made of hydrogen and carbon.
+Radioactive elements such as uranium and radium give off radiation as their nuclei decay.
+Nuclear fission splits a large nucleus into smaller ones and releases energy.
+Nuclear fusion joins small nuclei into a larger one and releases energy, as in the Sun.
+Kinetic energy depends on mass and speed: doubling the speed of an object makes its kinetic energy four times greater.
+Potential energy due to gravity equals mass times gravity times height.
+Work equals force times distance, measured in joules.
+Efficiency is the amount of useful energy output compared to the energy input.
+No machine is 100 percent efficient because some energy is always lost as heat due to friction.
+A perpetual motion machine is impossible because energy is lost to friction.
+Thermal energy flows from a hot cup of cocoa to the cooler air in a room until they are the same temperature.
+When hot and cold water are mixed, the final temperature is between the two starting temperatures.
+Specific heat is the amount of energy needed to raise the temperature of a substance; water has a high specific heat.
+Sand heats up faster than water in the sunlight because sand has a lower specific heat.
+Metals heat up quickly because they have low specific heat and are good conductors.
+Absolute zero is the coldest possible temperature, when particles have the least motion.
+The kelvin scale starts at absolute zero; 0 degrees Celsius equals 273 kelvins.
+To convert Celsius to Fahrenheit, multiply by 9/5 and add 32.
+Pressure in a liquid increases with depth; divers feel more pressure deeper underwater.
+Submarines dive by filling tanks with water and rise by pumping the water out.
+Airplanes fly because wings are shaped to create lift as air moves over them.
+The four forces on an airplane are lift, weight, thrust and drag.
+Rockets carry their own oxygen because there is no air in space.
+A force acting at a distance includes gravity, magnetic force and electric force.
+Contact forces include friction, tension, normal force and applied force.
+Tension is the pulling force in a rope or string.
+The normal force is the upward push of a surface on an object resting on it.
+An object resting on a table has balanced forces: gravity pulls down and the table pushes up.
+When forces are balanced, a moving object keeps moving at a constant speed in a straight line.
+Two forces in the same direction add together; forces in opposite directions subtract.
+A heavier ball and a lighter ball dropped together from the same height land at about the same time when air resistance is small.
+Terminal velocity is reached when air resistance equals the weight of a falling object.
+Centripetal force keeps an object moving in a circle; for planets it is gravity.
+A pendulum's swing time, its period, depends on its length, not its mass; a longer pendulum swings more slowly.
+Mass does not change the period of a pendulum.
+Springs stretch farther when more force or weight is applied.
+Elastic materials return to their original shape after being stretched.
+Magnets lose strength when heated or dropped.
+Earth's magnetic north pole is near the geographic North Pole and slowly moves over time.
+The strength of a magnetic or electric force decreases as distance increases.
+An electric current in a wire creates a magnetic field around the wire, which can move a compass needle.
+Transformers change the voltage of electricity in power lines.
+Alternating current changes direction many times a second; batteries produce direct current.
+Electrical energy is converted to light, heat, sound and motion in household devices.
+Electric power in watts equals voltage times current.
+A 100-watt bulb uses more energy per second than a 60-watt bulb.
+Thicker wires have less resistance; longer wires have more resistance.
+Light bulbs in parallel stay bright; adding bulbs in series makes each bulb dimmer.
+Light is both a wave and a stream of particles called photons.
+Light with more energy, such as ultraviolet, has a higher frequency and shorter wavelength.
+Visible light is only a small part of the electromagnetic spectrum.
+Polarized sunglasses reduce glare by blocking light waves vibrating in certain directions.
+Concave mirrors, like those in flashlights and telescopes, focus light; convex mirrors, like car side mirrors, show a wider view.
+Light slows down when it enters water or glass, which causes refraction.
+Diamonds sparkle because they refract and reflect light strongly.
+Color filters let only certain colors of light pass through; a red filter lets red light through.
+Mixing red, green and blue light makes white light.
+Our eyes have cone cells that detect color and rod cells that work in dim light.
+The Doppler effect is the change in pitch of a sound as the source moves toward or away from you, like a passing siren.
+Sound waves spread out and get weaker as they travel farther from the source.
+Sound travels faster in warm air than in cold air.
+Musical instruments make sound by vibrating strings, air columns, or surfaces such as drumheads.
+A tuning fork vibrates at one frequency and makes one pitch.
+Resonance happens when an object vibrates at its natural frequency because of another vibration.
+Earthquake waves and ocean waves carry energy over long distances.
+The speed of a wave equals its frequency times its wavelength.

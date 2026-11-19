@@ -1,0 +1,155 @@
+# Forces, motion, simple machines, energy forms and transformations, heat transfer
+A force is a push or a pull.
+Forces can change the speed, direction or shape of an object.
+Force is measured in newtons using a spring scale.
+Gravity is a force that pulls objects toward each other; on Earth it pulls objects toward the ground.
+Friction is a force that opposes motion between two surfaces that touch.
+Friction slows down moving objects and produces heat.
+Rubbing your hands together makes them warm because of friction.
+Rough surfaces produce more friction than smooth surfaces.
+Oil, grease, wax and other lubricants reduce friction.
+Ice is slippery because it has very little friction.
+Friction between tires and the road helps cars stop and turn; sand or salt on icy roads increases friction.
+Air resistance is friction from air that slows falling and moving objects.
+A parachute increases air resistance to slow a fall.
+Water resistance, or drag, slows objects moving through water.
+Magnetism is a force that can act at a distance.
+Gravity, magnetism and electric force can act without touching.
+Balanced forces are equal in size and opposite in direction; they do not change an object's motion.
+Unbalanced forces cause an object to start moving, stop, speed up, slow down or change direction.
+The net force is the total of all forces acting on an object.
+Newton's first law, the law of inertia, says an object at rest stays at rest and an object in motion stays in motion unless acted on by an unbalanced force.
+Inertia is the tendency of an object to resist changes in its motion; objects with more mass have more inertia.
+Seat belts protect passengers because their bodies keep moving forward due to inertia when a car stops suddenly.
+Newton's second law says force equals mass times acceleration.
+More force is needed to accelerate an object with more mass.
+The same force gives a smaller acceleration to a heavier object.
+Newton's third law says for every action there is an equal and opposite reaction.
+A rocket moves forward because hot gases push backward out of the engine; the gases push the rocket forward.
+When you swim, you push water backward and the water pushes you forward.
+When a person jumps off a boat, the boat moves in the opposite direction.
+Motion is a change in position over time.
+Speed is the distance traveled divided by the time it takes; speed equals distance divided by time.
+Average speed equals total distance divided by total time.
+Speed is measured in units such as meters per second, kilometers per hour or miles per hour.
+Velocity is speed in a certain direction.
+Acceleration is a change in velocity, including speeding up, slowing down or changing direction.
+An object moving in a circle at constant speed is accelerating because its direction keeps changing.
+A distance-time graph with a steeper line shows a faster speed; a flat line shows the object is not moving.
+To compare speeds, objects must be timed over the same distance.
+Momentum is mass times velocity.
+All objects fall at the same rate in a vacuum, regardless of mass.
+Without air resistance, a feather and a hammer fall at the same rate, as shown on the Moon.
+A falling object speeds up as it falls because of gravity.
+Objects thrown upward slow down, stop and fall back because gravity pulls them down.
+Weight is the force of gravity on an object; weight depends on mass and gravity.
+An object's weight would change on another planet, but its mass would stay the same.
+Buoyancy is the upward force of a fluid on an object; objects float when buoyancy equals their weight.
+Ships made of steel float because their shape displaces a large amount of water.
+Pressure is force divided by area.
+Sharp knives cut easily because the force is concentrated on a small area.
+Snowshoes spread weight over a larger area so a person does not sink into snow.
+Work is done when a force moves an object a distance; work equals force times distance.
+No work is done if the object does not move.
+Power is the rate of doing work, work divided by time, measured in watts.
+Simple machines make work easier by changing the size or direction of a force.
+The six simple machines are the lever, pulley, wheel and axle, inclined plane, wedge and screw.
+Simple machines do not reduce the amount of work; they let you use less force over a greater distance.
+A lever is a bar that turns on a fixed point called a fulcrum.
+A seesaw, crowbar, bottle opener, scissors, wheelbarrow, hammer pulling a nail and a broom are levers.
+Moving the fulcrum closer to the load makes the load easier to lift with a lever.
+A pulley is a wheel with a rope or chain around it, used to lift loads; a flagpole uses a pulley to raise a flag.
+A single fixed pulley changes the direction of the force, so you pull down to lift a load up.
+A movable pulley or a system of pulleys reduces the force needed to lift a heavy load.
+Cranes and elevators use pulleys to lift heavy objects.
+An inclined plane, or ramp, is a flat sloping surface that makes it easier to move objects up to a higher place.
+A longer, less steep ramp requires less force but a longer distance.
+A wedge is two inclined planes together used to split or cut things, like an ax, a knife or a doorstop.
+A screw is an inclined plane wrapped around a post, used to hold things together or lift.
+A wheel and axle is a large wheel attached to a smaller rod; doorknobs, steering wheels and screwdrivers are wheels and axles.
+Gears are wheels with teeth that transfer motion and force, as in bicycles and clocks.
+A compound machine is made of two or more simple machines, such as scissors, a bicycle or a can opener.
+Mechanical advantage tells how many times a machine multiplies the input force.
+Energy is the ability to do work or cause change.
+The law of conservation of energy states that energy cannot be created or destroyed; it only changes from one form to another.
+Kinetic energy is the energy of motion; faster and heavier objects have more kinetic energy.
+Potential energy is stored energy due to position or condition.
+Gravitational potential energy depends on an object's height and mass; higher and heavier objects have more.
+A stretched rubber band, a compressed spring and a drawn bow store elastic potential energy.
+Water stored behind a dam has potential energy.
+A rock at the top of a hill has potential energy, which changes to kinetic energy as it rolls down.
+As a ball falls, potential energy changes into kinetic energy.
+A roller coaster has the most potential energy at the top of the highest hill and the most kinetic energy at the bottom.
+A swinging pendulum changes potential energy to kinetic energy and back again.
+Mechanical energy is the total kinetic and potential energy of an object.
+Forms of energy include mechanical, thermal or heat, chemical, electrical, light or radiant, sound, magnetic and nuclear energy.
+Chemical energy is stored in the bonds of molecules, in food, fuel, wood and batteries.
+Food contains chemical energy that the body uses.
+Batteries store chemical energy and change it into electrical energy.
+In a flashlight, chemical energy in the battery changes to electrical energy, then to light and heat.
+A light bulb changes electrical energy into light energy and heat.
+A toaster changes electrical energy into heat, or thermal energy.
+A fan or motor changes electrical energy into mechanical energy, motion.
+A radio or speaker changes electrical energy into sound energy.
+A generator changes mechanical energy into electrical energy.
+Solar panels, or solar cells, change light energy from the Sun into electrical energy.
+Plants change light energy into chemical energy during photosynthesis.
+A car engine changes chemical energy in gasoline into mechanical energy and heat.
+Burning wood changes chemical energy into heat and light.
+Wind turbines change the kinetic energy of wind into electrical energy.
+Hydroelectric dams change the energy of falling or moving water into electrical energy.
+When you eat food, chemical energy changes into the mechanical energy of your muscles and heat.
+Muscles change chemical energy into mechanical energy.
+Nuclear energy is stored in the nucleus of atoms and released by fission or fusion.
+Nuclear power plants split uranium atoms, called fission, to produce heat that makes electricity.
+In every energy change some energy is converted to heat, which is often wasted.
+Energy-efficient devices waste less energy as heat.
+LED and fluorescent bulbs are more efficient than incandescent bulbs because they give off less heat.
+Thermal energy is the total energy of motion of the particles in a substance.
+Heat is the transfer of thermal energy from a warmer object to a cooler object.
+Heat always flows from hot objects to cold objects until they reach the same temperature.
+When you hold an ice cube, heat moves from your hand to the ice.
+A cold drink warms up because heat flows from the warmer air into the drink.
+Heat moves in three ways: conduction, convection and radiation.
+Conduction is the transfer of heat through direct contact, such as a metal spoon getting hot in hot soup.
+A metal pan on a stove heats by conduction.
+Convection is the transfer of heat by the movement of a fluid, a liquid or gas, as warm fluid rises and cool fluid sinks.
+Convection currents form in boiling water, in the air of a room, and in Earth's mantle.
+Radiation is the transfer of energy by electromagnetic waves, which can travel through empty space.
+The Sun heats Earth by radiation.
+Feeling the warmth of a campfire from a distance is heat transfer by radiation.
+Conductors let heat or electricity pass through easily; metals are good conductors.
+Insulators slow the transfer of heat or electricity; wood, plastic, rubber, cloth, foam, glass and air are insulators.
+Pot handles are made of plastic or wood because they are insulators and do not get hot.
+A thermos or insulated cup keeps hot drinks hot and cold drinks cold by reducing heat transfer.
+Wool coats and blankets keep you warm by trapping air, an insulator, that slows heat loss.
+Houses are insulated with fiberglass or foam in walls and attics to reduce heat loss and save energy.
+Double-pane windows with air between the glass reduce heat transfer.
+Dark colors absorb more light and heat than light colors; white and shiny surfaces reflect light and heat.
+A black object in sunlight gets warmer than a white object because it absorbs more light energy.
+Wearing light-colored clothing in summer keeps you cooler because it reflects sunlight.
+Temperature is measured with a thermometer in degrees Celsius or Fahrenheit.
+Thermal energy depends on temperature and mass; a bathtub of warm water has more thermal energy than a cup of hot water.
+Metal feels colder than wood at the same temperature because metal conducts heat away from your hand faster.
+Energy from fuels is released as heat when they burn.
+Sound energy is produced by vibrating objects.
+Light energy travels as waves and can travel through space.
+Electrical energy is the energy of moving electric charges.
+A moving object can transfer energy when it hits another object, as when a bowling ball knocks down pins.
+The higher a ball is dropped from, the higher it bounces, because it had more potential energy.
+A ball bounces lower each time because some energy changes to heat and sound.
+Energy is transferred when objects collide.
+A spring scale measures force or weight in newtons.
+Pushing a heavy box takes more force than pushing a light box.
+A car traveling faster takes a longer distance to stop.
+Wheels and ball bearings reduce friction.
+Streamlined shapes reduce air resistance on cars, planes and fast animals.
+Brakes use friction to slow down wheels.
+Walking requires friction between shoes and the ground.
+Shoes with treads have more friction and help prevent slipping.
+A magnet can push or pull without touching an object.
+A rolling ball eventually stops because of friction.
+In space with no friction or air resistance, a moving object would keep moving in a straight line.
+Gravity causes a ball rolled off a table to fall to the floor in a curved path.
+Increasing the angle of a ramp makes a ball roll down faster.
+A heavier object needs more force to start moving and to stop.

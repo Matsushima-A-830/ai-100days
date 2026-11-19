@@ -1,6 +1,6 @@
 """Scores my hand-written model/ folder on the real ARC validation and test splits using the
-Weight-Space-Programming repo's own wsp.free_model.run() (bwrap-isolated, exactly as
-harness.score_free would), and separately checks it against the task's own ten given examples.
+Weight-Space-Programming repo's own wsp.free_model.run() (isolate=False here; change it to
+True for the bwrap-isolated run harness.score_free does), and separately checks it against the task's own ten given examples.
 
 Run from the repository root with the venv active and WSP_DATA_ROOT / HF_HOME set:
     WSP_DATA_ROOT=... HF_HOME=... HF_HUB_OFFLINE=1 python score_my_model.py

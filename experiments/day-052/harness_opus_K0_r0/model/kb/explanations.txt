@@ -1,0 +1,178 @@
+# Cause and effect, why-explanations across topics
+A hot air balloon rises because the heated air inside is less dense than the cooler air outside.
+A ship made of steel floats because its hollow shape displaces enough water to make it less dense overall than water.
+A helium balloon rises because helium is less dense than air.
+A diver's air bubbles rise because air is less dense than water.
+An object sinks in water when its density is greater than the density of water.
+Salt water is denser than fresh water, so objects float more easily in the ocean.
+An egg sinks in fresh water but floats in very salty water.
+Ice floats on water because ice is less dense than liquid water.
+Pipes can burst in winter because water expands when it freezes.
+Bottles of water left in a freezer can crack because the water expands as it freezes into ice.
+A tire's air pressure increases on a hot day because the air inside expands when heated.
+A basketball left outside in cold weather goes flat because the air inside contracts.
+Power lines sag in summer because the metal wires expand in the heat.
+Sidewalks have cracks or gaps to allow concrete to expand and contract with temperature changes.
+A metal lid on a glass jar is easier to open after running it under hot water because the metal expands more than the glass.
+Sweating cools the body because evaporation of sweat removes heat from the skin.
+Wet clothes dry faster on a hot, sunny, windy day because evaporation is faster.
+Water evaporates faster from a wide pan than from a narrow glass because there is more surface area.
+Spreading out wet clothes increases surface area and helps them dry faster.
+A fan cools you by moving air that speeds up evaporation of sweat from your skin.
+Food stays fresh longer in a refrigerator because cold temperatures slow the growth of bacteria and mold.
+Salting and drying food preserves it by removing water that bacteria need.
+Bread molds faster in a warm, moist, dark place.
+Plants wilt when they do not get enough water because their cells lose water and pressure.
+Leaves of plants are green because chlorophyll reflects green light.
+Plants grow toward a window because they respond to light.
+A plant kept in a dark closet turns yellow because it cannot make chlorophyll and food without light.
+Seeds can sprout in the dark because they use food stored in the seed.
+Farmers add fertilizer to soil to supply nutrients that help crops grow.
+Earthworms are good for gardens because they loosen soil, let air and water in, and add nutrients.
+Bees are important to farmers because they pollinate crops so fruits and seeds develop.
+Fewer bees would mean fewer fruits and vegetables because flowers would not be pollinated.
+Removing wolves from an area can cause the deer population to grow and overgraze plants.
+Introducing a new predator can reduce the population of its prey.
+If all the plants in an ecosystem died, the herbivores and then the carnivores would die because they depend on plants for food.
+If decomposers disappeared, dead material would build up and soil would lose nutrients.
+If the Sun stopped shining, plants could not make food and food chains would collapse.
+A drought reduces plants, which reduces the food for herbivores, which then decrease in number.
+A forest fire destroys habitats, forcing animals to move to new areas.
+Cutting down a forest destroys habitat, causes erosion and reduces oxygen production.
+A dam on a river changes the habitat upstream into a lake and reduces water flow downstream.
+Animals migrate to find food and warmer weather when the seasons change.
+Animals hibernate to save energy when food is scarce in winter.
+Birds fluff their feathers in cold weather to trap air and stay warm.
+Dogs pant to cool off by evaporation from their tongues.
+Elephants and pigs roll in mud to cool off and protect their skin from the Sun.
+Lizards lie in the sun to raise their body temperature.
+Desert animals burrow underground during the day to escape the heat.
+Some animals live in groups to protect each other from predators and to hunt together.
+Animal coloring can warn, hide, or attract mates.
+Thorns, spines and bad-tasting chemicals protect plants from being eaten.
+Leaves of desert plants are small or waxy to reduce water loss.
+Trees in cold climates such as pines have needle-shaped leaves with a waxy coating to reduce water loss and shed snow.
+Mountains are colder at the top because air is thinner and holds less heat at higher altitudes.
+Climbers need extra oxygen on very high mountains because the air is thinner.
+Ears pop on an airplane or mountain because air pressure changes.
+Coastal areas have milder temperatures because water heats and cools slowly.
+Deserts get very cold at night because there are few clouds and little water vapor to trap heat.
+Cloudy nights are warmer than clear nights because clouds trap heat.
+Summer days are hotter because the Sun is higher in the sky and days are longer.
+It is colder at the North Pole because sunlight strikes at a low angle.
+Shadows change length during the day because the Sun's position in the sky changes as Earth rotates.
+A person's shadow is longest at sunrise and sunset.
+Stars are not seen during the day because sunlight is much brighter.
+The Moon appears to change shape because we see different amounts of its lit half as it orbits Earth.
+The Moon looks bigger than stars because it is much closer to Earth.
+Venus is often called the morning star or evening star because it is bright near sunrise and sunset.
+Craters on the Moon remain for millions of years because the Moon has no wind, water or weather to erode them.
+Earth has fewer visible craters than the Moon because weathering, erosion and plate tectonics erase them and the atmosphere burns up meteoroids.
+Astronauts wear spacesuits because space has no air and extreme temperatures.
+Astronauts' footprints remain on the Moon because there is no wind or rain.
+A person would weigh less on the Moon because the Moon has less gravity than Earth.
+A person would weigh more on Jupiter because Jupiter has more gravity.
+An object dropped on the Moon falls more slowly than on Earth because of weaker gravity.
+High tides happen on the side of Earth facing the Moon and the opposite side.
+Sound cannot be heard in space because sound waves need a medium such as air to travel.
+You hear thunder after you see lightning because sound travels more slowly than light.
+You can hear a train coming by putting your ear on the rail because sound travels faster through solids.
+A string telephone works because sound vibrations travel along the string.
+A guitar string makes a higher pitch when it is tightened or shortened.
+Covering a drum with a cloth makes it quieter because the cloth absorbs vibrations.
+A straw looks bent in a glass of water because light refracts when it passes from water to air.
+A pencil in water looks broken because of refraction.
+A magnifying glass makes objects look bigger because its convex lens bends light.
+Mirrors let you see yourself because they reflect light.
+You can see a book because light reflects off the book into your eyes.
+A shadow forms when an opaque object blocks the path of light.
+Black pavement gets hotter than white sand because dark colors absorb more sunlight.
+People wear white or light-colored clothes in hot weather because light colors reflect sunlight.
+Solar water heaters and solar ovens are painted black to absorb more sunlight.
+Rubbing two sticks together makes them warm because friction changes motion energy into heat.
+A car's brakes get hot because friction changes kinetic energy into heat.
+A ball rolling on grass stops sooner than on a smooth floor because grass has more friction.
+Putting oil on a squeaky door hinge reduces friction.
+People spread sand or salt on icy sidewalks to increase friction and melt ice.
+Salt lowers the freezing point of water, which melts ice on roads.
+A heavy box is harder to push than a light box because it has more mass and more friction.
+Wearing a seat belt prevents injury because of inertia: your body keeps moving forward when the car stops.
+A tablecloth can be pulled from under dishes quickly because of the inertia of the dishes.
+It is harder to stop a heavy truck than a small car moving at the same speed because the truck has more momentum.
+A balloon rocket moves forward because air rushes out the back, an action and reaction.
+A swimmer pushes water backward to move forward.
+Objects fall to the ground because gravity pulls them toward Earth's center.
+A ramp makes it easier to lift a heavy object because less force is needed over a longer distance.
+A wheelbarrow makes it easier to lift heavy loads because it is a lever.
+A pulley lets you lift a flag to the top of a pole by pulling down on a rope.
+A doorknob makes it easier to turn the latch because it is a wheel and axle.
+Copper is used in electrical wires because it is a good conductor of electricity.
+Electrical wires are covered with plastic or rubber because they are insulators that prevent shocks.
+Pot handles are made of plastic or wood because these insulators do not conduct heat well.
+Cooking pans are made of metal because metal conducts heat well.
+A metal spoon in hot soup gets hot faster than a plastic spoon because metal is a better conductor of heat.
+A thermos keeps soup hot because a vacuum layer prevents conduction and convection.
+Styrofoam cups keep drinks hot because foam is a good insulator.
+Down jackets keep people warm because feathers trap air, a poor conductor of heat.
+Snow insulates the ground and keeps plants and burrowing animals from freezing.
+A circuit with a broken wire will not work because the path for current is not complete.
+A bulb lights only when the circuit is closed.
+Batteries run down because the chemicals inside are used up.
+Magnets stick to a refrigerator door because the door is made of steel, which contains iron.
+A compass points north because its magnetized needle lines up with Earth's magnetic field.
+A balloon rubbed on hair sticks to a wall because of static electricity.
+You get a shock touching a doorknob after walking on carpet because electric charges built up on your body.
+Iron rusts because it reacts with oxygen and water in the air.
+Painting iron or steel keeps oxygen and water away and prevents rust.
+Cut apples turn brown because of a chemical reaction with oxygen in the air.
+Baking soda and vinegar make bubbles because a chemical reaction produces carbon dioxide gas.
+Bread dough rises because yeast produces carbon dioxide gas.
+A candle goes out when covered with a jar because the fire uses up the oxygen.
+Water puts out fire by cooling the fuel and keeping oxygen away.
+Sugar dissolves faster in hot tea than in iced tea because the particles move faster at higher temperatures.
+Smaller pieces of a substance dissolve or react faster because they have more surface area.
+Crushed ice melts faster than an ice cube because of greater surface area.
+Food coloring spreads through water because particles move and spread out by diffusion.
+The smell of cookies spreads through a house because gas particles diffuse through the air.
+Humans need to eat because food provides energy and materials for growth and repair.
+Breathing rate increases during exercise because muscles need more oxygen.
+Your heart beats faster when you run because muscles need more oxygen and nutrients.
+You shiver when cold because muscle movement produces heat.
+Your skin turns red when you are hot because blood vessels widen to release heat.
+Washing hands removes germs and helps prevent the spread of disease.
+Vaccines protect people because they train the immune system to recognize germs.
+Antibiotics should be taken exactly as prescribed to help prevent antibiotic-resistant bacteria.
+People get sick more often in winter because they spend more time indoors close together, where germs spread.
+Children look like their parents because they inherit genes from them.
+Siblings look different because each child inherits a different mix of genes from the parents.
+A puppy is a dog and not a cat because it inherited genes from dog parents.
+Fossils of ocean animals on mountaintops show that the land was once under the sea and was pushed up.
+Coal found in Antarctica shows the continent was once warmer and covered with plants.
+Rock layers are evidence of Earth's history; the deeper layers formed first.
+Rounded pebbles in a river show that rocks were worn by water.
+River water is muddy after a storm because runoff carries soil into the river.
+Beaches lose sand during storms because large waves erode the shore.
+Hillsides without plants erode faster because no roots hold the soil.
+Glaciers left boulders called erratics far from where they formed.
+The Great Lakes and Finger Lakes were carved by glaciers during the last ice age.
+Long Island was formed from glacial deposits called moraines.
+Volcanoes form islands when lava builds up from the sea floor.
+Earthquakes happen because energy is released when plates suddenly move along faults.
+Tsunamis are caused by underwater earthquakes, volcanic eruptions or landslides that move large amounts of water.
+Clouds form when warm moist air rises, expands and cools.
+Rain falls when cloud droplets join and become too heavy.
+Hurricanes form over warm oceans because warm water provides energy and moisture.
+Hurricanes lose strength over land because they lose their supply of warm, moist air.
+Weather forecasts are more accurate for tomorrow than for next month.
+Scientists study ice cores to learn about Earth's past climate and atmosphere.
+Greenhouse gases warm Earth because they absorb heat radiated from the surface.
+Melting ice caps raise sea level and reduce habitat for polar bears.
+The ozone layer protects living things from ultraviolet radiation that causes skin cancer.
+Recycling saves energy because making products from recycled materials uses less energy than from raw materials.
+Using public transportation reduces pollution because fewer cars burn gasoline.
+Electric cars reduce air pollution in cities but still need electricity that may come from fossil fuels.
+Wind and solar power do not run out and produce little pollution.
+Fossil fuels are limited because they took millions of years to form.
+Planting trees along a field acts as a windbreak that reduces wind erosion.
+Wetlands reduce flooding because they absorb and slowly release water.
+Paved surfaces increase runoff and flooding because water cannot soak into the ground.

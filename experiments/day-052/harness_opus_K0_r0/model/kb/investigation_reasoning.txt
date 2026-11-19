@@ -1,0 +1,74 @@
+# Investigations: design, data, conclusions (phrasings common in test questions)
+The best way to make an investigation more reliable is to repeat it several times and compare the results.
+Conducting more trials and testing more samples makes the results of an investigation more valid.
+Using a larger number of plants, animals or samples in an experiment gives more reliable results.
+To test one variable, all other conditions must be kept the same so the comparison is fair.
+A student testing how sunlight affects plant growth should give all plants the same water, soil and temperature but different amounts of light.
+A student testing how water affects plant growth should vary the amount of water and keep light, soil and plant type the same.
+A student testing whether fertilizer helps plants grow should have one group with fertilizer and one control group without fertilizer.
+When testing which paper towel absorbs the most water, use the same size towel and the same amount of water for each brand.
+When testing how temperature affects how fast sugar dissolves, use the same amount of sugar and water and change only the water temperature.
+When testing which ball bounces highest, drop each ball from the same height onto the same surface.
+When testing how the height of a ramp affects the speed of a car, use the same car and change only the ramp height.
+When testing which insulator keeps water hot longest, start with the same amount of water at the same temperature in each container.
+The variable that is measured, such as plant height, bounce height or time, is the dependent variable.
+The variable a student purposely changes, such as drop height, amount of water or temperature, is the independent variable.
+Results should be recorded in a data table during the investigation.
+Measurements should be taken with the correct tool and recorded with units.
+A scientist should report results honestly even if they do not support the hypothesis.
+If an experiment's results do not match the prediction, the scientist should check the procedure, repeat the experiment, or revise the hypothesis.
+A conclusion should be based on the data collected in the investigation.
+An investigation with only one trial or one sample may give results that are due to chance.
+Scientists compare their results with results from other scientists to check their accuracy.
+Scientists communicate results through reports, journals, graphs, presentations and the internet.
+A good scientific question can be tested by an experiment and measured.
+Which one is better or prettier is an opinion and cannot be tested scientifically.
+Asking how the amount of light affects plant growth is a testable scientific question.
+A prediction based on a pattern in data is called an inference or a hypothesis.
+Data in a table can be shown in a graph to make patterns easier to see.
+Line graphs are best for showing changes over time, such as temperature during a day or plant growth over weeks.
+Bar graphs are best for comparing different groups, such as the number of each kind of bird seen.
+Circle graphs show percentages of a whole, such as the parts of Earth's atmosphere.
+Scatter plots show the relationship between two variables.
+An outlier is a data point that is very different from the others and may be due to an error.
+The mean is the average of a set of numbers; the range is the difference between the largest and smallest values.
+Precise measurements use tools with smaller units, such as millimeters instead of centimeters.
+Observing with the senses, measuring, classifying, inferring, predicting and communicating are science process skills.
+Classifying means sorting objects into groups based on their properties.
+Scientists use models when the real object is too large, too small, too far away or too dangerous.
+A globe is a model of Earth; a map is a flat model of an area.
+A diagram of the water cycle is a model that shows how water moves.
+A computer simulation can model events that take a very long time, such as climate change or plate movement.
+Models can be used to make predictions and explain observations.
+Evidence from many different investigations makes a scientific explanation stronger.
+Scientific ideas change when new evidence is found, for example new technology like telescopes and microscopes.
+Scientists cannot prove a hypothesis absolutely true; they can only support it with evidence.
+Sharing data allows other scientists to repeat the investigation and verify the results.
+Field guides help identify plants and animals.
+A science journal or notebook records observations, data, drawings and questions.
+Safety equipment must be used even in a short experiment.
+Scientists wear gloves and goggles when handling chemicals.
+When observing animals in an experiment, scientists must treat them humanely and return them to their habitat.
+Students should never taste or smell unknown substances directly.
+Electric equipment should be kept away from water during investigations.
+Scientists measure the same thing several times and take the average to reduce errors.
+Reliable data come from careful measurements repeated many times.
+Valid conclusions come from controlled experiments with only one variable changed.
+An experiment needs a control so the results can be compared to normal conditions.
+When an experiment has more than one variable changed, the results cannot be explained clearly.
+Using different kinds of plants in different groups would add another variable.
+The hypothesis should be testable and based on observations.
+After drawing a conclusion, scientists often ask new questions and plan new investigations.
+Good observations are detailed and accurate and include measurements.
+Observations describe what is seen; inferences explain what was seen.
+The sentence "the leaf is green and 5 centimeters long" is an observation.
+The sentence "the plant died because it did not get enough water" is an inference.
+Temperature data collected at the same time each day can be compared fairly.
+To study the effect of a variable on a population, scientists may compare an area with the variable to an area without it.
+Long-term studies show patterns over many years, such as climate trends and population changes.
+Tools such as probes, sensors and computers help collect data automatically.
+Scientists use satellite images to observe changes in forests, ice and cities over time.
+A hand lens is used to look at details of rocks, insects and leaves.
+Engineers build and test prototypes, find problems and redesign them.
+The best design solution meets the criteria within the constraints.
+Testing a design many times shows whether it works reliably.

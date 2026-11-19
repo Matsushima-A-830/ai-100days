@@ -1,87 +1,79 @@
 1
-00:00:00,000 --> 00:00:04,483
+00:00:00,000 --> 00:00:03,839
 Day 52: Weight-Space Programming has a language model write
 
 2
-00:00:04,483 --> 00:00:08,509
-another model's weights by hand, no gradient descent,
+00:00:03,839 --> 00:00:07,677
+another model's weights directly, with no gradient descent.
 
 3
-00:00:08,509 --> 00:00:09,497
-MIT licensed.
+00:00:07,677 --> 00:00:10,019
+We ran the official harness locally.
 
 4
-00:00:09,947 --> 00:00:14,019
-Three frontier LLMs get only ten ARC science questions and
+00:00:10,469 --> 00:00:13,529
+The writer sees only ten ARC science questions,
 
 5
-00:00:14,019 --> 00:00:16,265
-write a model's weights by hand.
+00:00:13,529 --> 00:00:16,002
+then writes a model's weights by hand.
 
 6
-00:00:16,265 --> 00:00:20,547
-Free to design, they all converge on a sparse fact table read
+00:00:16,002 --> 00:00:19,517
+The paper reports 50.8 percent for Claude Opus's first
 
 7
-00:00:20,547 --> 00:00:22,021
-by a fixed procedure.
+00:00:19,517 --> 00:00:20,233
+generation.
 
 8
-00:00:22,471 --> 00:00:26,403
-I took the writer's role myself, reading the same task,
+00:00:20,683 --> 00:00:24,677
+The harness launches Claude Code inside a bubblewrap sandbox
 
 9
-00:00:26,403 --> 00:00:29,691
-and wrote 155 short science facts from memory,
+00:00:24,677 --> 00:00:27,805
+that cannot see the test data, the home folder,
 
 10
-00:00:29,691 --> 00:00:32,050
-nothing from the hidden test set.
+00:00:27,805 --> 00:00:29,402
+or any host but the API.
 
 11
-00:00:32,500 --> 00:00:36,791
-Build.py turns each fact into an idf-weighted word vector.
+00:00:29,852 --> 00:00:34,897
+In 45 minutes, Opus wrote 4,071 lines of science facts and
 
 12
-00:00:36,791 --> 00:00:40,490
-Arch.py, a fixed tensor program with no branching,
+00:00:34,897 --> 00:00:39,594
+a retrieval procedure, using tensor operations with no
 
 13
-00:00:40,490 --> 00:00:45,004
-compares each option against every fact by cosine similarity.
+00:00:39,594 --> 00:00:40,464
+branching.
 
 14
-00:00:45,454 --> 00:00:50,112
-The repository's own scorer ran this on the real ARC test set,
+00:00:40,914 --> 00:00:46,420
+The harness then scored that model on the 3,530 held-out test
 
 15
-00:00:50,112 --> 00:00:51,991
-3,530 held-out questions,
+00:00:46,420 --> 00:00:47,323
+questions.
 
 16
-00:00:51,991 --> 00:00:54,997
-the exact code the paper's authors used.
+00:00:47,773 --> 00:00:52,771
+It scored 50.79 percent, matching the paper's 50.8.
 
 17
-00:00:55,447 --> 00:00:59,353
-A single hand-written pass scored 31.3 percent on the test
+00:00:52,771 --> 00:00:57,083
+A smaller model written outside the harness,
 
 18
-00:00:59,353 --> 00:01:01,305
-set, six points above chance,
+00:00:57,083 --> 00:01:01,101
+with only 155 facts, scored 31.3 percent.
 
 19
-00:01:01,305 --> 00:01:05,009
-from a weight table where only 2 percent of entries are
+00:01:01,551 --> 00:01:05,863
+Code is MIT licensed, the ARC dataset is CC BY-SA.
 
 20
-00:01:05,009 --> 00:01:05,548
-nonzero.
-
-21
-00:01:05,998 --> 00:01:09,047
+00:01:05,863 --> 00:01:08,796
 Full write-up in Japanese on Zenn.
-
-22
-00:01:09,047 --> 00:01:13,532
-Code is MIT licensed, the ARC dataset is CC BY-SA.

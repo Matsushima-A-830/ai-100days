@@ -1,0 +1,92 @@
+# Conditional cause-effect generalizations ("if ... then ...")
+If Earth rotated faster, days and nights would be shorter.
+If Earth rotated more slowly, days would be longer.
+If Earth's axis were not tilted, there would be no seasons.
+If Earth's axis were tilted more, summers would be hotter and winters colder.
+If Earth were closer to the Sun, it would be hotter and a year would be shorter.
+If Earth were farther from the Sun, it would be colder and a year would be longer.
+If the Moon were closer to Earth, tides would be higher.
+If the Moon had an atmosphere, it would have weather and fewer craters.
+If there were no Moon, tides would be much smaller, caused only by the Sun.
+If the Sun stopped shining, plants would die and Earth would become very cold.
+If the mass of an object increases, its weight increases and more force is needed to move it.
+If the distance between two objects increases, the gravitational force between them decreases.
+If the mass of a planet is greater, its gravity is stronger.
+If more force is applied to an object, it accelerates more.
+If friction is reduced, an object slides farther.
+If the height of a ramp increases, a ball rolls down faster and farther.
+If a ball is dropped from a greater height, it hits the ground faster and bounces higher.
+If an object moves faster, it has more kinetic energy.
+If an object is raised higher, it has more potential energy.
+If the temperature of a gas in a closed container increases, its pressure increases.
+If a gas is cooled, its particles slow down and it contracts.
+If a liquid is heated, it evaporates faster.
+If the temperature of water increases, more sugar or salt can dissolve in it.
+If the temperature increases, chemical reactions happen faster.
+If the surface area of a solid increases, it dissolves and reacts faster.
+If heat is added to ice, it melts; if heat is removed from water, it freezes.
+If salt is added to ice, the ice melts at a lower temperature.
+If a circuit is broken, current stops flowing and the bulb goes out.
+If more batteries are added in series, the bulb gets brighter.
+If more bulbs are added in series, each bulb gets dimmer.
+If more coils of wire are wrapped around an electromagnet, it becomes stronger.
+If the current in an electromagnet increases, the electromagnet gets stronger.
+If a magnet is moved farther away, its pull becomes weaker.
+If a guitar string is tightened, its pitch becomes higher.
+If a drum is hit harder, the sound becomes louder.
+If the frequency of a wave increases, its wavelength decreases.
+If an object is moved closer to a light source, its shadow becomes larger.
+If a predator population increases, the prey population decreases.
+If a predator population decreases, the prey population increases.
+If the prey population decreases, the predator population later decreases because of less food.
+If the prey population increases, the predator population later increases.
+If a producer such as grass dies out, the herbivores that eat it will decrease.
+If an herbivore population grows too large, it may overgraze and destroy plants.
+If decomposers were removed, dead material would build up and nutrients would not return to the soil.
+If a habitat is destroyed, the animals living there must move, adapt or die.
+If a new predator is introduced, native prey populations may decrease.
+If an invasive species has no natural predators, its population can grow rapidly.
+If the climate becomes warmer, some species will move to cooler areas, and some may become extinct.
+If a pond becomes polluted, fish and frogs may die.
+If fertilizer runs into a lake, algae grow rapidly and oxygen levels drop.
+If trees are cut down on a hillside, erosion and runoff increase.
+If plants are planted on bare soil, erosion decreases.
+If land is paved, runoff and flooding increase.
+If the slope of a river increases, the water flows faster and erodes more.
+If a river slows down, it deposits sediment.
+If more carbon dioxide is added to the atmosphere, more heat is trapped and Earth warms.
+If more trees are planted, more carbon dioxide is removed from the air.
+If people burn less fossil fuel, air pollution decreases.
+If people recycle more, less trash goes to landfills and fewer resources are used.
+If a plant gets no light, it cannot make food and will die.
+If a plant gets no water, it wilts and dies.
+If a plant is placed on its side, the stem will bend upward and the roots will grow downward.
+If a plant is placed near a window, it will grow toward the light.
+If seeds are kept dry and cold, they will not germinate.
+If a person exercises, heart rate and breathing rate increase.
+If a person does not get enough calcium, bones become weak.
+If a person does not wash hands, germs can spread.
+If a person is vaccinated, the body is protected against that disease.
+If bacteria are exposed to antibiotics many times, resistant bacteria may survive and multiply.
+If both parents have only dominant alleles, all offspring show the dominant trait.
+If both parents are heterozygous, about one fourth of offspring show the recessive trait.
+If an animal has a helpful variation, it is more likely to survive and reproduce.
+If the environment changes, organisms with helpful traits survive and the population changes over time.
+If air pressure falls, stormy weather is likely.
+If air pressure rises, fair weather is likely.
+If warm moist air rises and cools, clouds and precipitation form.
+If the air temperature drops to the dew point, water vapor condenses into dew, fog or clouds.
+If a cold air mass meets a warm air mass, the warm air is pushed up and storms may form.
+If a hurricane moves over land, it weakens.
+If a volcano erupts, ash may block sunlight and cool the climate.
+If tectonic plates move apart, magma rises and new crust forms.
+If tectonic plates collide, mountains, volcanoes or trenches can form.
+If rock layers are undisturbed, the bottom layer is the oldest.
+If magma cools slowly, large crystals form; if it cools quickly, small crystals form.
+If water freezes in a crack in a rock, the rock can break apart.
+If more people move into an area, more water, food and energy are needed.
+If an area has no rain for a long time, a drought occurs and crops fail.
+If a wetland is drained, flooding downstream may increase and wildlife loses habitat.
+If an experiment is repeated and gives the same results, the results are more reliable.
+If more than one variable is changed, the results of an experiment cannot be trusted.
+If the data do not support the hypothesis, the hypothesis should be revised.

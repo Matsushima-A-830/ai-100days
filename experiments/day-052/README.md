@@ -75,16 +75,35 @@ PY
 (`vocab.txt` / `build.py` / `arch.py` / `NOTES.md`、論文公開コードの `models/<writer>/<run>/`
 と同じ構成)。
 
-## ローカル検証が必要な部分(任意)
+## ローカル検証(実施済み、results.md 8節)
 
-今回スコープ外とした「`harness.run`そのもの(Claude Code CLIをbubblewrap内でサブプロセスとして
-起動するnested-sandbox実行)」を試す場合は、ログイン済みのClaude Code CLIプロファイルを
-持つローカルPCで以下を実行する(有料APIキーは不要、ログイン済みClaude Codeのみ必要):
+`harness.run`そのもの(Claude Code CLIをbubblewrap内でwriterとして起動)をローカルPCで実行した。
+venvは`/tmp`と`$HOME`の両方の外に置き、`WSP_DATA_ROOT`は短いパスにする必要がある(理由はresults.md 8-2・8-3)。
 
 ```bash
-export WSP_DATA_ROOT=/path/to/wsp_data HF_HOME=/path/to/hf WSP_VENV=/path/to/.venv-wsp
-export WSP_CLAUDE_BIN=$(which claude)
-export WSP_CLAUDE_PROFILES=a=$HOME/.claude   # ログイン済みのClaude Code設定ディレクトリ
-.venv-wsp/bin/python -m harness.run --arch free-arc --data-access blind --rep 0 \
-    --writer opus --profile a
+sudo apt-get install -y bubblewrap
+sudo mkdir -p /opt/wsp && sudo chown $USER:$USER /opt/wsp
+cd /opt/wsp && git clone https://github.com/effl-lab/Weight-Space-Programming.git wsp
+python3 -m venv .venv-wsp && .venv-wsp/bin/pip install -r wsp/requirements.txt
+HF_HOME=/opt/wsp/hf .venv-wsp/bin/python -c "from huggingface_hub import snapshot_download; snapshot_download('allenai/ai2_arc', repo_type='dataset')"
+
+cd wsp
+export WSP_DATA_ROOT=/opt/wsp/data HF_HOME=/opt/wsp/hf WSP_VENV=/opt/wsp/.venv-wsp
+export WSP_CLAUDE_BIN=$(readlink -f $(which claude)) WSP_CLAUDE_PROFILES=a=$HOME/.claude
+../.venv-wsp/bin/python -m harness.run --arch free-arc --data-access blind --rep 0 --writer opus --profile a
+
+# 論文同梱モデルの再採点
+../.venv-wsp/bin/python -m harness.score_model models/opus/free-arc_blind_K0_r0
 ```
+
+1回の実行で出力トークンは約25万(今回はClaudeプランの5時間上限で終了)。
+実行後は`$WSP_DATA_ROOT/runs_arc/<run>/config/.credentials.json`(コピーされたアクセストークン)を削除しておく。
+
+## ファイル
+
+- `model/` — ハーネス外でClaude Codeに書かせた小さなモデル(155文、test 31.33%)
+- `score_my_model.py` / `check_examples.py` — 上記モデルの採点・10例題チェック
+- `harness_opus_K0_r0/` — `harness.run`でClaude Opus 5.5が書いたモデル(`model/`)と`result.json`・`selftest.json`・`proxy_log.jsonl`・`harness_run.log`(test 50.79%)
+- `logs_score_isolated.txt` — 小さなモデルを`isolate=True`で採点したログ
+- `logs_score_released_opus_r0.txt` — 論文同梱モデルの再採点ログ(末尾)
+- `results.md` — 実行ログ・数値の記録

@@ -1,0 +1,348 @@
+# Each line: words that count as one concept (first word is the head). Simple inflections are added automatically.
+# --- irregular verbs
+grow grew grown growth
+freeze froze frozen freezing
+eat ate eaten
+fall fell fallen
+rise rose risen
+give gave given
+take took taken
+run ran
+wear wore worn
+blow blew blown
+throw threw thrown
+drink drank drunk
+sink sank sunk
+begin began begun
+swim swam
+fly flew flown flight flies
+dig dug
+hide hid hidden
+bite bit bitten
+break broke broken
+choose chose
+build built
+catch caught
+bring brought
+buy bought
+teach taught
+think thought
+find found
+hold held
+keep kept
+lose lost loss
+meet met
+pay paid
+sell sold
+send sent
+sleep slept
+spend spent
+stand stood
+tell told
+understand understood
+win won
+write wrote written
+drive drove driven
+ride rode ridden
+shake shook shaken
+steal stole stolen
+wake woke woken
+speak spoke spoken
+feed fed
+lead led
+bleed bled
+breed bred
+fight fought
+strike struck
+sweep swept
+shine shone
+slide slid
+stick stuck
+sting stung
+swing swung
+hang hung
+feel felt
+hear heard
+see saw seen sight
+leave
+know knew known knowledge
+draw drew drawn
+light lit
+seek sought
+melt molten
+# --- irregular plurals
+mouse mice
+tooth teeth
+foot feet
+goose geese
+child children
+man men
+woman women
+leaf leaves
+wolf wolves
+life lives living alive
+knife knives
+half halves
+shelf shelves
+calf calves
+larva larvae larval
+pupa pupae
+fungus fungi fungal
+bacterium bacteria bacterial
+alga algae
+nucleus nuclei nuclear
+cactus cacti
+stimulus stimuli
+phenomenon phenomena
+criterion criteria
+datum data
+medium media
+antenna antennae
+vertebra vertebrae
+ox oxen
+fish fishes
+deer
+sheep
+species
+# --- protect words Porter would merge wrongly / merge families Porter splits
+organism organisms
+organ organs
+general generally
+generator generators
+producer producers
+product products
+production
+produce produces produced producing
+consumer consumers
+consume consumes consumed consuming consumption
+decomposer decomposers decompose decomposes decomposed decomposing decomposition
+condensation condense condenses condensed condensing condenser
+evaporation evaporate evaporates evaporated evaporating evaporative
+precipitation precipitate precipitates
+photosynthesis photosynthesize photosynthesizes photosynthetic
+respiration respire respiratory
+transpiration transpire
+conduction conduct conducts conducted conducting conductive conductivity
+conductor conductors
+insulator insulators insulate insulates insulated insulating insulation
+reflection reflect reflects reflected reflecting reflective
+refraction refract refracts refracted refracting
+absorption absorb absorbs absorbed absorbing absorbent
+reproduction reproduce reproduces reproduced reproducing reproductive
+digestion digest digests digested digesting digestive
+circulation circulate circulates circulatory
+excretion excrete excretory
+erosion erode erodes eroded eroding
+deposition deposit deposits deposited depositing
+weathering weather weathered weathers
+vibration vibrate vibrates vibrating vibrated
+rotation rotate rotates rotating rotated spin spins spinning spun
+orbit orbits orbiting orbited orbital revolution revolutions revolve revolves revolving revolved
+gravity gravitational gravitation
+magnet magnets magnetic magnetism magnetized
+electricity electric electrical electrically
+electron electrons electronic
+energy energies
+friction frictional
+heat heats heated heating
+temperature temperatures
+volcano volcanoes volcanic
+earthquake earthquakes seismic
+mineral minerals
+material materials
+moon moons lunar
+sun sun's solar sunlight sunshine sunny
+earth earth's
+planet planets planetary
+star stars stellar
+water waters
+ocean oceans oceanic sea seas
+cell cells cellular
+gene genes genetic genetics
+inherit inherits inherited inheritance heredity hereditary
+environment environments environmental
+pollution pollute pollutes polluted pollutant pollutants
+nutrient nutrients nutrition nutritious
+muscle muscles muscular
+nerve nerves nervous neuron neurons
+skeleton skeletal skeletons
+fossil fossils fossilized
+volume volumes
+mass masses
+weight weights weigh weighs weighed
+density dense denser densest densities
+solution solutions
+solubility soluble insoluble dissolve dissolves dissolved dissolving
+mixture mixtures mix mixes mixed mixing
+chemical chemicals chemically
+physical physically
+experiment experiments experimental
+hypothesis hypotheses hypothesize
+observation observe observes observed observing observations
+measurement measure measures measured measuring
+variable variables
+predator predators predation
+prey
+adaptation adapt adapts adapted adaptations
+migration migrate migrates migrating migratory
+hibernation hibernate hibernates hibernating
+camouflage camouflaged
+renewable renewables
+nonrenewable
+recycle recycles recycled recycling
+conservation conserve conserves conserving
+season seasons seasonal
+climate climates
+atmosphere atmospheric
+oxygen
+carbon
+dioxide
+liquid liquids
+solid solids
+gas gases gaseous
+humid humidity
+cloud clouds cloudy
+rain rains rained raining rainy rainfall
+wind winds windy
+snow snows snowing snowy snowfall
+ice ices icy
+glacier glaciers glacial
+cool cools cooled cooling cooler coolest
+warm warms warmed warming warmer warmest warmth
+hot hotter hottest
+cold colder coldest
+far farther farthest further distant distance distances
+near nearer nearest nearby close closer closest
+large larger largest big bigger biggest huge giant enormous
+small smaller smallest tiny little
+fast faster fastest quick quickly quicker rapid rapidly
+slow slower slowest slowly
+high higher highest height
+low lower lowest
+long longer longest length
+short shorter shortest
+strong stronger strongest strength
+weak weaker weakest
+heavy heavier heaviest
+deep deeper deepest depth
+wide wider widest width
+lung lungs
+heart hearts
+blood
+kidney kidneys
+liver
+stomach
+brain brains
+skin
+bone bones
+root roots
+stem stems
+flower flowers flowering
+seed seeds
+fruit fruits
+pollen pollinate pollinates pollination pollinator pollinators
+germinate germinates germination germinating
+insect insects
+mammal mammals
+reptile reptiles
+amphibian amphibians
+bird birds
+plant plants
+animal animals
+tree trees
+human humans
+microscope microscopes microscopic
+telescope telescopes
+thermometer thermometers
+mechanical mechanic
+metal metals metallic
+nonmetal nonmetals
+atom atoms atomic
+molecule molecules molecular
+compound compounds
+element elements
+proton protons
+neutron neutrons
+sedimentary sediment sediments
+igneous
+metamorphic metamorphism
+invertebrate invertebrates
+vertebrate vertebrates
+chloroplast chloroplasts chlorophyll
+mitochondria mitochondrion mitochondrial
+dominant
+recessive
+offspring
+parent parents parental
+ecosystem ecosystems
+habitat habitats
+population populations
+community communities
+extinct extinction
+endangered
+mechanical
+kinetic
+potential
+wave waves
+sound sounds
+light lights
+color colors colour colours
+lens lenses
+mirror mirrors
+prism prisms
+pressure pressures
+force forces
+speed speeds
+velocity
+acceleration accelerate accelerates accelerating
+motion moving move moves moved movement
+circuit circuits
+battery batteries
+bulb bulbs
+wire wires
+switch switches
+# --- synonyms
+produce produces produced producing generate generates generated generating create creates created creating
+release releases released releasing emit emits emitted
+reduce reduces reduced reducing decrease decreases decreased decreasing lessen
+increase increases increased increasing raise raises raised
+prevent prevents prevented preventing
+protect protects protected protecting protection
+destroy destroys destroyed destroying destruction
+survive survives survived surviving survival
+damage damages damaged damaging harm harms harmed harmful
+help helps helped helping beneficial benefit benefits
+store stores stored storing storage
+carry carries carried carrying transport transports transported transporting
+pull pulls pulled pulling
+push pushes pushed pushing
+# --- comparatives Porter does not merge
+young younger youngest
+old older oldest
+dark darker darkest darkness
+bright brighter brightest brightness
+thick thicker thickest thickness
+thin thinner thinnest
+soft softer softest
+hard harder hardest hardness
+smooth smoother smoothest
+rough rougher roughest
+wet wetter wettest
+dry drier driest dryer
+loud louder loudest loudness
+quiet quieter quietest
+rich richer richest
+tall taller tallest
+cheap cheaper cheapest
+easy easier easiest easily
+safe safer safest safety
+clean cleaner cleanest
+light lighter lightest
+tight tighter tightest
+loose looser loosest
+sharp sharper sharpest
+steep steeper steepest
+calm calmer calmest
+mild milder mildest
+rock rocks rocky stone stones
+car cars automobile automobiles vehicle vehicles

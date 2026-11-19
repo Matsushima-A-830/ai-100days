@@ -157,54 +157,57 @@
   </div>
 
   <div class="heading">
-    <h1>勾配降下なしでLLMに重みを「手書き」させる</h1>
-    <p><span class="src">Weight-Space Programming Doesn't Need Transformers</span>(arXiv 2611.22055)のfree-arcタスクを、Claude Code自身がwriter役としてARC理科問題10例題から再現した。</p>
+    <h1>勾配降下なしでLLMに重みを「書かせる」<br>公式ハーネスで論文の数字を再現した</h1>
+    <p><span class="src">Weight-Space Programming Doesn't Need Transformers</span>(arXiv 2611.22055)の<code>harness.run</code>を手元のPCで実行し、Claude Opus 5.5にARCの例題10問だけからモデルを書かせた(free-arc / blind / forward call 0回)。</p>
   </div>
 
   <div class="stat-row">
-    <div class="stat-number">31.3%</div>
-    <div class="stat-caption">ARC test <strong>3,530問</strong>での正解率(chanceは25%)。validation 862問では<strong>28.5%</strong>。</div>
+    <div class="stat-number">50.79%</div>
+    <div class="stat-caption">ARC test <strong>3,530問</strong>での正解率(chanceは25%)。論文のOpus第1世代は<strong>50.8%</strong>で、ほぼ一致した</div>
   </div>
 
   <section class="block compare">
-    <div class="block-label">chance guessing vs. 手書きモデル(155 facts)</div>
+    <div class="block-label">同じタスク文・forward call 0回で書かせた2つのモデル</div>
     <div class="compare-grid">
       <div class="compare-panel bad">
-        <div class="compare-title">✗ chance guessing(4択ランダム)</div>
-        <pre class="compare-output">accuracy  25.00%
-(1/4 を毎回ランダムに選んだ場合の期待値)</pre>
+        <div class="compare-title">ハーネス外で書かせた小さな版</div>
+        <pre class="compare-output">test       31.33%
+validation 28.51%
+知識       155文
+weights    185,641</pre>
       </div>
       <div class="compare-panel good">
-        <div class="compare-title">✓ 手書きモデル(idf bag-of-words + 類似検索)</div>
-        <pre class="compare-output">test       31.33%  (n=3530)
-validation 28.51%  (n=862)
-weights    185,641 (非ゼロ 3,922 = 2.1%)</pre>
+        <div class="compare-title">✓ ハーネスでOpusが書いた版</div>
+        <pre class="compare-output">test       50.79%
+validation 51.10%
+知識       4,071行
+weights    995,784</pre>
       </div>
     </div>
   </section>
 
   <section class="block">
-    <div class="block-label">what was written (model/build.py, model/arch.py)</div>
+    <div class="block-label">harness.run の実行(result.json)</div>
     <div class="terminal">
       <div class="term-row">
-        <span class="term-tag">facts</span>
-        <span class="toks">155個の手書き事実文(ARCの10例題のみを見て、一般理科知識から書き下ろし)</span>
+        <span class="term-tag">run</span>
+        <span class="toks">2,732秒・138ターン・出力245,034トークン</span>
       </div>
       <div class="term-row">
-        <span class="term-tag">build</span>
-        <span class="toks">各事実をvocab(1,188語)上のidf重み付きbag-of-wordsに変換・正規化</span>
+        <span class="term-tag">subset</span>
+        <span class="toks">ARC-Easy 58.12% / ARC-Challenge 35.92%</span>
       </div>
       <div class="term-row">
-        <span class="term-tag">arch</span>
-        <span class="toks">質問+選択肢のbow と155事実のコサイン類似度 top-8 を softmax加重合計</span>
+        <span class="term-tag">check</span>
+        <span class="toks">同梱の論文モデルを再採点 → 50.80%、保存値と全項目一致</span>
       </div>
-      <div class="term-foot">勾配降下は一度も使用していない。<b>arch.pyはif/while/and/orを一切含まない固定テンソルプログラム</b>。</div>
+      <div class="term-foot">arch.pyは<b>if/while/and/orを含まない固定テンソルプログラム</b>。勾配降下は使わない。</div>
     </div>
   </section>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>論文のLLMは練習問題への反復(forward call最大10回・約12万出力トークン)と複数世代の改善を経て42.7〜54.4%に到達している。今回は一発書き・一発採点(反復なし)での結果。</p>
+    <p>writerは改善の途中でClaudeプランの5時間上限に達して終了し(exit_code 1)、その時点のモデルが採点された(valid: true)。venvは/tmpとホームディレクトリの外に置く必要があった。</p>
   </div>
 
   <footer>

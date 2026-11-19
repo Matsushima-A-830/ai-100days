@@ -1,0 +1,92 @@
+# Contrasts and true statements (only / both / all / outside / inside)
+Only plant cells have chloroplasts and cell walls; both plant and animal cells have a nucleus, cytoplasm, cell membrane and mitochondria.
+Animal cells have no cell wall and no chloroplasts.
+Electrons are found outside the nucleus in an electron cloud; protons and neutrons are inside the nucleus.
+All matter is made of atoms.
+All living things are made of cells, but not all living things can move.
+All organisms need energy, water and a way to get rid of wastes.
+All mammals have hair and feed milk to their young, but not all mammals live on land.
+All birds have feathers and lay eggs, but not all birds can fly.
+All insects have six legs and three body parts.
+All stars produce their own light; planets and moons only reflect light.
+All planets orbit the Sun; moons orbit planets.
+Both weathering and erosion change Earth's surface; weathering breaks rock down, erosion carries it away.
+Weathering breaks rock in place; erosion moves the pieces to another place.
+Mass is the amount of matter and does not change with location; weight is the pull of gravity and changes with location.
+Rotation is spinning on an axis, which causes day and night; revolution is orbiting around another object, which takes a year for Earth.
+Weather is short-term; climate is the long-term average.
+A physical change does not make a new substance; a chemical change makes a new substance.
+Conductors let electricity and heat flow; insulators block them.
+Producers make their own food; consumers eat other organisms; decomposers break down dead organisms.
+Mitosis makes body cells for growth and repair; meiosis makes sex cells for reproduction.
+Inherited traits come from genes; acquired traits come from experience or the environment.
+Renewable resources can be replaced; nonrenewable resources are used up faster than they form.
+In a series circuit there is one path; in a parallel circuit there are several paths.
+Reflection is light bouncing off a surface; refraction is light bending as it passes into a new material.
+Evaporation changes liquid to gas; condensation changes gas to liquid.
+Melting changes solid to liquid; freezing changes liquid to solid.
+Igneous rock forms from melted rock; sedimentary rock from sediment; metamorphic rock from heat and pressure.
+Vertebrates have backbones; invertebrates do not have backbones.
+Herbivores eat plants; carnivores eat animals; omnivores eat both.
+A predator hunts; prey is hunted.
+Speed tells how fast; velocity tells how fast and in which direction.
+Kinetic energy is energy of motion; potential energy is stored energy.
+Heat is the flow of thermal energy; temperature measures the average motion of particles.
+An element has one kind of atom; a compound has two or more elements chemically bonded; a mixture is physically combined.
+A solution is evenly mixed; a suspension settles over time.
+Acids have a pH below 7; bases have a pH above 7; neutral substances have a pH of 7.
+Viruses are not living cells; bacteria are living single cells.
+Antibiotics kill bacteria; vaccines prevent diseases caused by viruses and bacteria.
+Arteries carry blood away from the heart; veins carry blood back to the heart.
+A solar eclipse happens at new moon; a lunar eclipse happens at full moon.
+A meteor burns in the atmosphere; a meteorite hits the ground.
+A comet is made of ice and dust; an asteroid is made of rock and metal.
+Stars are huge balls of hot gas; planets are smaller and do not make light.
+The inner planets are small and rocky; the outer planets are large gas giants.
+The Moon has no atmosphere; Earth has an atmosphere.
+Earth's crust is solid; the outer core is liquid; the inner core is solid.
+A hypothesis is a testable prediction; a theory is a well-supported explanation; a law describes what always happens.
+An observation uses the senses; an inference is a conclusion drawn from observations.
+The independent variable is changed; the dependent variable is measured; controlled variables stay the same.
+Transparent materials let light through; opaque materials block light.
+Sound needs a medium; light can travel through a vacuum.
+Sound is a longitudinal wave; light is a transverse wave.
+Fresh water has little salt; ocean water is salty.
+Deciduous trees lose leaves in fall; evergreen trees keep their leaves.
+Complete metamorphosis has a pupa stage; incomplete metamorphosis has a nymph stage and no pupa.
+Gymnosperms make seeds in cones; angiosperms make seeds in fruits from flowers.
+Cold-blooded animals depend on the environment for body heat; warm-blooded animals make their own body heat.
+Instinct is inborn; learned behavior comes from experience.
+Asexual reproduction has one parent and identical offspring; sexual reproduction has two parents and varied offspring.
+Dominant traits show with one allele; recessive traits need two alleles.
+Gravity pulls all objects toward each other; magnets pull only on certain metals.
+Like charges repel; opposite charges attract.
+Like magnetic poles repel; unlike poles attract.
+A cold front brings quick storms and cooler air; a warm front brings steady rain and warmer air.
+High pressure brings fair weather; low pressure brings stormy weather.
+Cumulus clouds mean fair weather; cumulonimbus clouds mean thunderstorms; stratus clouds bring gray skies; cirrus clouds are high and wispy.
+Fossil fuels pollute when burned; solar and wind power do not pollute the air.
+Natural gas, coal and oil are fossil fuels; wood is a renewable biomass fuel.
+The Sun is a star, not a planet.
+The Sun does not orbit Earth; Earth orbits the Sun.
+The Moon orbits Earth; Earth orbits the Sun; the Sun orbits the center of the Milky Way.
+The Moon does not make its own light; it reflects light from the Sun.
+The Sun is not the largest star; it is an average, medium-sized star.
+Seasons are not caused by Earth's distance from the Sun; they are caused by the tilt of the axis.
+Plants do not get their food from the soil; they make food from carbon dioxide and water using sunlight.
+Most of a tree's mass comes from carbon dioxide in the air, not from the soil.
+Plants get water and minerals from the soil, but not food.
+Heavier objects do not fall faster than lighter objects when air resistance is small.
+Cold is not a substance; cold objects simply have less thermal energy.
+A blanket does not make heat; it slows the loss of body heat.
+Rust is not paint; it is a new substance, iron oxide.
+Clouds are not water vapor; they are tiny liquid droplets or ice crystals.
+Bats are not birds; they are mammals.
+Whales are not fish; they are mammals that breathe air.
+Spiders are not insects; they are arachnids with eight legs.
+Mushrooms are not plants; they are fungi.
+Penguins are birds that cannot fly but swim well.
+Viruses are not made of cells and cannot reproduce on their own.
+Glass is not a good conductor of electricity.
+Air is matter because it has mass and takes up space.
+Light is not matter; it is a form of energy.

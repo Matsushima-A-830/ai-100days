@@ -1,0 +1,83 @@
+# More detail: geology ordering, reproduction, classification, energy trade-offs
+A fault or an igneous intrusion is younger than the rock layers it cuts across.
+An unconformity is a gap in the rock record where layers were eroded away.
+Tilted or folded rock layers were bent after they formed.
+Rock layers form horizontally and are later tilted by Earth's forces.
+Soil takes hundreds to thousands of years to form.
+Rocks are made of minerals, but minerals are not made of rocks.
+Gravity pulls precipitation down to Earth and makes rivers flow downhill to the ocean.
+The Sun's energy and gravity together drive the water cycle.
+Water vapor is an invisible gas in the air.
+Some fish, frogs and corals reproduce by external fertilization, releasing eggs and sperm into the water.
+Mammals, birds and reptiles reproduce by internal fertilization.
+Birds and reptiles lay eggs with shells; mammals mostly give birth to live young.
+Animals that lay many eggs usually do so because most of the young will not survive.
+Animals that care for their young usually have fewer offspring.
+A female frog can lay thousands of eggs at once.
+A chicken egg hatches after about 21 days.
+Human babies depend on adults for many years.
+Insects such as bees and ants hatch from eggs.
+Butterflies lay eggs on plants their caterpillars can eat.
+Domain Bacteria and Domain Archaea contain single-celled organisms without a nucleus; Domain Eukarya contains organisms with a nucleus.
+Archaea live in extreme environments such as hot springs and very salty water.
+The kingdom Plantae contains multicellular organisms that make their own food by photosynthesis.
+The kingdom Animalia contains multicellular organisms that eat other organisms and usually can move.
+The kingdom Fungi contains organisms that absorb food, such as mushrooms, yeasts and molds.
+The kingdom Protista contains mostly single-celled organisms with a nucleus.
+Scientists use body structure, DNA, development and evolutionary history to classify organisms.
+A dog and a wolf belong to the same genus, Canis, so they are closely related.
+House cats, lions and tigers belong to the cat family.
+Humans belong to the species Homo sapiens.
+A dichotomous key gives two choices at each step, such as has wings or has no wings.
+Organisms are named by genus and species, like Felis catus for the house cat.
+Solar energy advantages: renewable, no air pollution, free fuel; disadvantages: not available at night, needs large areas of panels, expensive to install.
+Wind energy advantages: renewable, no air pollution; disadvantages: wind does not always blow, turbines can harm birds and are noisy.
+Hydroelectric energy advantages: renewable, no air pollution; disadvantages: dams flood land, change river habitats and block fish.
+Geothermal energy advantages: renewable and reliable; disadvantage: only available in certain places near volcanic activity.
+Nuclear energy advantages: produces a lot of energy without carbon dioxide; disadvantages: radioactive waste and risk of accidents.
+Coal advantages: plentiful and cheap; disadvantages: nonrenewable, air pollution, acid rain, carbon dioxide and mining damage.
+Oil advantages: easy to transport and used for gasoline; disadvantages: nonrenewable, oil spills and air pollution.
+Natural gas burns cleaner than coal and oil but is still a nonrenewable fossil fuel that releases carbon dioxide.
+Biomass fuels such as wood and ethanol are renewable but release carbon dioxide and need land to grow crops.
+Tidal energy is renewable and predictable but only works on certain coasts.
+The best energy source for a sunny desert region would be solar energy.
+The best energy source for a windy coastal area or open plains would be wind energy.
+A region with fast rivers could use hydroelectric power.
+A region with volcanoes or hot springs, such as Iceland, could use geothermal energy.
+Hurricanes are rated from category 1 to 5 by wind speed on the Saffir-Simpson scale.
+Tornadoes are rated by damage on the Enhanced Fujita scale.
+Earthquake magnitude increases about 32 times in energy for each whole number on the magnitude scale.
+A tornado watch means conditions are right for tornadoes; a tornado warning means a tornado has been seen.
+Emergency kits contain water, food, flashlights, batteries, first aid supplies and a radio.
+Buildings can be made safer in earthquakes with flexible frames and base isolators.
+Houses in flood areas can be built on stilts.
+Hurricane shutters protect windows from flying debris.
+Early warning systems help people evacuate before tsunamis, hurricanes and volcanic eruptions.
+Scientists monitor volcanoes by measuring earthquakes, ground swelling and gas releases.
+Scientists cannot yet predict exactly when an earthquake will happen.
+Weather forecasters use data from many weather stations to predict weather.
+Chemical symbols use one or two letters, with the first letter capitalized, such as O for oxygen and Fe for iron.
+The subscript in a chemical formula tells how many atoms of an element are in a molecule, such as the 2 in H2O.
+A coefficient in front of a formula tells how many molecules there are.
+Synthesis reactions combine substances into a more complex substance; decomposition reactions break a substance into simpler substances.
+Combustion reactions combine a fuel with oxygen to produce heat, light, carbon dioxide and water.
+Water can be broken down into hydrogen and oxygen by electricity, which shows water is a compound.
+Some chemical reactions, like burning, are hard to reverse; some physical changes, like melting, are easy to reverse.
+Physical changes are usually reversible; chemical changes are usually not easily reversed.
+Melting ice can be refrozen, but burned wood cannot become wood again.
+Elements cannot be broken down into simpler substances by chemical means.
+Compounds can be broken down into elements by chemical reactions.
+The properties of a mixture are a blend of the properties of its parts.
+Air is a mixture of nitrogen, oxygen, argon, carbon dioxide and water vapor.
+Brass is a mixture of copper and zinc called an alloy.
+Seawater is a mixture of water, salt and other dissolved substances.
+Blood is a mixture of plasma, cells and platelets.
+Milk is a mixture of water, fats, proteins and sugars.
+Granite is a mixture of minerals such as quartz, feldspar and mica.
+Concrete is a mixture of cement, sand, gravel and water.
+Muddy water can be separated by filtering or letting the mud settle.
+Salt water can be separated by evaporation or distillation.
+Sand and gravel can be separated by a sieve or screen.
+Iron filings and sulfur can be separated with a magnet.
+Oil and water can be separated because oil floats on top.
+Ink colors can be separated by chromatography.

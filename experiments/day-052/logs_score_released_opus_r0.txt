@@ -1,0 +1,15 @@
+  "weights": 109122020,
+  "nonzero": 574025
+ },
+ "matches_stored": {
+  "valid": true,
+  "test_accuracy": true,
+  "test": true,
+  "validation": true,
+  "test_by_subset": true,
+  "words": true,
+  "weights": true,
+  "nonzero": true
+ },
+ "problems": []
+}

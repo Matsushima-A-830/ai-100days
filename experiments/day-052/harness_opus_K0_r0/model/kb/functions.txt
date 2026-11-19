@@ -1,0 +1,128 @@
+# Structure and function statements
+The function of the cell membrane is to control what moves into and out of the cell.
+The function of the cell wall is to support and protect the plant cell and give it shape.
+The function of the nucleus is to control cell activities and store DNA.
+The function of the mitochondria is to release energy from food through respiration.
+The function of chloroplasts is to make food using sunlight by photosynthesis.
+The function of the vacuole is to store water, food and wastes.
+The function of ribosomes is to make proteins.
+The function of cytoplasm is to hold the organelles and allow materials to move in the cell.
+The function of roots is to absorb water and nutrients and anchor the plant.
+The function of the stem is to support the plant and transport water and food.
+The function of leaves is to make food for the plant by photosynthesis.
+The function of flowers is to produce seeds for reproduction.
+The function of fruit is to protect seeds and help disperse them.
+The function of seeds is to grow into new plants.
+The function of the seed coat is to protect the embryo.
+The function of petals is to attract pollinators.
+The function of stomata is to let gases in and out of the leaf.
+The function of xylem is to carry water up from the roots.
+The function of phloem is to carry sugar from the leaves.
+The function of thorns and spines is to protect plants from animals.
+The function of the heart is to pump blood throughout the body.
+The function of the lungs is to take in oxygen and remove carbon dioxide.
+The function of the stomach is to break down food with acid and enzymes.
+The function of the small intestine is to digest food and absorb nutrients into the blood.
+The function of the large intestine is to absorb water and remove solid waste.
+The function of the kidneys is to filter blood and produce urine.
+The function of the liver is to make bile, store nutrients and remove toxins from the blood.
+The function of the brain is to control the body and process information.
+The function of nerves is to carry messages between the brain and the body.
+The function of the spinal cord is to carry messages between the brain and nerves.
+The function of bones is to support the body, protect organs and make blood cells.
+The function of the skull is to protect the brain.
+The function of the ribs is to protect the heart and lungs.
+The function of muscles is to move the body by contracting.
+The function of tendons is to connect muscles to bones.
+The function of ligaments is to connect bones at joints.
+The function of joints is to let bones move.
+The function of the skin is to protect the body, prevent water loss and help control temperature.
+The function of red blood cells is to carry oxygen.
+The function of white blood cells is to fight infection.
+The function of platelets is to help blood clot.
+The function of arteries is to carry blood away from the heart.
+The function of veins is to carry blood back to the heart.
+The function of capillaries is to exchange materials between blood and cells.
+The function of the diaphragm is to help the lungs breathe.
+The function of the trachea is to carry air to the lungs.
+The function of the esophagus is to move food to the stomach.
+The function of teeth is to break food into smaller pieces.
+The function of saliva is to soften food and begin digesting starch.
+The function of the eye is to detect light; the ear detects sound; the nose detects smell.
+The function of the iris is to control the size of the pupil.
+The function of the eardrum is to vibrate with sound waves.
+The function of hormones is to carry chemical messages in the blood.
+The function of the immune system is to protect the body against disease.
+The function of the excretory system is to remove wastes.
+The function of the digestive system is to break food into nutrients.
+The function of the circulatory system is to transport oxygen, nutrients and wastes.
+The function of the respiratory system is to exchange oxygen and carbon dioxide.
+The function of the nervous system is to control and coordinate the body.
+The function of the skeletal system is to support and protect the body.
+The function of the muscular system is to move the body.
+The function of the reproductive system is to produce offspring.
+The function of the endocrine system is to regulate the body with hormones.
+The function of gills is to take oxygen from water.
+The function of fins is to help fish swim and steer.
+The function of scales is to protect fish and reptiles.
+The function of feathers is to keep birds warm and help them fly.
+The function of fur is to keep mammals warm.
+The function of blubber is to insulate marine mammals from cold water.
+The function of a shell is to protect the soft body of an animal.
+The function of claws is to grab, dig, climb or catch prey.
+The function of antennae is to sense smell and touch.
+The function of whiskers is to sense the surroundings.
+The function of a tail can be balance, steering, swimming or communication.
+The function of webbed feet is to help animals swim.
+The function of camouflage is to help an animal hide.
+The function of warning colors is to warn predators that an animal is dangerous.
+The function of a beak is to get and eat food.
+The function of a thermometer is to measure temperature.
+The function of a barometer is to measure air pressure.
+The function of an anemometer is to measure wind speed.
+The function of a wind vane is to show wind direction.
+The function of a rain gauge is to measure rainfall.
+The function of a hygrometer is to measure humidity.
+The function of a seismograph is to measure earthquake waves.
+The function of a microscope is to magnify very small objects.
+The function of a telescope is to observe distant objects in space.
+The function of a balance is to measure mass.
+The function of a spring scale is to measure force or weight.
+The function of a graduated cylinder is to measure liquid volume.
+The function of a ruler is to measure length.
+The function of a stopwatch is to measure time.
+The function of a compass is to show direction using Earth's magnetic field.
+The function of a battery is to provide electrical energy to a circuit.
+The function of a switch is to open and close a circuit.
+The function of a wire is to carry electric current.
+The function of a fuse or circuit breaker is to stop current when it is too high.
+The function of a light bulb is to change electrical energy into light.
+The function of a generator is to change motion into electricity.
+The function of a motor is to change electricity into motion.
+The function of a solar panel is to change sunlight into electricity.
+The function of a lever is to lift or move loads with less force.
+The function of a pulley is to lift loads and change the direction of force.
+The function of a ramp is to move objects to a higher place with less force.
+The function of a wedge is to split or cut objects.
+The function of a screw is to hold objects together.
+The function of a wheel and axle is to move objects and turn things more easily.
+The function of a lens is to bend light and focus images.
+The function of a mirror is to reflect light.
+The function of a prism is to separate white light into colors.
+The function of insulation is to slow the movement of heat.
+The function of a thermostat is to control temperature.
+The function of a dam is to store water, control floods or generate electricity.
+The function of a levee is to keep a river from flooding.
+The function of a windbreak is to reduce wind erosion.
+The function of the ozone layer is to block ultraviolet radiation.
+The function of the atmosphere is to provide air, block harmful radiation, keep Earth warm and burn up meteors.
+The function of decomposers is to break down dead matter and recycle nutrients.
+The function of producers is to make food from sunlight for the ecosystem.
+The function of pollinators is to move pollen between flowers.
+The function of a control group is to provide a comparison.
+The function of a hypothesis is to give a testable prediction.
+The function of a model is to represent something that is hard to study directly.
+The function of a data table is to organize data.
+The function of a graph is to show patterns in data.
+The function of a key or legend is to explain the symbols on a map or graph.
+The function of safety goggles is to protect the eyes.

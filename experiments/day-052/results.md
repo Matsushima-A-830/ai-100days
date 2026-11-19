@@ -142,3 +142,78 @@ model exited 1: bwrap: execvp <venv>/bin/python: No such file or directory
 - `harness.run`そのもの(Claude Code CLIをbwrap内でサブプロセスとして起動する
   nested-sandbox実行、複数世代のlineage)はローカル検証が必要(上記4節参照、
   `README.md`に再現コマンドを記載)。
+
+## 8. ローカル検証(2026-11-19〜20, matsu PC)
+
+環境: Windows + WSL2 (Linux 6.6), 16コア, RAM 30GB, Python 3.12.3 (uv venv)、`requirements.txt`どおり(`torch==2.6.0`)。
+WSPリポジトリは同じcommit `51ce8ac`、bubblewrap 0.9.0(Ubuntu `bubblewrap_0.9.0-1ubuntu0.3`)、Claude Code CLI 2.1.328。
+
+### 8-1. 3・5節の再現(手書きモデル・単体テスト)
+
+- `pytest tests -q` → `18 failed, 121 passed in 21.50s`。失敗の内訳は MathBench zip 未取得12件、MMLU 2件、SQuAD 3件、SciQ 1件で、すべてデータ未取得の`FileNotFoundError`(3節の記述どおり。SciQも含まれる)。
+- `model/`を`score_my_model.py`(`isolate=False`)で採点 → test 0.313314 / validation 0.285093 / nonzero 3,922 / weights 185,641。5節と完全に一致。
+- `check_examples.py` → `5/10 correct`。一致。
+
+### 8-2. bwrap隔離実行(`isolate=True`)
+
+`score_my_model.py`の`isolate=False`を`isolate=True`に変えて実行(`logs_score_isolated.txt`):
+test 0.313314 / validation 0.285093 で`isolate=False`と同一。
+
+ただし最初はvenvをscratch領域(`/tmp`配下)に置いていたため、6節と同じ
+`bwrap: execvp <venv>/bin/python: No such file or directory`で失敗した。
+6節は原因を`/usr/local`がバインドされないためとしていたが、手元ではvenvのpythonは`/usr/bin/python3.12`を指しており、原因は別だった。
+`wsp.free_model._argv()`はvenvを`--ro-bind`した**後に**`--tmpfs /tmp`を重ねるため、**venvが`/tmp`配下にあると空のtmpfsで隠れる**(ツール側の制約)。
+venvを`/tmp`の外に置くと成功した。
+
+### 8-3. `harness.run`本体(Claude Opus 5.5をwriterとして起動、free-arc / blind / K0)
+
+```bash
+export WSP_DATA_ROOT=/opt/wsp/data HF_HOME=/opt/wsp/hf WSP_VENV=/opt/wsp/.venv-wsp
+export WSP_CLAUDE_BIN=$(readlink -f $(which claude)) WSP_CLAUDE_PROFILES=a=$HOME/.claude
+python -m harness.run --arch free-arc --data-access blind --rep 0 --writer opus --profile a
+```
+
+起動までに引っかかった点(いずれもツールの仕様・既定動作によるもの):
+
+1. `WSP_DATA_ROOT`を長いパスに置くと`OSError: AF_UNIX path too long`(プロキシ用Unixソケット`<run_dir>/proxy.sock`がLinuxの上限約108バイトを超える)。
+2. venvを`$HOME`配下(`~/.cache/...`)に置くと、サンドボックス内に`/home/<user>`のパスが現れ、self-testが`problems: ["self-test failed", "visible=/home/matsu"]`で起動を拒否する。venvは`/tmp`と`$HOME`の両方の外(今回は`/opt/wsp`)に置く必要がある。
+3. `WSP_CLAUDE_BIN`はシンボリックリンクではなく実体(`claude.exe`、ネイティブELF)を指定した。
+
+結果(`harness_opus_K0_r0/result.json`):
+
+```
+{"run_id": "free-arc_blind_K0_r0", "valid": true, "test_accuracy": 0.5079320113314447, "practice_accuracy": null, "exit_code": 1, "wall_s": 2732.3, "problems": []}
+WALL 2750.40 s
+```
+
+| | 値 |
+|---|---|
+| ARC test(3,530問) | **50.79%**(answered 98.98%) |
+| ARC-Easy / ARC-Challenge(test) | 58.12% / 35.92% |
+| validation(862問) | 51.10% |
+| weights / nonzero | 995,784 / 714,879 |
+| 知識ベース | `kb/*.txt` 4,071行(NOTES.mdによると展開後約4,900文) |
+| 所要時間 | 2,732秒(約45分)、138ターン |
+| 出力トークン / thinking | 245,034 / 50,687(CLIの換算コスト表示 $12.11) |
+| forward call | 0(K0) |
+| ネットワーク | `proxy_log.jsonl`は`api.anthropic.com:443`への2件のみ(allowed) |
+
+- self-testは`{"stdout": "done\n"}`で通過(データ・ホーム・ネットワークへの到達なし)。
+- 終了理由: writerはまだ改善を続けていたが、`You've hit your 5-hour limit`(Claudeプランの5時間あたり利用上限)で終了し`exit_code 1`。ハーネスはその時点の`model/`をそのまま採点し、`valid: true`だった。
+- writerが書いたモデル(`harness_opus_K0_r0/model/`): 手書きの理科知識ベース+Porter stemmer+idf重み付きの文単位検索(質問の被覆×選択肢の被覆、否定文の極性補正、上位5文の幾何減衰和、PPMIを弱いタイブレーカー)。詳細は同`NOTES.md`。
+- 監査フラグ(`audit.flags`)は`search_loop: ["evolution","mutate"]`(知識ベースの語彙)、`outside_paths: ["/srv/lib"]`(ハーネスが読み取り専用で渡すライブラリを読んだ)、`network: ["curl"]`(コマンド中の語)。`problems`は空。
+
+### 8-4. 論文公開モデルの再採点
+
+```bash
+python -m harness.score_model models/opus/free-arc_blind_K0_r0
+```
+
+test 50.80% / validation 50.67%、`matches_stored`が全項目`true`(`logs_score_released_opus_r0.txt`)。
+論文表のClaude Opus 5.5「LLM-designed 初代」50.8%は、このK0(forward callなし)の第1世代モデルの値。
+
+### 8-5. 4・5節の比較についての訂正
+
+5節は論文との差を「論文はforward callで何度も試行・改善したため」としていたが、論文表の初代50.8%はforward budget 0(K0)の結果で、反復による改善は含まない。
+54.4%への伸びはlineage(前世代のモデルを親として渡す次世代)によるもの。
+ハーネスでOpusに書かせた今回の結果(K0、50.79%)は論文の初代とほぼ同じで、5節の31.33%との差はforward callの有無ではなく、書いたモデルの規模と作り込み(知識ベース155文 対 約4,000行、出力トークン量)の差と考えられる。

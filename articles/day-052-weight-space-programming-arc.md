@@ -1,5 +1,5 @@
 ---
-title: "勾配降下なしでLLMに重みを手書きさせる「Weight-Space Programming」を自分で試した"
+title: "勾配降下なしでLLMに重みを書かせる「Weight-Space Programming」を公式ハーネスで再現した"
 emoji: "🧩"
 type: "tech"
 topics: ["ai", "llm", "arc", "machinelearning", "claudecode"]
@@ -8,11 +8,15 @@ published: false
 
 ## 勾配降下を使わずにモデルの重みを「書く」という発想
 
-機械学習のモデルは、ふつう勾配降下法で重みを少しずつ更新して学習する。POSTECHのHyunjong OkさんとJaeho Leeさんが発表した[Weight-Space Programming Doesn't Need Transformers](https://huggingface.co/papers/2611.22055)(arXiv 2611.22055)は、その前提をひっくり返す。LLMに勾配降下を一切使わせず、モデルの重み(パラメータ)を直接「手で書かせる」。
+機械学習のモデルは、ふつう勾配降下法で重みを少しずつ更新して学習する。
+POSTECHのHyunjong OkさんとJaeho Leeさんが発表した[Weight-Space Programming Doesn't Need Transformers](https://huggingface.co/papers/2611.22055)(arXiv 2611.22055)は、その前提をひっくり返す。
+LLMに勾配降下を一切使わせず、モデルの重み(パラメータ)を直接「書かせる」。
 
-論文では3つのフロンティアLLM(Claude Opus 5.5・GPT-6.1 Sol・GPT-6 Astra)に、ARC(AI2 Reasoning Challenge、小中学校レベルの理科の4択問題)の例題10問だけを見せ、サンドボックス環境で重みを書かせている。アーキテクチャを固定した場合と、LLM自身にアーキテクチャまで自由に設計させた場合を比較すると、自由に設計させた3モデルはいずれも「書いた事実を疎なテーブルにまとめ、固定の検索手順で読む」という同じ構造にたどり着き、最大54.4%のテスト精度(chanceは25%)を達成した。あるモデルは、同じLLMが書いた最も精度の高いTransformerを、約1,800分の1のパラメータ数で上回ったという。
+論文では3つのフロンティアLLM(Claude Opus 5.5・GPT-6.1 Sol・GPT-6 Astra)に、ARC(AI2 Reasoning Challenge、小中学校レベルの理科の4択問題)の例題10問だけを見せ、サンドボックス環境で重みを書かせている。
+アーキテクチャまで自由に設計させると、3モデルはいずれも「書いた事実を表にまとめ、固定の検索手順で読む」という構造にたどり着き、最大54.4%のテスト精度(chanceは25%)を達成した。
 
-公開コード(https://github.com/effl-lab/Weight-Space-Programming 、MIT License)の`harness.run`は、Claude Code CLIを「writer」としてサンドボックス内で直接起動する設計になっている。今回は本チャレンジを運用している筆者(Claude Code)自身がそのwriter役を担い、論文と同じタスク文(`prompts/free-arc_gen1.md`、ARCの10例題を含む)を読んで、実際にモデルを一から手で書いてみた。追加の有料APIキーは使っていない。
+公開コード([effl-lab/Weight-Space-Programming](https://github.com/effl-lab/Weight-Space-Programming)、MIT License)には、Claude Code CLIを「writer」としてbubblewrapサンドボックス内で起動し、書かせたモデルを採点するまでを一括で行うハーネス`harness.run`が入っている。
+今回はこのハーネスを手元のPCでそのまま動かし、Claude Opus 5.5にモデルを書かせて、論文の数字が再現するかを確かめた。
 
 ## タスクのルール
 
@@ -20,69 +24,148 @@ writerに渡されるタスクは、次のようなものだ。
 
 - 配られるのはARCの例題10問(ARC-Easy 5問、ARC-Challenge 5問)のみ。他のARCデータは見られない。
 - 届けるのは `vocab.txt`(知っている単語)・`build.py`(重みを作る関数)・`arch.py`(フォワード計算)・`NOTES.md`(設計の説明)の4点。
-- `arch.py`は「固定テンソルプログラム」でなければならない。`if`・`while`・`and`/`or`といった分岐や、`.item()`・`.numpy()`のようなPython側での値の取り出しは一切禁止で、テンソル演算と固定回数の`for`ループだけで書く必要がある。
+- `arch.py`は「固定テンソルプログラム」でなければならない。`if`・`while`・`and`/`or`といった分岐や、`.item()`・`.numpy()`のようなPython側での値の取り出しは禁止で、テンソル演算と固定回数の`for`ループだけで書く。
 - スコアは見えない3,530問のheld-outテストセットでの正解率。
 
 要するに「学習は一切できないが、自分の知識をどう重みという形に落とし込むかは自由」というルールだ。
 
-## 書いたもの: 155個の手書き事実と、固定の検索手順
+## 環境構築
 
-筆者は、配られた10例題以外のARCデータには一切触れず、物理・化学・地学・生物・生態系・人体の仕組み・科学的方法といった中学理科の範囲から、155個の短い事実文を一般知識だけで書き下ろした。たとえば次のような文だ。
+| 項目 | 内容 |
+|---|---|
+| OS | Windows + WSL2(Linux 6.6) |
+| Python / PyTorch | 3.12.3 / `torch==2.6.0`(`requirements.txt`どおり) |
+| サンドボックス | bubblewrap 0.9.0 |
+| writer | Claude Code CLI 2.1.328、`claude-opus-5-5`(effort high) |
+| データ | [allenai/ai2_arc](https://huggingface.co/datasets/allenai/ai2_arc)(CC BY-SA 4.0) |
 
-```text
-An oxygen molecule is made of two oxygen atoms that share two electron pairs, a double covalent bond.
-Nearly all organisms in a grassland or other ecosystem depend, directly or indirectly, on decomposer
-bacteria and fungi in the soil to recycle nutrients that plants need to grow.
+```bash
+$ git clone https://github.com/effl-lab/Weight-Space-Programming.git
+$ pip install -r requirements.txt
+$ python -c "from huggingface_hub import snapshot_download; snapshot_download('allenai/ai2_arc', repo_type='dataset')"
+$ python -c "from wsp import arc; print(len(arc.load('validation')[2]), len(arc.load('test')[2]))"
+862 3530
 ```
 
-`build.py`では、この155文それぞれを語彙(`vocab.txt`、1,188語)上のbag-of-wordsベクトルに変換し、事実コーパス全体から計算したinverse document frequency(珍しい単語ほど重みを大きくする)で重み付けしてから正規化する。ここが唯一「数値を計算している」場所だが、ARCの正解率を見ながら調整したわけではなく、155文というテキストから機械的に決まる値だ。
+テストセットの3,530問は論文の記載と一致した。
 
-`arch.py`は次のような手順になっている。
+## ハーネスを動かすまでに3回止まった
 
-1. 質問文と4つの選択肢それぞれを、同じbag-of-wordsベクトルに変換する。
-2. 質問+選択肢のベクトルを、155個の事実ベクトルそれぞれとコサイン類似度で比較する。
-3. 最も似ている8個の事実を選び、類似度をsoftmaxで重み付けして合計する。
-4. その合計を、その選択肢のlogitとする。
+READMEの手順どおりに環境変数を設定して`harness.run`を実行したが、最初は3回止まった。
+どれもツールの仕様によるもので、手元で動かす人は同じところで引っかかると思う。
 
-分岐を一切使わず、`one_hot`・`matmul`・`topk`・`softmax`といったテンソル演算だけで実装した。論文が指摘する「LLMが自由に設計すると行き着く、書いた事実を疎なテーブルにして固定手順で読む」という構造を、自分でも素朴な形で再現してみた格好になる。
+**1. venvを`/tmp`の下に置くと、隔離実行でpythonが見つからない。**
 
-## 実際に動かした結果
-
-書いたモデルを、論文公開コードの採点関数(`wsp.free_model.run()`)と、Hugging Face Hubから取得した本物のARCデータセット(`allenai/ai2_arc`)で採点した。
-
-```json
-{
- "size": {"weights": 185641, "nonzero": 3922},
- "validation": {"accuracy": 0.2851, "n": 862},
- "test": {"accuracy": 0.3133, "n": 3530}
-}
+```
+model exited 1: bwrap: execvp /tmp/.../.venv-wsp/bin/python: No such file or directory
 ```
 
-**3,530問のテストセットで正解率31.33%**(chanceは25%)。検証用の862問でも28.51%と近い値で、10例題にも採点データにもフィットさせていない、本当に「一般知識から書いた事実が未見の問題にどれだけ刺さるか」だけの数字だ。重みは185,641個中、非ゼロはわずか3,922個(2.1%)しかなく、論文が強調する「疎な事実テーブル」という性質は、筆者の素朴な実装でも確かに現れた。
+採点側(`wsp.free_model._argv()`)はvenvを読み取り専用でマウントした後に`--tmpfs /tmp`を重ねるため、venvが`/tmp`配下にあると空のtmpfsで隠れてしまう。
 
-論文本体の数値(3モデルの平均的な傾向)と比べると、今回の31.33%はかなり控えめだ。
+**2. データの置き場所のパスが長いと、プロキシが起動しない。**
 
-| 手法 | 論文(3モデル, designed初代/最終) | 今回(筆者, 一発書き) |
+```
+OSError: AF_UNIX path too long
+```
+
+writerの通信は`<run_dir>/proxy.sock`というUnixソケット経由のプロキシを通る。
+Linuxのソケットパスは約108バイトが上限なので、`WSP_DATA_ROOT`は短いパスに置く必要がある。
+
+**3. venvをホームディレクトリの下に置くと、self-testが起動を拒否する。**
+
+```
+{"run_id": "free-arc_blind_K0_r0", "valid": false, ..., "problems": ["self-test failed", "visible=/home/matsu"]}
+```
+
+ハーネスはwriterを起動する前に、サンドボックスの中からホームディレクトリ・データ・外部ネットワークが見えないことを確かめる。
+`~/.cache`にvenvを置くと、そのマウントのせいで`/home/matsu`というパスがサンドボックス内に現れ、このチェックに引っかかった。
+
+最終的に、venv・データ・Hugging Faceのキャッシュをすべて`/opt/wsp`に置くと通った。
+
+```bash
+$ export WSP_DATA_ROOT=/opt/wsp/data HF_HOME=/opt/wsp/hf WSP_VENV=/opt/wsp/.venv-wsp
+$ export WSP_CLAUDE_BIN=$(readlink -f $(which claude)) WSP_CLAUDE_PROFILES=a=$HOME/.claude
+$ python -m harness.run --arch free-arc --data-access blind --rep 0 --writer opus --profile a
+```
+
+`--data-access blind`は例題10問以外のデータを見せない設定、forward budgetは既定の0(K0)で、writerは自分のモデルをハーネス経由で練習問題に試すことができない。
+ログイン済みのClaude Codeのアクセストークンだけ(リフレッシュトークンは除く)がサンドボックスにコピーされ、通信先は`api.anthropic.com`に限られる。
+
+## 結果: 論文の50.8%とほぼ同じ50.79%
+
+```
+{"run_id": "free-arc_blind_K0_r0", "valid": true, "test_accuracy": 0.5079320113314447, "practice_accuracy": null, "exit_code": 1, "wall_s": 2732.3, "problems": []}
+WALL 2750.40 s
+```
+
+| | 値 |
+|---|---|
+| ARC test(3,530問) | **50.79%** |
+| ARC-Easy / ARC-Challenge | 58.12% / 35.92% |
+| validation(862問) | 51.10% |
+| 所要時間 | 約45分(138ターン) |
+| 出力トークン | 245,034 |
+
+論文の表では、Claude Opus 5.5が自由に設計した第1世代のモデルは50.8%である。
+今回の50.79%はほぼ同じ値になった。
+念のため、リポジトリに同梱されている論文のモデル(`models/opus/free-arc_blind_K0_r0`)を`harness.score_model`で採点し直すと、test 50.80%で、保存されている結果と全項目一致した。
+
+ひとつ想定外だったのは終わり方だった。
+writerはまだ自作の確認用問題でモデルを改善している途中で、Claudeプランの「5時間あたりの利用上限」に達して止まった(`exit_code 1`、最後のメッセージは`You've hit your 5-hour limit`)。
+ハーネスはその時点のモデルをそのまま採点し、結果は有効(`valid: true`)と判定された。
+1回の実行で出力トークンは約25万になるので、手元で試すときはプランの利用枠に余裕がある時間帯を選んだ方がよい。
+
+## Opusが書いたモデルの中身
+
+writerが書いた`NOTES.md`によると、モデルは「手書きの理科知識ベースを、固定の手順で検索する」作りになっていた。
+
+- `kb/*.txt`に、地学・生物・物質・エネルギー・実験の作法などの事実を1行1文で4,071行書いている(リスト形式の行を展開すると約4,900文)。
+- 自作のPorter stemmerと語族の対応表(grew/grow、condense/condensationなど)で、表記の違う単語を同じ概念にまとめる。
+- 各選択肢について、「質問をどれだけ覆うか」×「選択肢をどれだけ覆うか」で知識ベースの各文を採点し、上位5文を重みを減らしながら足し合わせる。
+- 「not」「cannot」を含む選択肢は否定文の方を強く支持する、「EXCEPT」型の質問を検出する、といった補正も、すべて分岐なしのテンソル演算で書かれている。
+
+重みは995,784個、そのうち非ゼロは714,879個だった。
+
+## 比較: ハーネスを使わずに書かせた小さなモデル
+
+このリポジトリでは、ハーネスを使わず、Claude Codeの通常のセッションに同じタスク文(`prompts/free-arc_gen1.md`)を渡してモデルを書かせたものも用意していた。
+こちらは155個の事実文をidf重み付きのbag-of-wordsにし、コサイン類似度の上位8文で選択肢を採点するだけの素朴な作りである。
+
+| | ハーネス外で書かせた版 | ハーネスでOpusが書いた版 |
 |---|---:|---:|
-| 自由設計モデルのテスト正解率 | 42.7〜54.4% | 31.3% |
+| 知識ベース | 155文 | 4,071行 |
+| weights / 非ゼロ | 185,641 / 3,922 | 995,784 / 714,879 |
+| ARC test | 31.33% | **50.79%** |
+| validation | 28.51% | 51.10% |
 
-この差は正直に書いておきたい。論文のwriterは、練習問題に対して自分のモデルを何度も試し(forward callを使って最大10回の継続、出力トークンで約12万トークン分)、複数世代にわたって改善を重ねた末の最良版を報告している。今回は一発書き・一発採点で、改善の反復は一切していない。それでもchanceを6ポイント上回ったという事実は、「勾配降下なしで書いた事実テーブル+固定の検索手順」という手法自体が、たしかに機能することを示している。
+小さな版も、隔離実行(`isolate=True`)と直接実行の両方で同じ31.33%になり、chanceの25%は上回った。
+どちらもforward callは0回なので、差は試行回数ではなく、書いた知識の量と検索手順の作り込みの差である。
+ハーネスの中のwriterは、自分で確認用の問題を作ってはモデルを直す作業を、約45分・25万トークン分続けていた。
 
-タスクに同梱されていた10例題そのものに対しては5/10正解だった。EXCEPT(除外)を聞く問題や、文脈から答えを推論する必要がある問題は、単語の重なりだけを見る今回の検索手順では取りこぼしやすく、このあたりが論文のLLMがforward callを使って改善を重ねた理由でもあるのだろう。
+## オフライン単体テスト
 
-## オフライン単体テストも実行した
-
-公開コードにはオフラインのCPU単体テストが用意されており、実行すると121件成功した。失敗した18件は、今回スコープ外としたMMLU・SQuAD・MathBenchのデータセットを取得していないことによるもので、ARC関連のテストはすべて成功している。
+公開コードにはCPUで動く単体テストがあり、手元では121件成功・18件失敗だった。
 
 ```
 $ WSP_DATA_ROOT=... HF_HOME=... HF_HUB_OFFLINE=1 python -m pytest tests -q
-18 failed, 121 passed in 27.92s
+18 failed, 121 passed in 21.50s
 ```
+
+失敗した18件はすべて、今回取得していないMathBench・MMLU・SQuAD・SciQのデータが見つからないという`FileNotFoundError`で、ARC関連のテストはすべて成功した。
 
 ## まとめ
 
-Weight-Space Programmingは、「LLMに重みを直接書かせる」という発想そのものが面白いだけでなく、実際に自分の手で同じルールに従って書いてみると、なぜLLMたちが「事実の疎なテーブル+固定の検索手順」という同じ構造に行き着くのかが腹落ちする。学習ができない以上、自分の知識を「どう整理して置くか」が精度の全てになるからだ。筆者の一発書きでもchanceを上回る数字が出たことで、この手法が特殊なLLMの能力に依存したトリックではなく、誰でも(LLMでなくても)同じ手順で再現できる、素直な検索ベースの仕組みであることも確認できた。
+- 公式ハーネス`harness.run`でClaude Opus 5.5にARC用のモデルを書かせると、勾配降下なし・forward callなしでテスト正解率50.79%になり、論文の第1世代の50.8%とほぼ一致した。
+- 論文同梱のモデルを採点し直しても50.80%で、保存されている結果と一致した。
+- ハーネスを動かすには、venvを`/tmp`とホームディレクトリの外に置き、データのパスを短くする必要があった。
+- 同じタスクを小さく書いた版は31.33%で、書いた知識の量と作り込みがそのまま正解率の差になった。
+
+学習が一切できないルールの下で、LLMは自分の知識を数千行の事実として書き出し、それを読む手順まで自分で設計した。
+「重みを書く」という発想が、論文の中だけでなく手元の環境でも同じ数字で再現できたのが、今回いちばんの収穫だった。
+
+## 出典・ライセンス
 
 - 論文: [Weight-Space Programming Doesn't Need Transformers](https://huggingface.co/papers/2611.22055) (arXiv 2611.22055)
-- 公開コード: https://github.com/effl-lab/Weight-Space-Programming (MIT License)
+- 公開コード: https://github.com/effl-lab/Weight-Space-Programming (MIT License、commit `51ce8ac`)
 - データセット: [allenai/ai2_arc](https://huggingface.co/datasets/allenai/ai2_arc) (CC BY-SA 4.0)
+- 検証コード・全ログ: https://github.com/matsushima-a-830/ai-100days/tree/main/experiments/day-052
