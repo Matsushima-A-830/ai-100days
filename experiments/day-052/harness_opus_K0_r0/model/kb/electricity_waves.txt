@@ -1,0 +1,149 @@
+# Electricity, magnetism, sound, light, waves
+Electricity is the flow of electric charges, usually electrons.
+Electric current is the flow of electrons through a conductor such as a wire.
+A circuit is a closed path through which electric current flows.
+A complete, or closed, circuit is needed for electric current to flow and for a bulb to light.
+An open circuit has a break or gap, so current cannot flow and the bulb does not light.
+A simple circuit has a power source such as a battery, wires, and a load such as a light bulb.
+A switch opens and closes a circuit to turn a device on and off.
+A battery is a source of electrical energy in a circuit.
+In a series circuit, there is only one path for the current; if one bulb goes out, all the bulbs go out.
+In a parallel circuit, there is more than one path; if one bulb goes out, the others stay lit.
+Homes are wired with parallel circuits so each device can be turned on and off separately.
+Adding more batteries in series makes a bulb brighter.
+Electrical conductors such as copper, silver, aluminum, gold and other metals let electricity flow easily.
+Electrical insulators such as rubber, plastic, glass, wood and cloth do not let electricity flow easily.
+Wires are made of copper covered with plastic or rubber insulation for safety.
+Water, especially salt water, conducts electricity, so electrical devices should be kept away from water.
+Resistance is the opposition to the flow of electric current; it is measured in ohms.
+Voltage is the push that moves current through a circuit; it is measured in volts.
+Current is measured in amperes, or amps.
+Ohm's law: voltage equals current times resistance.
+Electric power is measured in watts; energy used is measured in kilowatt-hours.
+A fuse or circuit breaker stops current if too much flows, preventing fires.
+Short circuits can cause wires to overheat and start fires.
+Static electricity is the buildup of electric charge on the surface of an object.
+Rubbing a balloon on hair transfers electrons and gives the balloon a static charge, so it sticks to a wall.
+Objects with opposite charges attract; objects with like or the same charges repel.
+A positive charge and a negative charge attract each other.
+Two negative charges repel each other.
+A static shock happens when built-up charges jump from one object to another, as after walking across a carpet.
+Lightning is a huge discharge of static electricity.
+A magnet is an object that attracts iron, nickel and cobalt.
+Magnets attract objects made of iron or steel, such as nails, paper clips and pins.
+Magnets do not attract aluminum, copper, gold, silver, plastic, glass, wood, paper or rubber.
+Aluminum cans are not attracted to magnets, but steel cans are.
+Every magnet has a north pole and a south pole.
+Like magnetic poles repel each other; opposite poles attract.
+A north pole and a south pole attract; two north poles repel.
+The magnetic force is strongest at the poles of a magnet.
+A magnetic field is the area around a magnet where its force acts.
+Iron filings sprinkled around a magnet show the pattern of its magnetic field.
+If a magnet is broken in half, each piece has a north pole and a south pole.
+Earth acts like a giant magnet with a magnetic field.
+A compass needle is a small magnet that lines up with Earth's magnetic field and points north.
+Compasses are used for navigation to find direction.
+An electromagnet is made by wrapping a coiled wire around an iron core and passing electric current through it.
+An electromagnet can be turned on and off, and it becomes stronger with more coils of wire or more current.
+Electromagnets are used in cranes that lift scrap metal, in motors, doorbells, speakers and MRI machines.
+Electric current produces a magnetic field.
+Moving a magnet inside a coil of wire produces an electric current; this is how generators work.
+Electric motors use magnets and electricity to produce motion.
+Generators in power plants turn turbines to produce electricity.
+Most electricity is produced in power plants by spinning turbines connected to generators.
+Electricity travels from power plants to homes through power lines.
+A wave is a disturbance that carries energy from one place to another without carrying matter.
+Waves transfer energy, not matter.
+Mechanical waves, such as sound waves, water waves and seismic waves, need a medium to travel through.
+A medium is the matter, solid, liquid or gas, that a wave travels through.
+Electromagnetic waves, such as light, can travel through empty space, a vacuum.
+In a transverse wave, the particles of the medium move perpendicular, or at right angles, to the direction the wave travels.
+Light waves and waves on a rope are transverse waves.
+In a longitudinal or compression wave, the particles of the medium move back and forth parallel to the direction of the wave.
+Sound waves are longitudinal waves made of compressions and rarefactions.
+The crest is the highest point of a wave and the trough is the lowest point.
+Wavelength is the distance from one crest to the next crest.
+Amplitude is the height of a wave; it is related to the energy of the wave.
+Frequency is the number of waves that pass a point each second, measured in hertz.
+Higher frequency waves have shorter wavelengths.
+Waves with larger amplitude carry more energy.
+Sound is produced by vibrations.
+Sound is a form of energy caused by objects vibrating, which makes the air vibrate.
+When a guitar string is plucked, it vibrates and produces sound.
+Sound needs a medium to travel; it cannot travel through empty space, a vacuum.
+There is no sound in space because there is no air to carry sound waves.
+Sound travels fastest through solids, slower through liquids, and slowest through gases.
+Sound travels faster in water than in air, and faster in steel than in water.
+The speed of sound in air is about 343 meters per second.
+Light travels much faster than sound, which is why we see lightning before we hear thunder.
+Pitch is how high or low a sound is; it depends on the frequency of the vibrations.
+Faster vibrations make a higher pitch; slower vibrations make a lower pitch.
+Shorter, thinner or tighter strings vibrate faster and make a higher pitch.
+Longer, thicker or looser strings make a lower pitch.
+A short column of air in a flute or a bottle with more water makes a higher pitch.
+Volume, or loudness, depends on the amplitude of sound waves; more energy makes a louder sound.
+Loudness is measured in decibels.
+Hitting a drum harder makes a louder sound because the vibrations have greater amplitude.
+An echo is a sound wave that reflects off a surface and returns.
+Soft materials like curtains, carpets and foam absorb sound and reduce echoes.
+Sonar uses reflected sound waves to find the depth of the ocean and locate objects underwater.
+Ultrasound uses high-frequency sound waves to make images inside the body.
+Humans hear sounds from about 20 to 20,000 hertz; dogs and bats can hear higher pitches.
+Loud sounds can damage hearing; ear protection should be worn around loud machines.
+Light is a form of energy that travels in straight lines as electromagnetic waves.
+Light travels at about 300,000 kilometers per second, the fastest speed in the universe.
+Light can travel through a vacuum, so sunlight reaches Earth through space.
+Luminous objects such as the Sun, stars, fire and light bulbs give off their own light.
+Most objects are seen because they reflect light into our eyes.
+We see an object when light reflects off it and enters our eyes.
+Reflection is the bouncing of light off a surface.
+A mirror reflects light; smooth shiny surfaces reflect light best.
+The angle of incidence equals the angle of reflection.
+A plane mirror makes an image that is reversed left to right.
+Refraction is the bending of light as it passes from one medium to another, such as from air into water or glass.
+A straw in a glass of water looks bent because of refraction.
+Lenses refract light to form images.
+A convex lens is thicker in the middle and bends light rays together to focus them; magnifying glasses use convex lenses.
+A concave lens is thinner in the middle and spreads light rays apart.
+Eyeglasses use lenses to correct vision by refracting light.
+Microscopes, telescopes, cameras and binoculars use lenses.
+Absorption happens when a material takes in light and changes it to heat.
+Transparent materials such as clear glass, water and air let almost all light pass through.
+Translucent materials such as wax paper, frosted glass and thin cloth let some light through but scatter it.
+Opaque materials such as wood, metal, rock and cardboard block light and make shadows.
+A shadow forms when an opaque object blocks light.
+A shadow is larger when the object is closer to the light source.
+White light, such as sunlight, is made of all the colors of the rainbow.
+A prism separates white light into the colors of the spectrum: red, orange, yellow, green, blue, indigo, violet.
+Red light has the longest wavelength of visible light and violet light has the shortest.
+An object's color is the color of light it reflects; other colors are absorbed.
+A red apple looks red because it reflects red light and absorbs other colors.
+A white object reflects all colors of light; a black object absorbs all colors of light.
+Black objects get hotter in sunlight because they absorb all the light.
+The electromagnetic spectrum includes radio waves, microwaves, infrared, visible light, ultraviolet, X-rays and gamma rays.
+Radio waves have the longest wavelengths and the lowest energy; gamma rays have the shortest wavelengths and the highest energy.
+Infrared radiation is felt as heat.
+Ultraviolet light from the Sun causes sunburn and can damage skin.
+X-rays pass through soft tissue but are blocked by bones, so they are used to make images of bones.
+Microwaves are used to cook food and for communication.
+Radio waves are used for radio, television and cell phone communication.
+Lasers produce a narrow, intense beam of light of one color.
+Fiber optic cables carry light signals for communication.
+Plants absorb red and blue light and reflect green light.
+Animals that are active at night have large eyes to gather more light.
+The pupil of the eye lets light in, and the lens focuses it on the retina.
+Light from the Sun is needed for plants to grow and for us to see.
+Sunlight travels to Earth in about eight minutes.
+Solar cells convert light energy into electrical energy.
+A periscope uses mirrors to see over objects.
+Telescopes use lenses or mirrors to collect light from distant objects.
+Light travels in a straight line until it hits an object.
+A flashlight beam shows that light travels in straight lines.
+Energy from waves can be harmful: loud sound damages ears, ultraviolet light burns skin, X-rays and gamma rays damage cells.
+Ocean waves are caused mostly by wind and carry energy to the shore.
+A seismic wave carries energy from an earthquake through Earth.
+Particles of a medium move back and forth or up and down as a wave passes, but they do not travel along with the wave.
+A cork on water bobs up and down as a wave passes but does not move along with the wave.
+Telephones change sound into electrical signals, and speakers change electrical signals back into sound.
+A microphone changes sound energy into electrical energy.
+Digital signals are more reliable than analog signals and can be stored and copied without losing quality.

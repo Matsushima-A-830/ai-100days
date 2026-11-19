@@ -1,0 +1,224 @@
+# Glossary: one term and its definition per line
+Absorption: the taking in of light, heat, sound or a substance by a material.
+Acceleration: the rate at which velocity changes; speeding up, slowing down or changing direction.
+Acid rain: rain made acidic by sulfur and nitrogen pollution from burning fossil fuels.
+Adaptation: an inherited trait or behavior that helps an organism survive in its environment.
+Air mass: a large body of air with the same temperature and humidity.
+Air pressure: the force of air pressing down on an area.
+Allele: one of the different forms of a gene.
+Altitude: the height above sea level.
+Amplitude: the height of a wave from its rest position; larger amplitude means more energy and louder sound.
+Anemometer: an instrument that measures wind speed.
+Aquifer: an underground layer of rock that stores groundwater.
+Asexual reproduction: reproduction with one parent that produces identical offspring.
+Asteroid: a rocky object orbiting the Sun, mostly between Mars and Jupiter.
+Atmosphere: the layer of gases surrounding Earth.
+Atom: the smallest unit of an element.
+Axis: an imaginary line through the North and South Poles around which Earth spins.
+Bacteria: single-celled microorganisms without a nucleus.
+Barometer: an instrument that measures air pressure.
+Biodiversity: the variety of different species living in an area.
+Biome: a large area with a particular climate and plants and animals, such as a desert or rain forest.
+Biosphere: the part of Earth where life exists.
+Boiling point: the temperature at which a liquid changes to a gas; water boils at 100 degrees Celsius.
+Buoyancy: the upward force of a liquid or gas on an object.
+Camouflage: coloring or patterns that help an animal blend into its surroundings.
+Carnivore: an animal that eats only other animals.
+Carrying capacity: the largest population an environment can support.
+Cell: the smallest unit of life.
+Cell membrane: the thin layer that surrounds a cell and controls what enters and leaves.
+Cell wall: the stiff outer layer that supports a plant cell.
+Chemical change: a change that produces a new substance.
+Chemical energy: energy stored in the bonds of substances such as food, fuel and batteries.
+Chlorophyll: green pigment in plants that captures light energy.
+Chloroplast: the organelle where photosynthesis happens.
+Chromosome: a structure in the nucleus made of DNA that carries genes.
+Circuit: a closed path through which electricity flows.
+Climate: the average weather of a place over many years.
+Comet: a ball of ice and dust orbiting the Sun with a glowing tail.
+Community: all the populations living together in an area.
+Compound: a substance made of two or more elements chemically joined.
+Condensation: the change from a gas to a liquid.
+Conduction: transfer of heat by direct contact.
+Conductor: a material that lets heat or electricity flow easily.
+Conservation: saving and protecting natural resources.
+Constellation: a group of stars forming a pattern in the sky.
+Consumer: an organism that eats other organisms for energy.
+Continental drift: the slow movement of continents over Earth's surface.
+Control: the part of an experiment kept unchanged for comparison.
+Convection: transfer of heat by the movement of liquids or gases.
+Core: the center of Earth, made of iron and nickel.
+Crust: Earth's thin, solid outer layer.
+Cytoplasm: the gel-like material inside a cell.
+Decomposer: an organism that breaks down dead plants and animals.
+Density: mass per unit volume.
+Deposition: the dropping of sediment by wind, water or ice.
+Dependent variable: the factor measured in an experiment that responds to changes.
+Dew point: the temperature at which water vapor condenses into liquid.
+Diffusion: movement of particles from where they are crowded to where they are less crowded.
+Digestion: breaking down food into nutrients the body can use.
+DNA: the molecule that carries genetic instructions.
+Dominant trait: a trait that shows up when at least one dominant allele is present.
+Dormant: in a resting state with little activity, such as a seed or a volcano that may erupt again.
+Echo: a reflected sound.
+Eclipse: when one object in space blocks the light reaching another.
+Ecosystem: living and nonliving things interacting in an area.
+Electromagnet: a magnet made by electric current flowing through a wire coiled around iron.
+Electron: a negatively charged particle that orbits the nucleus of an atom.
+Element: a substance made of only one type of atom.
+Embryo: an organism in its earliest stage of development, such as the baby plant inside a seed.
+Endangered: a species at risk of becoming extinct.
+Energy: the ability to do work or cause change.
+Energy pyramid: a diagram showing energy decreasing at each level of a food chain.
+Epicenter: the point on Earth's surface above where an earthquake starts.
+Equator: an imaginary line around the middle of Earth halfway between the poles.
+Erosion: the carrying away of weathered rock and soil by water, wind, ice or gravity.
+Evaporation: the change from a liquid to a gas.
+Evolution: change in species over long periods of time.
+Exoskeleton: a hard outer covering of an arthropod.
+Extinct: a species that no longer has any living members.
+Fault: a break in Earth's crust where rocks move.
+Fertilization: the joining of a male sex cell and a female sex cell.
+Food chain: the path of energy as one organism eats another.
+Food web: overlapping food chains in an ecosystem.
+Force: a push or a pull.
+Fossil: remains or traces of an organism that lived long ago.
+Fossil fuel: coal, oil or natural gas formed from ancient organisms.
+Frequency: the number of waves passing a point per second; higher frequency gives higher pitch.
+Friction: a force that resists motion between surfaces.
+Front: the boundary between two air masses.
+Galaxy: a huge system of stars, gas and dust.
+Gene: a segment of DNA that controls a trait.
+Germination: the sprouting of a seed.
+Glacier: a large mass of moving ice.
+Gravity: a force of attraction between objects with mass.
+Greenhouse effect: warming of Earth as gases trap heat.
+Groundwater: water stored underground in soil and rock.
+Habitat: the place where an organism lives.
+Hardness: how easily a mineral can be scratched.
+Herbivore: an animal that eats only plants.
+Heredity: the passing of traits from parents to offspring.
+Hibernation: a deep sleep some animals go into during winter.
+Humidity: the amount of water vapor in the air.
+Humus: decayed plant and animal matter in soil.
+Hypothesis: a testable prediction.
+Igneous rock: rock formed from cooled magma or lava.
+Independent variable: the factor that is changed in an experiment.
+Inertia: the tendency of an object to resist a change in motion.
+Inference: a conclusion based on observations.
+Inherited trait: a characteristic passed from parents to offspring.
+Instinct: a behavior an animal is born knowing.
+Insulator: a material that does not let heat or electricity pass through easily.
+Invertebrate: an animal without a backbone.
+Kinetic energy: energy of motion.
+Larva: the young, wormlike stage of an insect after hatching.
+Lava: magma that has reached Earth's surface.
+Learned behavior: a behavior an animal gets from experience.
+Lever: a bar that pivots on a fulcrum.
+Life cycle: the stages of growth and change in an organism's life.
+Light-year: the distance light travels in a year.
+Luster: the way a mineral's surface reflects light.
+Magma: melted rock beneath Earth's surface.
+Magnetic field: the area around a magnet where magnetic force acts.
+Mantle: the thick layer of Earth between the crust and the core.
+Mass: the amount of matter in an object.
+Matter: anything that has mass and takes up space.
+Melting point: the temperature at which a solid becomes a liquid.
+Metamorphic rock: rock changed by heat and pressure.
+Metamorphosis: a series of changes in body form during an animal's life cycle.
+Meteor: a streak of light from a space rock burning in the atmosphere.
+Meteorite: a space rock that lands on Earth.
+Microorganism: a living thing too small to see without a microscope.
+Migration: seasonal movement of animals from one place to another.
+Mimicry: when one organism looks like another to protect itself.
+Mineral: a naturally formed, nonliving solid with a crystal structure.
+Mitochondria: organelles that release energy from food.
+Mixture: two or more substances combined but not chemically joined.
+Molecule: two or more atoms bonded together.
+Moon phase: the shape of the lit part of the Moon seen from Earth.
+Motion: a change in position.
+Mutation: a change in a gene or DNA.
+Mutualism: a relationship in which both organisms benefit.
+Natural resource: a material from nature used by people.
+Natural selection: the process by which organisms best suited to their environment survive and reproduce.
+Nebula: a cloud of gas and dust in space where stars form.
+Neutron: a particle with no charge in the nucleus of an atom.
+Niche: the role of an organism in its ecosystem.
+Nonrenewable resource: a resource that cannot be replaced in a short time.
+Nucleus: the control center of a cell; also the center of an atom with protons and neutrons.
+Nutrient: a substance an organism needs to live and grow.
+Omnivore: an animal that eats both plants and animals.
+Opaque: blocking all light.
+Orbit: the curved path of one object around another in space.
+Organ: a group of tissues that work together.
+Organism: any living thing.
+Ozone layer: a layer of the atmosphere that absorbs ultraviolet rays.
+Parasite: an organism that lives on or in a host and harms it.
+Photosynthesis: the process by which plants use sunlight, water and carbon dioxide to make sugar and oxygen.
+Physical change: a change in size, shape or state that does not form a new substance.
+Pitch: how high or low a sound is.
+Pollination: moving pollen from stamen to pistil.
+Pollution: harmful substances in the environment.
+Population: all members of one species in an area.
+Potential energy: stored energy.
+Precipitation: water falling from clouds as rain, snow, sleet or hail.
+Predator: an animal that hunts other animals.
+Prey: an animal that is hunted and eaten.
+Prism: a clear object that separates white light into colors.
+Producer: an organism that makes its own food.
+Proton: a positively charged particle in the nucleus.
+Pupa: the resting stage between larva and adult in complete metamorphosis.
+Radiation: transfer of energy by waves through space.
+Recessive trait: a trait that appears only when two recessive alleles are present.
+Recycle: to process used materials to make new products.
+Reflection: bouncing of light, sound or heat off a surface.
+Refraction: bending of light as it passes from one material to another.
+Renewable resource: a resource that can be replaced naturally.
+Reproduction: the process of making offspring.
+Respiration: the process cells use to release energy from food; also breathing.
+Revolution: one complete trip of an object around another.
+Rock cycle: the process by which rocks change from one type to another.
+Rotation: spinning on an axis.
+Runoff: water that flows over land into streams and rivers.
+Satellite: an object that orbits a planet.
+Sediment: bits of rock, soil and organic material carried by water, wind or ice.
+Sedimentary rock: rock formed from layers of sediment pressed together.
+Seismograph: an instrument that records earthquake waves.
+Sexual reproduction: reproduction involving two parents.
+Simple machine: a device that makes work easier, such as a lever, pulley or ramp.
+Soil: loose material of weathered rock, humus, air and water.
+Solar system: the Sun and all objects that orbit it.
+Solubility: how much of a substance can dissolve.
+Solution: a mixture in which one substance dissolves evenly in another.
+Species: a group of similar organisms that can reproduce together.
+Speed: distance traveled per unit of time.
+Static electricity: buildup of electric charge on an object.
+Stomata: tiny openings in leaves for gas exchange.
+Sublimation: change from a solid directly to a gas.
+Symbiosis: a close relationship between two species.
+Temperature: a measure of how hot or cold something is.
+Tide: the regular rise and fall of ocean water caused by the Moon's gravity.
+Tissue: a group of similar cells doing the same job.
+Topsoil: the upper layer of soil rich in humus.
+Trait: a characteristic of an organism.
+Translucent: letting some light pass through.
+Transparent: letting all light pass through.
+Transpiration: water loss through the leaves of plants.
+Tropism: growth of a plant toward or away from a stimulus.
+Vacuole: a storage sac in a cell.
+Variable: a factor that can change in an experiment.
+Vertebrate: an animal with a backbone.
+Vibration: a rapid back and forth movement.
+Volcano: an opening in the crust where magma erupts.
+Volume: the amount of space an object occupies; also loudness of sound.
+Water cycle: the continuous movement of water on, above and below Earth's surface.
+Wavelength: the distance between two crests of a wave.
+Weather: the condition of the atmosphere at a given time and place.
+Weathering: the breaking down of rock into smaller pieces.
+Weight: the force of gravity on an object.
+Work: force applied over a distance.
+Diurnal: active during the day; most birds, butterflies and humans are diurnal.
+Nocturnal: active at night; owls, bats and raccoons are nocturnal.
+Radiant energy: energy carried by electromagnetic waves, such as light and heat from the Sun.
+Solar energy is radiant energy from the Sun.
+Insulin is a hormone made by the pancreas.

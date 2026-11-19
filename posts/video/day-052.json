@@ -1,0 +1,152 @@
+{
+  "day": 52,
+  "project": "Weight-Space Programming",
+  "slug": "weight-space",
+  "tagline": "Having an LLM write another model's weights directly, no gradient descent",
+  "source_url": "github.com/effl-lab/Weight-Space-Programming",
+  "license": "MIT",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 52: Weight-Space Programming has a language model write another model's weights directly, with no gradient descent. We ran the official harness locally."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "No gradient descent, ever",
+        "Ten example questions only",
+        "The writer designs the architecture itself"
+      ],
+      "narration": "The writer sees only ten ARC science questions, then writes a model's weights by hand. The paper reports 50.8 percent for Claude Opus's first generation."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {
+          "id": "task",
+          "label": "ARC task",
+          "sub": "10 examples only",
+          "pos": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "writer",
+          "label": "Writer",
+          "sub": "Opus 5.5 in bwrap",
+          "pos": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "arch",
+          "label": "arch.py",
+          "sub": "fixed tensor program",
+          "pos": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "kb",
+          "label": "Fact base",
+          "sub": "4,071 written lines",
+          "pos": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "score",
+          "label": "Scorer",
+          "sub": "harness.run",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "id": "test",
+          "label": "ARC test set",
+          "sub": "3,530 questions",
+          "pos": [
+            1,
+            2
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "task",
+          "to": "writer",
+          "label": "TASK.md"
+        },
+        {
+          "from": "writer",
+          "to": "kb",
+          "label": "writes"
+        },
+        {
+          "from": "kb",
+          "to": "arch",
+          "label": "build.py"
+        },
+        {
+          "from": "arch",
+          "to": "score",
+          "label": "logits"
+        },
+        {
+          "from": "score",
+          "to": "test",
+          "label": "grade"
+        }
+      ],
+      "steps": [
+        {
+          "focus": [
+            "task",
+            "writer"
+          ],
+          "narration": "The harness launches Claude Code inside a bubblewrap sandbox that cannot see the test data, the home folder, or any host but the API."
+        },
+        {
+          "focus": [
+            "writer",
+            "kb",
+            "arch"
+          ],
+          "narration": "In 45 minutes, Opus wrote 4,071 lines of science facts and a retrieval procedure, using tensor operations with no branching."
+        },
+        {
+          "focus": [
+            "arch",
+            "score",
+            "test"
+          ],
+          "narration": "The harness then scored that model on the 3,530 held-out test questions."
+        }
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "50.79%",
+      "caption": "ARC test accuracy of the model Opus wrote, versus 50.8% in the paper. Chance is 25%.",
+      "lines": [
+        "PAPER     50.8%  (Opus, gen 1)",
+        "LOCAL     50.79% (n=3530)",
+        "SMALL     31.33% (155 facts)"
+      ],
+      "narration": "It scored 50.79 percent, matching the paper's 50.8. A smaller model written outside the harness, with only 155 facts, scored 31.3 percent."
+    },
+    {
+      "type": "outro",
+      "narration": "Code is MIT licensed, the ARC dataset is CC BY-SA. Full write-up in Japanese on Zenn."
+    }
+  ]
+}

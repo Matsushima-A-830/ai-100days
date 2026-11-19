@@ -1,0 +1,141 @@
+# Scientific method, investigations, lab safety, tools, measurement, data, models, engineering design
+The scientific method includes asking a question, doing research, forming a hypothesis, testing with an experiment, analyzing data and drawing a conclusion.
+A hypothesis is a testable prediction or possible explanation that can be tested by an experiment.
+A hypothesis is often written as an if-then statement.
+A prediction is a statement about what will happen in the future based on observations or evidence.
+An observation is information gathered using the senses or instruments.
+A qualitative observation describes qualities such as color, smell or texture; a quantitative observation uses numbers and measurements.
+An inference is an explanation or conclusion based on observations and prior knowledge.
+A conclusion is a statement that tells whether the data support the hypothesis.
+A scientific theory is a well-tested explanation supported by a large body of evidence.
+A scientific law describes what happens in nature, often with a mathematical rule, but does not explain why.
+Scientific knowledge can change when new evidence is discovered.
+Scientists share their results so other scientists can repeat and check their experiments.
+Scientists publish their results so other scientists can review them.
+Scientists repeat experiments several times to make sure the results are reliable and accurate.
+Repeating trials and using a large sample size makes results more reliable.
+Replication means other scientists repeat an experiment and get the same results.
+A controlled experiment tests only one variable at a time.
+The independent variable is the factor the scientist changes on purpose; it is also called the manipulated variable.
+The dependent variable is the factor that is measured; it changes in response to the independent variable; it is also called the responding variable.
+Controlled variables, or constants, are factors kept the same in all groups of an experiment.
+The control group does not receive the treatment being tested and is used for comparison.
+The experimental group receives the treatment being tested.
+To make a fair test, change only one variable and keep all other conditions the same.
+If more than one variable is changed, the scientist cannot tell which variable caused the result.
+In an experiment on plant growth with fertilizer, the amount of fertilizer is the independent variable and the plant height is the dependent variable.
+When testing plants, use the same kind of plant, the same soil, the same amount of water and the same light for all groups.
+Data are facts, numbers and observations collected during an experiment.
+Data should be recorded accurately in a data table or science notebook as they are collected.
+Scientists record all data honestly, even if the results do not support the hypothesis.
+If the results do not support the hypothesis, the scientist should revise the hypothesis and test again.
+Graphs help show patterns and relationships in data.
+A line graph shows how something changes over time or how one variable changes another.
+A bar graph compares amounts in different categories.
+A circle graph, or pie chart, shows parts of a whole as percentages.
+On a graph, the independent variable is usually on the x-axis and the dependent variable on the y-axis.
+A trend is a pattern in data.
+Averaging the results of several trials gives a more reliable result.
+Accuracy is how close a measurement is to the true value; precision is how close repeated measurements are to each other.
+Error can come from measuring tools, mistakes or uncontrolled variables.
+A model is a representation of an object or process, such as a globe, a map, a diagram or a computer simulation.
+Models help scientists study things that are too big, too small, too far away, too slow, too fast or too dangerous to study directly.
+Models have limitations because they are simpler than the real thing.
+Scientists use computer models to predict weather and climate.
+A scientific question can be answered by observations, experiments and evidence.
+Questions about opinions, beliefs or what is beautiful cannot be answered by science.
+Evidence is information from observations and data that supports or disproves an idea.
+Scientists should be skeptical, open-minded, curious, honest and willing to change their ideas based on evidence.
+Scientists work in teams and communicate with each other.
+Peer review is when other scientists check research before it is published.
+Bias can affect results; a good experiment avoids bias.
+A sample should be large and random to represent the whole population.
+Lab safety rules: wear safety goggles, follow the teacher's directions, never eat or drink in the lab, and report accidents and spills.
+Safety goggles protect the eyes from chemicals, heat, flying objects and splashes.
+Students should wear goggles when heating substances or working with chemicals or glass.
+Gloves protect hands from chemicals and from bacteria in samples.
+A lab apron protects clothing and skin from spills.
+Never eat, drink or taste anything in a laboratory.
+Bringing food and drinks into a laboratory is unsafe.
+Students should wash their hands after handling chemicals, plants, animals or samples, and before leaving the laboratory.
+Tie back long hair and roll up loose sleeves when working near flames.
+Never point the open end of a heated test tube at yourself or others.
+Smell chemicals by wafting the fumes toward your nose with your hand, never by sniffing directly.
+Tell the teacher immediately if there is an accident, spill, broken glass or injury.
+Broken glass should be swept up with a brush and dustpan, not picked up with hands.
+Dispose of chemicals as directed by the teacher, not down the drain unless instructed.
+Know the location of the fire extinguisher, eye wash station and safety shower.
+If a chemical gets in your eyes, rinse them with water at the eyewash station for several minutes.
+Use tongs or heat-resistant gloves to handle hot objects.
+Clean materials and the work area after an experiment.
+Treat living organisms in experiments carefully and humanely.
+Samples of bacteria should be kept covered and handled with gloves.
+A hand lens, or magnifying glass, makes small objects look larger.
+A microscope is used to observe very small things such as cells.
+A telescope is used to observe distant objects such as stars and planets.
+Binoculars help observe distant birds and animals.
+A balance, such as a triple beam balance or electronic scale, measures mass in grams or kilograms.
+A spring scale measures force and weight in newtons.
+A graduated cylinder measures the volume of liquids in milliliters.
+A beaker holds and mixes liquids but gives only rough volume measurements.
+A ruler or meter stick measures length in centimeters and meters.
+A metric ruler is used to measure small lengths in millimeters and centimeters.
+A tape measure measures long distances.
+A thermometer measures temperature in degrees Celsius or Fahrenheit.
+A stopwatch or timer measures time in seconds.
+A pH meter or litmus paper measures acidity.
+A barometer measures air pressure, an anemometer measures wind speed, and a rain gauge measures rainfall.
+A compass shows direction.
+A seismograph records earthquakes.
+A Bunsen burner or hot plate is used to heat substances.
+Test tubes hold small amounts of chemicals.
+An eyedropper or pipette transfers small amounts of liquid.
+Petri dishes are used to grow bacteria and fungi.
+Forceps or tweezers pick up small objects.
+The metric system, or International System of Units, is used by scientists around the world.
+The meter is the basic unit of length, the gram is the basic unit of mass, and the liter is the basic unit of volume.
+One kilometer equals 1,000 meters; one meter equals 100 centimeters; one centimeter equals 10 millimeters.
+One kilogram equals 1,000 grams; one liter equals 1,000 milliliters.
+One milliliter equals one cubic centimeter.
+Temperature in science is measured in degrees Celsius; water freezes at 0 and boils at 100 degrees Celsius.
+Time is measured in seconds, minutes, hours, days and years.
+The newton is the unit of force; the joule is the unit of energy and work; the watt is the unit of power.
+Speed is measured in meters per second or kilometers per hour.
+Density is measured in grams per cubic centimeter or grams per milliliter.
+Very large distances in space are measured in light-years or astronomical units.
+An astronomical unit is the average distance from Earth to the Sun.
+Technology is the use of scientific knowledge to solve problems and make tools and products.
+Engineers design solutions to problems using the engineering design process.
+The engineering design process includes defining the problem, brainstorming, designing, building a prototype, testing, and improving the design.
+A prototype is an early model of a design that is built to be tested.
+Criteria are the requirements a design must meet; constraints are limits such as cost, time, materials and safety.
+Engineers test designs and redesign them to make improvements.
+Engineers choose materials based on their properties, such as strength, weight, cost and flexibility.
+Inventions such as the telescope, microscope and computer have helped scientists make new discoveries.
+The invention of the microscope led to the discovery of cells and microorganisms.
+The telescope allowed scientists to study the Moon, planets and stars in detail.
+Computers help scientists collect, store and analyze large amounts of data.
+Satellites help scientists study weather, oceans, land and climate.
+Advances in technology, such as refrigeration and transportation, have increased the variety of food available.
+Improvements in shipping foods around the world have increased the types of food available for sale in stores.
+Refrigeration keeps food fresh longer by slowing the growth of bacteria.
+Canning, freezing, drying and salting preserve food by preventing the growth of microorganisms.
+Technology can have both positive and negative effects on society and the environment.
+New technologies can create new problems, such as pollution from cars.
+Cell phones, the internet and satellites have improved communication.
+Vaccines and antibiotics have improved human health and increased life spans.
+Medical technologies such as X-rays, MRI and ultrasound let doctors see inside the body.
+A scientist studying the same thing in two different places should use the same methods so the results can be compared.
+Scientists keep careful records so that others can repeat the investigation.
+A good investigation has a large number of samples and repeated trials.
+Students should record observations in a journal with the date and time.
+Charts and tables organize data so it can be compared.
+A scientist should change the experiment design if results cannot be measured.
+Making observations over a long period of time shows patterns such as seasons and Moon phases.
+Field studies observe organisms in their natural environment.
+Biologists study living things; chemists study matter and chemical reactions; physicists study matter, energy and forces.
+Astronomers study stars, planets and space; meteorologists study weather; geologists study rocks and Earth.
+Ecologists study how organisms interact with their environment.
+Botanists study plants; zoologists study animals; entomologists study insects.
+Oceanographers study the ocean; paleontologists study fossils; seismologists study earthquakes.
+Microbiologists study microorganisms such as bacteria.

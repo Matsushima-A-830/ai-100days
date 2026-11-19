@@ -1,0 +1,105 @@
+{
+ "run_id": "free-arc_blind_K0_r0",
+ "arch": "free-arc",
+ "data_access": "blind",
+ "forward_budget": 0,
+ "rep": 0,
+ "writer": "opus",
+ "profile": "a",
+ "exit_code": 1,
+ "ended": "exit code 1",
+ "segments": 1,
+ "init_tools": [
+  "Bash",
+  "Edit",
+  "Glob",
+  "Grep",
+  "Read",
+  "Write"
+ ],
+ "wall_s": 2732.3,
+ "valid": true,
+ "problems": [],
+ "test_accuracy": 0.5079320113314447,
+ "practice_accuracy": null,
+ "test": {
+  "accuracy": 0.5079320113314447,
+  "answered": 0.9898016997167138,
+  "accuracy_answered": 0.5105895821408128,
+  "n": 3530
+ },
+ "validation": {
+  "accuracy": 0.5110208816705336,
+  "answered": 0.988399071925754,
+  "accuracy_answered": 0.5140845070422535,
+  "n": 862
+ },
+ "words": 45510,
+ "weights": 995784,
+ "nonzero": 714879,
+ "test_by_subset": {
+  "ARC-Easy": {
+   "accuracy": 0.5811839323467229,
+   "answered": 0.9940803382663848,
+   "accuracy_answered": 0.5831561037856231,
+   "n": 2365
+  },
+  "ARC-Challenge": {
+   "accuracy": 0.35922746781115883,
+   "answered": 0.9811158798283262,
+   "accuracy_answered": 0.36132983377077865,
+   "n": 1165
+  }
+ },
+ "tokens": {
+  "input_tokens": 264,
+  "output_tokens": 245034,
+  "cache_read_input_tokens": 24115474,
+  "cache_creation_input_tokens": 297933,
+  "thinking_tokens": 50687,
+  "cost_usd_equiv": 12.108294800000003,
+  "num_turns": 138,
+  "duration_ms": 2958261,
+  "segments": 1,
+  "semantics": [
+   "per_segment"
+  ],
+  "matches_cumulative": true,
+  "cost_basis": "cli"
+ },
+ "trajectory": [],
+ "audit": {
+  "tool_calls": {
+   "Read": 3,
+   "Bash": 93,
+   "Write": 41
+  },
+  "tool_errors": 1,
+  "bash_commands": 93,
+  "forward_commands_transcript": 0,
+  "forward_calls_counted": 0,
+  "literal_provenance": {
+   "numeric_rows": 0,
+   "rows_copied_from_tool_output": 0,
+   "examples": []
+  },
+  "flags": {
+   "search_loop": [
+    "evolution",
+    "mutate"
+   ],
+   "forward_reimpl": [
+    ".forward("
+   ],
+   "outside_paths": [
+    "/srv/lib"
+   ],
+   "network": [
+    "curl"
+   ]
+  },
+  "is_error": true,
+  "final_message": "You've hit your 5-hour limit \u00b7 resets 2:10am (Asia/Tokyo)"
+ },
+ "proxy_denied": []
+}

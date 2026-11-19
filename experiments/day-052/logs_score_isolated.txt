@@ -1,0 +1,20 @@
+loaded ARC: validation=862 test=3530 questions (0.0s)
+run() took 4.2s
+{
+ "size": {
+  "weights": 185641,
+  "nonzero": 3922
+ },
+ "validation": {
+  "accuracy": 0.285092807424594,
+  "answered": 0.9361948955916474,
+  "accuracy_answered": 0.2874845105328377,
+  "n": 862
+ },
+ "test": {
+  "accuracy": 0.313314447592068,
+  "answered": 0.9297450424929179,
+  "accuracy_answered": 0.3180987202925046,
+  "n": 3530
+ }
+}

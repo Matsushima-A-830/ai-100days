@@ -1,0 +1,88 @@
+# Heredity, genetics, evolution, natural selection
+Heredity is the passing of traits from parents to offspring.
+Inherited traits are passed from parents to offspring through genes.
+Genes are sections of DNA on chromosomes that carry instructions for traits.
+DNA is the molecule in cells that carries genetic information; it is shaped like a double helix.
+Offspring get half of their genes from the mother and half from the father.
+Each parent passes one allele of each gene to its offspring.
+Inherited traits include eye color, hair color, skin color, height potential, blood type, freckles, dimples and attached earlobes.
+In plants, inherited traits include flower color, seed shape and leaf shape.
+Acquired traits are characteristics an organism gets during its life, such as scars, learned skills, or muscles from exercise; they are not inherited.
+Learned behaviors, like reading or riding a bike, are not inherited.
+A scar, a haircut or a tan are acquired traits that cannot be passed to offspring.
+Some traits are affected by both genes and the environment, such as height and weight.
+Gregor Mendel is called the father of genetics; he studied inheritance in pea plants.
+Mendel found that traits are controlled by factors, now called genes, that come in pairs.
+A dominant allele hides the effect of a recessive allele.
+A recessive trait appears only when an organism inherits two recessive alleles.
+Dominant alleles are written with a capital letter, such as T, and recessive alleles with a lowercase letter, such as t.
+Genotype is the genetic makeup of an organism, such as Tt; phenotype is its physical appearance, such as tall.
+Homozygous means having two identical alleles, such as TT or tt; heterozygous means two different alleles, such as Tt.
+A Punnett square is a chart used to predict the possible genotypes of offspring.
+If both parents are heterozygous Tt, about 3 out of 4 offspring show the dominant trait and 1 out of 4 shows the recessive trait.
+A cross between TT and tt produces all Tt offspring, which all show the dominant trait.
+A cross between Tt and tt produces about half dominant and half recessive offspring.
+Two parents with a dominant trait can have a child with a recessive trait if both carry the recessive allele.
+Sexual reproduction combines genetic material from two parents, so offspring are different from each parent.
+Sexual reproduction produces genetic variation among offspring.
+Asexual reproduction involves only one parent, and offspring are genetically identical to the parent.
+Examples of asexual reproduction are budding in yeast and hydra, binary fission in bacteria, and plants growing from runners or cuttings.
+Bacteria reproduce asexually by binary fission, splitting into two cells.
+Clones are genetically identical copies of an organism.
+Sex cells, eggs and sperm, have half the number of chromosomes of body cells.
+Humans have 46 chromosomes, or 23 pairs, in each body cell.
+Sex cells in humans have 23 chromosomes.
+Fertilization joins an egg and sperm, restoring the full number of chromosomes.
+A mutation is a change in the DNA of a gene.
+Mutations can be harmful, helpful or have no effect.
+Mutations in sex cells can be passed to offspring.
+Mutations can be caused by radiation, such as X-rays and ultraviolet light, and by some chemicals.
+Genetic disorders such as sickle cell anemia, cystic fibrosis and hemophilia are caused by mutated genes.
+Genetic engineering changes the DNA of an organism, for example to make bacteria produce insulin.
+Selective breeding, or artificial selection, is when people choose organisms with desired traits to breed.
+Farmers use selective breeding to produce crops and livestock with desirable traits, such as cows that give more milk.
+Different breeds of dogs were produced by selective breeding.
+Evolution is the change in the inherited traits of a species over many generations.
+Charles Darwin developed the theory of evolution by natural selection after studying finches and tortoises on the Galapagos Islands.
+Darwin observed that finches on different Galapagos islands had different beak shapes suited to the food on each island.
+Natural selection is the process in which organisms with traits best suited to their environment survive and reproduce more.
+In natural selection, individuals with helpful variations survive and pass those traits to their offspring.
+Natural selection requires variation in traits, inheritance, overproduction of offspring and competition for resources.
+Organisms produce more offspring than can survive, so they compete for food, water and space.
+Over many generations, helpful traits become more common in a population.
+Variation means differences in traits among individuals of the same species.
+Variations come from mutations and from sexual reproduction.
+Peppered moths: when trees became dark from pollution, dark moths were better camouflaged and became more common.
+Bacteria can evolve resistance to antibiotics through natural selection when antibiotics are overused.
+Insects can become resistant to pesticides over many generations.
+Species that cannot adapt to changes in their environment may become extinct.
+Extinction happens when the last member of a species dies.
+Causes of extinction include habitat loss, climate change, new predators or diseases, overhunting and competition.
+Fossils provide evidence of evolution by showing how organisms changed over time.
+Similar bone structures, called homologous structures, in different animals such as a human arm, a bat wing and a whale flipper show common ancestry.
+Similarities in DNA and embryos show that organisms are related.
+Organisms with more similar DNA are more closely related.
+Over long periods, isolated populations can evolve into new species.
+Geographic isolation, such as by a mountain range or an ocean, can lead to new species.
+Adaptations develop in a population over many generations, not in one individual's lifetime.
+An individual organism cannot change its genes to adapt; populations change over generations.
+The giraffe's long neck evolved because giraffes with longer necks could reach more food and had more offspring.
+Lamarck wrongly proposed that organisms pass on traits acquired during their lifetime.
+Biodiversity is the variety of living things in an area.
+Greater genetic diversity helps a population survive changes in the environment and disease.
+Populations with little genetic variation are more likely to be wiped out by disease or environmental change.
+Identical twins develop from one fertilized egg and have the same DNA.
+Fraternal twins develop from two different eggs and are no more alike than other siblings.
+Traits controlled by many genes, such as human height and skin color, show a wide range of variation.
+Chromosomes come in pairs, one from each parent.
+The sex of a human baby is determined by the father's sperm, which carries an X or a Y chromosome.
+Females have two X chromosomes; males have an X and a Y chromosome.
+Offspring of the same parents can look different because each inherits a different combination of genes.
+Cloned plants from cuttings have the same traits as the parent plant.
+Pollen from one plant fertilizing another plant is cross-pollination and produces variation.
+DNA is copied before a cell divides so each new cell gets a complete set.
+The structure of DNA was discovered by Watson and Crick with help from Rosalind Franklin's X-ray images.
+Genes determine the proteins a cell makes, and proteins determine traits.
+A pedigree is a chart that shows how a trait is inherited in a family over generations.
+The environment can affect how genes are expressed, such as hydrangea flower color depending on soil acidity.
+Flamingos are pink because of the food they eat, an environmental effect.
