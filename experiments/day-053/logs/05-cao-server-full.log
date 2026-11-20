@@ -1,0 +1,74 @@
+2026-11-20 01:08:44,221 - root - INFO - Logging to: /root/.aws/cli-agent-orchestrator/logs/cao_2026-11-20_01-08-44.log
+2026-11-20 01:08:44,222 - cli_agent_orchestrator.api.main - INFO - Holding server lock /root/.aws/cli-agent-orchestrator/server.lock (pid 1843)
+2026-11-20 01:08:44,222 - cli_agent_orchestrator.api.main - INFO - workflow approval gate: ON (source: default)
+2026-11-20 01:08:44,312 - cli_agent_orchestrator.clients.database - INFO - Migration: added tier column to workflow_run
+2026-11-20 01:08:44,313 - cli_agent_orchestrator.clients.database - INFO - Migration: added generation column to workflow_run
+2026-11-20 01:08:44,314 - cli_agent_orchestrator.clients.database - INFO - Migration: added manifest_json column to workflow_run
+2026-11-20 01:08:44,315 - cli_agent_orchestrator.clients.database - INFO - Migration: added error column to workflow_run
+2026-11-20 01:08:44,316 - cli_agent_orchestrator.clients.database - INFO - Migration: added kind column to workflow_run
+2026-11-20 01:08:44,317 - cli_agent_orchestrator.clients.database - INFO - Migration: added caller_id column to workflow_run
+2026-11-20 01:08:44,322 - cli_agent_orchestrator.clients.database - INFO - Migration: added call_fingerprint column to workflow_run_step
+2026-11-20 01:08:44,323 - cli_agent_orchestrator.clients.database - INFO - Migration: added terminal_id column to workflow_run_step
+2026-11-20 01:08:44,324 - cli_agent_orchestrator.clients.database - INFO - Migration: added reprompted column to workflow_run_step
+2026-11-20 01:08:44,325 - cli_agent_orchestrator.clients.database - INFO - Migration: added error_kind column to workflow_run_step
+2026-11-20 01:08:44,326 - cli_agent_orchestrator.clients.database - INFO - Migration: added result_json column to workflow_run_step
+2026-11-20 01:08:44,358 - cli_agent_orchestrator.decisions.engine - INFO - Decision settings: threshold=0.7 on_timeout_ms=1000 shadow_timeout_ms=10000 points=effort.route=off:fixed_table,model.route=off:fixed_table,provider.route=off:fixed_table,task.features=off:fixed_table
+2026-11-20 01:08:44,365 - cli_agent_orchestrator.api.main - INFO - Seeded 16 new builtin skill(s).
+2026-11-20 01:08:44,368 - cli_agent_orchestrator.api.main - INFO - memory_repair mode=apply total=0 repaired=0 unchanged=0 skipped=0 failed=0
+2026-11-20 01:08:44,371 - cli_agent_orchestrator.plugins.registry - INFO - Loaded CAO plugin: claude_code_memory
+2026-11-20 01:08:44,372 - cli_agent_orchestrator.plugins.registry - INFO - Loaded CAO plugin: codex_memory
+2026-11-20 01:08:44,374 - cli_agent_orchestrator.plugins.registry - INFO - Loaded CAO plugin: event_log_publisher
+2026-11-20 01:08:44,375 - cli_agent_orchestrator.plugins.registry - INFO - Loaded CAO plugin: kiro_cli_memory
+2026-11-20 01:08:44,375 - cli_agent_orchestrator.plugins.registry - INFO - Loaded CAO plugin: mcp_apps
+2026-11-20 01:08:44,379 - cli_agent_orchestrator.api.main - INFO - Event bus consumers started (StatusMonitor, LogWriter, InboxService)
+2026-11-20 01:08:44,390 - cli_agent_orchestrator.api.main - INFO - Flow daemon started
+2026-11-20 01:08:44,392 - cli_agent_orchestrator.services.cleanup_service - INFO - Starting cleanup of data older than 14 days (before 2026-11-06 01:08:44.392106+00:00)
+2026-11-20 01:08:44,392 - cli_agent_orchestrator.services.status_monitor - INFO - StatusMonitor started
+2026-11-20 01:08:44,394 - cli_agent_orchestrator.services.log_writer - INFO - LogWriter started
+2026-11-20 01:08:44,394 - cli_agent_orchestrator.services.inbox_service - INFO - InboxService started
+2026-11-20 01:08:44,394 - cli_agent_orchestrator.services.delegation_callback_service - INFO - DelegationCallbackService started
+2026-11-20 01:08:44,394 - cli_agent_orchestrator.api.main - INFO - OpenCode inbox delivery poller started
+2026-11-20 01:08:44,394 - cli_agent_orchestrator.api.main - INFO - Inbox reconciliation daemon started
+2026-11-20 01:08:44,394 - cli_agent_orchestrator.api.main - INFO - Ephemeral sweep daemon started
+2026-11-20 01:08:44,395 - cli_agent_orchestrator.api.main - INFO - Kept-terminal reaper started
+2026-11-20 01:08:44,398 - cli_agent_orchestrator.services.cleanup_service - INFO - Deleted 0 old terminals from database
+2026-11-20 01:08:44,401 - cli_agent_orchestrator.services.cleanup_service - INFO - Deleted 0 old inbox messages from database
+2026-11-20 01:08:44,403 - cli_agent_orchestrator.services.cleanup_service - INFO - Deleted 0 old idempotency keys from database
+2026-11-20 01:08:44,404 - cli_agent_orchestrator.services.cleanup_service - INFO - Deleted 0 old terminal log files
+2026-11-20 01:08:44,404 - cli_agent_orchestrator.services.cleanup_service - INFO - Deleted 0 old server log files
+2026-11-20 01:08:44,406 - cli_agent_orchestrator.services.cleanup_service - INFO - Deleted 0 old handoff result records
+2026-11-20 01:08:44,406 - cli_agent_orchestrator.services.cleanup_service - INFO - Cleanup completed successfully
+2026-11-20 01:09:02,727 - libtmux.server - INFO - session created
+2026-11-20 01:09:02,741 - cli_agent_orchestrator.clients.tmux - INFO - Created tmux session: cao-d5e29183 with window: code_supervisor-1b9f in directory: /home/user/cao-workspace
+2026-11-20 01:09:02,760 - cli_agent_orchestrator.services.fifo_reader - INFO - Started FIFO reader for terminal 6138da31
+2026-11-20 01:09:02,772 - cli_agent_orchestrator.clients.tmux - INFO - Started pipe-pane for cao-d5e29183:code_supervisor-1b9f to /root/.aws/cli-agent-orchestrator/fifos/6138da31.fifo
+2026-11-20 01:09:02,772 - cli_agent_orchestrator.clients.tmux - INFO - send_special_key: cao-d5e29183:code_supervisor-1b9f - key: Enter
+2026-11-20 01:09:02,784 - cli_agent_orchestrator.providers.manager - INFO - Created claude_code provider for terminal: 6138da31
+2026-11-20 01:09:02,784 - cli_agent_orchestrator.services.terminal_service - INFO - Created terminal: 6138da31 in session: cao-d5e29183 (new_session=True)
+2026-11-20 01:09:02,793 - cli_agent_orchestrator.utils.terminal - INFO - Waiting for shell to be ready for terminal 6138da31...
+2026-11-20 01:09:02,819 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 01:09:02,824 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 01:09:02,827 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 01:09:02,887 - cli_agent_orchestrator.services.status_monitor - INFO - Terminal 6138da31 status changed: unknown
+2026-11-20 01:09:05,211 - cli_agent_orchestrator.utils.terminal - INFO - Shell ready for 6138da31 (buffer stable, 53 bytes)
+2026-11-20 01:09:05,224 - cli_agent_orchestrator.providers.claude_code - INFO - Set skipDangerousModePermissionPrompt in ~/.claude/settings.json
+2026-11-20 01:09:05,225 - cli_agent_orchestrator.clients.tmux - INFO - send_keys: cao-d5e29183:code_supervisor-1b9f - keys length: 1240
+2026-11-20 01:09:06,561 - cli_agent_orchestrator.providers.claude_code - INFO - Claude Code started without prompts
+2026-11-20 01:09:06,561 - cli_agent_orchestrator.utils.terminal - INFO - wait_until_status [6138da31]: waiting for {idle, completed, waiting_user_answer}, timeout=60s
+2026-11-20 01:10:06,592 - cli_agent_orchestrator.utils.terminal - WARNING - wait_until_status [6138da31]: timeout waiting for {idle, completed, waiting_user_answer}
+2026-11-20 01:10:06,593 - cli_agent_orchestrator.services.terminal_service - ERROR - Deferred init for terminal 6138da31 failed: TimeoutError('Claude Code initialization timed out after 60s').
+Traceback (most recent call last):
+  File "/root/.local/share/uv/tools/cli-agent-orchestrator/lib/python3.11/site-packages/cli_agent_orchestrator/services/terminal_service.py", line 5401, in _run
+    await provider_instance.initialize()
+  File "/root/.local/share/uv/tools/cli-agent-orchestrator/lib/python3.11/site-packages/cli_agent_orchestrator/providers/claude_code.py", line 1267, in initialize
+    raise TimeoutError(f"Claude Code initialization timed out after {init_timeout}s")
+TimeoutError: Claude Code initialization timed out after 60s
+2026-11-20 01:10:06,609 - cli_agent_orchestrator.services.terminal_service - WARNING - Deferred-init failure for 6138da31 has no caller_id to notify; failure is log-only.
+2026-11-20 01:11:17,165 - libtmux.session - INFO - session killed
+2026-11-20 01:11:17,168 - cli_agent_orchestrator.clients.tmux - INFO - Killed tmux session: cao-d5e29183
+2026-11-20 01:11:17,171 - cli_agent_orchestrator.services.terminal_service - INFO - Deferred-init terminal 6138da31 exact cleanup: absent (session 'cao-d5e29183' is gone; no pane in it can carry 6138da31)
+2026-11-20 01:11:17,219 - cli_agent_orchestrator.services.fifo_reader - INFO - Stopped FIFO reader for terminal 6138da31
+2026-11-20 01:11:17,220 - cli_agent_orchestrator.providers.manager - INFO - Cleaned up provider for terminal: 6138da31
+2026-11-20 01:11:17,226 - cli_agent_orchestrator.services.terminal_service - INFO - Deleted terminal: 6138da31
+2026-11-20 01:11:17,228 - cli_agent_orchestrator.services.session_service - INFO - Deleted session: cao-d5e29183
+2026-11-20 01:12:20,100 - cli_agent_orchestrator.api.main - INFO - Shutting down CLI Agent Orchestrator server...

@@ -1,0 +1,63 @@
+{
+  "day": 53,
+  "project": "CAO",
+  "slug": "cli-agent-orchestrator",
+  "tagline": "AWS's open-source orchestrator for multiple AI coding CLIs",
+  "source_url": "github.com/awslabs/cli-agent-orchestrator",
+  "license": "Apache-2.0",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 53: CLI Agent Orchestrator, AWS's framework for coordinating multiple AI coding CLIs, tried with Claude Code as the worker."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "Runs a local server that tracks terminals and sessions",
+        "Starts provider CLIs like Claude Code in tmux panes",
+        "A supervisor delegates tasks to workers in parallel"
+      ],
+      "narration": "CAO runs a local server, starts CLI agents such as Claude Code inside tmux panes, and lets a supervisor hand work off to those workers."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {"id": "launch", "label": "cao launch", "sub": "--provider claude_code", "pos": [0, 0]},
+        {"id": "server", "label": "cao-server", "sub": "HTTP :9889", "pos": [1, 0]},
+        {"id": "tmux", "label": "tmux pane", "sub": "spawns `claude` CLI", "pos": [0, 1], "span": 2},
+        {"id": "dialog", "label": "Onboarding dialog", "sub": "theme, security, trust prompt", "pos": [0, 2]},
+        {"id": "timeout", "label": "Init timeout", "sub": "provider_init_error, 60s", "pos": [1, 2]}
+      ],
+      "edges": [
+        {"from": "launch", "to": "server", "label": "POST /sessions"},
+        {"from": "server", "to": "tmux", "label": "spawn"},
+        {"from": "tmux", "to": "dialog", "label": "claude starts"},
+        {"from": "dialog", "to": "timeout", "label": "never idle"}
+      ],
+      "steps": [
+        {"focus": ["launch", "server"], "narration": "A launch command tells the local server to create a session and a worker terminal."},
+        {"focus": ["server", "tmux"], "narration": "The server opens a tmux pane and types the claude command into it, with the flag that is meant to skip permission prompts."},
+        {"focus": ["tmux", "dialog"], "narration": "This was Claude Code's first interactive run in the container, so it showed a theme picker, a security notice, and a folder-trust prompt instead of going idle."},
+        {"focus": ["dialog", "timeout"], "narration": "None of those screens cleared automatically, so the wait for an idle worker ran out."}
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "60s",
+      "caption": "Installing CAO and starting its server worked perfectly. Handing a task to a Claude Code worker did not.",
+      "lines": [
+        "wait_until_status: timeout after 60s",
+        "TimeoutError: Claude Code init timed out",
+        "cao session list: status = error"
+      ],
+      "narration": "Every install and server-start step worked exactly as documented. Only the supervisor-to-worker handoff failed, with this exact timeout from the server log."
+    },
+    {
+      "type": "outro",
+      "narration": "Full write-up, including why we stopped instead of forcing the trust prompt through, is on Zenn."
+    }
+  ]
+}

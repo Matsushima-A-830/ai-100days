@@ -1,0 +1,14 @@
+
+Agent 'code_supervisor' launching on claude_code:
+  Allowed:  @cao-mcp-server, fs_read, fs_list
+  Blocked:  Agent, Bash, BashOutput, CronCreate, CronDelete, CronList, Edit, EnterWorktree, ExitWorktree, FetchInboxMessage, GetTask, KillShell, ListAgents, Monitor, NotebookEdit, PowerShell, RemoteTrigger, ScheduleWakeup, SendFile, SendMessage, Task, TaskStop, TeamCreate, TeamDelete, WebFetch, WebSearch, Workflow, Write
+  Delegates: ALL TOOLS (unrestricted)
+  Enforcement: native (the provider refuses blocked tools)
+  Directory: /home/user/cao-workspace
+
+  To skip this prompt next time, relaunch with --auto-approve
+  To remove all restrictions, relaunch with --yolo
+
+Session created: cao-d5e29183
+Terminal created: code_supervisor-1b9f
+Error: Initial message was not delivered to terminal 6138da31 (provider_init_error): Worker 6138da31 failed to initialize: Claude Code initialization timed out after 60s

@@ -1,0 +1,87 @@
+1
+00:00:00,000 --> 00:00:02,496
+Day 53: CLI Agent Orchestrator,
+
+2
+00:00:02,496 --> 00:00:07,086
+AWS's framework for coordinating multiple AI coding CLIs,
+
+3
+00:00:07,086 --> 00:00:10,066
+tried with Claude Code as the worker.
+
+4
+00:00:10,516 --> 00:00:12,387
+CAO runs a local server,
+
+5
+00:00:12,387 --> 00:00:16,752
+starts CLI agents such as Claude Code inside tmux panes,
+
+6
+00:00:16,752 --> 00:00:20,884
+and lets a supervisor hand work off to those workers.
+
+7
+00:00:21,334 --> 00:00:24,767
+A launch command tells the local server to create a session
+
+8
+00:00:24,767 --> 00:00:26,047
+and a worker terminal.
+
+9
+00:00:26,497 --> 00:00:28,643
+The server opens a tmux pane and
+
+10
+00:00:28,643 --> 00:00:30,855
+types the claude command into it,
+
+11
+00:00:30,855 --> 00:00:34,543
+with the flag that is meant to skip permission prompts.
+
+12
+00:00:34,993 --> 00:00:38,775
+This was Claude Code's first interactive run in the container,
+
+13
+00:00:38,775 --> 00:00:41,643
+so it showed a theme picker, a security notice,
+
+14
+00:00:41,643 --> 00:00:44,571
+and a folder-trust prompt instead of going idle.
+
+15
+00:00:45,021 --> 00:00:47,828
+None of those screens cleared automatically,
+
+16
+00:00:47,828 --> 00:00:50,315
+so the wait for an idle worker ran out.
+
+17
+00:00:50,765 --> 00:00:54,152
+Every install and server-start step worked exactly as
+
+18
+00:00:54,152 --> 00:00:54,854
+documented.
+
+19
+00:00:54,854 --> 00:00:57,730
+Only the supervisor-to-worker handoff failed,
+
+20
+00:00:57,730 --> 00:01:00,541
+with this exact timeout from the server log.
+
+21
+00:01:00,991 --> 00:01:04,810
+Full write-up, including why we stopped instead of forcing the
+
+22
+00:01:04,810 --> 00:01:06,842
+trust prompt through, is on Zenn.
