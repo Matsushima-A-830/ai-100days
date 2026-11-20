@@ -1,0 +1,44 @@
+$ CAO_HOME_DIR=/home/matsu/.cao-home cao launch ... (同じコマンド、フォルダを人間が信頼済みにした後)
+
+Agent 'code_supervisor' launching on claude_code:
+  Allowed:  @cao-mcp-server, fs_read, fs_list
+  Blocked:  Agent, Bash, BashOutput, CronCreate, CronDelete, CronList, Edit, EnterWorktree, ExitWorktree, FetchInboxMessage, GetTask, KillShell, ListAgents, Monitor, NotebookEdit, PowerShell, RemoteTrigger, ScheduleWakeup, SendFile, SendMessage, Task, TaskStop, TeamCreate, TeamDelete, WebFetch, WebSearch, Workflow, Write
+  Delegates: ALL TOOLS (unrestricted)
+  Enforcement: native (the provider refuses blocked tools)
+  Directory: /home/matsu/cao-workspace
+
+  To skip this prompt next time, relaunch with --auto-approve
+  To remove all restrictions, relaunch with --yolo
+
+Session created: cao-48b9ed18
+Terminal created: code_supervisor-52d4
+I handed both files to one worker, the developer agent (Claude Code, terminal 18a265d6). It finished in about 24 seconds
+and the terminal was shut down afterwards. I opened both files myself and they contain what the worker reported.
+
+/home/matsu/cao-workspace/notes-a.md (ocean)
+Salt wind on the waves
+the tide pulls the moon's pale light
+back to the dark deep
+
+/home/matsu/cao-workspace/notes-b.md (mountains)
+Granite shoulders rise
+snow keeps the old silence there
+clouds bow at the peak
+
+Both follow the 5-7-5 syllable pattern. The worker says it didn't change any other files.
+
+I left out two steps of the usual supervisor workflow:
+- No task file: this session has no tool for writing files, so I put the instructions directly in the handoff message.
+- No code review: I didn't send the haikus to the reviewer agent because these are short text files, not code.
+
+$ ls -la /home/matsu/cao-workspace
+-rw-r--r--  1 matsu matsu   82 Nov 20 20:16 notes-a.md
+-rw-r--r--  1 matsu matsu   79 Nov 20 20:16 notes-b.md
+$ cat /home/matsu/cao-workspace/notes-a.md
+Salt wind on the waves
+the tide pulls the moon's pale light
+back to the dark deep
+$ cat /home/matsu/cao-workspace/notes-b.md
+Granite shoulders rise
+snow keeps the old silence there
+clouds bow at the peak

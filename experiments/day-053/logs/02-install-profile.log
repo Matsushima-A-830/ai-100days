@@ -1,0 +1,3 @@
+✓ Agent 'code_supervisor' installed successfully
+✓ Context file: /root/.aws/cli-agent-orchestrator/agent-context/code_supervisor.md
+✓ kiro_cli agent: /root/.kiro/agents/code_supervisor.json

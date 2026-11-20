@@ -1,0 +1,144 @@
+{
+  "day": 53,
+  "project": "CAO",
+  "slug": "cli-agent-orchestrator",
+  "tagline": "AWS's open-source orchestrator for multiple AI coding CLIs",
+  "source_url": "github.com/awslabs/cli-agent-orchestrator",
+  "license": "Apache-2.0",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 53: CLI Agent Orchestrator, AWS's framework for coordinating AI coding CLIs, with Claude Code handing work to Claude Code."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "A local server tracks sessions and terminals",
+        "Each agent is a real CLI running in a tmux pane",
+        "A supervisor delegates tasks to worker agents"
+      ],
+      "narration": "CAO runs a local server, starts each agent as a real command line tool inside tmux, and lets a supervisor hand tasks to workers."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {
+          "id": "launch",
+          "label": "cao launch",
+          "sub": "--provider claude_code",
+          "pos": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "server",
+          "label": "cao-server",
+          "sub": "HTTP :9889",
+          "pos": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "sup",
+          "label": "Supervisor",
+          "sub": "read-only + CAO tools",
+          "pos": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "worker",
+          "label": "Worker",
+          "sub": "developer profile",
+          "pos": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "files",
+          "label": "Workspace files",
+          "sub": "notes-a.md, notes-b.md",
+          "pos": [
+            0,
+            2
+          ],
+          "span": 2
+        }
+      ],
+      "edges": [
+        {
+          "from": "launch",
+          "to": "server",
+          "label": "POST /sessions"
+        },
+        {
+          "from": "server",
+          "to": "sup",
+          "label": "tmux pane"
+        },
+        {
+          "from": "sup",
+          "to": "worker",
+          "label": "handoff"
+        },
+        {
+          "from": "worker",
+          "to": "files",
+          "label": "writes"
+        }
+      ],
+      "steps": [
+        {
+          "focus": [
+            "launch",
+            "server"
+          ],
+          "narration": "A launch command asks the local server for a new session."
+        },
+        {
+          "focus": [
+            "server",
+            "sup"
+          ],
+          "narration": "The server opens a tmux pane and starts Claude Code as the supervisor. It can read files, but not write them."
+        },
+        {
+          "focus": [
+            "sup",
+            "worker"
+          ],
+          "narration": "So the supervisor opens a second pane and hands the task to a developer worker."
+        },
+        {
+          "focus": [
+            "worker",
+            "files"
+          ],
+          "narration": "The worker writes both files, reports back, and its pane is closed."
+        }
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "47s",
+      "caption": "In a new folder, launch timed out at 60 seconds. After we trusted the folder ourselves, delegation finished in 47 seconds.",
+      "lines": [
+        "'Welcome to' matched Ubuntu MOTD",
+        "trust prompt left open: 60s",
+        "trusted: 2 files, completed"
+      ],
+      "narration": "The first runs timed out. CAO looks for the words Welcome to, matched Ubuntu's login banner instead, and never answered the folder trust prompt. Once we trusted the folder ourselves, the handoff finished in forty seven seconds."
+    },
+    {
+      "type": "outro",
+      "narration": "The full write-up, including a settings change CAO makes to Claude Code, is on Zenn."
+    }
+  ]
+}

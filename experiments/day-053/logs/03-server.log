@@ -1,0 +1,92 @@
+INFO:     Started server process [1843]
+INFO:     Waiting for application startup.
+Server logs: /root/.aws/cli-agent-orchestrator/logs/cao_2026-11-20_01-08-44.log
+For debug logs: export CAO_LOG_LEVEL=DEBUG && cao-server
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9889 (Press CTRL+C to quit)
+2026-11-20 01:09:02,819 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 01:09:02,824 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 01:09:02,827 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+INFO:     127.0.0.1:49788 - "POST /sessions?agent_profile=code_supervisor&working_directory=%2Fhome%2Fuser%2Fcao-workspace&provider=claude_code&allowed_tools=%40cao-mcp-server%2Cfs_read%2Cfs_list HTTP/1.1" 201 Created
+INFO:     127.0.0.1:49800 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49802 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49812 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49814 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49818 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49822 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49824 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38572 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38574 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38586 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38590 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38602 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38610 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38624 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38636 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38642 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42240 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42248 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42256 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42270 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42286 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42296 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42308 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42320 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42328 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42342 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49180 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49186 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49202 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49210 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49222 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49228 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49238 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49250 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49266 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49274 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33422 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33430 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33436 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33438 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33446 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33450 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33458 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33468 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33478 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:33492 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46892 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46906 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46912 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46924 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46930 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46944 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46952 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46956 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46972 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46976 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35322 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35330 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35338 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35342 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35350 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35358 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35366 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:35370 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+2026-11-20 01:10:06,592 - cli_agent_orchestrator.utils.terminal - WARNING - wait_until_status [6138da31]: timeout waiting for {idle, completed, waiting_user_answer}
+2026-11-20 01:10:06,593 - cli_agent_orchestrator.services.terminal_service - ERROR - Deferred init for terminal 6138da31 failed: TimeoutError('Claude Code initialization timed out after 60s').
+Traceback (most recent call last):
+  File "/root/.local/share/uv/tools/cli-agent-orchestrator/lib/python3.11/site-packages/cli_agent_orchestrator/services/terminal_service.py", line 5401, in _run
+    await provider_instance.initialize()
+  File "/root/.local/share/uv/tools/cli-agent-orchestrator/lib/python3.11/site-packages/cli_agent_orchestrator/providers/claude_code.py", line 1267, in initialize
+    raise TimeoutError(f"Claude Code initialization timed out after {init_timeout}s")
+TimeoutError: Claude Code initialization timed out after 60s
+2026-11-20 01:10:06,609 - cli_agent_orchestrator.services.terminal_service - WARNING - Deferred-init failure for 6138da31 has no caller_id to notify; failure is log-only.
+INFO:     127.0.0.1:35380 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50942 - "GET /sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50952 - "GET /sessions/cao-d5e29183/terminals HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50964 - "GET /terminals/6138da31 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50980 - "DELETE /sessions/cao-d5e29183 HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1843]

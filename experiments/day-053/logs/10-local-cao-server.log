@@ -1,0 +1,134 @@
+2026-11-20 20:11:15,079 - root - INFO - Logging to: /home/matsu/.cao-home/logs/cao_2026-11-20_20-11-15.log
+2026-11-20 20:11:15,080 - cli_agent_orchestrator.api.main - INFO - Holding server lock /home/matsu/.cao-home/server.lock (pid 347481)
+2026-11-20 20:11:15,080 - cli_agent_orchestrator.api.main - INFO - workflow approval gate: ON (source: default)
+2026-11-20 20:11:15,281 - cli_agent_orchestrator.clients.database - INFO - Migration: added tier column to workflow_run
+2026-11-20 20:11:15,285 - cli_agent_orchestrator.clients.database - INFO - Migration: added generation column to workflow_run
+2026-11-20 20:11:15,288 - cli_agent_orchestrator.clients.database - INFO - Migration: added manifest_json column to workflow_run
+2026-11-20 20:11:15,291 - cli_agent_orchestrator.clients.database - INFO - Migration: added error column to workflow_run
+2026-11-20 20:11:15,296 - cli_agent_orchestrator.clients.database - INFO - Migration: added kind column to workflow_run
+2026-11-20 20:11:15,300 - cli_agent_orchestrator.clients.database - INFO - Migration: added caller_id column to workflow_run
+2026-11-20 20:11:15,324 - cli_agent_orchestrator.clients.database - INFO - Migration: added call_fingerprint column to workflow_run_step
+2026-11-20 20:11:15,328 - cli_agent_orchestrator.clients.database - INFO - Migration: added terminal_id column to workflow_run_step
+2026-11-20 20:11:15,335 - cli_agent_orchestrator.clients.database - INFO - Migration: added reprompted column to workflow_run_step
+2026-11-20 20:11:15,340 - cli_agent_orchestrator.clients.database - INFO - Migration: added error_kind column to workflow_run_step
+2026-11-20 20:11:15,344 - cli_agent_orchestrator.clients.database - INFO - Migration: added result_json column to workflow_run_step
+2026-11-20 20:11:15,437 - cli_agent_orchestrator.decisions.engine - INFO - Decision settings: threshold=0.7 on_timeout_ms=1000 shadow_timeout_ms=10000 points=effort.route=off:fixed_table,model.route=off:fixed_table,provider.route=off:fixed_table,task.features=off:fixed_table
+2026-11-20 20:11:15,457 - cli_agent_orchestrator.api.main - INFO - Seeded 16 new builtin skill(s).
+2026-11-20 20:11:15,460 - cli_agent_orchestrator.api.main - INFO - memory_repair mode=apply total=0 repaired=0 unchanged=0 skipped=0 failed=0
+2026-11-20 20:11:15,461 - cli_agent_orchestrator.plugins.registry - INFO - Loaded CAO plugin: claude_code_memory
+2026-11-20 20:11:15,462 - cli_agent_orchestrator.plugins.registry - INFO - Loaded CAO plugin: codex_memory
+2026-11-20 20:11:15,462 - cli_agent_orchestrator.plugins.registry - INFO - Loaded CAO plugin: event_log_publisher
+2026-11-20 20:11:15,462 - cli_agent_orchestrator.plugins.registry - INFO - Loaded CAO plugin: kiro_cli_memory
+2026-11-20 20:11:15,462 - cli_agent_orchestrator.plugins.registry - INFO - Loaded CAO plugin: mcp_apps
+2026-11-20 20:11:15,466 - cli_agent_orchestrator.api.main - INFO - Event bus consumers started (StatusMonitor, LogWriter, InboxService)
+2026-11-20 20:11:15,467 - cli_agent_orchestrator.api.main - INFO - Flow daemon started
+2026-11-20 20:11:15,468 - cli_agent_orchestrator.services.cleanup_service - INFO - Starting cleanup of data older than 14 days (before 2026-11-06 11:11:15.468457+00:00)
+2026-11-20 20:11:15,470 - cli_agent_orchestrator.services.status_monitor - INFO - StatusMonitor started
+2026-11-20 20:11:15,470 - cli_agent_orchestrator.services.log_writer - INFO - LogWriter started
+2026-11-20 20:11:15,470 - cli_agent_orchestrator.services.inbox_service - INFO - InboxService started
+2026-11-20 20:11:15,470 - cli_agent_orchestrator.services.delegation_callback_service - INFO - DelegationCallbackService started
+2026-11-20 20:11:15,470 - cli_agent_orchestrator.api.main - INFO - OpenCode inbox delivery poller started
+2026-11-20 20:11:15,471 - cli_agent_orchestrator.api.main - INFO - Inbox reconciliation daemon started
+2026-11-20 20:11:15,471 - cli_agent_orchestrator.api.main - INFO - Ephemeral sweep daemon started
+2026-11-20 20:11:15,471 - cli_agent_orchestrator.api.main - INFO - Kept-terminal reaper started
+2026-11-20 20:11:15,473 - cli_agent_orchestrator.services.cleanup_service - INFO - Deleted 0 old terminals from database
+2026-11-20 20:11:15,476 - cli_agent_orchestrator.services.cleanup_service - INFO - Deleted 0 old inbox messages from database
+2026-11-20 20:11:15,478 - cli_agent_orchestrator.services.cleanup_service - INFO - Deleted 0 old idempotency keys from database
+2026-11-20 20:11:15,478 - cli_agent_orchestrator.services.cleanup_service - INFO - Deleted 0 old terminal log files
+2026-11-20 20:11:15,478 - cli_agent_orchestrator.services.cleanup_service - INFO - Deleted 0 old server log files
+2026-11-20 20:11:15,479 - cli_agent_orchestrator.services.cleanup_service - INFO - Deleted 0 old handoff result records
+2026-11-20 20:11:15,479 - cli_agent_orchestrator.services.cleanup_service - INFO - Cleanup completed successfully
+2026-11-20 20:11:24,892 - libtmux.server - INFO - session created
+2026-11-20 20:11:24,904 - cli_agent_orchestrator.clients.tmux - INFO - Created tmux session: cao-89d6ac99 with window: code_supervisor-0214 in directory: /home/matsu/cao-workspace
+2026-11-20 20:11:24,935 - cli_agent_orchestrator.services.fifo_reader - INFO - Started FIFO reader for terminal f1b4af67
+2026-11-20 20:11:24,949 - cli_agent_orchestrator.clients.tmux - INFO - Started pipe-pane for cao-89d6ac99:code_supervisor-0214 to /home/matsu/.cao-home/fifos/f1b4af67.fifo
+2026-11-20 20:11:24,949 - cli_agent_orchestrator.clients.tmux - INFO - send_special_key: cao-89d6ac99:code_supervisor-0214 - key: Enter
+2026-11-20 20:11:24,965 - cli_agent_orchestrator.providers.manager - INFO - Created claude_code provider for terminal: f1b4af67
+2026-11-20 20:11:24,965 - cli_agent_orchestrator.services.terminal_service - INFO - Created terminal: f1b4af67 in session: cao-89d6ac99 (new_session=True)
+2026-11-20 20:11:24,974 - cli_agent_orchestrator.utils.terminal - INFO - Waiting for shell to be ready for terminal f1b4af67...
+2026-11-20 20:11:25,004 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 20:11:25,010 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 20:11:25,013 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 20:11:25,049 - cli_agent_orchestrator.services.status_monitor - INFO - Terminal f1b4af67 status changed: unknown
+2026-11-20 20:11:28,880 - cli_agent_orchestrator.utils.terminal - INFO - Shell ready for f1b4af67 (buffer stable, 722 bytes)
+2026-11-20 20:11:28,897 - cli_agent_orchestrator.providers.claude_code - INFO - Set skipDangerousModePermissionPrompt in ~/.claude/settings.json
+2026-11-20 20:11:28,898 - cli_agent_orchestrator.clients.tmux - INFO - send_keys: cao-89d6ac99:code_supervisor-0214 - keys length: 1216
+2026-11-20 20:11:29,230 - cli_agent_orchestrator.providers.claude_code - INFO - Claude Code started without prompts
+2026-11-20 20:11:29,230 - cli_agent_orchestrator.utils.terminal - INFO - wait_until_status [f1b4af67]: waiting for {waiting_user_answer, idle, completed}, timeout=60s
+2026-11-20 20:12:29,261 - cli_agent_orchestrator.utils.terminal - WARNING - wait_until_status [f1b4af67]: timeout waiting for {waiting_user_answer, idle, completed}
+2026-11-20 20:12:29,261 - cli_agent_orchestrator.services.terminal_service - ERROR - Deferred init for terminal f1b4af67 failed: TimeoutError('Claude Code initialization timed out after 60s').
+Traceback (most recent call last):
+  File "/home/matsu/.local/share/uv/tools/cli-agent-orchestrator/lib/python3.11/site-packages/cli_agent_orchestrator/services/terminal_service.py", line 5401, in _run
+    await provider_instance.initialize()
+  File "/home/matsu/.local/share/uv/tools/cli-agent-orchestrator/lib/python3.11/site-packages/cli_agent_orchestrator/providers/claude_code.py", line 1267, in initialize
+    raise TimeoutError(f"Claude Code initialization timed out after {init_timeout}s")
+TimeoutError: Claude Code initialization timed out after 60s
+2026-11-20 20:12:29,284 - cli_agent_orchestrator.services.terminal_service - WARNING - Deferred-init failure for f1b4af67 has no caller_id to notify; failure is log-only.
+2026-11-20 20:12:38,532 - libtmux.session - INFO - session killed
+2026-11-20 20:12:38,535 - cli_agent_orchestrator.clients.tmux - INFO - Killed tmux session: cao-89d6ac99
+2026-11-20 20:12:38,538 - cli_agent_orchestrator.services.terminal_service - INFO - Deferred-init terminal f1b4af67 exact cleanup: absent (session 'cao-89d6ac99' is gone; no pane in it can carry f1b4af67)
+2026-11-20 20:12:38,752 - cli_agent_orchestrator.services.fifo_reader - INFO - Stopped FIFO reader for terminal f1b4af67
+2026-11-20 20:12:38,752 - cli_agent_orchestrator.providers.manager - INFO - Cleaned up provider for terminal: f1b4af67
+2026-11-20 20:12:38,762 - cli_agent_orchestrator.services.terminal_service - INFO - Deleted terminal: f1b4af67
+2026-11-20 20:12:38,764 - cli_agent_orchestrator.services.session_service - INFO - Deleted session: cao-89d6ac99
+2026-11-20 20:15:59,797 - libtmux.server - INFO - session created
+2026-11-20 20:15:59,809 - cli_agent_orchestrator.clients.tmux - INFO - Created tmux session: cao-48b9ed18 with window: code_supervisor-52d4 in directory: /home/matsu/cao-workspace
+2026-11-20 20:15:59,828 - cli_agent_orchestrator.services.fifo_reader - INFO - Started FIFO reader for terminal 5f80ddc4
+2026-11-20 20:15:59,843 - cli_agent_orchestrator.clients.tmux - INFO - Started pipe-pane for cao-48b9ed18:code_supervisor-52d4 to /home/matsu/.cao-home/fifos/5f80ddc4.fifo
+2026-11-20 20:15:59,843 - cli_agent_orchestrator.clients.tmux - INFO - send_special_key: cao-48b9ed18:code_supervisor-52d4 - key: Enter
+2026-11-20 20:15:59,859 - cli_agent_orchestrator.providers.manager - INFO - Created claude_code provider for terminal: 5f80ddc4
+2026-11-20 20:15:59,859 - cli_agent_orchestrator.services.terminal_service - INFO - Created terminal: 5f80ddc4 in session: cao-48b9ed18 (new_session=True)
+2026-11-20 20:15:59,868 - cli_agent_orchestrator.utils.terminal - INFO - Waiting for shell to be ready for terminal 5f80ddc4...
+2026-11-20 20:15:59,899 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 20:15:59,904 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 20:15:59,907 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 20:15:59,933 - cli_agent_orchestrator.services.status_monitor - INFO - Terminal 5f80ddc4 status changed: unknown
+2026-11-20 20:16:02,873 - cli_agent_orchestrator.utils.terminal - INFO - Shell ready for 5f80ddc4 (buffer stable, 155 bytes)
+2026-11-20 20:16:02,889 - cli_agent_orchestrator.providers.claude_code - INFO - Set skipDangerousModePermissionPrompt in ~/.claude/settings.json
+2026-11-20 20:16:02,890 - cli_agent_orchestrator.clients.tmux - INFO - send_keys: cao-48b9ed18:code_supervisor-52d4 - keys length: 1216
+2026-11-20 20:16:04,235 - cli_agent_orchestrator.providers.claude_code - INFO - Claude Code started without prompts
+2026-11-20 20:16:04,235 - cli_agent_orchestrator.utils.terminal - INFO - wait_until_status [5f80ddc4]: waiting for {waiting_user_answer, idle, completed}, timeout=60s
+2026-11-20 20:16:04,332 - cli_agent_orchestrator.services.status_monitor - INFO - Terminal 5f80ddc4 status changed: idle
+2026-11-20 20:16:05,236 - cli_agent_orchestrator.utils.terminal - INFO - wait_until_status [5f80ddc4]: reached idle
+2026-11-20 20:16:10,363 - cli_agent_orchestrator.providers.claude_code - WARNING - input-ready settle check timed out after 5.0s for 5f80ddc4; proceeding anyway
+2026-11-20 20:16:10,393 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 20:16:10,399 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 20:16:10,402 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 20:16:10,415 - cli_agent_orchestrator.clients.tmux - INFO - send_keys: cao-48b9ed18:code_supervisor-52d4 - keys length: 324
+2026-11-20 20:16:12,691 - cli_agent_orchestrator.services.status_monitor - INFO - Terminal 5f80ddc4 status changed: processing
+2026-11-20 20:16:12,962 - cli_agent_orchestrator.services.terminal_service - INFO - Sent input to terminal: 5f80ddc4
+2026-11-20 20:16:18,242 - libtmux.session - INFO - window created
+2026-11-20 20:16:18,247 - cli_agent_orchestrator.clients.tmux - INFO - Created window 'developer-5fe4' in session 'cao-48b9ed18' in directory: /home/matsu/cao-workspace
+2026-11-20 20:16:18,253 - cli_agent_orchestrator.services.fifo_reader - INFO - Started FIFO reader for terminal 18a265d6
+2026-11-20 20:16:18,266 - cli_agent_orchestrator.clients.tmux - INFO - Started pipe-pane for cao-48b9ed18:developer-5fe4 to /home/matsu/.cao-home/fifos/18a265d6.fifo
+2026-11-20 20:16:18,266 - cli_agent_orchestrator.clients.tmux - INFO - send_special_key: cao-48b9ed18:developer-5fe4 - key: Enter
+2026-11-20 20:16:18,282 - cli_agent_orchestrator.providers.manager - INFO - Created claude_code provider for terminal: 18a265d6
+2026-11-20 20:16:18,283 - cli_agent_orchestrator.utils.terminal - INFO - Waiting for shell to be ready for terminal 18a265d6...
+2026-11-20 20:16:18,352 - cli_agent_orchestrator.services.status_monitor - INFO - Terminal 18a265d6 status changed: unknown
+2026-11-20 20:16:21,585 - cli_agent_orchestrator.utils.terminal - INFO - Shell ready for 18a265d6 (buffer stable, 155 bytes)
+2026-11-20 20:16:21,602 - cli_agent_orchestrator.clients.tmux - INFO - send_keys: cao-48b9ed18:developer-5fe4 - keys length: 848
+2026-11-20 20:16:22,987 - cli_agent_orchestrator.providers.claude_code - INFO - Claude Code started without prompts
+2026-11-20 20:16:22,987 - cli_agent_orchestrator.utils.terminal - INFO - wait_until_status [18a265d6]: waiting for {waiting_user_answer, idle, completed}, timeout=60s
+2026-11-20 20:16:23,083 - cli_agent_orchestrator.services.status_monitor - INFO - Terminal 18a265d6 status changed: idle
+2026-11-20 20:16:23,987 - cli_agent_orchestrator.utils.terminal - INFO - wait_until_status [18a265d6]: reached idle
+2026-11-20 20:16:29,133 - cli_agent_orchestrator.providers.claude_code - WARNING - input-ready settle check timed out after 5.0s for 18a265d6; proceeding anyway
+2026-11-20 20:16:29,134 - cli_agent_orchestrator.services.terminal_service - INFO - Created terminal: 18a265d6 in session: cao-48b9ed18 (new_session=False)
+2026-11-20 20:16:29,146 - cli_agent_orchestrator.utils.terminal - INFO - wait_until_status [18a265d6]: waiting for {idle, completed}, timeout=120.0s
+2026-11-20 20:16:29,146 - cli_agent_orchestrator.utils.terminal - INFO - wait_until_status [18a265d6]: reached idle
+2026-11-20 20:16:29,175 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 20:16:29,180 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 20:16:29,182 - cli_agent_orchestrator.services.vault.config - WARNING - max_recall_body_chars=4096 exceeds the injection scope budget 1000; the injection renderer requires its own lower cap
+2026-11-20 20:16:29,196 - cli_agent_orchestrator.clients.tmux - INFO - send_keys: cao-48b9ed18:developer-5fe4 - keys length: 390
+2026-11-20 20:16:29,298 - cli_agent_orchestrator.services.status_monitor - INFO - Terminal 18a265d6 status changed: processing
+2026-11-20 20:16:31,745 - cli_agent_orchestrator.services.terminal_service - INFO - Sent input to terminal: 18a265d6
+2026-11-20 20:16:38,340 - cli_agent_orchestrator.services.status_monitor - INFO - Terminal 18a265d6 status changed: completed
+2026-11-20 20:16:38,928 - cli_agent_orchestrator.clients.tmux - INFO - send_keys: cao-48b9ed18:developer-5fe4 - keys length: 5
+2026-11-20 20:16:39,048 - cli_agent_orchestrator.services.status_monitor - INFO - Terminal 18a265d6 status changed: processing
+2026-11-20 20:16:41,471 - cli_agent_orchestrator.services.terminal_service - INFO - Sent input to terminal: 18a265d6
+2026-11-20 20:16:41,534 - cli_agent_orchestrator.clients.tmux - INFO - Stopped pipe-pane for cao-48b9ed18:developer-5fe4
+2026-11-20 20:16:42,023 - cli_agent_orchestrator.services.fifo_reader - INFO - Stopped FIFO reader for terminal 18a265d6
+2026-11-20 20:16:42,034 - libtmux.window - INFO - window killed
+2026-11-20 20:16:42,034 - cli_agent_orchestrator.clients.tmux - INFO - Killed tmux window: cao-48b9ed18:developer-5fe4
+2026-11-20 20:16:42,034 - cli_agent_orchestrator.providers.manager - INFO - Cleaned up provider for terminal: 18a265d6
+2026-11-20 20:16:42,050 - cli_agent_orchestrator.services.terminal_service - INFO - Deleted terminal: 18a265d6
+2026-11-20 20:16:47,307 - cli_agent_orchestrator.services.status_monitor - INFO - Terminal 5f80ddc4 status changed: completed

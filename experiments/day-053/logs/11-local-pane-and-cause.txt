@@ -1,0 +1,38 @@
+ローカル2回目のlaunch(cao-89d6ac99)で、60秒タイムアウト後に tmux capture-pane -t cao-89d6ac99 -p した結果の抜粋。
+(MOTDのシステム情報行・IPアドレス行と、多数の --disallowedTools は省略)
+
+=== ペインの内容 ===
+Welcome to Ubuntu 24.04.3 LTS (GNU/Linux 6.6.87.2-microsoft-standard-WSL2 x86_64)
+ ...
+This message is shown once a day. To disable it please create the
+/home/matsu/.hushlogin file.
+(base) matsu@akim01:~/cao-workspace$ unset $(env | ...) 2>/dev/null; claude --dangerously-skip-permissions --session-id e4055ffc-... --append-system-prompt-file /home/matsu/.cao-home/tmp/f1b4af67.prompt --mcp-config /home/matsu/.cao-home/tmp/f1b4af67.mcp.json --strict-mcp-config --disallowedTools ... --disallowedTools Write
+────────────────────────────────────────
+ Accessing workspace:
+ /home/matsu/cao-workspace
+ Quick safety check: Is this a project you created or one you trust? (Like your own code, a well-known open source project,
+ or work from your team). If not, take a moment to review what's in this folder first.
+ Claude Code'll be able to read, edit, and execute files here.
+ Security guide
+ ❯ No, exit
+   Yes, I trust this folder
+ Enter to confirm · Esc to cancel
+
+(テーマ選択・セキュリティ通知は表示されなかった。Claude Codeはこの環境で対話的に利用済み。)
+
+=== cao-server ログ(10-local-cao-server.log より) ===
+2026-11-20 20:11:28,897 - cli_agent_orchestrator.providers.claude_code - INFO - Set skipDangerousModePermissionPrompt in ~/.claude/settings.json
+2026-11-20 20:11:28,898 - cli_agent_orchestrator.clients.tmux - INFO - send_keys: cao-89d6ac99:code_supervisor-0214 - keys length: 1216
+2026-11-20 20:11:29,230 - cli_agent_orchestrator.providers.claude_code - INFO - Claude Code started without prompts
+2026-11-20 20:11:29,230 - cli_agent_orchestrator.utils.terminal - INFO - wait_until_status [f1b4af67]: waiting for {waiting_user_answer, idle, completed}, timeout=60s
+2026-11-20 20:12:29,261 - cli_agent_orchestrator.utils.terminal - WARNING - wait_until_status [f1b4af67]: timeout waiting for {waiting_user_answer, idle, completed}
+2026-11-20 20:12:29,261 - cli_agent_orchestrator.services.terminal_service - ERROR - Deferred init for terminal f1b4af67 failed: TimeoutError('Claude Code initialization timed out after 60s').
+
+=== 原因箇所: cli_agent_orchestrator/providers/claude_code.py (CAO 2.5.4, a21ad13) ===
+3:1155-            if re.search(r"Welcome to|Claude Code v\d+", clean_output):
+4:1156:                logger.info("Claude Code started without prompts")
+
+_handle_startup_prompts() は「Welcome to|Claude Code v\d+」をClaude Code起動完了の合図とみなしてループを抜ける。
+tmuxペインのログインシェルが出したUbuntuのMOTD「Welcome to Ubuntu ...」がこれに一致し、
+claudeコマンド送信から0.33秒(信頼ダイアログが描画される前)で「started without prompts」と判定してループを抜けたため、
+信頼ダイアログの自動承認(TRUST_PROMPT_PATTERN = "Yes, I trust this folder" に一致したらDown→Enterを送る分岐)が一度も実行されなかった。

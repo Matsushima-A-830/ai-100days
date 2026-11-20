@@ -1,0 +1,87 @@
+1
+00:00:00,000 --> 00:00:02,577
+Day 53: CLI Agent Orchestrator,
+
+2
+00:00:02,577 --> 00:00:06,568
+AWS's framework for coordinating AI coding CLIs,
+
+3
+00:00:06,568 --> 00:00:10,310
+with Claude Code handing work to Claude Code.
+
+4
+00:00:10,760 --> 00:00:12,560
+CAO runs a local server,
+
+5
+00:00:12,560 --> 00:00:16,910
+starts each agent as a real command line tool inside tmux,
+
+6
+00:00:16,910 --> 00:00:20,210
+and lets a supervisor hand tasks to workers.
+
+7
+00:00:20,660 --> 00:00:24,015
+A launch command asks the local server for a new session.
+
+8
+00:00:24,465 --> 00:00:26,778
+The server opens a tmux pane and
+
+9
+00:00:26,778 --> 00:00:29,452
+starts Claude Code as the supervisor.
+
+10
+00:00:29,452 --> 00:00:32,198
+It can read files, but not write them.
+
+11
+00:00:32,648 --> 00:00:35,492
+So the supervisor opens a second pane and
+
+12
+00:00:35,492 --> 00:00:38,058
+hands the task to a developer worker.
+
+13
+00:00:38,508 --> 00:00:41,473
+The worker writes both files, reports back,
+
+14
+00:00:41,473 --> 00:00:43,059
+and its pane is closed.
+
+15
+00:00:43,509 --> 00:00:45,130
+The first runs timed out.
+
+16
+00:00:45,130 --> 00:00:47,400
+CAO looks for the words Welcome to,
+
+17
+00:00:47,400 --> 00:00:49,864
+matched Ubuntu's login banner instead,
+
+18
+00:00:49,864 --> 00:00:52,653
+and never answered the folder trust prompt.
+
+19
+00:00:52,653 --> 00:00:55,052
+Once we trusted the folder ourselves,
+
+20
+00:00:55,052 --> 00:00:57,905
+the handoff finished in forty seven seconds.
+
+21
+00:00:58,355 --> 00:01:02,201
+The full write-up, including a settings change CAO makes to
+
+22
+00:01:02,201 --> 00:01:03,766
+Claude Code, is on Zenn.
