@@ -1,0 +1,18 @@
+$ cao launch --agents code_supervisor --provider claude_code --working-directory /home/matsu/cao-workspace --headless --auto-approve "<PRと同じタスク文>"
+
+Agent 'code_supervisor' launching on claude_code:
+  Allowed:  @cao-mcp-server, fs_read, fs_list
+  Blocked:  Agent, Bash, BashOutput, CronCreate, CronDelete, CronList, Edit, EnterWorktree, ExitWorktree, FetchInboxMessage, GetTask, KillShell, ListAgents, Monitor, NotebookEdit, PowerShell, RemoteTrigger, ScheduleWakeup, SendFile, SendMessage, Task, TaskStop, TeamCreate, TeamDelete, WebFetch, WebSearch, Workflow, Write
+  Delegates: ALL TOOLS (unrestricted)
+  Enforcement: native (the provider refuses blocked tools)
+  Directory: /home/matsu/cao-workspace
+
+  To skip this prompt next time, relaunch with --auto-approve
+  To remove all restrictions, relaunch with --yolo
+
+Error: cao-server refused the launch (500): Failed to create session: [Errno 95] Operation not supported
+
+# cao-server側(~/.aws -> /mnt/c/Users/matsu/.aws、WSLのdrvfs上)
+2026-11-20 20:10:20,466 - cli_agent_orchestrator.clients.tmux - INFO - Created tmux session: cao-8457eef0 with window: code_supervisor-1e01 in directory: /home/matsu/cao-workspace
+2026-11-20 20:10:20,499 - cli_agent_orchestrator.services.terminal_service - ERROR - Failed to create terminal: [Errno 95] Operation not supported
+2026-11-20 20:10:20,520 - libtmux.session - INFO - session killed

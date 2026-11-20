@@ -151,3 +151,123 @@ tmuxセッション・`cao-server` プロセスともに検証後に終了済み
   ツール自体の挙動である。
 - 人間の確認を経ずに別の自律エージェントの「フォルダを信頼する」確認を
   代わりに承認する操作は、Claude Code自身の安全機構によって拒否された。
+
+## 6. ローカル検証(2026-11-20, matsu PC)
+
+環境: Windows + WSL2(Ubuntu 24.04.3, Linux 6.6)、一般ユーザー(uid 1000)、tmux 3.4、uv、
+Claude Code CLI 2.1.329(対話的に利用済み。`~/.claude.json` の `hasCompletedOnboarding: true`)。
+CAOはPRと同じコミットを指定してインストールした。
+
+```
+$ uv tool install git+https://github.com/awslabs/cli-agent-orchestrator.git@a21ad13b6b00c494c991a8edc133ae72d2935da1
+Installed 4 executables: cao, cao-mcp-server, cao-ops-mcp-server, cao-server
+$ cao --version
+cao, version 2.5.4
+```
+
+タスク文・`cao launch` の引数は4節と同じ。ワークスペースは空の `/home/matsu/cao-workspace`。
+
+### 6-1. 1回目: `[Errno 95] Operation not supported`(`logs/07-local-launch-mkfifo-errno95.log`)
+
+```
+Error: cao-server refused the launch (500): Failed to create session: [Errno 95] Operation not supported
+```
+
+この環境の `~/.aws` はWindows側(`/mnt/c/Users/matsu/.aws`、WSLのdrvfs=9p)へのシンボリックリンクで、
+CAOの既定のホーム `~/.aws/cli-agent-orchestrator` がWindowsのドライブ上にあった。
+CAOはターミナル出力を名前付きパイプ(`fifos/<id>.fifo`)経由で読むが、drvfs上では `os.mkfifo` が失敗する
+(同じディレクトリで `flock`・SQLite WALは成功、`mkfifo` だけ `[Errno 95]` になることを確認)。
+環境変数 `CAO_HOME_DIR=/home/matsu/.cao-home` でホームをLinux側に移して回避した。
+
+### 6-2. 2回目: PRと同じ60秒タイムアウトを再現(`logs/08-local-launch-trust-timeout.log`)
+
+```
+Session created: cao-89d6ac99
+Terminal created: code_supervisor-0214
+Error: Initial message was not delivered to terminal f1b4af67 (provider_init_error): Worker f1b4af67 failed to initialize: Claude Code initialization timed out after 60s
+```
+
+tmuxペインで止まっていたのはフォルダ信頼確認(`Quick safety check ... ❯ No, exit / Yes, I trust this folder`)だけで、
+テーマ選択・セキュリティ通知は表示されなかった(`logs/11-local-pane-and-cause.txt`)。
+新しく作ったフォルダはClaude Codeにとって未信頼なので、信頼確認は一般ユーザー・オンボーディング済みでも出る。
+
+CAOには信頼確認を自動で承認する処理(`providers/claude_code.py` の `_handle_startup_prompts()`)があるが、
+今回は動かなかった。原因はCAOのバグで、起動完了の判定に使う正規表現 `r"Welcome to|Claude Code v\d+"` が、
+tmuxペインのログインシェルが表示したUbuntuのMOTD `Welcome to Ubuntu 24.04.3 LTS ...` に一致した。
+
+```
+20:11:28,898 send_keys: cao-89d6ac99:code_supervisor-0214 - keys length: 1216
+20:11:29,230 Claude Code started without prompts
+20:11:29,230 wait_until_status [f1b4af67]: waiting for {waiting_user_answer, idle, completed}, timeout=60s
+20:12:29,261 wait_until_status [f1b4af67]: timeout waiting for {waiting_user_answer, idle, completed}
+20:12:29,261 Deferred init for terminal f1b4af67 failed: TimeoutError('Claude Code initialization timed out after 60s').
+```
+
+claudeコマンドを送ってから0.33秒、信頼ダイアログが描画される前に「started without prompts」と判定してループを抜けたため、
+信頼確認の自動承認は一度も実行されなかった。
+UbuntuのMOTDは1日1回だけ表示される(ペインに `This message is shown once a day.` と表示)。
+3回目のlaunchではシェルの初期出力が155バイト(2回目は722バイト)で、MOTDは出ていなかった。
+MOTDが出ない状態で、未信頼フォルダの信頼確認をCAOが自動承認できるかは試していない(下記のとおり人間が信頼済みにしてから3回目を実行した)。
+
+補足: PRの4節のペイン(`logs/06-tmux-pane-transcript.txt`)にも `Welcome to Claude Code v2.1.329` が表示されており、同じ正規表現に一致する文字列である。
+
+### 6-3. 3回目: フォルダを人間が信頼済みにすると、委任まで成功(`logs/09-local-launch-delegation-success.log`)
+
+信頼確認はCAOの監視なしで動くエージェントに関わる操作なので、Claude(検証担当)がtmuxへキーを送って代行せず、
+人間(matsu)が別の端末で `cd ~/cao-workspace && claude` を実行して「Yes, I trust this folder」を選んだ。
+`~/.claude.json` の `projects["/home/matsu/cao-workspace"].hasTrustDialogAccepted` が `true` になったことを確認してから再実行した。
+
+```
+Session created: cao-48b9ed18
+Terminal created: code_supervisor-52d4
+I handed both files to one worker, the developer agent (Claude Code, terminal 18a265d6). It finished in about 24 seconds
+and the terminal was shut down afterwards. I opened both files myself and they contain what the worker reported.
+...
+```
+
+```
+$ cat /home/matsu/cao-workspace/notes-a.md
+Salt wind on the waves
+the tide pulls the moon's pale light
+back to the dark deep
+$ cat /home/matsu/cao-workspace/notes-b.md
+Granite shoulders rise
+snow keeps the old silence there
+clouds bow at the peak
+$ cao session list
+SESSION                   CONDUCTOR    STATUS          TERMINALS
+cao-48b9ed18              5f80ddc4     completed       1
+```
+
+`cao-server` のログ(`logs/10-local-cao-server.log`)での流れ:
+
+| 時刻 | 出来事 |
+|---|---|
+| 20:15:59.9 | supervisor(`code_supervisor`、terminal 5f80ddc4)のtmuxセッション作成 |
+| 20:16:05.2 | supervisorがidleに到達(init成功) |
+| 20:16:12.7 | supervisorにタスク送信、processingへ |
+| 20:16:18.2 | supervisorがworker用のtmuxウィンドウ `developer-5fe4`(terminal 18a265d6)を作成 |
+| 20:16:23.9 | workerがidleに到達 |
+| 20:16:29.3 → 20:16:38.3 | workerがタスクを処理しcompleted |
+| 20:16:42.0 | workerのウィンドウを削除 |
+| 20:16:47.3 | supervisorがcompleted |
+
+launch(supervisorのセッション作成 20:15:59.9)からsupervisorのcompleted(20:16:47.3)まで約47秒。
+
+supervisorは書き込み系ツールを持たない(`Allowed: @cao-mcp-server, fs_read, fs_list`)ので、
+ファイルはworker(`developer` プロファイル、Claude Code)が作った。
+
+### 6-4. CAOが `~/.claude/settings.json` を書き換える
+
+launchのたびに、CAOはユーザー全体のClaude Code設定 `~/.claude/settings.json` に
+`"skipDangerousModePermissionPrompt": true` を追加する(ログ `Set skipDangerousModePermissionPrompt in ~/.claude/settings.json`)。
+これは `--dangerously-skip-permissions` 起動時の確認画面を、CAO経由に限らずすべてのClaude Code起動で省略する設定である。
+検証前のこのPCの設定には無かったため、検証後に削除して元に戻した。
+
+### 6-5. PRの記述との差分
+
+- 60秒タイムアウトは一般ユーザー・オンボーディング済みのローカルPCでも再現した。
+- ただし止めたのはフォルダ信頼確認だけで、直接の原因はCAOの起動判定の正規表現がUbuntuのMOTDに一致するバグだった。
+  「`--dangerously-skip-permissions` が信頼確認を免除しない」こと自体は正しいが、CAOはそれを前提に自動承認処理を持っており、それが動かなかった。
+- テーマ選択・セキュリティ通知は、Claude Codeを一度も対話的に起動していない実行環境に固有の画面で、このPCでは出なかった。
+- フォルダを事前に信頼済みにすれば、Claude Code providerでsupervisor→workerの委任は動いた。

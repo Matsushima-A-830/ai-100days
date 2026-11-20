@@ -1,87 +1,87 @@
 1
-00:00:00,000 --> 00:00:02,496
+00:00:00,000 --> 00:00:02,577
 Day 53: CLI Agent Orchestrator,
 
 2
-00:00:02,496 --> 00:00:07,086
-AWS's framework for coordinating multiple AI coding CLIs,
+00:00:02,577 --> 00:00:06,568
+AWS's framework for coordinating AI coding CLIs,
 
 3
-00:00:07,086 --> 00:00:10,066
-tried with Claude Code as the worker.
+00:00:06,568 --> 00:00:10,310
+with Claude Code handing work to Claude Code.
 
 4
-00:00:10,516 --> 00:00:12,387
+00:00:10,760 --> 00:00:12,560
 CAO runs a local server,
 
 5
-00:00:12,387 --> 00:00:16,752
-starts CLI agents such as Claude Code inside tmux panes,
+00:00:12,560 --> 00:00:16,910
+starts each agent as a real command line tool inside tmux,
 
 6
-00:00:16,752 --> 00:00:20,884
-and lets a supervisor hand work off to those workers.
+00:00:16,910 --> 00:00:20,210
+and lets a supervisor hand tasks to workers.
 
 7
-00:00:21,334 --> 00:00:24,767
-A launch command tells the local server to create a session
+00:00:20,660 --> 00:00:24,015
+A launch command asks the local server for a new session.
 
 8
-00:00:24,767 --> 00:00:26,047
-and a worker terminal.
-
-9
-00:00:26,497 --> 00:00:28,643
+00:00:24,465 --> 00:00:26,778
 The server opens a tmux pane and
 
+9
+00:00:26,778 --> 00:00:29,452
+starts Claude Code as the supervisor.
+
 10
-00:00:28,643 --> 00:00:30,855
-types the claude command into it,
+00:00:29,452 --> 00:00:32,198
+It can read files, but not write them.
 
 11
-00:00:30,855 --> 00:00:34,543
-with the flag that is meant to skip permission prompts.
+00:00:32,648 --> 00:00:35,492
+So the supervisor opens a second pane and
 
 12
-00:00:34,993 --> 00:00:38,775
-This was Claude Code's first interactive run in the container,
+00:00:35,492 --> 00:00:38,058
+hands the task to a developer worker.
 
 13
-00:00:38,775 --> 00:00:41,643
-so it showed a theme picker, a security notice,
+00:00:38,508 --> 00:00:41,473
+The worker writes both files, reports back,
 
 14
-00:00:41,643 --> 00:00:44,571
-and a folder-trust prompt instead of going idle.
+00:00:41,473 --> 00:00:43,059
+and its pane is closed.
 
 15
-00:00:45,021 --> 00:00:47,828
-None of those screens cleared automatically,
+00:00:43,509 --> 00:00:45,130
+The first runs timed out.
 
 16
-00:00:47,828 --> 00:00:50,315
-so the wait for an idle worker ran out.
+00:00:45,130 --> 00:00:47,400
+CAO looks for the words Welcome to,
 
 17
-00:00:50,765 --> 00:00:54,152
-Every install and server-start step worked exactly as
+00:00:47,400 --> 00:00:49,864
+matched Ubuntu's login banner instead,
 
 18
-00:00:54,152 --> 00:00:54,854
-documented.
+00:00:49,864 --> 00:00:52,653
+and never answered the folder trust prompt.
 
 19
-00:00:54,854 --> 00:00:57,730
-Only the supervisor-to-worker handoff failed,
+00:00:52,653 --> 00:00:55,052
+Once we trusted the folder ourselves,
 
 20
-00:00:57,730 --> 00:01:00,541
-with this exact timeout from the server log.
+00:00:55,052 --> 00:00:57,905
+the handoff finished in forty seven seconds.
 
 21
-00:01:00,991 --> 00:01:04,810
-Full write-up, including why we stopped instead of forcing the
+00:00:58,355 --> 00:01:02,201
+The full write-up, including a settings change CAO makes to
 
 22
-00:01:04,810 --> 00:01:06,842
-trust prompt through, is on Zenn.
+00:01:02,201 --> 00:01:03,766
+Claude Code, is on Zenn.

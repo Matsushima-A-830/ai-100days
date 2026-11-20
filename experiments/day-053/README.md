@@ -55,13 +55,22 @@ cao launch --agents code_supervisor --provider claude_code \
 
 詳細は `results.md` を参照。ログは `logs/` 以下に実行順で保存している。
 
-## 結論
+## 結論(ローカル検証後、results.md 6節)
 
 インストール・プロファイル管理・サーバー起動までは公式手順どおりに動いた。
-一方で「Claude Code providerで実際にsupervisor/worker間の委任を見る」という
-本来の目的(ファイル作成タスクのworkerへの委任)には、
-Claude Code CLI自体の初回対話的セットアップが壁になり到達できなかった。
-これは本チャレンジのクラウドRoutine環境特有の制約ではなく、
-「root権限で、かつClaude Code CLIを初めて対話的に起動する環境でCAOを動かすと、
-`--dangerously-skip-permissions` だけでは初回オンボーディングを突破できない」という、
-ツール自体の挙動として再現する制約である。
+`cao launch --provider claude_code` の60秒タイムアウトはローカルPC(WSL2 Ubuntu、一般ユーザー、Claude Code利用済み)でも再現した。
+止めていたのは新しいワークスペースに対するClaude Codeのフォルダ信頼確認で、
+CAOの自動承認処理が、起動判定の正規表現 `Welcome to` がUbuntuのMOTDに一致するバグのため実行されなかった。
+フォルダを人間が事前に信頼済みにすると、supervisorが `developer` workerへファイル作成を委任し、2ファイルが作られた。
+
+ローカルで再現する場合の注意:
+
+```bash
+# ~/.aws がWindows側(/mnt/c)にあるWSL環境では mkfifo が失敗するので、CAOのホームをLinux側に置く
+export CAO_HOME_DIR=$HOME/.cao-home
+# ワークスペースを一度 claude で開き「Yes, I trust this folder」を選んでおく
+cd /path/to/workspace && claude   # 信頼を選んで /exit
+```
+
+CAOはlaunchのたびに `~/.claude/settings.json` へ `"skipDangerousModePermissionPrompt": true` を追加する。
+不要なら検証後に削除する。

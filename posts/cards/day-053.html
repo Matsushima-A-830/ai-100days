@@ -157,59 +157,60 @@
   </div>
 
   <div class="heading">
-    <h1>Claude Code自身をワーカーに、<br>AWS公式のマルチエージェントCLIを動かしたら</h1>
-    <p><span class="src">awslabs/cli-agent-orchestrator</span>(Apache-2.0)のインストールとサーバー起動は成功。
-    supervisorからworkerへの委任だけが、Claude Code CLIの初回オンボーディング画面で止まった。</p>
+    <h1>AWS公式マルチエージェントCLIで、<br>Claude CodeがClaude Codeに委任</h1>
+    <p><span class="src">awslabs/cli-agent-orchestrator</span>(Apache-2.0)を手元のWSL2 Ubuntuで検証。
+    新しいフォルダでは信頼確認で60秒タイムアウト、フォルダを自分で信頼済みにするとworkerへの委任まで動いた。</p>
   </div>
 
   <div class="stat-row">
-    <div class="stat-number">60s</div>
-    <div class="stat-caption"><strong>TimeoutError</strong>: Claude Code initialization timed out after 60s<br>
-    (supervisor worker の `cao launch --provider claude_code` が返した実際のエラー)</div>
+    <div class="stat-number">47s</div>
+    <div class="stat-caption"><strong>supervisor → developer worker</strong> の委任で2ファイルを作成して完了するまで<br>
+    (cao-serverログ 20:15:59.9 → 20:16:47.3)</div>
   </div>
 
   <section class="block compare">
-    <div class="block-label">supervisor → worker 委任タスクの結果</div>
+    <div class="block-label">同じ cao launch --provider claude_code の結果</div>
     <div class="compare-grid">
-      <div class="compare-panel good">
-        <div class="compare-title">✓ インストール〜サーバー起動</div>
-        <pre class="compare-output">uv tool install ... → Installed 4 executables
-cao install code_supervisor → ✓ installed successfully
-cao-server → Uvicorn running on http://127.0.0.1:9889</pre>
-      </div>
       <div class="compare-panel bad">
-        <div class="compare-title">✗ ワーカーへの委任</div>
-        <pre class="compare-output">cao launch --provider claude_code ...
+        <div class="compare-title">✗ 未信頼の新しいフォルダ</div>
+        <pre class="compare-output">Quick safety check: ... trust?
+❯ No, exit
 → provider_init_error
-Worker failed to initialize: Claude Code
-initialization timed out after 60s</pre>
+  timed out after 60s</pre>
+      </div>
+      <div class="compare-panel good">
+        <div class="compare-title">✓ 自分で信頼済みにしたフォルダ</div>
+        <pre class="compare-output">I handed both files to one worker,
+the developer agent (Claude Code)
+notes-a.md / notes-b.md 作成
+cao session list → completed</pre>
       </div>
     </div>
   </section>
 
   <section class="block">
-    <div class="block-label">tmuxペインの中で起きていたこと</div>
+    <div class="block-label">60秒タイムアウトの原因(CAO 2.5.4)</div>
     <div class="terminal">
       <div class="term-row">
-        <span class="term-tag">flag</span>
-        <span class="toks">claude --dangerously-skip-permissions ... (渡されていた)</span>
+        <span class="term-tag">regex</span>
+        <span class="toks">r"Welcome to|Claude Code v\d+" を起動完了の合図とみなす</span>
       </div>
       <div class="term-row">
-        <span class="term-tag">stuck</span>
-        <span class="toks">テーマ選択 → セキュリティ通知 → フォルダ信頼確認(Quick safety check)</span>
+        <span class="term-tag">motd</span>
+        <span class="toks">tmuxペイン先頭の "Welcome to Ubuntu 24.04.3 LTS" に一致</span>
       </div>
       <div class="term-row">
-        <span class="term-tag">manual</span>
-        <span class="toks">信頼確認を手で進めようとしたら "Undermining Oversight" で拒否</span>
+        <span class="term-tag">0.33s</span>
+        <span class="toks">"started without prompts" → 信頼確認の自動承認が走らない</span>
       </div>
-      <div class="term-foot">root権限 + Claude Code初回起動という条件で再現するツール自体の挙動。</div>
+      <div class="term-foot">~/.aws がWindows側(/mnt/c)のWSLでは mkfifo が [Errno 95]。CAO_HOME_DIR をLinux側に置いて回避。</div>
     </div>
   </section>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>無監督で動く別エージェントの「フォルダを信頼する」確認を、人間の判断を経ずに代わりに承認する操作は、
-    Claude Code自身の安全機構によって拒否された。妥当な制止と判断し、別の回避策は試みず検証を終了した。</p>
+    <p>CAOはlaunchのたびに ~/.claude/settings.json へ "skipDangerousModePermissionPrompt": true を追加する。
+    CAO以外のClaude Codeにも効く設定なので、検証後に削除した。</p>
   </div>
 
   <footer>
