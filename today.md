@@ -2,19 +2,19 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 053
-- 選んだ候補(backlog.mdのタイトルかURL): awslabs/cli-agent-orchestrator — https://github.com/awslabs/cli-agent-orchestrator
+- Day: 054
+- 選んだ候補(backlog.mdのタイトルかURL): higurashi-ai/Haru-4B — https://huggingface.co/higurashi-ai/Haru-4B
 - 補足メモ(あれば):
-  - 出典: https://github.com/awslabs/cli-agent-orchestrator (Apache-2.0。2026-11-19付研究PR〈#181〉でbacklog.mdに追記。AWS Open Source Blog発表記事: https://aws.amazon.com/blogs/opensource/introducing-cli-agent-orchestrator-transforming-developer-cli-tools-into-a-multi-agent-powerhouse)
-  - 概要: AWS Labsが公開した、Claude Code・Codex CLI・Kiro CLI・GitHub Copilot CLI・Cursor CLI等、既に認証済みのAIコーディングCLIをプロバイダーとして束ね、supervisorエージェントが各CLIを独立したtmuxセッションで並列・直列に動かしてタスクを分担させるオーケストレーションフレームワーク。各エージェントは自身のネイティブな認証・機能を保ったまま、完全なCLIプロセスとして起動される。
-  - 選定理由: Apache-2.0。追加の有料APIキー・GPU不要で、導入済みのClaude Code CLI自身をプロバイダーとして使える。本チャレンジ自体がClaude Code Routineで運用されているため、「Claude Code自身をsupervisor配下のサブエージェントとして動かす」という自己言及的な検証ができる点を評価した。
-  - APIキー・前提条件についての方針: 追加の有料APIキーは不要(導入済みのClaude Code CLI自身をプロバイダーとして使う)。GPU不要。Python 3.11+・tmux 3.3+・uvの導入が前提。
+  - 出典: https://huggingface.co/higurashi-ai/Haru-4B (Apache-2.0。2026-11-13公開、Qwen3.5-4Bテキストバックボーン採用・BF16で5Bパラメータ。2026-11-20付研究PR〈#184〉でbacklog.mdに追記。公開デモ: https://huggingface.co/spaces/hugging-apps/haru-4b, https://huggingface.co/spaces/akhaliq/haru-4b-studio)
+  - 概要: 133msの音声フレーム(7.5Hz)を処理し、聞き取りと発話を同時に行う全二重(フルデュプレックス)音声対話モデル。一般的なターンベースの音声アシスタントと異なり、割り込みや相づちなど人間同士の会話に近い相互発話が可能とされる。Hugging Face Spacesに複数の公開デモがあり、GitHubリポジトリからのセルフホスト(`pip install -e ./haru`→`python -m haru.server`)やmacOS向けMLX実装も提供される。
+  - 選定理由: Apache-2.0でAPIキー不要。公開Spacesがあるため、自前のGPU環境が無くても実際の対話を無料で試せる。全二重(同時聞き取り・同時発話)という対話スタイルは本チャレンジで未取り上げの新しい切り口であり、割り込み耐性・相づちの有無など従来のターンベース音声アシスタントとの違いを実際の対話ログで示せる点を評価した。
+  - APIキー・前提条件についての方針: 追加の有料APIキーは不要。公開Spacesでの検証は無料かつGPU不要。モデルカードは自前ホストにNVIDIA GPU 12GB程度を推奨しており、CPUのみでの実時間動作は不明なため、Routine実行環境にGPUが無い場合は公開Spacesでの対話検証に絞る。自前ホストでのレイテンシ計測等、GPU環境が必須な部分が進まない場合はローカル検証にエスカレーションする。
   - 検証スコープ・手順(案):
-    1. `uv`でcli-agent-orchestratorを導入し、導入ログをそのまま記録する。
-    2. `cao install code_supervisor`→`cao-server`→`cao launch`で、Claude Code CLIをプロバイダーとしたsupervisor構成を立ち上げる。
-    3. supervisorに複数のサブタスク(例: 複数ファイルへの軽い修正・調査タスクの分担)を与え、tmux上で各サブエージェントが並列・直列に動く様子を記録する(ログ・可能ならスクリーンショット)。
-    4. 動かなかった場合も失敗として正直に`results.md`に記録する。tmux非対応等、Routine実行環境固有の制約で進まない部分はローカル検証にエスカレーションする。
-  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-11-19時点、backlog.md参照。検索範囲では日本語での一次検証記事は未検出)。
-  - 記事化の切り口: 本チャレンジを運用しているClaude Code自身をsupervisor配下のサブエージェントとして動かし、複数タスクを並列処理させる様子を見せる自己言及的な構成。tmuxの分割画面はスクリーンショット映えする。
+    1. 公開Spaces(hugging-apps/haru-4b または akhaliq/haru-4b-studio)で実際に音声対話を行い、応答ログ・音声サンプル・主観的な応答速度を記録する。
+    2. 割り込み発話(相手の発話中に話しかける)・相づちなど、ターンベースの音声アシスタントでは起きない振る舞いが実際に確認できるかを試す。
+    3. モデルカードが主張するレイテンシ・応答速度と、実際に体感した応答時間を比較する。
+    4. 可能であればGitHubリポジトリのセルフホスト手順を試す。GPU不足等Routine実行環境固有の制約で動かなかった場合は失敗として正直に記録しつつ、CLAUDE.mdの方針に従いRoutine環境の制約として記事には書かず、ローカル検証にエスカレーションする。
+  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-11-20時点、backlog.md参照。remio.ai・hashout.jp等の日本語紹介記事はあるが著者自身による検証記事は未検出)。
+  - 記事化の切り口: 全二重対話という新しい体験を実際の対話ログ・音声サンプルで見せ、従来のターンベース音声アシスタントとの違い(割り込み耐性・相づちの自然さ等)をBefore/After的に書く。
 
 状態: 設定済み
