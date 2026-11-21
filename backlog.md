@@ -2090,3 +2090,39 @@
 - 検証難易度: 中(論文は正解ラベル・ハーネス公開を明言しているが、本調査時点では具体的なGitHub URLを確認できなかったため要確認。公開コードが見つからない場合は、小規模な自作版〈数リポジトリのPRをマイニングしてクエリ・正解ファイルを作り、ローカルのsentence-transformers系埋め込みモデル〈APIキー・GPU不要〉とBM25/grepを比較〉で設計思想を疑似再現する方針も検討の価値あり)
 - 見栄え: 「コーディングエージェントはgrepで十分なのか、embeddingはなぜ強く見えるのか」という評価方法論そのものを検証する切り口は技術者向けに刺さりやすい。本チャレンジで既にコード検索・エージェントツール呼び出し系を複数扱っているため、差別化として「ベンチマークの測り方自体を疑う」姿勢を明記するとよい。
 - 状態: 未選択
+
+### [2026-11-21] Tracer-Cloud/opensre — 落ちたCI/CDパイプラインを自動調査し修正PRまで作るAI SREエージェント
+
+- 出典: https://github.com/Tracer-Cloud/opensre (本日GitHub Trending Pythonで+450star/日。Apache-2.0、Public Alpha)
+- 概要: CI/CDパイプラインの失敗を自動調査し根本原因分析を行い、検証済みの修正コードをPRとして提案するセルフホスト型AI SREエージェント。CloudWatch・Sentry・Elasticsearch等60以上の監視・インシデント管理ツールと連携でき、LLMバックエンドは`LLM_PROVIDER`で切り替え可能でOllama(ローカル・無料)にも対応する。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 低〜中(Apache-2.0。`curl -fsSL https://install.opensre.com | bash -s -- -gh`でインストールし`opensre ask "..."`で単発デモ可能。デフォルトは「hosted model」だがOllama等ローカルモデルへの切替にも対応するとREADMEに明記されており、追加の有料APIキー無しでの検証が見込める。本リポジトリ自身〈ai-100days〉や適当なダミーの壊れたCIワークフローを用意して原因調査・修正PR提案の挙動を確認する想定。GPU不要〈Ollama利用時は使用モデルのサイズに依存〉)
+- 見栄え: 「わざと壊したCI/CDパイプラインをAIエージェントが自動調査し修正PRまで出す」という分かりやすいBefore/Afterデモが作れる。実際に調査ログ・提案された修正diffを記事に載せられる。
+- 状態: 未選択
+
+### [2026-11-21] zhouxiaoka/autoclip — ローカルLLM/Whisperだけで動く長尺動画のAIハイライト自動切り出しツール
+
+- 出典: https://github.com/zhouxiaoka/autoclip (本日GitHub Trending Pythonで+689star/日。MIT)
+- 概要: YouTube/Bilibiliの長尺動画(ポッドキャスト・インタビュー等)を自動ダウンロードし、LLMでハイライトを判定して字幕・サムネイル付きの短尺クリップに自動分割するPythonツール。クラウドAPIだけでなくOllama/LM Studio(ローカルLLM)とfaster-whisper/SenseVoice(ローカル文字起こし)にも対応し、追加の有料APIキー無しで一通り動かせる。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(zenn.dev/tadayuuに「AI動画編集ツール全般」についての記事はあるがautoclip自体を扱った日本語記事は未検出)
+- 検証難易度: 低(MIT。デスクトップアプリの「用示例项目看看效果(サンプルで試す)」ならAPIキー無しで即体験可能。CLIはPython 3.10+とFFmpegのみで、`autoclip produce talk.mp4 --srt talk.srt --platform douyin --portrait-style podcast --json`のようにローカルの動画+字幕ファイルを使って検証できる。ローカルLLM/Whisper利用時はCPUのみでも動作する想定だが速度はハードウェア依存。GPU必須ではない)
+- 見栄え: 自前で用意した短い動画からAIが選んだハイライト区間・生成字幕・サムネイルを実際に見せられ、「どこを面白いと判定したか」をBefore(元動画)/After(切り出し結果)で比較できる。ある第三方スキャナが`SKILL.md`に「secret-exfiltration」疑いの中程度アラートを出しているとの情報もあり、スキル版を使う場合はコード内容を確認してから使う注意書きを添えるとよい。
+- 状態: 未選択
+
+### [2026-11-21] SenseNova-Loop-9B — 中間層を2回実行して9Bパラメータで14.6B相当の推論性能を狙う「ループ型デコーダ」多モーダルモデル(SenseTime)
+
+- 出典: https://huggingface.co/sensenova/SenseNova-Loop-9B (2026-11-17公開の正式版。プレビュー版は2026-10-30/31公開。コード: https://github.com/OpenSenseNova/SenseNova-Loop。Apache-2.0)
+- 概要: パラメータとして保存するのは約9Bのみだが、中間層ブロックを2回実行〈32層構成で56回のレイヤー実行〉することで約14.6B相当の推論計算量を実現するという「ループ型デコーダ」アーキテクチャの多モーダルモデル(テキスト+画像入力、512Kコンテキスト)。GAIA 69.9%・BIRD 72.34%・Terminal-Bench 2.1 59.55%という自己報告ベンチマークを掲げる(数値は要出典確認)。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(labmemo.com等に日本語の紹介記事はあるがZenn/Qiita/note以外)
+- 検証難易度: 中(Apache-2.0でAPIキー不要。ただし9Bクラスのモデルのためローカル実行にはGPU(4bit量子化で概算10GB VRAM程度という第三者情報あり、要実機確認)が必要になる可能性が高い。Routine実行環境にGPUが無い場合、公開Space(あれば)での対話検証に絞るか、「ループ無し相当〈1回実行〉との応答比較」のような縮小版の概念実証に留める必要がある。進まない場合はローカル検証にエスカレーションする想定)
+- 見栄え: 「同じ重みを2回通すだけでどれくらい応答品質が変わるか」を実際の応答例で比較できれば、アーキテクチャの面白さがそのまま記事のフックになる。ベンチマーク数値の自己報告部分は実際に検証困難なため、記事では自分で試した定性的な応答比較を主役にすべき。
+- 状態: 未選択
+
+### [2026-11-21] HKUDS/CLI-Anything — あらゆるGUIソフトをAIエージェント操作可能なCLIに変換するツール(参考・本日Trending再浮上だが既に周知のため優先度低)
+
+- 出典: https://github.com/HKUDS/cli-anything (本日GitHub Trending Pythonで+767star/日で2位。リポジトリ自体は2026年3月8日作成、Apache-2.0。CLI-Hub: https://clianything.cc)
+- 概要: GIMP・Blender・LibreOffice等デスクトップGUIソフトのソースコードを解析し、AIエージェント(Claude Code等)が操作できるCLIを自動生成するツール。Claude Codeプラグインとして`/plugin install cli-anything`→`/cli-anything ./<対象ソフト>`の1コマンドで生成できる。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(ただしnovita.ai・apidog.com・remio.ai・issoh.co.jp等、Zenn/Qiita/note以外の日本語紹介記事は既に複数存在)
+- 検証難易度: 低(Apache-2.0。Claude Code上でのプラグイン導入のみで追加の有料APIキー・GPU不要。ただし公開〈3月〉から8ヶ月以上経過しており情報自体は目新しくない)
+- 見栄え: 「Claude Codeがこのツールを使って別のGUIソフトをCLI化する」という自己言及的なデモは作りやすいが、日本語以外では既に紹介記事が多く差別化が必要。本日改めてGitHub Trendingで浮上した理由(新バージョン等)が特定できれば採用理由になり得るが、現時点では見送り推奨。
+- 状態: 未選択
