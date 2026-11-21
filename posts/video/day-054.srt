@@ -1,0 +1,67 @@
+1
+00:00:00,000 --> 00:00:05,770
+Day 54: Haru-4B, a full-duplex speech model that listens and
+
+2
+00:00:05,770 --> 00:00:09,520
+speaks at once, run on CPU with no GPU.
+
+3
+00:00:09,970 --> 00:00:14,634
+Haru-4B listens and speaks in the same 133 millisecond frame,
+
+4
+00:00:14,634 --> 00:00:18,840
+7.5 times a second, instead of waiting for turns like a
+
+5
+00:00:18,840 --> 00:00:20,675
+typical voice assistant.
+
+6
+00:00:21,125 --> 00:00:25,937
+Each frame, one chunk of the user's audio goes into a Qwen3.5
+
+7
+00:00:25,937 --> 00:00:28,067
+4B language model backbone.
+
+8
+00:00:28,517 --> 00:00:32,336
+A small MeanFlow head turns that hidden state into the model's
+
+9
+00:00:32,336 --> 00:00:35,969
+own audio in one step, while the backbone predicts the next
+
+10
+00:00:35,969 --> 00:00:37,817
+text token for the same frame.
+
+11
+00:00:38,267 --> 00:00:43,173
+We ran it on CPU only, using the project's own sample clips.
+
+12
+00:00:43,173 --> 00:00:48,242
+It finished, but averaged 435 milliseconds per frame against a
+
+13
+00:00:48,242 --> 00:00:53,311
+133 millisecond target, about 3.3 times slower than real time.
+
+14
+00:00:53,311 --> 00:00:57,644
+The output still replied while the user kept talking.
+
+15
+00:00:58,094 --> 00:01:00,318
+Apache 2.0, from higurashi-ai.
+
+16
+00:01:00,318 --> 00:01:04,913
+Source, license and the full write-up are linked on GitHub and
+
+17
+00:01:04,913 --> 00:01:06,395
+in the Zenn article.
