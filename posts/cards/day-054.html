@@ -189,57 +189,64 @@
   <div class="eyebrow">
     <span>$ day-054</span>
     <span class="divider">/</span>
-    <span class="path">--topic haru4b-cpu-only</span>
+    <span class="path">--topic haru4b-cpu-vs-gpu</span>
     <span class="divider">/</span>
     <span>海外AIネタ100日チャレンジ</span>
   </div>
 
   <div class="heading">
-    <h1>全二重音声対話モデルHaru-4Bを<br>GPUなしのCPUだけで動かす</h1>
-    <p><span class="src">higurashi-ai/Haru-4B</span>(Apache-2.0)を自前ホストでCPU実行。推論は完走したが、1フレーム(133ms)あたり平均435msで、リアルタイムの3.2〜3.5倍遅かった。</p>
+    <h1>全二重音声対話モデルHaru-4Bは<br>GPUで1フレーム133msを切った</h1>
+    <p><span class="src">higurashi-ai/Haru-4B</span>(Apache-2.0)を自前でCPUとGPUの両方で推論。速さは足りたが、同じ録音への返事はseedやデバイスで毎回変わった。</p>
   </div>
 
   <div class="stat-row">
-    <div class="stat-number">3.3x</div>
-    <div class="stat-caption">CPU実測 <strong>435ms/frame</strong> ÷ 設計上の <strong>133ms/frame</strong>(7.5Hz)。GPU推奨モデルをCPUだけで動かした結果の実時間比。</div>
+    <div class="stat-number">87.5ms</div>
+    <div class="stat-caption">RTX 5060 Ti(16GB)での1フレームの処理時間(7回平均)。設計上の <strong>133ms/frame</strong> を下回った。</div>
   </div>
 
-  <!-- ↓↓↓ パターンA: 数値推移チャート -->
-  <section class="block">
-    <div class="block-label">measured ms per frame (8 runs) vs. the model's 133ms design target</div>
-    <div class="chart-wrap">
-      <svg class="chart" viewBox="0 0 580 220" role="img"
-           aria-label="8回の実行いずれも、1フレームの処理時間が設計上の133msを大きく超えていた様子">
-        <g id="grid"></g>
-        <g id="plot"></g>
-      </svg>
-      <div class="chart-tooltip" id="tooltip"></div>
+  <section class="block compare">
+    <div class="block-label">haru-inference: ms per frame vs. the 133ms design target</div>
+    <div class="compare-grid">
+      <div class="compare-panel bad">
+        <div class="compare-title">✗ CPUのみ(リアルタイムの3倍以上遅い)</div>
+        <pre class="compare-output">Xeon 4 cores  435.0ms (avg of 9)
+Ryzen 7 7700  445.7ms</pre>
+      </div>
+      <div class="compare-panel good">
+        <div class="compare-title">✓ RTX 5060 Ti 16GB(133ms以内)</div>
+        <pre class="compare-output">PyTorch codec  72.5-104.9ms
+               (avg of 7: 87.5ms)
+Triton codec   72.5ms</pre>
+      </div>
     </div>
   </section>
-  <!-- ↑↑↑ パターンAここまで -->
 
   <section class="block">
-    <div class="block-label">full-duplex evidence: user audio RMS vs. model text (en_seg.wav)</div>
+    <div class="block-label">same input, different replies (user audio RMS vs. model text)</div>
     <div class="terminal">
       <div class="term-row">
-        <span class="term-tag">t=0.27s</span>
-        <span class="toks">user_rms=0.0205 (話している最中) → model: "Sure"</span>
+        <span class="term-tag">Xeon</span>
+        <span class="toks">発話中に "Sure" "Oh" "that's no good"(相づち)</span>
       </div>
       <div class="term-row">
-        <span class="term-tag">t=1.73s</span>
-        <span class="toks">user_rms=0.0586 (話している最中) → model: " Oh"</span>
+        <span class="term-tag">GPU en</span>
+        <span class="toks">5回中3回は無音、残りは冒頭に "Haru" / "Hello" の1語</span>
       </div>
       <div class="term-row">
-        <span class="term-tag">t=4.40s</span>
-        <span class="toks">user_rms=0.0678 (話している最中) → model: " no"</span>
+        <span class="term-tag">GPU ja</span>
+        <span class="toks">3回とも話し終えた後に一文(ターン制に近い)</span>
       </div>
-      <div class="term-foot">ユーザーの音量が高い=まだ話している最中のフレームに、モデルの相づちが乗っていた。</div>
+      <div class="term-row">
+        <span class="term-tag">Ryzen</span>
+        <span class="toks">発話に重ねて自己紹介を話し続けた(37フレーム中29)</span>
+      </div>
+      <div class="term-foot">1回の出力だけでは、相づちを打つモデルとも反応しないモデルとも言えなかった。</div>
     </div>
   </section>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>モデルカードはNVIDIA GPU(12GB程度)を推奨。今回はCPU(Xeon 4コア・GPUなし)での完走確認に留まり、GPUでの実際のリアルタイム会話(マイク入力)は未検証。</p>
+    <p>オフライン推論(録音を入力)での計測。causal_conv1d / flash-linear-attention は未導入。Webデモはサーバー起動まで確認し、マイクでの会話は未検証。</p>
   </div>
 
   <footer>
@@ -269,126 +276,6 @@
     grid.appendChild(frag);
   })();
 
-  // パターンAの折れ線チャート。data配列を実データ(x=パラメータ値, a/b=系列の数値)に差し替える。
-  // 系列が1つしかない場合は 'b' 関連の行(path/points/end-label)を削除してよい。
-  (function () {
-    var data = [
-      { x: 'en-1', a: 441.5, b: 133 },
-      { x: 'en-2', a: 428.9, b: 133 },
-      { x: 'ja-1', a: 447.8, b: 133 },
-      { x: 'ja-2', a: 423.3, b: 133 },
-      { x: 'ja-3', a: 430.6, b: 133 },
-      { x: 'ja-4', a: 422.1, b: 133 },
-      { x: 'ja-5', a: 462.1, b: 133 },
-      { x: 'ja-6', a: 423.1, b: 133 },
-      { x: 'ja-7', a: 436.2, b: 133 }
-    ];
-    if (!data.length) return;
-
-    var W = 580, H = 220, padL = 30, padR = 78, padT = 10, padB = 28;
-    var plotW = W - padL - padR, plotH = H - padT - padB;
-    var yMax = 500; // 実測値(最大462.1ms)より少し大きい、きりのいい数
-
-    function x(i) { return padL + (plotW * i) / (data.length - 1); }
-    function y(v) { return padT + plotH - (plotH * v) / yMax; }
-
-    var svgNS = 'http://www.w3.org/2000/svg';
-    var grid = document.getElementById('grid');
-    var plot = document.getElementById('plot');
-
-    [0, yMax / 3, (yMax * 2) / 3, yMax].forEach(function (v) {
-      var ly = y(v);
-      var line = document.createElementNS(svgNS, 'line');
-      line.setAttribute('x1', padL); line.setAttribute('x2', W - padR);
-      line.setAttribute('y1', ly); line.setAttribute('y2', ly);
-      line.setAttribute('class', 'chart-grid');
-      grid.appendChild(line);
-
-      var label = document.createElementNS(svgNS, 'text');
-      label.setAttribute('x', padL - 8); label.setAttribute('y', ly + 3);
-      label.setAttribute('text-anchor', 'end');
-      label.setAttribute('class', 'chart-axis-label');
-      label.textContent = Math.round(v) + 'ms';
-      grid.appendChild(label);
-    });
-
-    data.forEach(function (d, i) {
-      var lbl = document.createElementNS(svgNS, 'text');
-      lbl.setAttribute('x', x(i)); lbl.setAttribute('y', H - 6);
-      lbl.setAttribute('text-anchor', 'middle');
-      lbl.setAttribute('class', 'chart-axis-label');
-      lbl.textContent = d.x;
-      grid.appendChild(lbl);
-    });
-
-    function buildPath(key) {
-      return data.map(function (d, i) {
-        return (i === 0 ? 'M' : 'L') + x(i) + ' ' + y(d[key]);
-      }).join(' ');
-    }
-
-    ['a', 'b'].forEach(function (key) {
-      if (data[0][key] === undefined) return;
-      var path = document.createElementNS(svgNS, 'path');
-      path.setAttribute('d', buildPath(key));
-      path.setAttribute('class', 'line-' + key);
-      plot.appendChild(path);
-    });
-
-    var tooltip = document.getElementById('tooltip');
-    var wrap = document.querySelector('.chart-wrap');
-
-    ['a', 'b'].forEach(function (key) {
-      if (data[0][key] === undefined) return;
-      data.forEach(function (d, i) {
-        var cx = x(i), cy = y(d[key]);
-
-        var halo = document.createElementNS(svgNS, 'circle');
-        halo.setAttribute('cx', cx); halo.setAttribute('cy', cy); halo.setAttribute('r', 5);
-        halo.setAttribute('class', 'pt-halo');
-        plot.appendChild(halo);
-
-        var pt = document.createElementNS(svgNS, 'circle');
-        pt.setAttribute('cx', cx); pt.setAttribute('cy', cy); pt.setAttribute('r', 3.5);
-        pt.setAttribute('class', 'pt-' + key);
-        plot.appendChild(pt);
-
-        var hit = document.createElementNS(svgNS, 'circle');
-        hit.setAttribute('cx', cx); hit.setAttribute('cy', cy); hit.setAttribute('r', 12);
-        hit.setAttribute('class', 'hit');
-        hit.addEventListener('pointerenter', function () {
-          var rect = wrap.getBoundingClientRect();
-          var scale = rect.width / W;
-          tooltip.style.left = (cx * scale) + 'px';
-          tooltip.style.top = (cy * scale) + 'px';
-          tooltip.textContent = d.x + '  ' + d[key] + 'ms';
-          tooltip.classList.add('show');
-        });
-        hit.addEventListener('pointerleave', function () {
-          tooltip.classList.remove('show');
-        });
-        plot.appendChild(hit);
-      });
-    });
-
-    var last = data[data.length - 1];
-    ['a', 'b'].forEach(function (key) {
-      if (last[key] === undefined) return;
-      var label = document.createElementNS(svgNS, 'text');
-      label.setAttribute('x', x(data.length - 1) + 10);
-      label.setAttribute('y', y(last[key]) - 4);
-      label.setAttribute('class', 'end-label ' + key);
-      label.textContent = last[key] + 'ms';
-      plot.appendChild(label);
-
-      var name = document.createElementNS(svgNS, 'text');
-      name.setAttribute('x', x(data.length - 1) + 10);
-      name.setAttribute('y', y(last[key]) + 11);
-      name.setAttribute('class', 'series-name');
-      name.textContent = key === 'a' ? 'measured (CPU)' : '133ms target';
-      plot.appendChild(name);
-    });
-  })();
 </script>
 
 <!--

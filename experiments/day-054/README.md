@@ -53,10 +53,23 @@ done
   (`403 Forbidden: no rule or network setting allows this host`)。Routine環境固有の制約のため記事には
   反映していない。
 
-## 人間が確認・再現すべき点
+## ローカル検証(2026-11-21, matsu PC, RTX 5060 Ti 16GB)
 
-- GPU搭載PCで `python -m haru.server --hf-repo higurashi-ai/Haru-4B` を起動し、
-  `http://localhost:8998` でマイクを使った実際のリアルタイム全二重会話を試す
-  (このRoutine実行環境にはGPUが無く、マイクも無いため未検証)。
-- 公開Spaces(`hugging-apps/haru-4b` / `akhaliq/haru-4b-studio`)にブラウザからアクセスし、
-  同じ公式サンプル音声・カードで応答が再現するか比較する。
+結果は `results.md` の7節。GPUでは1フレーム72.5〜104.9ms(133msを下回る)、Ryzen 7 7700のCPUでは445.7ms。
+
+```bash
+uv venv -p 3.12 .venv
+uv pip install torch --index-url https://download.pytorch.org/whl/cu128
+uv pip install -e "./Haru/haru[triton]"
+bash local/run_batch.sh          # ~/haru-verify で実行した。GPU 7回 + Triton 1回 + CPU 1回
+python local/overlap.py assets/en_seg.wav local/out/en_cpu_card_s1.jsonl   # 発話の重なり
+haru-server --hf-repo higurashi-ai/Haru-4B --host 127.0.0.1 --port 8998    # Webデモ(起動のみ確認)
+```
+
+- `logs/07`〜`16` — ローカル検証の各実行ログとWebデモサーバーの起動ログ。
+- `local/out/` — 出力音声・フレーム単位の文字起こし。`local/overlap-results.txt` — 発話の重なりの集計。
+
+## 未検証
+
+- ブラウザのマイクを使った実際のリアルタイム全二重会話(Webデモサーバーの起動・warm-upまでは確認済み)。
+- 公開Spaces(`hugging-apps/haru-4b` / `akhaliq/haru-4b-studio`)での比較。

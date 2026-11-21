@@ -47,7 +47,7 @@ because `flash-linear-attention` is not installed. This is correct but much slow
 Sure  Oh  that's no good
 ```
 
-実行した8回(英語2回・日本語6回、入力は後述の公式サンプル音声)の「1フレームあたりの実測時間」:
+実行した9回(英語2回・日本語7回、入力は後述の公式サンプル音声)の「1フレームあたりの実測時間」:
 
 | 実行 | 1フレームの実測時間 |
 |---|---|
@@ -60,6 +60,8 @@ Sure  Oh  that's no good
 | 日本語(5秒無音追加, seed=1) | 462.1 ms |
 | 日本語(5秒無音追加, seed=7) | 423.1 ms |
 | 日本語(5秒無音追加, seed=123) | 436.2 ms |
+
+(注: seed=1/7/123の3回は出力音声・文字起こし(`out_ja_seed_*.wav` / `transcript_ja_seed_*.jsonl`)のみが残っており、標準出力ログは `logs/` にコミットされていない。2026-11-21のローカル検証時点で確認。)
 
 平均は約**435ms/フレーム**。モデルの設計上1フレームは133ms(7.5Hz)なので、
 CPU(4コア, Intel Xeon @2.10GHz)では**リアルタイムの約3.2〜3.5倍遅い**。
@@ -130,3 +132,90 @@ frame = int(sr * 0.133)
 - 公開Spaces(`hugging-apps/haru-4b` / `akhaliq/haru-4b-studio`)経由の検証は、このRoutine環境の
   ネットワークポリシーで`*.hf.space`への接続がブロックされたため未実施(ローカルPCのブラウザからであれば
   問題なく開けるはずである)。
+
+## 7. ローカル検証(2026-11-21, matsu PC)
+
+環境: Windows + WSL2(Ubuntu 24.04、Linux 6.6)、CPU AMD Ryzen 7 7700(8コア16スレッド)、RAM 30GB、
+GPU NVIDIA GeForce RTX 5060 Ti(16GB)、Python 3.12、torch 2.11.0+cu128、transformers 5.23.0、
+Haru commit `7fe6b7665f8bf035998f401f8cb779fbe53f2751`(2026-11-13)。
+`causal_conv1d` / `flash-linear-attention` は未導入(CPU検証と同じフォールバック警告が出る状態)。
+入力・カードは本ディレクトリの `assets/` / `card_en.txt` / `card_ja.txt` をそのまま使った。
+ログは `logs/07`〜`16`、出力音声・文字起こしは `local/out/`、実行スクリプトは `local/run_batch.sh`。
+
+### 7-1. インストール
+
+```
+$ uv venv -p 3.12 .venv
+$ uv pip install torch --index-url https://download.pytorch.org/whl/cu128
+$ uv pip install -e "./Haru/haru[triton]"
+$ .venv/bin/python -c "import torch,transformers;print(torch.__version__,torch.cuda.is_available(),torch.cuda.get_device_name(0),transformers.__version__)"
+2.11.0+cu128 True NVIDIA GeForce RTX 5060 Ti 5.23.0
+```
+
+モデル(`model.safetensors` 約10.5GB)のダウンロードは約2分(`Fetching 3 files: 100% 3/3 [02:06<00:00]`)。
+
+### 7-2. GPUでは1フレームが133msを下回った
+
+```
+$ .venv/bin/haru-inference assets/en_seg.wav out/en_gpu_card.wav --reference assets/en_ref.wav \
+    --device cuda --transcript out/en_gpu_card.jsonl --system-prompt-file card_en.txt
+...
+75 frames (10.0 s), 76.8 ms per frame -> out/en_gpu_card.wav
+Haru
+```
+
+| 実行(device / 入力 / seed) | 1フレームの実測時間 | 出力テキスト |
+|---|---|---|
+| GPU / 英語カード / seed=-1 | 76.8 ms | "Haru" |
+| GPU / 英語カード / seed=1 | 95.7 ms | (無音) |
+| GPU / 英語カード / seed=7 | 104.9 ms | (テキストなし) |
+| GPU / 英語カード / seed=123 | 82.6 ms | "Hello" |
+| GPU / 日本語カード・5秒無音追加 / seed=1 | 87.5 ms | "この山道を登りなげて" |
+| GPU / 日本語カード・5秒無音追加 / seed=7 | 77.7 ms | "この年になって 自分には もう何の用もなかった。" |
+| GPU / 日本語カード・5秒無音追加 / seed=123 | 87.0 ms | "人間は 山道を登る というよりも下るのである" |
+| GPU / 英語カード / seed=1 / `--codec-backend triton` | 72.5 ms | (無音) |
+| CPU(Ryzen 7 7700) / 英語カード / seed=1 | 445.7 ms | "Oh hi I'm Haru I'm twenty two years old I go running most mornings It's good for my brain and it clears my head I also am very curious about lot of things" |
+
+- GPU(PyTorch codec)7回の平均は約87.5ms/フレームで、設計上の133msの約0.66倍。リアルタイムより速い。
+- Triton codecでは72.5ms/フレーム(1回のみ)。
+- CPU(Ryzen 7 7700)は445.7ms/フレームで、セクション2のXeon 4コアの結果(平均約435ms)とほぼ同じ。リアルタイムの約3.4倍遅い。
+- GPU実行時のプロセス最大RSSは約13.4GB(`/usr/bin/time`)、Webデモ起動後のGPUメモリ使用量は13,592MiB(起動前1,609MiB)。
+- 同じseedでもGPUとCPUでは出力が異なった(例: 英語seed=1はGPUで無音、CPUで長い自己紹介)。
+
+### 7-3. Webデモサーバーの起動
+
+```
+$ .venv/bin/haru-server --hf-repo higurashi-ai/Haru-4B --host 127.0.0.1 --port 8998
+11:26:01 haru.server: serving on http://127.0.0.1:8998 (the model is loading)
+11:26:06 haru.backends: loaded higurashi-ai/Haru-4B on cuda:0 in 6.7 s
+11:26:09 haru.backends: warm-up: prompt of 593 positions in 1.8 s, then 86.1 ms per frame (a frame is 133 ms of audio)
+11:26:09 haru.server: ready
+$ curl -s -o /dev/null -w "HTTP %{http_code}\n" http://127.0.0.1:8998/
+HTTP 200
+```
+
+サーバーの起動とwarm-upまでは確認した。ブラウザのマイクを使った実際の会話は試していない。
+
+### 7-4. 出力テキストとユーザー音声の重なり(`local/overlap.py`、結果は `local/overlap-results.txt`)
+
+セクション3と同じく、フレームごとのユーザー音声RMSが0.01を超えるかで「話している最中」を判定した。
+ユーザー音声は英語0.0〜9.84s、日本語0.0〜8.38sに発話がある(日本語は末尾に5秒の無音を追加)。
+
+| 実行 | テキストのあるフレーム | うちユーザー発話中 |
+|---|---|---|
+| GPU 英語 seed=-1 / 1 / 7 / 123 / triton | 2 / 0 / 0 / 1 / 0 | 0 / 0 / 0 / 0 / 0 |
+| CPU 英語 seed=1 | 37 | 29 |
+| GPU 日本語 seed=1 / 7 / 123 | 7 / 12 / 16 | 0 / 0 / 0 |
+
+- GPUの英語5回は、無音か冒頭0.40sの1語("Haru" / "Hello")だけで、ユーザー発話中のテキストは無かった。
+- CPUの英語seed=1は、ユーザーが話している間も自己紹介を話し続けた(37フレーム中29フレームが発話中)。
+- GPUの日本語3回は、いずれもユーザーが話し終えた後(9.73s / 9.87s / 12.80s開始)の無音区間で話した。
+- つまり「ユーザーの発話中に短い相づちを返す」挙動はセクション3の1例(CPU, seed=-1)以外では再現せず、
+  実行(seed・デバイス)によって「黙って聞く」「話し終えてから答える」「相手の発話に重ねて話し続ける」まで大きくばらついた。
+
+### 7-5. PRの記述との差分
+
+- PRの「CPUではリアルタイムの約3.2〜3.5倍遅い」は、別CPU(Ryzen 7 7700)でも445.7ms/フレームで再現した。
+- GPU(RTX 5060 Ti 16GB)では72.5〜104.9ms/フレームで、オフライン推論ではリアルタイムより速く動いた。
+- 「話している最中に相づちを返す」はセクション3の1回で観測されたものであり、毎回起きる挙動ではなかった。
+- 実行回数は9回(PR時点の記事・X投稿・カード・動画の「8回」は誤り)。

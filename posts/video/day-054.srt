@@ -1,67 +1,75 @@
 1
-00:00:00,000 --> 00:00:05,770
+00:00:00,000 --> 00:00:05,679
 Day 54: Haru-4B, a full-duplex speech model that listens and
 
 2
-00:00:05,770 --> 00:00:09,520
-speaks at once, run on CPU with no GPU.
+00:00:05,679 --> 00:00:10,507
+speaks at once, timed on CPU and on a consumer GPU.
 
 3
-00:00:09,970 --> 00:00:14,634
+00:00:10,957 --> 00:00:15,646
 Haru-4B listens and speaks in the same 133 millisecond frame,
 
 4
-00:00:14,634 --> 00:00:18,840
+00:00:15,646 --> 00:00:19,874
 7.5 times a second, instead of waiting for turns like a
 
 5
-00:00:18,840 --> 00:00:20,675
+00:00:19,874 --> 00:00:21,719
 typical voice assistant.
 
 6
-00:00:21,125 --> 00:00:25,937
+00:00:22,169 --> 00:00:27,071
 Each frame, one chunk of the user's audio goes into a Qwen3.5
 
 7
-00:00:25,937 --> 00:00:28,067
+00:00:27,071 --> 00:00:29,240
 4B language model backbone.
 
 8
-00:00:28,517 --> 00:00:32,336
+00:00:29,690 --> 00:00:33,456
 A small MeanFlow head turns that hidden state into the model's
 
 9
-00:00:32,336 --> 00:00:35,969
+00:00:33,456 --> 00:00:37,040
 own audio in one step, while the backbone predicts the next
 
 10
-00:00:35,969 --> 00:00:37,817
+00:00:37,040 --> 00:00:38,862
 text token for the same frame.
 
 11
-00:00:38,267 --> 00:00:43,173
-We ran it on CPU only, using the project's own sample clips.
+00:00:39,312 --> 00:00:44,393
+On CPU it finished, but took about 435 milliseconds per frame,
 
 12
-00:00:43,173 --> 00:00:48,242
-It finished, but averaged 435 milliseconds per frame against a
+00:00:44,393 --> 00:00:47,590
+over three times slower than real time.
 
 13
-00:00:48,242 --> 00:00:53,311
-133 millisecond target, about 3.3 times slower than real time.
+00:00:47,590 --> 00:00:51,524
+On an RTX 5060 Ti it averaged 87.5 milliseconds,
 
 14
-00:00:53,311 --> 00:00:57,644
-The output still replied while the user kept talking.
+00:00:51,524 --> 00:00:54,229
+under the 133 millisecond target.
 
 15
-00:00:58,094 --> 00:01:00,318
-Apache 2.0, from higurashi-ai.
+00:00:54,229 --> 00:00:58,245
+Replies to the same clip changed from run to run,
 
 16
-00:01:00,318 --> 00:01:04,913
-Source, license and the full write-up are linked on GitHub and
+00:00:58,245 --> 00:01:01,359
+from silence to talking over the user.
 
 17
-00:01:04,913 --> 00:01:06,395
+00:01:01,809 --> 00:01:03,936
+Apache 2.0, from higurashi-ai.
+
+18
+00:01:03,936 --> 00:01:08,332
+Source, license and the full write-up are linked on GitHub and
+
+19
+00:01:08,332 --> 00:01:09,750
 in the Zenn article.

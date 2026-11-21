@@ -1,0 +1,9 @@
+### 01-gpu-en-card: assets/en_seg.wav out/en_gpu_card.wav --reference assets/en_ref.wav --device cuda --transcript out/en_gpu_card.jsonl --system-prompt-file card_en.txt
+
+
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `chunk_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `fused_recurrent_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+75 frames (10.0 s), 76.8 ms per frame -> out/en_gpu_card.wav
+Haru
