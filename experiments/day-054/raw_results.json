@@ -1,0 +1,10 @@
+[
+  {
+    "label": "english example (en_seg.wav / en_ref.wav)",
+    "error": "ProxyError('403 Forbidden (agent proxy: no rule or network setting allows this host)')"
+  },
+  {
+    "label": "japanese example (ja_seg.wav / ja_ref.wav)",
+    "error": "ProxyError('403 Forbidden (agent proxy: no rule or network setting allows this host)')"
+  }
+]

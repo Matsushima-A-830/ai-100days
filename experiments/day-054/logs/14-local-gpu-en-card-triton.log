@@ -1,0 +1,8 @@
+### gpu-en-card-triton: assets/en_seg.wav out/en_gpu_card_triton.wav --reference assets/en_ref.wav --device cuda --transcript out/en_gpu_card_triton.jsonl --system-prompt-file card_en.txt --seed 1 --codec-backend triton
+
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `chunk_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `fused_recurrent_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+75 frames (10.0 s), 72.5 ms per frame -> out/en_gpu_card_triton.wav
+wall=31.91s maxrss=13388912KB

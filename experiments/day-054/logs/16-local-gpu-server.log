@@ -1,0 +1,9 @@
+11:26:01 haru.server: serving on http://127.0.0.1:8998 (the model is loading)
+11:26:01 httpx2: HTTP Request: GET https://huggingface.co/api/models/higurashi-ai/Haru-4B/revision/main "HTTP/1.1 200 OK"
+11:26:06 haru.backends: loaded higurashi-ai/Haru-4B on cuda:0 in 6.7 s
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `chunk_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `fused_recurrent_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+11:26:09 haru.backends: warm-up: prompt of 593 positions in 1.8 s, then 86.1 ms per frame (a frame is 133 ms of audio)
+11:26:09 haru.server: ready

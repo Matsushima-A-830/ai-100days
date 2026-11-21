@@ -1,0 +1,138 @@
+{
+  "day": 54,
+  "project": "Haru-4B",
+  "slug": "haru4b-cpu-vs-gpu",
+  "tagline": "A full-duplex speech model, timed on CPU and on GPU",
+  "source_url": "huggingface.co/higurashi-ai/Haru-4B",
+  "license": "Apache-2.0",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 54: Haru-4B, a full-duplex speech model that listens and speaks at once, timed on CPU and on a consumer GPU."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "Processes 133ms audio frames, 7.5 times a second",
+        "Generates its own audio and text from every frame",
+        "Listens and speaks in the same frame, not in turns"
+      ],
+      "narration": "Haru-4B listens and speaks in the same 133 millisecond frame, 7.5 times a second, instead of waiting for turns like a typical voice assistant."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {
+          "id": "user",
+          "label": "User frame",
+          "sub": "133ms audio in",
+          "pos": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "lm",
+          "label": "Language model",
+          "sub": "Qwen3.5-4B backbone",
+          "pos": [
+            0,
+            1
+          ],
+          "span": 2
+        },
+        {
+          "id": "head",
+          "label": "Audio head",
+          "sub": "MeanFlow, 1 step",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "id": "text",
+          "label": "Text token",
+          "sub": "same frame",
+          "pos": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "out",
+          "label": "Model frame",
+          "sub": "133ms audio+text out",
+          "pos": [
+            0,
+            3
+          ],
+          "span": 2
+        }
+      ],
+      "edges": [
+        {
+          "from": "user",
+          "to": "lm",
+          "label": "listen"
+        },
+        {
+          "from": "lm",
+          "to": "head",
+          "label": "hidden state"
+        },
+        {
+          "from": "lm",
+          "to": "text",
+          "label": "hidden state"
+        },
+        {
+          "from": "head",
+          "to": "out",
+          "label": "speak"
+        },
+        {
+          "from": "text",
+          "to": "out",
+          "label": "speak"
+        }
+      ],
+      "steps": [
+        {
+          "focus": [
+            "user",
+            "lm"
+          ],
+          "narration": "Each frame, one chunk of the user's audio goes into a Qwen3.5 4B language model backbone."
+        },
+        {
+          "focus": [
+            "lm",
+            "head",
+            "text",
+            "out"
+          ],
+          "narration": "A small MeanFlow head turns that hidden state into the model's own audio in one step, while the backbone predicts the next text token for the same frame."
+        }
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "87.5ms",
+      "caption": "Average per frame on an RTX 5060 Ti, under the 133ms target",
+      "lines": [
+        "CPU:    435-446ms/frame",
+        "GPU:    72.5-105ms/frame",
+        "target: 133ms/frame (7.5Hz)"
+      ],
+      "narration": "On CPU it finished, but took about 435 milliseconds per frame, over three times slower than real time. On an RTX 5060 Ti it averaged 87.5 milliseconds, under the 133 millisecond target. Replies to the same clip changed from run to run, from silence to talking over the user."
+    },
+    {
+      "type": "outro",
+      "narration": "Apache 2.0, from higurashi-ai. Source, license and the full write-up are linked on GitHub and in the Zenn article."
+    }
+  ]
+}

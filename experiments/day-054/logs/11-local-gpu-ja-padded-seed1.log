@@ -1,0 +1,9 @@
+### gpu-ja-padded-seed1: assets/ja_seg_padded.wav out/ja_gpu_padded_s1.wav --reference assets/ja_ref.wav --device cuda --transcript out/ja_gpu_padded_s1.jsonl --system-prompt-file card_ja.txt --seed 1
+
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `chunk_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `fused_recurrent_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+105 frames (14.0 s), 87.5 ms per frame -> out/ja_gpu_padded_s1.wav
+この山道を登りなげて
+wall=21.73s maxrss=13389268KB
