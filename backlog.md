@@ -2126,3 +2126,48 @@
 - 検証難易度: 低(Apache-2.0。Claude Code上でのプラグイン導入のみで追加の有料APIキー・GPU不要。ただし公開〈3月〉から8ヶ月以上経過しており情報自体は目新しくない)
 - 見栄え: 「Claude Codeがこのツールを使って別のGUIソフトをCLI化する」という自己言及的なデモは作りやすいが、日本語以外では既に紹介記事が多く差別化が必要。本日改めてGitHub Trendingで浮上した理由(新バージョン等)が特定できれば採用理由になり得るが、現時点では見送り推奨。
 - 状態: 未選択
+
+### [2026-11-22] mvanhorn/last30days-skill — Reddit/HN/Polymarket等を横断して「直近30日の話題」を調査するClaude Codeスキル(本チャレンジのリサーチRoutine自体と同じ発想)
+
+- 出典: https://github.com/mvanhorn/last30days-skill (MIT。本日GitHub Trending Pythonで+673star/日、累計約72.6k star)
+- 概要: `/last30days <トピック>`で、Reddit・Hacker News・GitHub・Polymarket(キー不要)に加えX・YouTube・TikTok等(要APIキーまたはyt-dlp)を横断調査し、エンゲージメント(upvote・いいね・市場価格等)でランキングしたブリーフを生成するClaude Code/Codex/Cursor/Gemini CLI向けAgent Skill。SQLiteでの調査履歴蓄積・トピック自動発見機能も持つ。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介・検証記事は未検出)
+- 検証難易度: 低。MIT、Reddit/HN/GitHub/Polymarket等のキー不要ソースだけでも動作するため追加の有料APIキー不要(X・TikTok等の拡張ソースは任意でスキップ可能)。GPU不要。`/plugin marketplace add mvanhorn/last30days-skill`→`/plugin install last30days`で導入し、6時間以内に複数トピックでの調査結果を比較できる。
+- 見栄え: 本チャレンジのリサーチRoutine自身が毎朝行っている「海外情報源を横断してネタ候補を見つける」作業とほぼ同じ発想のツールであるため、「このツールに同じテーマを調査させた結果と、Routineが今日実際に見つけた候補を比較する」という強い自己言及的なデモが作れる。
+- 状態: 未選択
+
+### [2026-11-22] jingyaogong/minimind — 64Mパラメータの小型LLMをスクラッチから2時間で学習できる教育用プロジェクト
+
+- 出典: https://github.com/jingyaogong/minimind (Apache-2.0。本日GitHub Trending Pythonで+473star/日、累計約68.6k star。2026-04-01に"minimind-3"としてQwen3系アーキテクチャに刷新)
+- 概要: トークナイザ学習・事前学習・SFT・LoRA・DPO・PPO/GRPO/CISPO強化学習・ツール利用・蒸留まで、LLM構築パイプライン全体を純PyTorchで追体験できる教育用リポジトリ。著者環境ではRTX 3090 1枚で64M(Dense)モデルの事前学習+SFTが約2.3時間、MoE版が約3.2時間で完了すると報告されている。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(ai-heartland.com等の日本語紹介記事はあるがZenn/Qiita/note以外)
+- 検証難易度: 低〜中。Apache-2.0で追加の有料APIキー不要。CPU/MPSでも動作するとREADMEに明記されているが著者はRTX 3090前提で時間を計測しており、GPU無しのRoutine実行環境では学習データ・ステップ数を大きく縮小した縮小版パイプラインの動作確認に絞る必要がある(フル再現はローカルGPU環境にエスカレーションする可能性が高い)。
+- 見栄え: 「大規模言語モデルを自分の手でゼロから学習させ、どの程度の対話ができるようになるか」を実際の生成例で見せられる教育的な切り口。本チャレンジで多数扱ってきた「既成の大型モデルを試す」系とは逆に「小さく自作する」系であり差別化になる。
+- 状態: 未選択
+
+### [2026-11-22] p-e-w/heretic — 追加学習なしでLLMの拒否応答(検閲)を自動的に抑制するOptuna最適化ツール
+
+- 出典: https://github.com/p-e-w/heretic (AGPL-3.0。本日GitHub Trending Pythonで言及、累計約42.6k star・+119star/日。初版は2025年11月公開)
+- 概要: directional ablation(いわゆる"abliteration")とOptunaのTPEベース最適化を組み合わせ、学習済みLLMの拒否率とKLダイバージェンスを同時に最小化するパラメータを自動探索して、追加学習なしに拒否応答(検閲)を抑制するツール。著者によれば手動のabliterationより低いKLダイバージェンス(=元モデルへの改変が少ない)で同等の拒否抑制を達成するという。sycophancy(過度な同意)や冗長な応答の抑制等、他の挙動改変にも設定で対応する。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲ではZenn/Qiita/note以外にも、Gigazine・Hacker News Koreaの紹介記事はあるが日本語の一次検証記事は未検出。pasqualepillitteri.itの「/ja/」パスは機械翻訳の可能性が高く日本語の一次記事としては数えない)
+- 検証難易度: 中。`pip install heretic-llm`で導入可能でAPIキー不要だが、著者計測ではRTX 3090で4Bモデルの処理に約30〜40分かかっており、Routine実行環境にGPUが無い場合はさらに小型のモデル(1B未満)かCPU実行の大幅な試行回数削減が必要。AGPL-3.0のためコードを改変して配布する場合はソース公開義務に留意。
+- 見栄え: 「ツールの既定設定でモデルの挙動(拒否率・応答の質)がどう変わるか」というBefore/After比較が分かりやすい。ただし「検閲解除」という性質上、記事では解釈可能性・活性化工学(activation engineering)としての技術検証に焦点を当て、有害情報の生成を助長するような使い方・出力例は書かない方針を明記する必要がある。
+- 状態: 未選択
+
+### [2026-11-22] SWE-agent/mini-swe-agent — bashだけをツールに使う約100行の最小構成コーディングエージェント(v2)
+
+- 出典: https://github.com/SWE-agent/mini-swe-agent (MIT。本日GitHub Trending Pythonで言及、累計約10.0k star・+35star/日。v2リリースに伴う移行ガイドが追加)
+- 概要: ツールをbashのみに絞り、`subprocess.run`で逐次実行するだけの線形な会話履歴を持つ最小構成のAIエージェント。SWE-agent開発チーム自身がSWE-agent本体より多くの利用者にまず推奨する軽量版と位置付けており、SWE-bench Verifiedで74%超のスコアを報告している。litellm経由で多様なLLMプロバイダに対応する。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介・検証記事は未検出)
+- 検証難易度: 低。MIT、GPU不要。LLMプロバイダはlitellm経由で選べるため、Claude Code自身(Anthropic)を使えば追加の有料APIキー不要。`pip install mini-swe-agent`→`mini`で即試せる。本リポジトリ自身に意図的な小さなバグを仕込み、mini-swe-agentがbashのみでどこまで直せるかを試す自己言及的な検証が6時間以内に完結できる。
+- 見栄え: 「わずか100行のエージェントが実際にGitHub issue相当のバグを直せるか」というシンプルな分かりやすさがあり、本チャレンジ自身のリポジトリを被験対象にできる自己言及性も高い。
+- 状態: 未選択
+
+### [2026-11-22] google-research/paper-orchestra — アイデアと実験ログからLaTeX論文を自動生成するGoogle Research発マルチエージェントフレームワーク(参考・Gemini/OpenAI APIキー必須のため今回は選ばない)
+
+- 出典: https://github.com/google-research/paper-orchestra (Apache-2.0。本日GitHub Trending Pythonで+253star/日、累計約5.9k star)
+- 概要: アイデア・実験ログ・文献調査を入力に、アウトライン作成・文献レビュー・各セクション執筆・推敲・図表生成を分担する複数エージェントが協調してLaTeX形式の論文草稿を生成するフレームワーク。Streamlit製のデモUIとCLIの両方を提供する。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介記事は未検出)
+- 検証難易度: 高(本リポジトリの方針上)。リポジトリ自体はApache-2.0だが、動作にはSemantic Scholar APIキーに加え、モデルプロバイダとしてGemini(Vertex AIまたはGemini APIキー)かOpenAIのいずれかの認証情報が必須で、READMEにAnthropicの記載は無い。Gemini APIには無料枠があるものの、本Routineには現時点でGemini/OpenAI向けの環境変数が登録されておらず、CLAUDE.mdの「有料APIキー必須の候補は選ばない」方針に沿い今回は見送る。導入する場合はCLAUDE.md更新とRoutineへの新規環境変数登録が前提になる。
+- 見栄え: 高い(本チャレンジ自体が「検証して記事を書く」活動であるため、「論文を書くエージェント」という自己言及的な切り口は魅力的)。APIキー要件が解消されれば再検討の価値がある。
+- 状態: 未選択
