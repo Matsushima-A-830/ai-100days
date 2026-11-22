@@ -1,0 +1,4 @@
+loops=1: digits-concat 1/20, last-number 1/20
+loops=2: digits-concat 19/20, last-number 19/20
+loops=3: digits-concat 17/20, last-number 18/20
+loops=4: digits-concat 10/20, last-number 11/20

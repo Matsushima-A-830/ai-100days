@@ -1,0 +1,67 @@
+[transformers] `torch.bfloat16` is not supported for AWQ CUDA/XPU kernels yet. Casting to `torch.float16`.
+INFO  LogBar: headless/CI mode; progress animations disabled.                   
+WARN  Python GIL is enabled: Multi-gpu quant acceleration for MoE models is sub-optimal and multi-core accelerated cpu packing is also disabled. We recommend Python >= 3.13.3t with Pytorch > 2.8 for mult-gpu quantization and multi-cpu packing with env `PYTHON_GIL=0`.
+INFO  ENV: Auto setting PYTORCH_ALLOC_CONF='expandable_segments:True,max_split_size_mb:256,garbage_collection_threshold:0.7' for memory saving.
+INFO  ENV: Auto setting CUDA_DEVICE_ORDER=PCI_BUS_ID for correctness.           
+INFO    ┌─────────────┐    ┌────────────────────────┐    ┌────────────┐    ┌─────────┐ │ GPT-QModel  │ -> │ ▓▓▓▓▓▓▓▓▓▓▓▓ 16bit     │ -> │ ▒▒▒▒ 8bit  │ -> │ ░░ 4bit │ └─────────────┘    └────────────────────────┘    └────────────┘    └─────────┘ GPT-QModel   : 7.6.0 Transformers : 5.18.0 Torch        : 2.11.0+cu130 Triton       : 3.6.0
+INFO  Kernel: Auto-selection: adding candidate `AwqMarlinLinear`                
+INFO  Kernel: selected -> `AwqMarlinLinear`.                                    
+[transformers] [1mSenseNovaLoopForConditionalGeneration LOAD REPORT[0m from: models/SenseNova-Loop-9B-AWQ
+Key                                       | Status     | 
+------------------------------------------+------------+-
+model.language_model.embed_tokens.qweight | UNEXPECTED | 
+model.language_model.embed_tokens.scales  | UNEXPECTED | 
+lm_head.qweight                           | UNEXPECTED | 
+model.language_model.embed_tokens.qzeros  | UNEXPECTED | 
+lm_head.qzeros                            | UNEXPECTED | 
+lm_head.scales                            | UNEXPECTED | 
+model.language_model.loop_gate.logits     | UNEXPECTED | 
+lm_head.weight                            | MISSING    | 
+model.language_model.embed_tokens.weight  | MISSING    | 
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+INFO  gc.collect() reclaimed 138 objects in 0.240s                              
+loaded in 6.0s
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `chunk_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+order emb=awq head=awq: en NLL=20.2624 (71 tokens)
+order emb=awq head=seq: en NLL=24.6403 (71 tokens)
+order emb=seq head=awq: en NLL=1.0140 (71 tokens)
+order emb=seq head=seq: en NLL=17.5582 (71 tokens)
+chosen: emb=seq,head=awq
+===== loops=2 (decoder layer executions per token: 56) =====
+[nll en] loss=1.0140 ppl=2.757
+[nll ja] loss=2.3141 ppl=10.116
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `fused_recurrent_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+[mul_example] 3 tok, 1.13 tok/s
+91
+[bat_ball] 103 tok, 1.42 tok/s
+Let the ball cost **x** dollars. Then the bat costs **x + 1.00** dollars. Together they cost:
+\[
+x + (x + 1.00) = 1.10
+\]
+\[
+2x + 1.00 = 1.10 \implies 2x = 0.10 \implies x = 0.05
+\]
+**The ball costs 5 cents.**
+[widgets] 48 tok, 1.45 tok/s
+It would take **5 minutes**. Since each machine produces one widget every 5 minutes, 100 machines working simultaneously would each produce one widget in that same 5-minute interval, resulting in 100 widgets total.
+[sally] 48 tok, 1.29 tok/s
+Sally has **2** sisters.
+Since each of Sally's 3 brothers has 2 sisters, and those sisters must be the same girls (Sally plus her sisters), there are 2 sisters in total besides Sally.
+[ja_capital] 7 tok, 1.35 tok/s
+日本の首都は東京です。
+[fib_code] 60 tok, 1.36 tok/s
+```python
+def fib(n):
+    if n <= 0:
+        return 0
+    a, b = 0, 1
+    for _ in range(n - 1):
+        a, b = b, a + b
+    return b
+```
+[mul] 19/20 correct
+peak GPU memory allocated: 8.18 GiB

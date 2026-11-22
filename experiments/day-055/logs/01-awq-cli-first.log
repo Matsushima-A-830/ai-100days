@@ -1,0 +1,27 @@
+Traceback (most recent call last):
+  File "/home/matsu/loop-verify/.venv/bin/sensenova-loop", line 10, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/matsu/loop-verify/SenseNova-Loop/src/sensenova_loop/cli.py", line 70, in main
+    engine = LoopInference(args.model_path, device=args.device, dtype=getattr(torch, args.dtype),
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matsu/loop-verify/SenseNova-Loop/src/sensenova_loop/inference.py", line 55, in __init__
+    self.model = load_model(
+                 ^^^^^^^^^^^
+  File "/home/matsu/loop-verify/SenseNova-Loop/src/sensenova_loop/loading.py", line 39, in load_model
+    model = model_class.from_pretrained(model_path, device_map={"": str(device)}, **options)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matsu/loop-verify/.venv/lib/python3.12/site-packages/transformers/models/auto/auto_factory.py", line 409, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matsu/loop-verify/SenseNova-Loop/src/sensenova_loop/models/modeling_sensenova_loop.py", line 429, in from_pretrained
+    model, info = super().from_pretrained(*args, output_loading_info=True, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/matsu/loop-verify/.venv/lib/python3.12/site-packages/transformers/modeling_utils.py", line 4233, in from_pretrained
+    hf_quantizer, config, device_map = get_hf_quantizer(
+                                       ^^^^^^^^^^^^^^^^^
+  File "/home/matsu/loop-verify/.venv/lib/python3.12/site-packages/transformers/quantizers/auto.py", line 378, in get_hf_quantizer
+    hf_quantizer.validate_environment(
+  File "/home/matsu/loop-verify/.venv/lib/python3.12/site-packages/transformers/quantizers/quantizer_awq.py", line 50, in validate_environment
+    raise ImportError(
+ImportError: Loading an AWQ quantized model requires gptqmodel. Please install it with `pip install gptqmodel`

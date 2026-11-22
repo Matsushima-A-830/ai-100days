@@ -1,0 +1,165 @@
+[transformers] `torch.bfloat16` is not supported for AWQ CUDA/XPU kernels yet. Casting to `torch.float16`.
+INFO  LogBar: headless/CI mode; progress animations disabled.                   
+WARN  Python GIL is enabled: Multi-gpu quant acceleration for MoE models is sub-optimal and multi-core accelerated cpu packing is also disabled. We recommend Python >= 3.13.3t with Pytorch > 2.8 for mult-gpu quantization and multi-cpu packing with env `PYTHON_GIL=0`.
+INFO  ENV: Auto setting PYTORCH_ALLOC_CONF='expandable_segments:True,max_split_size_mb:256,garbage_collection_threshold:0.7' for memory saving.
+INFO  ENV: Auto setting CUDA_DEVICE_ORDER=PCI_BUS_ID for correctness.           
+INFO    ┌─────────────┐    ┌────────────────────────┐    ┌────────────┐    ┌─────────┐ │ GPT-QModel  │ -> │ ▓▓▓▓▓▓▓▓▓▓▓▓ 16bit     │ -> │ ▒▒▒▒ 8bit  │ -> │ ░░ 4bit │ └─────────────┘    └────────────────────────┘    └────────────┘    └─────────┘ GPT-QModel   : 7.6.0 Transformers : 5.18.0 Torch        : 2.11.0+cu130 Triton       : 3.6.0
+INFO  Kernel: Auto-selection: adding candidate `AwqMarlinLinear`                
+INFO  Kernel: selected -> `AwqMarlinLinear`.                                    
+[transformers] [1mSenseNovaLoopForConditionalGeneration LOAD REPORT[0m from: models/SenseNova-Loop-9B-AWQ
+Key                                       | Status     | 
+------------------------------------------+------------+-
+model.language_model.loop_gate.logits     | UNEXPECTED | 
+model.language_model.embed_tokens.qweight | UNEXPECTED | 
+lm_head.scales                            | UNEXPECTED | 
+model.language_model.embed_tokens.scales  | UNEXPECTED | 
+model.language_model.embed_tokens.qzeros  | UNEXPECTED | 
+lm_head.qweight                           | UNEXPECTED | 
+lm_head.qzeros                            | UNEXPECTED | 
+lm_head.weight                            | MISSING    | 
+model.language_model.embed_tokens.weight  | MISSING    | 
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+INFO  gc.collect() reclaimed 128 objects in 0.233s                              
+loaded in 5.6s
+===== loops=1 (decoder layer executions per token: 32) =====
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[nll en] loss=1.6011 ppl=4.959
+[nll ja] loss=3.6493 ppl=38.449
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[mul_example] 3 tok, 0.55 tok/s
+91
+[bat_ball] 64 tok, 2.66 tok/s
+The ball costs $0.15. If the ball is $x, the bat is $x + 1.00, and together they total $1.10, so 2x + 1.00 = 1.10 → x = 0.15.
+[widgets] 200 tok, 2.7 tok/s
+Let me analyze this step by step.
+First, I need to understand the relationship between machines, time, and output.
+**Step 1: Determine the rate per machine**
+- 5 machines produce 5 widgets in 5 minutes
+- Each machine produces 1 widget per 5 minutes
+- So each machine's rate = 1 widget per 5 minutes
+**Step 2: Determine the time for 100 machines to make 100 widgets**
+- 100 machines working simultaneously can produce 100 individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual individual
+[sally] 200 tok, 2.67 tok/s
+Let me analyze this step by-step.
+First, I need to consider the perspective of each brother. When Sally's brother says "I have 2 sisters," they are referring to the sisters that he has.
+Since Sally is one of the sisters, and there are 3 brothers, each brother would see the same set of sisters. If each brother has 2 sisters, that means there are 2 sisters in the family.
+Since Sally is one of those 2 sisters, she has 1 sister.
+Wait, let me reconsider. If there are 3 brothers and each has 2 sisters, the total number of sisters in the family is 2. Since Sally is one of them, she has 1 sister.
+Actually, let me think more carefully. If each of the 3 brothers has 2 sisters, that means there are 2 sisters in the family. Since Sally is one of those 2 sisters, she has 1 sister.
+The
+[ja_capital] 8 tok, 2.88 tok/s
+日本の首都は東京です。
+[fib_code] 61 tok, 2.7 tok/s
+```python
+def fib(n):
+    if n <= 0:
+        return 0
+    a, b = 0, 1
+    for _ in range(1, n):
+        a = b
+        b = a + b
+    return a
+```
+[mul] 1/20 correct
+===== loops=2 (decoder layer executions per token: 56) =====
+[nll en] loss=1.0129 ppl=2.754
+[nll ja] loss=2.3145 ppl=10.12
+[mul_example] 3 tok, 1.53 tok/s
+91
+[bat_ball] 103 tok, 1.4 tok/s
+Let the ball cost **x** dollars. Then the bat costs **x + 1.00** dollars. Together they cost:
+\[
+x + (x + 1.00) = 1.10
+\]
+\[
+2x + 1.00 = 1.10 \implies 2x = 0.10 \implies x = 0.05
+\]
+**The ball costs 5 cents.**
+[widgets] 48 tok, 1.39 tok/s
+It would take **5 minutes**. Since each machine produces one widget every 5 minutes, 100 machines working simultaneously would each produce one widget in that same 5-minute interval, resulting in 100 widgets total.
+[sally] 48 tok, 1.39 tok/s
+Sally has **2** sisters.
+Since each of Sally's 3 brothers has 2 sisters, and those sisters must be the same girls (Sally plus her sisters), there are 2 sisters in total besides Sally.
+[ja_capital] 7 tok, 1.31 tok/s
+日本の首都は東京です。
+[fib_code] 60 tok, 1.45 tok/s
+```python
+def fib(n):
+    if n <= 0:
+        return 0
+    a, b = 0, 1
+    for _ in range(n - 1):
+        a, b = b, a + b
+    return b
+```
+[mul] 19/20 correct
+===== loops=3 (decoder layer executions per token: 80) =====
+[nll en] loss=1.1894 ppl=3.285
+[nll ja] loss=2.7106 ppl=15.038
+[mul_example] 3 tok, 0.88 tok/s
+91
+[bat_ball] 107 tok, 0.97 tok/s
+Let the ball cost **x** dollars. Since the bat costs $1.00 more than the ball, the bat costs **x + 1**. Together they cost $1.10, so:
+**x + (x + 1) = 1.10**  
+**2x + 1 = 1.10**  
+**2x = 0.10**  
+**x = 0.05**
+The ball costs **$0.05**.
+[widgets] 50 tok, 0.91 tok/s
+It would take **5 minutes**. Since each machine produces one widget every 5 minutes, adding more machines doesn't change the time per widget—100 machines working simultaneously would each finish their own widget in that same 5-minute span.
+[sally] 80 tok, 0.93 tok/s
+Sally has **2** sisters. Since each of her 3 brothers has 2 sisters, and Sally is one of those sisters, there must be one additional sister besides Sally (3 brothers × 2 sisters each = 6 total sister-brother pairs, but each sister is counted once per brother, so 6 ÷ 3 = 2 sisters total, including Sally).
+[ja_capital] 7 tok, 0.99 tok/s
+日本の首都は東京です。
+[fib_code] 60 tok, 0.92 tok/s
+```python
+def fib(n):
+    if n <= 0:
+        return 0
+    a, b = 0, 1
+    for _ in range(n - 1):
+        a, b = b, a + b
+    return b
+```
+[mul] 17/20 correct
+===== loops=4 (decoder layer executions per token: 104) =====
+[nll en] loss=1.6573 ppl=5.245
+[nll ja] loss=3.3557 ppl=28.666
+[mul_example] 10 tok, 0.8 tok/s
+13 × 7 = 91
+[bat_ball] 115 tok, 0.82 tok/s
+Let the ball cost **x** dollars. Since the bat costs $1.00 more than the ball, the bat costs **x + 1**. Together they cost $1.10:
+\[
+x + (x + 1) = 1.10
+\]
+\[
+2x + 1 = 1.10
+\]
+\[
+2x = 0.10
+\]
+\[
+x = 0.05
+\]
+**The ball costs 5 cents.**
+[widgets] 45 tok, 0.81 tok/s
+It would take **5 minutes**. 
+Since each machine produces one widget every 5 minutes regardless of how many machines are working simultaneously, doubling the number of machines and widgets proportionally doesn’t change the time per machine.
+[sally] 53 tok, 0.8 tok/s
+Sally has **2** sisters. Since each of her 3 brothers also counts Sally as a sister, each brother must have 3 sisters total (including Sally), meaning there are 3 girls in total. Subtracting Sally leaves **2** sisters.
+[ja_capital] 7 tok, 0.81 tok/s
+日本の首都は東京です。
+[fib_code] 63 tok, 0.8 tok/s
+```python
+def fib(n):
+    if n < 0:
+        raise ValueError("Input must be non-negative.")
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a
+```
+[mul] 10/20 correct
+peak GPU memory allocated: 8.28 GiB

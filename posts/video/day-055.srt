@@ -1,0 +1,75 @@
+1
+00:00:00,000 --> 00:00:02,212
+Day 55: SenseNova-Loop-9B,
+
+2
+00:00:02,212 --> 00:00:07,146
+a language model that runs the same block of layers twice.
+
+3
+00:00:07,146 --> 00:00:09,358
+We changed how many times.
+
+4
+00:00:09,808 --> 00:00:12,568
+It stores only 32 decoder layers,
+
+5
+00:00:12,568 --> 00:00:16,918
+but runs layers 4 to 27 twice with the same weights,
+
+6
+00:00:16,918 --> 00:00:20,431
+so every token gets 56 layer computations.
+
+7
+00:00:20,881 --> 00:00:23,355
+Tokens go through the first four layers,
+
+8
+00:00:23,355 --> 00:00:25,026
+then into the looped block.
+
+9
+00:00:25,476 --> 00:00:29,364
+The block's output is fed back into the same layers once more
+
+10
+00:00:29,364 --> 00:00:31,149
+before the last four layers.
+
+11
+00:00:31,149 --> 00:00:33,380
+The loop count is a single setting,
+
+12
+00:00:33,380 --> 00:00:35,611
+so we switched it from one to four.
+
+13
+00:00:36,061 --> 00:00:40,077
+With one loop, it got only 1 of 20 multiplications right,
+
+14
+00:00:40,077 --> 00:00:40,992
+down from 19.
+
+15
+00:00:40,992 --> 00:00:44,233
+More loops did not help: four loops scored 11.
+
+16
+00:00:44,233 --> 00:00:48,530
+The weights were trained for two passes, and two worked best.
+
+17
+00:00:48,980 --> 00:00:50,864
+Apache 2.0, from SenseTime.
+
+18
+00:00:50,864 --> 00:00:55,189
+Source, license and the full write-up are linked on GitHub and
+
+19
+00:00:55,189 --> 00:00:56,585
+in the Zenn article.
