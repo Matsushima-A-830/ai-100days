@@ -1,0 +1,31 @@
+[transformers] `torch.bfloat16` is not supported for AWQ CUDA/XPU kernels yet. Casting to `torch.float16`.
+INFO  LogBar: headless/CI mode; progress animations disabled.                   
+WARN  Python GIL is enabled: Multi-gpu quant acceleration for MoE models is sub-optimal and multi-core accelerated cpu packing is also disabled. We recommend Python >= 3.13.3t with Pytorch > 2.8 for mult-gpu quantization and multi-cpu packing with env `PYTHON_GIL=0`.
+INFO  ENV: Auto setting PYTORCH_ALLOC_CONF='expandable_segments:True,max_split_size_mb:256,garbage_collection_threshold:0.7' for memory saving.
+INFO  ENV: Auto setting CUDA_DEVICE_ORDER=PCI_BUS_ID for correctness.           
+INFO    ┌─────────────┐    ┌────────────────────────┐    ┌────────────┐    ┌─────────┐ │ GPT-QModel  │ -> │ ▓▓▓▓▓▓▓▓▓▓▓▓ 16bit     │ -> │ ▒▒▒▒ 8bit  │ -> │ ░░ 4bit │ └─────────────┘    └────────────────────────┘    └────────────┘    └─────────┘ GPT-QModel   : 7.6.0 Transformers : 5.18.0 Torch        : 2.11.0+cu130 Triton       : 3.6.0
+INFO  Kernel: Auto-selection: adding candidate `AwqMarlinLinear`                
+INFO  Kernel: selected -> `AwqMarlinLinear`.                                    
+[transformers] [1mSenseNovaLoopForConditionalGeneration LOAD REPORT[0m from: models/SenseNova-Loop-9B-AWQ
+Key                                       | Status     | 
+------------------------------------------+------------+-
+lm_head.qweight                           | UNEXPECTED | 
+lm_head.scales                            | UNEXPECTED | 
+model.language_model.embed_tokens.qzeros  | UNEXPECTED | 
+model.language_model.loop_gate.logits     | UNEXPECTED | 
+lm_head.qzeros                            | UNEXPECTED | 
+model.language_model.embed_tokens.scales  | UNEXPECTED | 
+model.language_model.embed_tokens.qweight | UNEXPECTED | 
+lm_head.weight                            | MISSING    | 
+model.language_model.embed_tokens.weight  | MISSING    | 
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+INFO  Marlin fp16: compiling torch.ops JIT extension in `/home/matsu/.cache/gptqmodel/torch_extensions/marlin_fp16/ec57a2c7cce34c0c`.
+INFO  Marlin fp16: torch.ops JIT extension ready in 128s (estimated ~117s, +11s).
+INFO  gc.collect() reclaimed 138 objects in 0.210s                              
+[transformers] `causal_conv1d_fn` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `chunk_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+[transformers] `causal_conv1d_update` is falling back to its reference PyTorch implementation because `causal_conv1d` is not installed. This is correct but much slower; install `causal_conv1d` for the optimized kernel.
+[transformers] `fused_recurrent_gated_delta_rule` is falling back to its reference PyTorch implementation because `flash-linear-attention` is not installed. This is correct but much slower; install `flash-linear-attention` for the optimized kernel.
+转型发展 aneh … Mittag fem转型发展超高的3 creden теряет بعضهم应邀ComputedStyle electrode应邀服饰有限公司病历_free转型发展 …ComputedStyle flap转型发展 niezb转型发展Shape относalong '? swelling теряет теряетComputedStyle LPARAM转型发展 кли sma青铜 detention useMemo转型发展 detention thinking化和keletonComputedStyle转型发展3keletonComputedStyle …angat缅怀 abandoned青铜 والمت vel长者 stap … … Seo getopt нар(run的题目曆angat breaking riusci新安ingung gratuitikeleton detentionkeleton … Lutangatangatcirc …angatangatangatangat conj/platform,output breaking جل차가angatamaian femkeleton …\viewsComputedStyleComputedStyle … velangatangatangat conj转型发展 umgehend umgehendangatrozum จึง нарComputedStyle Gambarkeletonkeleton пораженияkeleton మాkeleton磋 monkeys …ные unha specializzata.leadingしてきたしてきたেন sanitizer sanitizer赡养 tilfeldig带我更长超高的 теряет 환영转型发展检查一下 인증必不可少 monkeys得当 LPARAM SaturdayIterator wt숍 unha advertisementlou والمت unhaInteresting زیرComputedStyle水处理 loft unha advertisement chứa Seo wtExtractExtract sanitizer奶粉 dissent夹杂.getAllepoca端正 slechts المثالिलработан已与 speziellen-containing未知的 loft loftkeletonleck送回 Đó.CommandType ValueEventListener wt monkeysiative sanitizerverkehr-containing三支一扶 universitaria Compre高桥未知的 ара直接进入िलिल sanitizerिल付诸 wt.completeИнные chứaهایت 끝나 끝나 บอก精選 sanitizerUGExtractcodegen Base需要经过 ĐóExtractهایت付诸疾病的Extractcodegen monkeys electrode procesosComputedStyle sanitizer sanitizerпси Loa Đó(/[ Суще超高的.setMax Azi Суще.setMax Coming والمت Đó转型发展هایتComputedStyle薬 sanitizer

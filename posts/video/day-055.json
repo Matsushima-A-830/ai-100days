@@ -1,0 +1,66 @@
+{
+  "day": 55,
+  "project": "SenseNova-Loop-9B",
+  "slug": "sensenova-loop",
+  "tagline": "A looped LLM that reuses the same layers twice, tested with 1 to 4 loops",
+  "source_url": "huggingface.co/sensenova/SenseNova-Loop-9B",
+  "license": "Apache-2.0",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 55: SenseNova-Loop-9B, a language model that runs the same block of layers twice. We changed how many times."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "32 stored decoder layers, about 9B parameters",
+        "Layers 4 to 27 run twice with shared weights",
+        "56 layer computations per token"
+      ],
+      "narration": "It stores only 32 decoder layers, but runs layers 4 to 27 twice with the same weights, so every token gets 56 layer computations."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {"id": "in", "label": "Layers 0-3", "sub": "run once", "pos": [0, 0], "span": 2},
+        {"id": "loop", "label": "Layers 4-27", "sub": "shared weights", "pos": [0, 1]},
+        {"id": "again", "label": "Same layers", "sub": "second pass", "pos": [1, 1]},
+        {"id": "out", "label": "Layers 28-31", "sub": "then LM head", "pos": [0, 2], "span": 2}
+      ],
+      "edges": [
+        {"from": "in", "to": "loop", "label": "pass 1"},
+        {"from": "loop", "to": "again", "label": "pass 2"},
+        {"from": "again", "to": "out", "label": "output"}
+      ],
+      "steps": [
+        {
+          "focus": ["in", "loop"],
+          "narration": "Tokens go through the first four layers, then into the looped block."
+        },
+        {
+          "focus": ["loop", "again", "out"],
+          "narration": "The block's output is fed back into the same layers once more before the last four layers. The loop count is a single setting, so we switched it from one to four."
+        }
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "19 -> 1",
+      "caption": "Correct answers out of 20 multiplications, two loops vs. one",
+      "lines": [
+        "1 loop:  1/20   ppl 4.96",
+        "2 loops: 19/20  ppl 2.75",
+        "3 loops: 18/20  ppl 3.29",
+        "4 loops: 11/20  ppl 5.25"
+      ],
+      "narration": "With one loop, it got only 1 of 20 multiplications right, down from 19. More loops did not help: four loops scored 11. The weights were trained for two passes, and two worked best."
+    },
+    {
+      "type": "outro",
+      "narration": "Apache 2.0, from SenseTime. Source, license and the full write-up are linked on GitHub and in the Zenn article."
+    }
+  ]
+}

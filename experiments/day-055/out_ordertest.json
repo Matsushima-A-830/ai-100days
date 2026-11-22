@@ -1,0 +1,190 @@
+{
+  "model": "models/SenseNova-Loop-9B-AWQ",
+  "loops": {
+    "2": {
+      "layer_executions": 56,
+      "nll": {
+        "en": {
+          "loss": 1.014,
+          "ppl": 2.757,
+          "tokens": 71
+        },
+        "ja": {
+          "loss": 2.3141,
+          "ppl": 10.116,
+          "tokens": 67
+        }
+      },
+      "prompts": {
+        "mul_example": {
+          "text": "91",
+          "output_tokens": 3,
+          "seconds": 2.643,
+          "tokens_per_second": 1.13
+        },
+        "bat_ball": {
+          "text": "Let the ball cost **x** dollars. Then the bat costs **x + 1.00** dollars. Together they cost:\n\n\\[\nx + (x + 1.00) = 1.10\n\\]\n\n\\[\n2x + 1.00 = 1.10 \\implies 2x = 0.10 \\implies x = 0.05\n\\]\n\n**The ball costs 5 cents.**",
+          "output_tokens": 103,
+          "seconds": 72.572,
+          "tokens_per_second": 1.42
+        },
+        "widgets": {
+          "text": "It would take **5 minutes**. Since each machine produces one widget every 5 minutes, 100 machines working simultaneously would each produce one widget in that same 5-minute interval, resulting in 100 widgets total.",
+          "output_tokens": 48,
+          "seconds": 33.181,
+          "tokens_per_second": 1.45
+        },
+        "sally": {
+          "text": "Sally has **2** sisters.\n\nSince each of Sally's 3 brothers has 2 sisters, and those sisters must be the same girls (Sally plus her sisters), there are 2 sisters in total besides Sally.",
+          "output_tokens": 48,
+          "seconds": 37.296,
+          "tokens_per_second": 1.29
+        },
+        "ja_capital": {
+          "text": "日本の首都は東京です。",
+          "output_tokens": 7,
+          "seconds": 5.196,
+          "tokens_per_second": 1.35
+        },
+        "fib_code": {
+          "text": "```python\ndef fib(n):\n    if n <= 0:\n        return 0\n    a, b = 0, 1\n    for _ in range(n - 1):\n        a, b = b, a + b\n    return b\n```",
+          "output_tokens": 60,
+          "seconds": 44.167,
+          "tokens_per_second": 1.36
+        }
+      },
+      "mul": [
+        {
+          "q": "964x59",
+          "answer": 56876,
+          "text": "56876",
+          "ok": true
+        },
+        {
+          "q": "876x63",
+          "answer": 55188,
+          "text": "55188",
+          "ok": true
+        },
+        {
+          "q": "141x43",
+          "answer": 6063,
+          "text": "6063",
+          "ok": true
+        },
+        {
+          "q": "623x72",
+          "answer": 44856,
+          "text": "44856",
+          "ok": true
+        },
+        {
+          "q": "514x48",
+          "answer": 24672,
+          "text": "24672",
+          "ok": true
+        },
+        {
+          "q": "588x55",
+          "answer": 32340,
+          "text": "32340",
+          "ok": true
+        },
+        {
+          "q": "697x37",
+          "answer": 25789,
+          "text": "25789",
+          "ok": true
+        },
+        {
+          "q": "616x27",
+          "answer": 16632,
+          "text": "16632",
+          "ok": true
+        },
+        {
+          "q": "388x27",
+          "answer": 10476,
+          "text": "10476",
+          "ok": true
+        },
+        {
+          "q": "873x22",
+          "answer": 19206,
+          "text": "19206",
+          "ok": true
+        },
+        {
+          "q": "733x42",
+          "answer": 30786,
+          "text": "30796",
+          "ok": false
+        },
+        {
+          "q": "645x87",
+          "answer": 56115,
+          "text": "56115",
+          "ok": true
+        },
+        {
+          "q": "250x49",
+          "answer": 12250,
+          "text": "12250",
+          "ok": true
+        },
+        {
+          "q": "201x19",
+          "answer": 3819,
+          "text": "3819",
+          "ok": true
+        },
+        {
+          "q": "970x97",
+          "answer": 94090,
+          "text": "94090",
+          "ok": true
+        },
+        {
+          "q": "438x70",
+          "answer": 30660,
+          "text": "30660",
+          "ok": true
+        },
+        {
+          "q": "673x22",
+          "answer": 14806,
+          "text": "14806",
+          "ok": true
+        },
+        {
+          "q": "462x65",
+          "answer": 30030,
+          "text": "30030",
+          "ok": true
+        },
+        {
+          "q": "423x88",
+          "answer": 37224,
+          "text": "37224",
+          "ok": true
+        },
+        {
+          "q": "755x36",
+          "answer": 27180,
+          "text": "27180",
+          "ok": true
+        }
+      ],
+      "mul_correct": 19
+    }
+  },
+  "order_search": {
+    "emb=awq,head=awq": 20.262392044067383,
+    "emb=awq,head=seq": 24.64032554626465,
+    "emb=seq,head=awq": 1.0139836072921753,
+    "emb=seq,head=seq": 17.55817222595215
+  },
+  "emb_order": "seq",
+  "head_order": "awq",
+  "peak_gpu_memory_gib": 8.18
+}
