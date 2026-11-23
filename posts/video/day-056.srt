@@ -1,0 +1,67 @@
+1
+00:00:00,000 --> 00:00:04,581
+Day 56: mini-swe-agent, a coding agent of about a hundred
+
+2
+00:00:04,581 --> 00:00:05,063
+lines.
+
+3
+00:00:05,063 --> 00:00:09,323
+We asked local models to fix one bug in our own repo.
+
+4
+00:00:09,773 --> 00:00:12,046
+It comes from the SWE-bench team.
+
+5
+00:00:12,046 --> 00:00:16,247
+Its only tool is bash, and the agent class is about a hundred
+
+6
+00:00:16,247 --> 00:00:17,900
+and fifty lines of code.
+
+7
+00:00:18,350 --> 00:00:20,918
+The model replies with a bash command,
+
+8
+00:00:20,918 --> 00:00:24,770
+and the agent appends every output to one linear history.
+
+9
+00:00:25,220 --> 00:00:29,034
+Each command runs in a fresh shell inside a container without
+
+10
+00:00:29,034 --> 00:00:32,035
+network, until the model echoes a submit marker.
+
+11
+00:00:32,485 --> 00:00:35,677
+Only gemma4 fixed it, four times out of six.
+
+12
+00:00:35,677 --> 00:00:37,273
+Qwen models never did.
+
+13
+00:00:37,273 --> 00:00:41,263
+A sed command without escaped brackets silently changed
+
+14
+00:00:41,263 --> 00:00:44,165
+nothing, and five runs submitted anyway.
+
+15
+00:00:44,615 --> 00:00:45,486
+MIT licensed.
+
+16
+00:00:45,486 --> 00:00:49,370
+Source, license and the full logs are linked on GitHub and
+
+17
+00:00:49,370 --> 00:00:50,710
+in the Zenn article.
