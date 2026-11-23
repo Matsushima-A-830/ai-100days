@@ -5,6 +5,13 @@ Zenn/X/noteで日本語発信するための作業リポジトリ。
 
 運用ルールは [CLAUDE.md](./CLAUDE.md) を参照。
 
+## 発信先アカウント
+
+| 媒体 | ホーム |
+|---|---|
+| Zenn | https://zenn.dev/matsushima_a |
+| note | https://note.com/regal_poppy7370 |
+
 ## 進め方
 
 1. 朝: リサーチRoutine(自動)が `backlog.md` にネタ候補を追加
