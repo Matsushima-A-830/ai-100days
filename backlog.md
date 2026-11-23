@@ -2171,3 +2171,39 @@
 - 検証難易度: 高(本リポジトリの方針上)。リポジトリ自体はApache-2.0だが、動作にはSemantic Scholar APIキーに加え、モデルプロバイダとしてGemini(Vertex AIまたはGemini APIキー)かOpenAIのいずれかの認証情報が必須で、READMEにAnthropicの記載は無い。Gemini APIには無料枠があるものの、本Routineには現時点でGemini/OpenAI向けの環境変数が登録されておらず、CLAUDE.mdの「有料APIキー必須の候補は選ばない」方針に沿い今回は見送る。導入する場合はCLAUDE.md更新とRoutineへの新規環境変数登録が前提になる。
 - 見栄え: 高い(本チャレンジ自体が「検証して記事を書く」活動であるため、「論文を書くエージェント」という自己言及的な切り口は魅力的)。APIキー要件が解消されれば再検討の価値がある。
 - 状態: 未選択
+
+### [2026-11-23] inworld/voice-isolator — 息遣いや笑い声は残し背景の声・雑音だけを除去する48kHzボイス分離モデル
+
+- 出典: https://huggingface.co/inworld/voice-isolator (コード・重みともにApache-2.0。GitHub: https://github.com/inworld-ai/voice-isolator。発表ブログ: https://inworld.ai/blog/introducing-voice-isolator、2026-11-18公開)
+- 概要: オフライン用(64Mパラメータ)とリアルタイム用(58Mパラメータ・20msのlook-ahead)の2モデルを公開。一般的なデノイザーが息遣い・笑い声・ため息まで「雑音」として除去してしまう問題に対し、話者本来の声色や発話の質感を保ったまま背景の他人の声・音楽・環境音だけを分離するよう学習されている。約1万時間のペア音声データで学習。`pip install inworld-voice-isolation`→`voice-isolate input.wav output.wav`で即実行可能。CPU・Apple Silicon(MPS)・CUDAいずれでも動作し、Hugging Face上で724 likes・3種のファインチューン・4種の量子化版が既に派生している。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では同名のElevenLabs「Voice Isolator」〈別会社・別製品〉の日本語記事はあるが、Inworld版を扱った日本語記事は未検出)
+- 検証難易度: 低。Apache-2.0でAPIキー不要、GPU不要(CPUでも動作)。モデルサイズも64M/58Mと小さく重み取得も速い。雑音入り音声サンプルを用意し、処理前後を比較するだけで6時間以内に完結する。
+- 見栄え: 高い。「ノイズ入り音声→分離後の声」「分離後に取り出された背景音」という3点のBefore/After比較が作りやすく、波形・スペクトログラム画像もシェアカードに使える。
+- 状態: 未選択
+
+### [2026-11-23] Search From the Start: Search-Native Pretraining for Language Models(QueryLM) — 事前学習中から検索クエリを発行させて学習する小型モデル
+
+- 出典: 論文 https://arxiv.org/abs/2611.26809 (EPFL/University of Toronto、Colin Raffel・Mayank Mishra等)。公開モデル群: https://huggingface.co/collections/Kausp11/search-native-pretraining。プロジェクトページ: https://kaustubhp11.github.io/querylm
+- 概要: 事後学習(SFT/RL)だけでなく事前学習の段階から、モデル自身に検索クエリを発行させ取得した証拠を使わせる「search-native」な学習手法を提案。360M〜3.3Bパラメータの複数サイズでQueryLMモデルと通常ベースライン(standard)を学習・公開し、同じFLOPs予算で比較した結果、1.4B相当のQueryLMが3.3Bの通常ベースラインの知識QA性能に匹敵/上回ると報告している。学習済みチェックポイント(querylm-wiki-360m等、Apache-2.0)はHugging Faceで公開されており、最小構成は361.8Mパラメータ・BF16で約0.7GBと小さい。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では論文名・QueryLMいずれも日本語記事は未検出)
+- 検証難易度: 低〜中。モデル重みはApache-2.0・APIキー不要で、最小の360Mモデルならノートパソコンのcpuでも推論比較が可能。ただし論文の検索機能自体を同じ設定で動かすには、学習に使われた検索インデックス/ツールの再現が必要になる可能性があり、その場合は推論のみ(QueryLM vs standardベースラインのQA応答比較)に絞るのが現実的。モデルカードにも「Not a product」「research artifact」と明記されている点は記事中で留意する必要がある。
+- 見栄え: 高い。「同じ計算量なら検索ネイティブな小型モデルの方が大きい通常モデルに勝つ」というBefore/After・棒グラフにしやすい結果で、シェアカードのパターンBと相性が良い。
+- 状態: 未選択
+
+### [2026-11-23] Intent Contracts: Taking Tools Away from Agents — プランナーからツールを取り上げてもエージェントの誤爆は防げなかったという論文
+
+- 出典: 論文(HF Daily Papers) https://huggingface.co/papers/2611.24025 。コード: https://github.com/zwang-devv/intent-contracts (MIT。Georgia Tech/UMass Amherst/UIUCの3名による2026年11月の論文)
+- 概要: ツール利用型LLMエージェントのプランナーモデルにツールを一切持たせず、各ステップで「目標・ユーザーの発言の逐語引用・スコープ」を記した契約だけを提出させ、別の小さな信頼済みモデルがその契約をユーザーの発言と照合してから実際のツール呼び出しを書く、という権限付与の仕組み(intent contracts)を提案・検証した論文。著者らの実験では、プランナーに`gpt-6.1-terra`、信頼済みモデルに`GLM-5.3-Flash`を使い3種のAmPermBenchタスクで評価したところ、「契約方式は無許可操作そのものは減らせず、曖昧な参照が絡む条件ではおよそ40〜49%が誤ったオブジェクトに対して実行されてしまう」という、提案手法が目的(誤爆防止)を達成できなかった旨が正直に報告されている。一方で「変更対象を事前に契約内で名指しできる」「プランナーが余計な作業を混ぜた場合の完遂率は上がる」といった副次的な利点も示している。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語での紹介・検証記事は未検出)
+- 検証難易度: 中。コード自体はMITでAPIキー不要な`scripts/recompute_tables.py`(論文の表を同梱データから再計算するだけ)はそのまま動く。ただし原論文の評価は`gpt-6.1-terra`・`GLM-5.3-Flash`という有料API想定のホスト型モデルをプランナー・信頼済みモデルに使っており、本チャレンジの「有料APIキー必須の候補は選ばない」方針に沿うには、Claude Code自身(Anthropic、追加の有料キー不要)をプランナー・信頼済みモデルの代替として差し替えて小規模に再現する工夫が必要。GPU不要。
+- 見栄え: 高い。「ツールを取り上げて二重チェックを挟んだのに、狙った通りには誤爆を防げなかった」という失敗の正直な報告自体が検証記事のフックになり、本チャレンジの「動かしていないものを動いたと書かない」姿勢とも相性が良い。本リポジトリ(ai-100days)自身を舞台に、Claude Codeへの指示とこの契約方式を模した簡易チェックを組んで挙動を観察する自己言及的な検証も狙える。
+- 状態: 未選択
+
+### [2026-11-23] Tencent Hy4-flash — 220B/アクティブ12Bで1Mコンテキストを謳うHunyuanファミリー最新モデル(参考・サイズとライセンス制限のため今回は選ばない)
+
+- 出典: https://huggingface.co/tencent/Hy4-flash (2026-11-16公開。ライセンスは独自の「Tencent Hy License 1.0」で、月間アクティブユーザー1億人または月間収益5000万ドルを超えるMaaS事業者向けに追加条件を課す、Apache-2.0とは異なる制限付きライセンス)
+- 概要: Tencent Hunyuanファミリーの最新・最もコスト効率重視とされるモデル。総パラメータ224B(Engram含む)・トークンごとのアクティブパラメータ12Bで、テキスト+画像入力・テキスト出力、コンテキスト長1M(1,048,576)トークンを謳う。本体・FP8量子化版・学習済みベース版の重みがHugging Face/ModelScope/GitCodeで公開されている。本日時点でHugging Face trending modelsに掲載。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(CometAPI・labmemo.com等の日本語ニュース記事はあるが、検証記事は未検出)
+- 検証難易度: 高。重み公開・APIキー不要という点では良いが、総パラメータ224Bは個人のノートPC・民生GPU1枚では到底扱えず、量子化版(FP8)でも一人・6時間以内の検証には重すぎる。コミュニティ製のGGUF等の軽量量子化が登場すれば再検討の余地はあるが、本日時点では確認できていない。ライセンスもApache-2.0ではなく利用者層によって追加条件が課される点に注意が必要。
+- 見栄え: 高い(「巨大な1Mコンテキストモデルに長文を読ませて質問する」という分かりやすいデモ性はある)。ただし検証難易度・ライセンスの両面から今回は見送る。
+- 状態: 見送り
