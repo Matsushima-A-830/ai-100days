@@ -2,20 +2,20 @@
 
 人間が通勤中などにここを書き換えてコミットする。実装Routineはこのファイルを読んで作業する。
 
-- Day: 056
-- 選んだ候補(backlog.mdのタイトルかURL): SWE-agent/mini-swe-agent — https://github.com/SWE-agent/mini-swe-agent
+- Day: 057
+- 選んだ候補(backlog.mdのタイトルかURL): Search From the Start: Search-Native Pretraining for Language Models(QueryLM) — https://arxiv.org/abs/2611.26809
 - 補足メモ(あれば):
-  - 出典: https://github.com/SWE-agent/mini-swe-agent (MIT。2026-11-22付研究PR〈#191、本稿執筆時点で未マージ〉でbacklog.mdに追記予定の候補。v2リリースに伴う移行ガイドが追加されており本日GitHub Trending Pythonで言及、累計約10.0k star・+35star/日)
-  - 概要: ツールをbashのみに絞り、`subprocess.run`で逐次実行するだけの線形な会話履歴を持つ約100行の最小構成コーディングエージェント。SWE-agent開発チーム自身がSWE-agent本体より多くの利用者にまず推奨する軽量版と位置付けており、SWE-bench Verifiedで74%超のスコアを自己報告している。litellm経由で多様なLLMプロバイダに対応する。
-  - 選定理由: MITでAPIキー不要(litellm経由でClaude Code自身のAnthropic認証を使い回せる)、GPU不要、6時間以内に完結しやすい軽量さ。本リポジトリ自身(ai-100days)を被験対象にできる自己言及的な検証がしやすく、「たった100行のエージェントが実際にbashだけでバグを直せるか」という分かりやすいBefore/After軸を作れる。
-  - APIキー・前提条件についての方針: 追加の有料APIキーは不要。litellm経由でモデルプロバイダを選べるため、Claude Code自身が使っているAnthropicの認証情報をそのまま使う想定(新規のAPIキーをファイルに書き込まない)。GPU不要。
+  - 出典: 論文 https://arxiv.org/abs/2611.26809 (EPFL/University of Toronto、Colin Raffel等。2026-11-23付研究PR〈#196、本稿執筆時点で未マージ〉でbacklog.mdに追記予定の候補)。公開モデル群: https://huggingface.co/collections/Kausp11/search-native-pretraining (Apache-2.0)。プロジェクトページ: https://kaustubhp11.github.io/querylm
+  - 概要: 事後学習(SFT/RL)だけでなく事前学習の段階から、モデル自身に検索クエリを発行させ取得した証拠を使わせる「search-native」な学習手法を提案。360M〜3.3Bパラメータの複数サイズでQueryLMモデルと通常ベースライン(standard)を学習・公開し、同じFLOPs予算で比較した結果、1.4B相当のQueryLMが3.3Bの通常ベースラインの知識QA性能に匹敵/上回ると報告している。
+  - 選定理由: モデル重みがApache-2.0で公開されており追加の有料APIキー不要。最小のquerylm-wiki-360m(361.8Mパラメータ、BF16で約0.7GB)はノートパソコンのCPUでも推論比較が可能で、6時間以内に完結しやすい。「同じ計算量なら検索ネイティブな小型モデルの方が大きい通常モデルに勝つ」という分かりやすいBefore/After軸を作れる。
+  - APIキー・前提条件についての方針: 追加の有料APIキーは不要。モデル重みはHugging Faceから直接取得(Apache-2.0)。GPU不要、CPUでの推論比較を主軸にする。モデルカードに「Not a product」「research artifact」と明記されている点は記事中でも断りを入れる。
   - 検証スコープ・手順(案):
-    1. `pip install mini-swe-agent`でインストールし、`mini`コマンドが起動することを確認する。
-    2. 本リポジトリ(ai-100days)のクローン上に、意図的な小さなバグ(例: `experiments/`配下のサンプルスクリプトの1行バグ)を仕込んだ作業用コピーを用意する。
-    3. mini-swe-agentにそのバグ修正を依頼し、bashのみのツールでどこまで原因調査・修正ができるかを実際のログ(実行したbashコマンド・差分)で記録する。
-    4. 可能であれば、同じタスクをClaude Code本体に直接依頼した場合との違い(手数・迂遠さ・成功率)も簡単に比較する。
-    5. SWE-bench Verified 74%超という自己報告ベンチマークはフル再現せず、上記の縮小版の定性的な検証を主役にする。
-  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-11-22時点、backlog.md追記候補〈PR #191〉参照。検索した範囲では日本語紹介・検証記事は未検出)。
-  - 記事化の切り口: 「わずか100行・bashのみのエージェントが、実際に仕込んだバグをどこまで自力で直せるか」を実行ログと差分で見せる。本チャレンジ自身のリポジトリを被験対象にする自己言及性も記事のフックにする。
+    1. `querylm-wiki-360m`(QueryLM)と同サイズの`standard-wiki-360m`(通常ベースライン)をHugging Faceから取得する。
+    2. 同じ知識QA系のプロンプト(Wikipedia由来の事実質問など)を両モデルに与え、応答の正確さ・検索クエリ発行の有無を比較する。
+    3. 論文が使う外部検索インデックス/ツールのフル再現は行わず、QueryLMが実際にどのようなクエリ文字列を生成するか・それをどう使っているように見えるかという定性的な観察に絞る。
+    4. 可能であれば`-sft-search`サフィックス付きモデル(search-SFT版)との違いも簡単に比較する。
+    5. 論文の「1.4B相当が3.3Bに匹敵/上回る」という定量結果はフル再現せず、縮小版の定性的な検証を主役にする。
+  - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(2026-11-23時点、backlog.md追記候補〈PR #196〉参照。検索した範囲では論文名・QueryLMいずれも日本語記事は未検出)。
+  - 記事化の切り口: 「事前学習の段階から検索を組み込んだ小型モデルは、実際にどんなクエリを発行し、同サイズの通常モデルと比べて何が変わるのか」を実際の出力例で見せる。「Not a product」と明記された研究用アーティファクトを一人で検証するという立ち位置も記事のフックにする。
 
 状態: 設定済み
