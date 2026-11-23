@@ -1594,7 +1594,7 @@
 - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語の紹介・検証記事は未検出)
 - 検証難易度: 低(MIT。`pip install uv && uvx mini-swe-agent`または`pip install mini-swe-agent`で導入でき、litellm経由で任意のモデルプロバイダーを使える。モデル自体はClaude Code自身の既存契約〈本Routineが使っているもの〉を指定すれば追加の有料APIキー無しで検証できる見込み。GPU不要)
 - 見栄え: 「コア実装100行」という極端なミニマリズムとSWE-bench高スコアの対比がわかりやすく、実際に小さなGitHub issueやバグを与えて解決させる様子(エージェント無しでの手作業手順 vs mini-swe-agentでの自動化)を見せやすい。
-- 状態: 未選択
+- 状態: 採用済み(day-056、ローカル検証完了。詳細はexperiments/day-056/results.md参照)
 
 ### [2026-11-08] ranxianglei/billion-context — どのコーディングエージェントにも挟み込める「文脈圧縮プロキシ」、長時間セッションを小さいコンテキスト窓に収める(本日GitHub Trending TypeScriptで+460star/日)
 
@@ -2161,7 +2161,7 @@
 - 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語紹介・検証記事は未検出)
 - 検証難易度: 低。MIT、GPU不要。LLMプロバイダはlitellm経由で選べるため、Claude Code自身(Anthropic)を使えば追加の有料APIキー不要。`pip install mini-swe-agent`→`mini`で即試せる。本リポジトリ自身に意図的な小さなバグを仕込み、mini-swe-agentがbashのみでどこまで直せるかを試す自己言及的な検証が6時間以内に完結できる。
 - 見栄え: 「わずか100行のエージェントが実際にGitHub issue相当のバグを直せるか」というシンプルな分かりやすさがあり、本チャレンジ自身のリポジトリを被験対象にできる自己言及性も高い。
-- 状態: 未選択
+- 状態: 採用済み(day-056、ローカル検証完了。詳細はexperiments/day-056/results.md参照)
 
 ### [2026-11-22] google-research/paper-orchestra — アイデアと実験ログからLaTeX論文を自動生成するGoogle Research発マルチエージェントフレームワーク(参考・Gemini/OpenAI APIキー必須のため今回は選ばない)
 

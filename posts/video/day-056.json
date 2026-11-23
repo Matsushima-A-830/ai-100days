@@ -1,0 +1,66 @@
+{
+  "day": 56,
+  "project": "mini-swe-agent",
+  "slug": "mini-swe-agent",
+  "tagline": "A tiny bash-only coding agent, wired to local models to fix a one-line bug",
+  "source_url": "github.com/SWE-agent/mini-swe-agent",
+  "license": "MIT",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 56: mini-swe-agent, a coding agent of about a hundred lines. We asked local models to fix one bug in our own repo."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "From the SWE-bench and SWE-agent team",
+        "Bash is the only tool",
+        "Agent class: 151 lines of code in v2.4.6"
+      ],
+      "narration": "It comes from the SWE-bench team. Its only tool is bash, and the agent class is about a hundred and fifty lines of code."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {"id": "llm", "label": "Local LLM", "sub": "Ollama", "pos": [0, 0]},
+        {"id": "agent", "label": "Agent loop", "sub": "linear history", "pos": [1, 0]},
+        {"id": "box", "label": "Docker", "sub": "no network", "pos": [1, 1]},
+        {"id": "done", "label": "Submit", "sub": "magic echo", "pos": [0, 1]}
+      ],
+      "edges": [
+        {"from": "llm", "to": "agent", "label": "command"},
+        {"from": "agent", "to": "box", "label": "run"},
+        {"from": "box", "to": "done", "label": "finish"}
+      ],
+      "steps": [
+        {
+          "focus": ["llm", "agent"],
+          "narration": "The model replies with a bash command, and the agent appends every output to one linear history."
+        },
+        {
+          "focus": ["agent", "box", "done"],
+          "narration": "Each command runs in a fresh shell inside a container without network, until the model echoes a submit marker."
+        }
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "4 / 27",
+      "caption": "Local-model runs that fixed the bug",
+      "lines": [
+        "gemma4 e4b:  4 of 6",
+        "Qwen2.5 3B-14B:  0 of 21",
+        "Claude Code:  1 of 1",
+        "Not fixed but submitted:  5"
+      ],
+      "narration": "Only gemma4 fixed it, four times out of six. Qwen models never did. A sed command without escaped brackets silently changed nothing, and five runs submitted anyway."
+    },
+    {
+      "type": "outro",
+      "narration": "MIT licensed. Source, license and the full logs are linked on GitHub and in the Zenn article."
+    }
+  ]
+}
