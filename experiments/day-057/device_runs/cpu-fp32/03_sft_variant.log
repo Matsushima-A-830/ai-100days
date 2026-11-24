@@ -1,0 +1,41 @@
+[run_device] script=experiments/day-057/03_sft_variant.py device=cpu dtype=fp32 torch=2.15.0+cu132 transformers=5.24.0
+{
+  "question": "Who wrote the novel Pride and Prejudice?",
+  "query": "Pride and Prejudice novel author",
+  "answer": "Jane Austen, author of Pride and Prejudice, was a British writer of novels and short stories. She was born in 1770 and died in 1813. She was a prolific writer, writing in a variety of genres, including novels, short stories, and poetry. She was a prolific"
+}
+{
+  "question": "What is the chemical symbol for gold?",
+  "query": "gold chemical symbol gold",
+  "answer": "Gold is a chemical element with the symbol Au and atomic number 79. It is a white, crystalline solid that is a common component of gold and other precious metals. It is a common component of gold and other precious metals, and is a common component of gold and other precious metals in the form of gold-"
+}
+{
+  "question": "What is the capital of Australia?",
+  "query": "Australia capital city name",
+  "answer": "Canberra is the capital city of Australia. It is the largest city in Australia, and the capital of the Australian Capital Territory. Canberra is the capital of the Australian Capital Territory, and the capital of the Australian Capital Territory. Canberra is the second-largest city in Australia, and the 12th-largest in the"
+}
+{
+  "question": "What is the capital of Mongolia?",
+  "query": "Mongolia capital city name",
+  "answer": "Ulaanbaatar is the capital and largest city of Mongolia. It is located in the center of the country, on the banks of the Yellow River. The city is home to the capital of Mongolia, the capital of the country's capital city, and the capital of the country's capital city.\n\nThe"
+}
+{
+  "question": "Who painted the Mona Lisa?",
+  "query": "Mona Lisa painting artist name",
+  "answer": "Leonardo da Vinci was a painter of the Renaissance period, active in the 15th century. He was born in Florence, Italy, and was active in the city of Florence. He was a pupil of the painter and architect, Giovanni Battista Tiepolo. He was a prolific painter, and his works are"
+}
+{
+  "question": "In which year did the Berlin Wall fall?",
+  "query": "Berlin Wall fall date year",
+  "answer": "9 November 1989 was the date of the fall of the Berlin Wall. The fall of the Berlin Wall was a major event in the history of the German Democratic Republic (GDR). The GDR was the first country to fall from the Soviet Union, and the first to fall from the Eastern Bl"
+}
+{
+  "question": "What is the tallest mountain in the world?",
+  "query": "tallest mountain world tallest mountain name",
+  "answer": "The tallest mountain in the world is Mount Everest, located in the Himalayas. It is the highest mountain in the world, and the tallest mountain in the world outside of Antarctica. It is also the tallest mountain in the world outside of the Himalayas.\n\nThe mountain is  tall, and is located in the"
+}
+{
+  "question": "Who was the first person to walk on the Moon?",
+  "query": "first person walk on the Moon name",
+  "answer": "Neil Armstrong was an American astronaut who became the first person to walk on the Moon, on July 20, 1969, during the Apollo 11 mission.\n\nHe was a member of the Apollo 11 crew, and was the first person to walk on the Moon. He was"
+}

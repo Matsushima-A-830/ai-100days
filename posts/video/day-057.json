@@ -1,0 +1,156 @@
+{
+  "day": 57,
+  "project": "QueryLM",
+  "slug": "querylm",
+  "tagline": "A 360M model pretrained from scratch to write its own search queries",
+  "source_url": "arxiv.org/abs/2611.26809",
+  "license": "Apache-2.0 (weights)",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 57: QueryLM, a 360 million parameter model pretrained from scratch to write its own search queries, retested on a local PC."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "Pretrained on Wikipedia text with inline search blocks",
+        "Learns to write a query, not to predict the retrieved passage",
+        "Paired with a compute-matched baseline with no search"
+      ],
+      "narration": "QueryLM was pretrained on Wikipedia text where some positions were replaced with a search query followed by a retrieved passage. The model only learned to write the query, never to predict the passage itself."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {
+          "id": "prompt",
+          "label": "Question prompt",
+          "sub": "few-shot QA text",
+          "pos": [
+            0,
+            0
+          ],
+          "span": 2
+        },
+        {
+          "id": "model",
+          "label": "QueryLM 360M",
+          "sub": "LlamaForCausalLM",
+          "pos": [
+            0,
+            1
+          ],
+          "span": 2
+        },
+        {
+          "id": "query",
+          "label": "Model writes query",
+          "sub": "<WEB_QUERY> ... </WEB_QUERY>",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "id": "retriever",
+          "label": "Caller's retriever",
+          "sub": "reference passage",
+          "pos": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "response",
+          "label": "Passage inserted",
+          "sub": "<WEB_RESPONSE> ... </WEB_RESPONSE>",
+          "pos": [
+            0,
+            3
+          ],
+          "span": 2
+        },
+        {
+          "id": "answer",
+          "label": "Model continues",
+          "sub": "greedy decoding",
+          "pos": [
+            0,
+            4
+          ],
+          "span": 2
+        }
+      ],
+      "edges": [
+        {
+          "from": "prompt",
+          "to": "model",
+          "label": "input"
+        },
+        {
+          "from": "model",
+          "to": "query",
+          "label": "writes"
+        },
+        {
+          "from": "query",
+          "to": "retriever",
+          "label": "query"
+        },
+        {
+          "from": "retriever",
+          "to": "response",
+          "label": "passage"
+        },
+        {
+          "from": "response",
+          "to": "answer",
+          "label": "context"
+        }
+      ],
+      "steps": [
+        {
+          "focus": [
+            "prompt",
+            "model",
+            "query"
+          ],
+          "narration": "Given a question, the model can open a search block and write its own query, at most 24 tokens."
+        },
+        {
+          "focus": [
+            "query",
+            "retriever",
+            "response"
+          ],
+          "narration": "The caller runs any retriever and inserts the passage back into the text. The model was never trained to generate that passage itself."
+        },
+        {
+          "focus": [
+            "response",
+            "answer"
+          ],
+          "narration": "With the passage in context, the model keeps generating and answers the question."
+        }
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "1 -> 17",
+      "caption": "Correct answers out of 300 Natural Questions: 1 without search, 17 when given a passage that contains the answer. The no-search baseline also scored 1.",
+      "lines": [
+        "8 questions : 3 -> 2 (first run)",
+        "CPU/GPU x BF16/FP32 : 3 -> 3",
+        "300 questions : 1 -> 17"
+      ],
+      "narration": "On 8 questions, searching seemed to hurt: 3 correct dropped to 2. Rerunning on CPU and GPU in two precisions gave 3 every time. On 300 questions, search lifted QueryLM from 1 to 17 correct."
+    },
+    {
+      "type": "outro",
+      "narration": "The chat fine-tuned version went from 3 to 80. Full results and sources are in the Zenn article, linked below."
+    }
+  ]
+}

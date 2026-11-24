@@ -1,0 +1,8 @@
+[run_device] script=experiments/day-057/01_reproduce_cards.py device=cpu dtype=bf16 torch=2.15.0+cu132 transformers=5.24.0
+=== QueryLM (search-native) ===
+WEB_QUERY ids: 49152 49153
+query : Jane Austen Pride and Prejudice capital Australia answer
+answer: The capital of Australia
+
+=== Standard (no-search baseline) ===
+answer: Gold
