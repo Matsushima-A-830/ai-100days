@@ -1,0 +1,19 @@
+n = 300 questions (NQ dev, DPR positive passage contains the answer)
+
+| condition | correct | accuracy | 95% CI |
+|---|---|---|---|
+| (A) QueryLM, no search | 1/300 | 0.3% | 0.1-1.9% |
+| (B) QueryLM, own query + gold passage | 17/300 | 5.7% | 3.6-8.9% |
+| (C) Standard, no search | 1/300 | 0.3% | 0.1-1.9% |
+| (D0) sft-search, no search | 3/300 | 1.0% | 0.3-2.9% |
+| (D) sft-search, own query + gold passage | 80/300 | 26.7% | 22.0-31.9% |
+
+QueryLM vs Standard (no search): only A correct = 1, only C correct = 1, McNemar exact p = 1
+QueryLM: no search -> search: only A correct = 1, only B correct = 17, McNemar exact p = 0.000145
+sft-search: no search -> search: only D0 correct = 0, only D correct = 77, McNemar exact p = 1.32e-23
+
+A: empty answers = 11, answer is a substring of the question = 39
+B: empty answers = 6, answer is a substring of the question = 67
+C: empty answers = 14, answer is a substring of the question = 59
+B_query: contains gold answer = 2, contains few-shot words (Jane Austen/Pride and Prejudice/Au/gold) = 235
+D_query: contains gold answer = 2, contains few-shot words (Jane Austen/Pride and Prejudice/Au/gold) = 1

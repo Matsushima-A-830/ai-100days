@@ -146,40 +146,40 @@
   </div>
 
   <div class="heading">
-    <h1>検索を教え込んだ360Mモデルに検索させたら、むしろ正解が減った</h1>
-    <p><span class="src">QueryLM</span>は、事前学習の段階からモデル自身に検索クエリを書かせる「search-native」な手法で学習された360Mモデル(Apache-2.0)。同条件のStandardベースラインと8問の知識QAで比較した。</p>
+    <h1>「検索が裏目」は8問での見え方。300問では検索で正解が増えた</h1>
+    <p><span class="src">QueryLM</span>は、事前学習の段階からモデル自身に検索クエリを書かせる「search-native」な手法で学習された360Mモデル(Apache-2.0)。同条件のベースラインと比べ、Natural Questions 300問で測り直した。</p>
   </div>
 
   <div class="stat-row">
-    <div class="stat-number">3 → 2</div>
-    <div class="stat-caption">QueryLM(360M)の8問中正解数。<strong>検索なしで3問</strong>正解していたのに、<strong>検索を使わせると2問</strong>に下がった(Standardベースラインは検索なしでも0問)。</div>
+    <div class="stat-number">1 → 17</div>
+    <div class="stat-caption">QueryLM(360M)のNQ 300問中の正解数。<strong>検索なしは1問</strong>(ベースラインも1問)、<strong>正解入りの段落を渡すと17問</strong>。検索で崩れたのは1問だけ。</div>
   </div>
 
   <section class="block compare">
-    <div class="block-label">同じ2問での挙動(検索なし vs 検索あり)</div>
+    <div class="block-label">同じ2問での挙動(NQ 300問から)</div>
     <div class="compare-grid">
-      <div class="compare-panel good">
-        <div class="compare-title">✓ QueryLM・検索なし</div>
-        <pre class="compare-output">Q: Pride and Prejudiceの作者は?
-A: Jane Austen
-
-Q: 世界最高峰は?
-A: Mount Everest</pre>
-      </div>
       <div class="compare-panel bad">
-        <div class="compare-title">✗ QueryLM・検索あり(同じ2問)</div>
-        <pre class="compare-output">Q: Pride and Prejudiceの作者は?
-A: (空文字列)
+        <div class="compare-title">✗ QueryLM・検索なし</div>
+        <pre class="compare-output">Q: 米最高裁初の女性判事は?
+A: Mary Shelley
 
-Q: 世界最高峰は?
-A: Au</pre>
+Q: アイルランド最後の死刑囚は?
+A: John Lydgate</pre>
+      </div>
+      <div class="compare-panel good">
+        <div class="compare-title">✓ QueryLM・正解入りの段落を渡す</div>
+        <pre class="compare-output">Q: 米最高裁初の女性判事は?
+A: Sandra Day O'Connor
+
+Q: アイルランド最後の死刑囚は?
+A: Michael Manning</pre>
       </div>
     </div>
   </section>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>チャット微調整版(sft-search)で同じ8問を試すと、この不安定さは見られず全問で本題は正解した。ベースモデルのまま検索をさせた場合に限った現象。</p>
+    <p>最初の8問では「検索させると3→2問に減った」が、手元のCPU/GPU×BF16/FP32ではすべて3問で再現せず(BF16の数値差)。クエリには例題の単語が235/300件で混入。チャット微調整版は3→80問。</p>
   </div>
 
   <footer>

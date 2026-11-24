@@ -1,91 +1,87 @@
 1
-00:00:00,000 --> 00:00:05,562
+00:00:00,000 --> 00:00:05,177
 Day 57: QueryLM, a 360 million parameter model pretrained from
 
 2
-00:00:05,562 --> 00:00:10,495
-scratch to write search queries, tested on a local CPU.
+00:00:05,177 --> 00:00:08,517
+scratch to write its own search queries,
 
 3
-00:00:10,945 --> 00:00:14,653
-QueryLM was pretrained on Wikipedia text where some positions
+00:00:08,517 --> 00:00:10,437
+retested on a local PC.
 
 4
-00:00:14,653 --> 00:00:18,118
-were replaced with a search query followed by a retrieved
+00:00:10,887 --> 00:00:14,557
+QueryLM was pretrained on Wikipedia text where some positions
 
 5
-00:00:18,118 --> 00:00:18,604
-passage.
+00:00:14,557 --> 00:00:17,986
+were replaced with a search query followed by a retrieved
 
 6
-00:00:18,604 --> 00:00:21,157
-The model only learned to write the query,
+00:00:17,986 --> 00:00:18,467
+passage.
 
 7
-00:00:21,157 --> 00:00:23,345
-never to predict the passage itself.
+00:00:18,467 --> 00:00:20,994
+The model only learned to write the query,
 
 8
-00:00:23,795 --> 00:00:27,878
-Given a question, the model can open a search block and
+00:00:20,994 --> 00:00:23,159
+never to predict the passage itself.
 
 9
-00:00:27,878 --> 00:00:30,772
-write its own query, at most 24 tokens.
+00:00:23,609 --> 00:00:27,766
+Given a question, the model can open a search block and
 
 10
-00:00:31,222 --> 00:00:33,144
-The caller runs any retriever and
+00:00:27,766 --> 00:00:30,714
+write its own query, at most 24 tokens.
 
 11
-00:00:33,144 --> 00:00:35,415
-inserts the passage back into the text.
+00:00:31,164 --> 00:00:33,068
+The caller runs any retriever and
 
 12
-00:00:35,415 --> 00:00:38,908
-The model was never trained to generate that passage itself.
+00:00:33,068 --> 00:00:35,319
+inserts the passage back into the text.
 
 13
-00:00:39,358 --> 00:00:42,946
-With the passage in context, the model keeps generating and
+00:00:35,319 --> 00:00:38,781
+The model was never trained to generate that passage itself.
 
 14
-00:00:42,946 --> 00:00:44,223
-answers the question.
+00:00:39,231 --> 00:00:42,810
+With the passage in context, the model keeps generating and
 
 15
-00:00:44,673 --> 00:00:46,425
-On 8 knowledge questions,
+00:00:42,810 --> 00:00:44,084
+answers the question.
 
 16
-00:00:46,425 --> 00:00:50,210
-QueryLM beat the standard baseline 3 to 0 even without
+00:00:44,534 --> 00:00:47,850
+On 8 questions, searching seemed to hurt:
 
 17
-00:00:50,210 --> 00:00:50,911
-searching.
+00:00:47,850 --> 00:00:49,711
+3 correct dropped to 2.
 
 18
-00:00:50,911 --> 00:00:54,486
-But letting it actually search sometimes backfired:
+00:00:49,711 --> 00:00:54,645
+Rerunning on CPU and GPU in two precisions gave 3 every time.
 
 19
-00:00:54,486 --> 00:00:58,552
-two answers it had right turned into an empty string or an
+00:00:54,645 --> 00:00:59,580
+On 300 questions, search lifted QueryLM from 1 to 17 correct.
 
 20
-00:00:58,552 --> 00:00:59,603
-unrelated word.
+00:01:00,030 --> 00:01:02,928
+The chat fine-tuned version went from 3 to 80.
 
 21
-00:01:00,053 --> 00:01:02,553
-Chat fine-tuning fixed this instability.
-
-22
-00:01:02,553 --> 00:01:05,615
+00:01:02,928 --> 00:01:06,015
 Full results and sources are in the Zenn article,
 
-23
-00:01:05,615 --> 00:01:06,427
+22
+00:01:06,015 --> 00:01:06,834
 linked below.
