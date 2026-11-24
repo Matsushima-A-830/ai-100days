@@ -1,0 +1,10 @@
+=== QueryLM (search-native) ===
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights:  83%|████████▎ | 240/290 [00:00<00:00, 2398.44it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 2841.00it/s]
+WEB_QUERY ids: 49152 49153
+query : Jane Austen Pride and Prejudice capital Australia answer
+answer: The capital of Australia
+
+=== Standard (no-search baseline) ===
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 3158.54it/s]
+answer: Gold

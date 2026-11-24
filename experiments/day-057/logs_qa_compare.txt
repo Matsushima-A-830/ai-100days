@@ -1,0 +1,68 @@
+Loading QueryLM...
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 3229.90it/s]
+Loading Standard...
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|██████████| 290/290 [00:00<00:00, 2980.92it/s]
+{
+  "question": "Who wrote the novel Pride and Prejudice?",
+  "querylm_no_search": "Jane Austen",
+  "querylm_query": "Pride and Prejudice novel author",
+  "querylm_retrieved": "Pride and Prejudice is an 1813 novel of manners written by Jane Austen.",
+  "querylm_with_search": "",
+  "standard": "Jane Austen"
+}
+{
+  "question": "What is the chemical symbol for gold?",
+  "querylm_no_search": "Au",
+  "querylm_query": "Jane Austen Question What is the chemical symbol for gold",
+  "querylm_retrieved": "Gold is a chemical element with the symbol Au and atomic number 79.",
+  "querylm_with_search": "Au",
+  "standard": "Gold?"
+}
+{
+  "question": "What is the capital of Australia?",
+  "querylm_no_search": "The capital of Australia",
+  "querylm_query": "Jane Austen Pride and Prejudice capital Australia answer",
+  "querylm_retrieved": "Canberra is the capital city of Australia. It was founded in 1913 and is the country's largest inland city.",
+  "querylm_with_search": "The capital of Australia",
+  "standard": "Gold"
+}
+{
+  "question": "What is the capital of Mongolia?",
+  "querylm_no_search": "The capital of Mongolia?",
+  "querylm_query": "Mongolia capital symbol gold Au",
+  "querylm_retrieved": "Ulaanbaatar is the capital and largest city of Mongolia.",
+  "querylm_with_search": "Ulaanbaatar",
+  "standard": "Gold"
+}
+{
+  "question": "Who painted the Mona Lisa?",
+  "querylm_no_search": "Jane Austen",
+  "querylm_query": "Jane Austen Mona Lisa painting question",
+  "querylm_retrieved": "The Mona Lisa is a half-length portrait painting by the Italian artist Leonardo da Vinci.",
+  "querylm_with_search": "The Mona Lisa",
+  "standard": "The Mona Lisa?"
+}
+{
+  "question": "In which year did the Berlin Wall fall?",
+  "querylm_no_search": "1949",
+  "querylm_query": "Pride and Prejudice Berlin Wall fall year date",
+  "querylm_retrieved": "The Berlin Wall fell on 9 November 1989, when East Germany announced that its citizens could cross the border freely.",
+  "querylm_with_search": "The Berlin Wall fell?",
+  "standard": "1961"
+}
+{
+  "question": "What is the tallest mountain in the world?",
+  "querylm_no_search": "Mount Everest",
+  "querylm_query": "tallest mountain world answer Au symbol",
+  "querylm_retrieved": "Mount Everest, known in Nepali as Sagarmatha, is Earth's highest mountain above sea level, located in the Himalayas.",
+  "querylm_with_search": "Au",
+  "standard": "The highest mountain in the world?"
+}
+{
+  "question": "Who was the first person to walk on the Moon?",
+  "querylm_no_search": "John Lennon",
+  "querylm_query": "first person walk on the Moon name",
+  "querylm_retrieved": "Neil Armstrong was an American astronaut who became the first person to walk on the Moon, on July 20, 1969, during the Apollo 11 mission.",
+  "querylm_with_search": "",
+  "standard": "The first person to walk on the Moon?"
+}
