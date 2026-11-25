@@ -2252,3 +2252,48 @@
 - 検証難易度: 高。ページ上で公開コード・ライセンスの記載が確認できず、再現には論文記載の学習済みチェックポイントではなく追加学習(SFTおよびループ対応キーの学習)が必要になる可能性が高い。本チャレンジがDay-055で検証したSenseNova-Loop-9B(学習済みの重みをそのまま使い、推論時にループ回数だけ変える検証)とは異なり、本手法は学習段階そのものに手を加える提案のため、GPU負荷・再現コストがより高い。
 - 見栄え: 高い(Day-055のSenseNova-Loop-9Bと同じ「ループ型デコーダ」というテーマの最新作で、「推論時にループ回数を変える」vs「学習時にループ残差接続を加える」という比較軸になり得る)。ただしコード未公開・再現コストの高さから今回は見送る。コードが公開されれば再検討の価値がある。
 - 状態: 見送り
+
+### [2026-11-25] jingyaogong/minimind — 64Mパラメータの小型LLMをゼロから2時間・約3円で学習できる教育用プロジェクト
+
+- 出典: https://github.com/jingyaogong/minimind (本日GitHub Trending Pythonで+828star/日、累計約70,895star。2024-08-27公開、現行のminimind-3は2026-04-01リリース。Apache-2.0)
+- 概要: 事前学習・SFT・LoRA・DPO・RLAIF(PPO/GRPO/CISPO)・ツール利用・エージェントRL・蒸留まで、小型LLMの学習パイプライン全体をネイティブPyTorchでフルスクラッチ実装した教育用プロジェクト。64Mパラメータの密なモデルと、総198M/アクティブ64MのMoE版(minimind-3-moe)を提供し、「NVIDIA 3090 1枚・2時間・約3円でゼロから自分のLLMを学習できる」ことを売りにする。モデル・データセットはHugging Face/ModelScopeから取得でき、RLAIFを試す場合のみ別途報酬モデル(InternLM2-1.8B-Reward)のダウンロードが必要。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では著者自身による検証記事は未検出。英語記事〈pyshine.com等〉はあるが、「2時間」はSFT単体1エポックの実測値であり全工程では異なる点に触れている日本語記事は見当たらない)
+- 検証難易度: 低。Apache-2.0でAPIキー不要。著者の推奨環境はRTX 3090だが、CPU/Apple Silicon(MPS)でも動作すると明記されており(速度は劣る)、本チャレンジの過去実績のGPU〈RTX 5060 Ti 16GB〉があれば6時間以内に事前学習→SFT→簡単な応答確認まで完結できる見込み。
+- 見栄え: 高い。「ゼロから学習した64Mモデルが実際にどの程度チャットに応答できるか」を対話ログで見せられ、学習時間・コストという具体的な数値もシェアカードに使える。
+- 状態: 未選択
+
+### [2026-11-25] mvanhorn/last30days-skill — Reddit・X・HN・Polymarket等を横断し「本物の反応」でトピックを要約するAIエージェント向けスキル
+
+- 出典: https://github.com/mvanhorn/last30days-skill (本日GitHub Trending Pythonで+950star/日、累計約75,022star。GitHub Trending「Repository of the day」。MIT)
+- 概要: Claude Code等のAIエージェント向けスキルとして、直近30日間のReddit・X(Twitter)・YouTube・Hacker News・Polymarket・TikTok・GitHub・Web検索を横断し、アップ票・いいね・予測市場の出来高といった実際のエンゲージメント量で結果をランク付けした上で、出典付きの要約をエージェントに書かせるツール。「Googleは編集者を集約するが、/last30daysは人々を検索する」というコンセプト。Reddit・Hacker News・Polymarket・GitHubは追加キー無しでそのまま動作し、X・YouTube・TikTok等は任意のAPIキー/ログイン情報で機能が拡張される。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語での紹介記事〈knightli.com等〉はあるがZenn/Qiita/noteでの検証記事は未検出)
+- 検証難易度: 低。MITでAPIキー不要の範囲(Reddit/HN/Polymarket/GitHub)だけでも実用的な検証が可能。GPU不要。本リポジトリ自身の毎朝のリサーチRoutine(本タスク)と同じ「海外のネタを横断的に集める」という目的が重なり、自己言及的な検証がしやすい。
+- 見栄え: 高い。「このスキルを使って集めた候補と、Routineが人力で巡回して集めた候補を比べる」というBefore/After・自己言及的な比較記事が作れる。
+- 状態: 未選択
+
+### [2026-11-25] p-e-w/heretic — 再学習なしでLLMの拒否応答(セーフティアライメント)を自動的に抑制するツール(abliteration最適化。採用時は発信内容に要注意)
+
+- 出典: https://github.com/p-e-w/heretic (本日GitHub Trending Pythonで+213star/日、累計約43,182star。Trendshift「Repository of the Day」。AGPL-3.0)
+- 概要: directional ablation(いわゆる「abliteration」)という既存の研究手法を、Optunaによるパラメータ自動探索(拒否応答の抑制量とKLダイバージェンスの両方を最小化)と組み合わせ、追加学習無しで既存のtransformer系LLMの拒否応答・迎合性・応答長などの挙動を変更できるようにしたツール。`pip install heretic-llm`で導入し、対象モデルを指定して実行するだけで動く。コミュニティで既に1,000〜5,000以上の派生モデルがHugging Faceに公開されている。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では著者自身による検証記事は未検出。GIGAZINE等の紹介記事はある)
+- 検証難易度: 低〜中。AGPL-3.0でAPIキー不要。小型モデル(1B台)であればGPU無しでも動作検証できる可能性があるが、著者の例示〈Qwen3-4B・RTX 3090で30〜40分〉はGPUを前提。本チャレンジの過去実績のGPUがあれば6時間以内に完結する。
+- 見栄え: 高い。KLダイバージェンス等の定量評価値で「安全性アライメントをどの程度動かしたか」を示せる技術的なデモになる。ただし「検閲解除」を扱うツールであり、採用する場合は発信時にデュアルユース性(悪用リスク)に触れた上で、あくまでセーフティアライメントの仕組みを理解するための技術検証という文脈を明確にする必要がある。採用するかどうかは人間の判断を仰ぎたい。
+- 状態: 未選択
+
+### [2026-11-25] HKUDS/CLI-Anything — 既存のGUIソフトウェアをAIエージェントが操作できるCLIに自動変換するツール
+
+- 出典: https://github.com/HKUDS/CLI-Anything (本日GitHub Trending Pythonで+1,094star/日、累計約65,603star。GitHub Trending「Repository of the Day」。香港大学HKUDSによる2026年3月公開)
+- 概要: GIMP・Blender・LibreOffice・Obsidian・Zotero・ComfyUIなど、GUI操作が前提で従来AIエージェントが扱いづらかったソフトウェアに対し、7段階の生成パイプラインでコードベースを解析し、JSON出力・REPL・undo/redo付きのPython製CLIを自動生成する(README上はApache-2.0表記だが、一部転載記事ではMIT表記も見られ採用時はLICENSEファイルで要確認)。生成されたCLIは`SKILL.md`付きでClaude Code/Cursor/Codex等のエージェントがそのまま発見・利用できる。コミュニティ製CLIを配布する「CLI-Hub」レジストリも併設。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲ではissoh.co.jp・apidog.com等の日本語紹介記事はあるが、Zenn/Qiita/noteでの著者自身による検証記事は未検出)
+- 検証難易度: 低〜中。APIキー不要で、Claude Code自身をエージェントとして使えば追加キー不要。対象ソフトウェア(例: GIMP・LibreOffice等、いずれも無料インストール可)をRoutine/ローカル環境に導入する手間はあるが、GPU不要で6時間以内に完結する見込み。
+- 見栄え: 高い。「CLI生成前はエージェントが操作できなかったGUIソフトを、生成後はコマンドで操作できるようになる」というBefore/After比較がわかりやすい。
+- 状態: 未選択
+
+### [2026-11-25] google-research/paper-orchestra — 実験ログとアイデアから学会投稿用LaTeX論文を自動生成するマルチエージェントフレームワーク(参考・有料APIキー必須のため今回は選ばない)
+
+- 出典: https://github.com/google-research/paper-orchestra (Apache-2.0。Google Cloud AI Researchによる2026年公開、関連論文 arXiv:2604.05018)
+- 概要: 実験ログ・アイデアといった生の材料を入力に、アウトライン作成・文献レビュー・セクション執筆・推敲・図表作成を専門分化した複数エージェントが分担し、文献調査や図を含む学会投稿用LaTeXの原稿を生成するフレームワーク。Streamlitデモとカンファレンス用LaTeXテンプレートを同梱。
+- 日本語記事件数: Zenn 0件 / Qiita 0件 / note 0件(検索した範囲では日本語一次検証記事は未検出。日本語ニュース紹介記事〈2026-04-08付〉はある)
+- 検証難易度: 高。コード自体はApache-2.0でGPU不要だが、文献検索にSemantic Scholar、文章生成にOpenAI・GeminiのAPIキーが必須と明記されており、本チャレンジの「有料APIキー必須の候補は選ばない」方針に反する。Claude Code自身への差し替えが容易にできるかは要確認で、今回は見送る。
+- 見栄え: 高い(「実験ログから論文のドラフトが自動生成される」という分かりやすいデモ性はある)。ただしAPIキー要件から今回は見送り。
+- 状態: 見送り
