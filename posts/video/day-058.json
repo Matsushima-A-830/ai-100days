@@ -1,0 +1,152 @@
+{
+  "day": 58,
+  "project": "OpenSRE",
+  "slug": "opensre",
+  "tagline": "A self-hosted AI agent that investigates CI/CD failures",
+  "source_url": "github.com/Tracer-Cloud/opensre",
+  "license": "Apache-2.0",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 58: OpenSRE, a self-hosted agent that investigates CI failures. We ran it on a local model, with no paid API key."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "Takes an alert and finds the root cause",
+        "Plans, gathers evidence, then diagnoses",
+        "Runs on a local Ollama model"
+      ],
+      "narration": "You hand it an alert. It plans what to check, gathers evidence from your tools, and writes a root cause report."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {
+          "id": "alert",
+          "label": "Alert JSON",
+          "sub": "CI log + diff",
+          "pos": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "plan",
+          "label": "Plan",
+          "sub": "plan_actions",
+          "pos": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "llm",
+          "label": "Local LLM",
+          "sub": "qwen2.5:7b-instruct",
+          "pos": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "tools",
+          "label": "Gather evidence",
+          "sub": "get_error_logs",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "id": "code",
+          "label": "Run code",
+          "sub": "run_diagnostic_code",
+          "pos": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "diag",
+          "label": "Diagnose",
+          "sub": "root_cause_diagnosis",
+          "pos": [
+            0,
+            3
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "alert",
+          "to": "plan",
+          "label": "read"
+        },
+        {
+          "from": "plan",
+          "to": "llm",
+          "label": "ask"
+        },
+        {
+          "from": "plan",
+          "to": "tools",
+          "label": "pick"
+        },
+        {
+          "from": "plan",
+          "to": "code",
+          "label": "pick"
+        },
+        {
+          "from": "tools",
+          "to": "diag",
+          "label": "evidence"
+        }
+      ],
+      "steps": [
+        {
+          "focus": [
+            "alert",
+            "plan",
+            "llm"
+          ],
+          "narration": "We broke a tiny repo by swapping round for int, which truncates. The CI log went into the alert."
+        },
+        {
+          "focus": [
+            "plan",
+            "tools",
+            "code"
+          ],
+          "narration": "The planner picks tools. Log tools need Datadog or AWS, and the code runner was called without arguments."
+        },
+        {
+          "focus": [
+            "tools",
+            "diag"
+          ],
+          "narration": "So the loop ran five times, and every evidence step came back empty."
+        }
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "0 / 4",
+      "caption": "Runs that named the real cause: int() truncation.",
+      "lines": [
+        "code_defect      4 / 4",
+        "evidence found   0 / 20",
+        "14B finished     0 / 2"
+      ],
+      "narration": "All four runs called it a code defect, but none found the truncation. On CPU, the 14B model never finished, because of a fixed sixty second timeout."
+    },
+    {
+      "type": "outro",
+      "narration": "Apache-2.0, self-hosted. Logs and the write-up are on Zenn and GitHub."
+    }
+  ]
+}

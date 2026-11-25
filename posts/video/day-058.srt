@@ -1,0 +1,79 @@
+1
+00:00:00,000 --> 00:00:05,098
+Day 58: OpenSRE, a self-hosted agent that investigates CI
+
+2
+00:00:05,098 --> 00:00:05,904
+failures.
+
+3
+00:00:05,904 --> 00:00:10,286
+We ran it on a local model, with no paid API key.
+
+4
+00:00:10,736 --> 00:00:11,978
+You hand it an alert.
+
+5
+00:00:11,978 --> 00:00:15,347
+It plans what to check, gathers evidence from your tools,
+
+6
+00:00:15,347 --> 00:00:17,180
+and writes a root cause report.
+
+7
+00:00:17,630 --> 00:00:20,939
+We broke a tiny repo by swapping round for int,
+
+8
+00:00:20,939 --> 00:00:22,065
+which truncates.
+
+9
+00:00:22,065 --> 00:00:24,248
+The CI log went into the alert.
+
+10
+00:00:24,698 --> 00:00:26,259
+The planner picks tools.
+
+11
+00:00:26,259 --> 00:00:28,210
+Log tools need Datadog or AWS,
+
+12
+00:00:28,210 --> 00:00:31,397
+and the code runner was called without arguments.
+
+13
+00:00:31,847 --> 00:00:33,746
+So the loop ran five times,
+
+14
+00:00:33,746 --> 00:00:36,560
+and every evidence step came back empty.
+
+15
+00:00:37,010 --> 00:00:39,785
+All four runs called it a code defect,
+
+16
+00:00:39,785 --> 00:00:41,976
+but none found the truncation.
+
+17
+00:00:41,976 --> 00:00:44,678
+On CPU, the 14B model never finished,
+
+18
+00:00:44,678 --> 00:00:47,599
+because of a fixed sixty second timeout.
+
+19
+00:00:48,049 --> 00:00:50,104
+Apache-2.0, self-hosted.
+
+20
+00:00:50,104 --> 00:00:53,958
+Logs and the write-up are on Zenn and GitHub.

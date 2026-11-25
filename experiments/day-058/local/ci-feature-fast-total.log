@@ -1,0 +1,17 @@
+$ ruff check .
+All checks passed!
+$ pytest -q
+.F.                                                                      [100%]
+=================================== FAILURES ===================================
+________________________________ test_rounding _________________________________
+
+    def test_rounding():
+>       assert total_with_tax(19.99) == 21.99
+E       assert 21.98 == 21.99
+E        +  where 21.98 = total_with_tax(19.99)
+
+tests/test_calc.py:9: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_calc.py::test_rounding - assert 21.98 == 21.99
+1 failed, 2 passed in 0.02s
+Process completed with exit code 1.

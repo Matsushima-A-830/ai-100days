@@ -1,0 +1,2 @@
+6917f6e Speed up total_with_tax using integer cents
+e558453 Add invoice total calculation with tests

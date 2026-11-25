@@ -1,0 +1,6 @@
+{
+  "report": "test_rounding assert failure due to incorrect rounding in the `total_with_tax` function\n\n## Findings\n\u2022 The test job `test_rounding` failed due to an assert statement where the expected value (21.99) did not match the actual value (21.98).\n\n*Non-Validated Claims (Inferred):*\n\u2022 The `total_with_tax` function's rounding logic might be inconsistent or incorrect [evidence: a review of the `total_with_tax` function code would confirm or refute this].\n\n\n*Cited Evidence:*\n- Queries: get sre guidance\n\n\nTiming: 449s\n",
+  "problem_md": "# CI failed: test job on feature/fast-total\nPipeline: invoice-calc CI | Severity: high\n\nError: All checks passed!\n.F.                                                                      [100%]\n=================================== FAILURES ===================================\n________________________________ test_rounding _________________________________\n\n    def test_rounding():\n>       assert total_with_tax(19.99) == 21.99\nE       assert 21.98 == 21.99\nE        +  where 21.98 = total_with_tax(19.99)\n\ntests/test_calc.py:9: AssertionError",
+  "root_cause": "test_rounding assert failure due to incorrect rounding in the `total_with_tax` function [evidence: tests/test_calc.py:9].",
+  "is_noise": false
+}
