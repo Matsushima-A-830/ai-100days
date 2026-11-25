@@ -1,0 +1,65 @@
+  … Reading alert
+
+  Alert      CI failed: test job on feature/fast-total
+  Pipeline   invoice-calc CI
+  Severity   high
+
+  ● Reading alert  46.8s
+  … Loading integrations
+  ● Loading integrations  0ms  No auth context and no local integrations found (store: /home/runner/.tracer/integrations.json, env fallback checked)
+  … Planning
+  ● Planning  49.3s  error logs, SRE runbook
+  … Gathering evidence
+[WARNING] Action failed: get_error_logs:FAILED(Action not available: required data sources not fo)
+  ● Gathering evidence  1ms  No evidence collected | Errors: get_error_logs:FAILED(Action not available: required data sources not fo)
+  … Diagnosing
+  ● Diagnosing  106.2s  confidence 25%
+  … Planning
+  ● Planning  48.9s  error logs, run diagnostic code
+  … Gathering evidence
+[WARNING] Action failed: get_error_logs:FAILED(Action not available: required data sources not fo)
+[WARNING] Action failed: run_diagnostic_code:FAILED(TypeError: run_diagnostic_code() missing 1 require)
+  ● Gathering evidence  1ms  No evidence collected | Errors: get_error_logs:FAILED(Action not available: required data sources not fo), run_diagnostic_code:FAILED(TypeError: run_diagnostic_code() missing 1 require)
+  … Diagnosing
+  ● Diagnosing  51.7s  confidence 70%
+  … Planning
+  ● Planning  41.2s  error logs, run diagnostic code
+  … Gathering evidence
+[WARNING] Action failed: get_error_logs:FAILED(Action not available: required data sources not fo)
+[WARNING] Action failed: run_diagnostic_code:FAILED(TypeError: run_diagnostic_code() missing 1 require)
+  ● Gathering evidence  1ms  No evidence collected | Errors: get_error_logs:FAILED(Action not available: required data sources not fo), run_diagnostic_code:FAILED(TypeError: run_diagnostic_code() missing 1 require)
+  … Diagnosing
+  ● Diagnosing  29.7s  confidence 43%
+  … Planning
+  ● Planning  27.8s  error logs
+  … Gathering evidence
+[WARNING] Action failed: get_error_logs:FAILED(Action not available: required data sources not fo)
+  ● Gathering evidence  0ms  No evidence collected | Errors: get_error_logs:FAILED(Action not available: required data sources not fo)
+  … Diagnosing
+  ● Diagnosing  44.4s  confidence 45%
+  … Planning
+  ● Planning  12.6s  error logs, run diagnostic code
+  … Gathering evidence
+[WARNING] Action failed: get_error_logs:FAILED(Action not available: required data sources not fo)
+[WARNING] Action failed: run_diagnostic_code:FAILED(TypeError: run_diagnostic_code() missing 1 require)
+  ● Gathering evidence  0ms  No evidence collected | Errors: get_error_logs:FAILED(Action not available: required data sources not fo), run_diagnostic_code:FAILED(TypeError: run_diagnostic_code() missing 1 require)
+  … Diagnosing
+  ● Diagnosing  38.7s  confidence 25%
+
+Investigation complete
+
+Most likely: code_defect
+
+## Findings
+• The test job failed with an assertion error in `test_rounding`
+
+Non-Validated Claims (Inferred):
+• The failure might be due to a recent code change, but this would need additional context from the commit history or code review [evidence: github]
+
+
+Cited Evidence:
+- Queries: get sre guidance
+
+
+Timing: 497s
+

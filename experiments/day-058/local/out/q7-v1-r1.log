@@ -1,0 +1,63 @@
+  … Reading alert
+
+  Alert      CI failed: test job on feature/fast-total
+  Pipeline   invoice-calc CI
+  Severity   high
+
+  ● Reading alert  105.5s
+  … Loading integrations
+  ● Loading integrations  0ms  No auth context and no local integrations found (store: /home/runner/.tracer/integrations.json, env fallback checked)
+  … Planning
+  ● Planning  52.5s  run diagnostic code
+  … Gathering evidence
+[WARNING] Action failed: run_diagnostic_code:FAILED(TypeError: run_diagnostic_code() missing 1 require)
+  ● Gathering evidence  5ms  No evidence collected | Errors: run_diagnostic_code:FAILED(TypeError: run_diagnostic_code() missing 1 require)
+  … Diagnosing
+  ● Diagnosing  54.2s  confidence 33%
+  … Planning
+  ● Planning  22.3s  SRE runbook
+  … Gathering evidence
+  ● Gathering evidence  1ms  No new evidence
+  … Diagnosing
+  ● Diagnosing  40.9s  confidence 25%
+  … Planning
+  ● Planning  44.9s  batch jobs, error logs
+  … Gathering evidence
+[WARNING] Action failed: get_failed_jobs:FAILED(Action not available: required data sources not fo)
+[WARNING] Action failed: get_error_logs:FAILED(Action not available: required data sources not fo)
+  ● Gathering evidence  0ms  No evidence collected | Errors: get_failed_jobs:FAILED(Action not available: required data sources not fo), get_error_logs:FAILED(Action not available: required data sources not fo)
+  … Diagnosing
+  ● Diagnosing  53.2s  confidence 33%
+  … Planning
+  ● Planning  12.4s  batch jobs, error logs
+  … Gathering evidence
+[WARNING] Action failed: get_failed_jobs:FAILED(Action not available: required data sources not fo)
+[WARNING] Action failed: get_error_logs:FAILED(Action not available: required data sources not fo)
+  ● Gathering evidence  0ms  No evidence collected | Errors: get_failed_jobs:FAILED(Action not available: required data sources not fo), get_error_logs:FAILED(Action not available: required data sources not fo)
+  … Diagnosing
+  ● Diagnosing  37.9s  confidence 33%
+  … Planning
+  ● Planning  18.9s  error logs
+  … Gathering evidence
+[WARNING] Action failed: get_error_logs:FAILED(Action not available: required data sources not fo)
+  ● Gathering evidence  0ms  No evidence collected | Errors: get_error_logs:FAILED(Action not available: required data sources not fo)
+  … Diagnosing
+  ● Diagnosing  44.0s  confidence 25%
+
+Investigation complete
+
+Most likely: code_defect
+
+## Findings
+• The test job failed due to a matching failure in the rounding assertion.
+
+Non-Validated Claims (Inferred):
+• The assertion failure might be caused by a recent code change in the `test_calc.py` file, although the evidence does not provide information on recent changes. [evidence: Need revision history or diff of test_calc.py in the last commit]
+
+
+Cited Evidence:
+- Queries: get sre guidance
+
+
+Timing: 487s
+

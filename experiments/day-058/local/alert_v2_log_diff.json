@@ -1,0 +1,16 @@
+{
+  "alert_name": "CI failed: test job on feature/fast-total",
+  "pipeline_name": "invoice-calc CI",
+  "severity": "high",
+  "alert_source": "generic",
+  "message": "GitHub Actions workflow 'CI' failed on branch feature/fast-total (job: test, step: pytest -q). Head commit 6917f6e: 'Speed up total_with_tax using integer cents'. The previous commit e558453 on main passed.",
+  "commonAnnotations": {
+    "summary": "CI test job failed after commit 6917f6e",
+    "repository": "invoice-calc",
+    "branch": "feature/fast-total",
+    "failed_step": "pytest -q",
+    "ci_log": "$ ruff check .\nAll checks passed!\n$ pytest -q\n.F.                                                                      [100%]\n=================================== FAILURES ===================================\n________________________________ test_rounding _________________________________\n\n    def test_rounding():\n>       assert total_with_tax(19.99) == 21.99\nE       assert 21.98 == 21.99\nE        +  where 21.98 = total_with_tax(19.99)\n\ntests/test_calc.py:9: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_calc.py::test_rounding - assert 21.98 == 21.99\n1 failed, 2 passed in 0.02s\nProcess completed with exit code 1.\n",
+    "correlation_id": "ci-invoice-calc-6917f6e",
+    "commit_diff": "diff --git a/src/invoice_calc/calc.py b/src/invoice_calc/calc.py\nindex 244a818..9350056 100644\n--- a/src/invoice_calc/calc.py\n+++ b/src/invoice_calc/calc.py\n@@ -5,4 +5,5 @@ TAX_RATE = 0.10\n \n def total_with_tax(subtotal: float, rate: float = TAX_RATE) -> float:\n     \"\"\"Return subtotal plus tax, rounded to 2 decimal places.\"\"\"\n-    return round(subtotal * (1 + rate), 2)\n+    # Faster: integer cents arithmetic\n+    return int(subtotal * (1 + rate) * 100) / 100\n"
+  }
+}

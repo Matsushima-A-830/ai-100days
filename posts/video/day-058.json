@@ -8,56 +8,145 @@
   "scenes": [
     {
       "type": "title",
-      "narration": "Day 58: OpenSRE, a self-hosted agent that investigates CI failures, tested without any paid API key."
+      "narration": "Day 58: OpenSRE, a self-hosted agent that investigates CI failures. We ran it on a local model, with no paid API key."
     },
     {
       "type": "overview",
       "heading": "What is it?",
       "bullets": [
-        "Reads CI logs to find the root cause of a failure",
-        "Separates CI-caused failures from code-caused ones",
-        "Can push a fix to the PR branch for review"
+        "Takes an alert and finds the root cause",
+        "Plans, gathers evidence, then diagnoses",
+        "Runs on a local Ollama model"
       ],
-      "narration": "OpenSRE reads failing CI logs, figures out whether the pipeline or the code is at fault, and can push a fix back to the pull request."
+      "narration": "You hand it an alert. It plans what to check, gathers evidence from your tools, and writes a root cause report."
     },
     {
       "type": "architecture",
       "heading": "How it works",
       "nodes": [
-        {"id": "cli", "label": "CLI", "sub": "opensre investigate", "pos": [0, 0], "span": 2},
-        {"id": "settings", "label": "Config check", "sub": "LLMSettings.from_env()", "pos": [0, 1]},
-        {"id": "graph", "label": "Agent graph", "sub": "LangGraph state machine", "pos": [1, 1]},
-        {"id": "plan", "label": "Plan actions", "sub": "gathers evidence", "pos": [0, 2]},
-        {"id": "client", "label": "LLM client", "sub": "llm_client.py", "pos": [1, 2]},
-        {"id": "backend", "label": "Model backend", "sub": "Anthropic / OpenAI / Ollama", "pos": [0, 3], "span": 2}
+        {
+          "id": "alert",
+          "label": "Alert JSON",
+          "sub": "CI log + diff",
+          "pos": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "plan",
+          "label": "Plan",
+          "sub": "plan_actions",
+          "pos": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "llm",
+          "label": "Local LLM",
+          "sub": "qwen2.5:7b-instruct",
+          "pos": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "tools",
+          "label": "Gather evidence",
+          "sub": "get_error_logs",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "id": "code",
+          "label": "Run code",
+          "sub": "run_diagnostic_code",
+          "pos": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "diag",
+          "label": "Diagnose",
+          "sub": "root_cause_diagnosis",
+          "pos": [
+            0,
+            3
+          ]
+        }
       ],
       "edges": [
-        {"from": "cli", "to": "settings", "label": "validate"},
-        {"from": "settings", "to": "graph", "label": "provider ok"},
-        {"from": "graph", "to": "plan", "label": "step"},
-        {"from": "plan", "to": "client", "label": "ask"},
-        {"from": "client", "to": "backend", "label": "request"}
+        {
+          "from": "alert",
+          "to": "plan",
+          "label": "read"
+        },
+        {
+          "from": "plan",
+          "to": "llm",
+          "label": "ask"
+        },
+        {
+          "from": "plan",
+          "to": "tools",
+          "label": "pick"
+        },
+        {
+          "from": "plan",
+          "to": "code",
+          "label": "pick"
+        },
+        {
+          "from": "tools",
+          "to": "diag",
+          "label": "evidence"
+        }
       ],
       "steps": [
-        {"focus": ["cli", "settings"], "narration": "Before anything else, OpenSRE validates the configured LLM provider. With nothing set, it defaults to Anthropic."},
-        {"focus": ["settings", "graph", "plan"], "narration": "Once validated, it builds a LangGraph state machine and gathers evidence in a plan actions node."},
-        {"focus": ["plan", "client", "backend"], "narration": "That node asks an LLM client what to check next. It can route to a local Ollama server instead of a cloud API, so no paid key is required."}
+        {
+          "focus": [
+            "alert",
+            "plan",
+            "llm"
+          ],
+          "narration": "We broke a tiny repo by swapping round for int, which truncates. The CI log went into the alert."
+        },
+        {
+          "focus": [
+            "plan",
+            "tools",
+            "code"
+          ],
+          "narration": "The planner picks tools. Log tools need Datadog or AWS, and the code runner was called without arguments."
+        },
+        {
+          "focus": [
+            "tools",
+            "diag"
+          ],
+          "narration": "So the loop ran five times, and every evidence step came back empty."
+        }
       ]
     },
     {
       "type": "finding",
       "heading": "What we found",
-      "stat": "1 env var",
-      "caption": "Same command, same input. Setting LLM_PROVIDER=ollama was the only change.",
+      "stat": "0 / 4",
+      "caption": "Runs that named the real cause: int() truncation.",
       "lines": [
-        "no provider   -> raw crash",
-        "ollama set    -> reaches plan_actions"
+        "code_defect      4 / 4",
+        "evidence found   0 / 20",
+        "14B finished     0 / 2"
       ],
-      "narration": "With no provider set, OpenSRE crashed on a raw Python traceback, since it silently defaults to Anthropic. Setting one variable, LLM_PROVIDER=ollama, let it reach the real LangGraph pipeline before failing on the network call."
+      "narration": "All four runs called it a code defect, but none found the truncation. On CPU, the 14B model never finished, because of a fixed sixty second timeout."
     },
     {
       "type": "outro",
-      "narration": "Apache-2.0, self-hosted. Full write-up, sources and the Ollama follow-up on Zenn and GitHub."
+      "narration": "Apache-2.0, self-hosted. Logs and the write-up are on Zenn and GitHub."
     }
   ]
 }

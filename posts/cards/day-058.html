@@ -1,4 +1,4 @@
-<title>OpenSRE: 鍵無し設定で挙動が一変</title>
+<title>OpenSRE: 壊したCIの調査</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+JP:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -176,42 +176,45 @@
   </div>
 
   <div class="heading">
-    <h1>環境変数1つでクラッシュが消えた</h1>
-    <p>CI障害を調査するAIエージェント<span class="src">OpenSRE</span>を有料APIキー無しで動かそうとした。`LLM_PROVIDER`未設定だと生のPythonスタックトレースで落ちるが、`ollama`を指定するだけで本物のエージェントパイプラインまで到達した。</p>
+    <h1>分類は当たる、原因は当たらない</h1>
+    <p>CI障害を調べるAIエージェント<span class="src">OpenSRE</span>を有料APIキー無し・Ollama(qwen2.5:7b-instruct、CPU)で動かし、<code>round</code>を<code>int()</code>の切り捨てに変えて壊したCIを4回調べさせた。</p>
   </div>
-
   <div class="stat-row">
-    <div class="stat-number">1 env var</div>
-    <div class="stat-caption">同じ`investigate`コマンド・同じ入力JSONに対して、設定した環境変数は<strong>LLM_PROVIDER=ollama</strong>の1つだけ。</div>
+    <div class="stat-number">0 / 4</div>
+    <div class="stat-caption">本当の原因(<strong>int()による切り捨て</strong>)を指摘した回数。調査は4回とも完走(419〜580秒)し、確信度は4回とも25%。</div>
   </div>
-
   <!-- ↓↓↓ パターンB: Before/After比較 -->
   <section class="block compare">
-    <div class="block-label">LLM_PROVIDER設定による挙動の違い</div>
+    <div class="block-label">4回の調査の結論</div>
     <div class="compare-grid">
-      <div class="compare-panel bad">
-        <div class="compare-title">✗ 未設定(デフォルト=anthropic)</div>
-        <pre class="compare-output">pydantic_core._pydantic_core.ValidationError:
-1 validation error for LLMSettings
-Value error, LLM provider 'anthropic'
-requires ANTHROPIC_API_KEY to be set.</pre>
-      </div>
       <div class="compare-panel good">
-        <div class="compare-title">✓ LLM_PROVIDER=ollama</div>
-        <pre class="compare-output">app/nodes/plan_actions/node.py:61
-app/services/llm_client.py:314
-RuntimeError: LLM API request failed
-after multiple retries.</pre>
+        <div class="compare-title">✓ 当たった: 4 / 4</div>
+        <pre class="compare-output">分類 = code_defect
+(CI側ではなくコード側の不具合)
+
+関数名 total_with_tax に言及: 2 / 4</pre>
+      </div>
+      <div class="compare-panel bad">
+        <div class="compare-title">✗ 外れた: 0 / 4</div>
+        <pre class="compare-output">int() 切り捨ての指摘: 0 / 4
+test_calc.py を疑う: 1 / 4
+存在しないDB/AWSログを根拠に: 1 / 4
+diffを渡しても変わらず</pre>
       </div>
     </div>
   </section>
+  <div class="terminal">
+    <div class="term-row"><span class="term-tag">LOOP</span><span>Planning → Gathering evidence → Diagnosing ×5</span></div>
+    <div class="term-row"><span class="term-tag">TOOL</span><span>get_error_logs: required data sources not found</span></div>
+    <div class="term-row"><span class="term-tag">TOOL</span><span>run_diagnostic_code: TypeError (missing 1 required)</span></div>
+    <div class="term-foot">証拠収集20回で <b>証拠0件</b> / 14Bは <b>60秒固定timeout</b> で完走 0 / 2</div>
+  </div>
   <!-- ↑↑↑ パターンBここまで -->
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>Public Alpha段階のOSS(PyPI版2026.4.5)。上記は`experiments/day-058/results.md`に記録した実際のコマンド出力そのまま。Ollamaを実際に起動した本番デモはローカル検証中。</p>
+    <p>PyPI版2026.4.5、連携先(Datadog・AWS等)は未設定、CIログ(+diff)をアラートJSONに入れて<code>opensre investigate</code>に渡した。Ryzen 7 7700のCPU推論。数値は<code>experiments/day-058/results.md</code>より。</p>
   </div>
-
   <footer>
     <div class="sources">
       <a href="https://github.com/Tracer-Cloud/opensre" target="_blank" rel="noopener">→ github.com/Tracer-Cloud/opensre</a>

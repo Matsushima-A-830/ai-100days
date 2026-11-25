@@ -1,0 +1,11 @@
+diff --git a/src/invoice_calc/calc.py b/src/invoice_calc/calc.py
+index 244a818..9350056 100644
+--- a/src/invoice_calc/calc.py
++++ b/src/invoice_calc/calc.py
+@@ -5,4 +5,5 @@ TAX_RATE = 0.10
+ 
+ def total_with_tax(subtotal: float, rate: float = TAX_RATE) -> float:
+     """Return subtotal plus tax, rounded to 2 decimal places."""
+-    return round(subtotal * (1 + rate), 2)
++    # Faster: integer cents arithmetic
++    return int(subtotal * (1 + rate) * 100) / 100

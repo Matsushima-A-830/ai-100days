@@ -1,0 +1,6 @@
+{
+  "report": "Most likely: code_defect\n\n## Findings\n\u2022 The test job failed with an assertion error in `test_rounding`\n\n*Non-Validated Claims (Inferred):*\n\u2022 The failure might be due to a recent code change, but this would need additional context from the commit history or code review [evidence: github]\n\n\n*Cited Evidence:*\n- Queries: get sre guidance\n\n\nTiming: 497s\n",
+  "problem_md": "# CI failed: test job on feature/fast-total\nPipeline: invoice-calc CI | Severity: high\n\nError: FAILED tests/test_calc.py::test_rounding - assert 21.98 == 21.99",
+  "root_cause": "Most likely: code_defect [evidence: error in test suite logs indicating assertion failure]",
+  "is_noise": false
+}

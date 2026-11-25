@@ -1,0 +1,6 @@
+{
+  "report": "Most likely: code_defect\n\n## Findings\n\u2022 The test job failed due to a matching failure in the rounding assertion.\n\n*Non-Validated Claims (Inferred):*\n\u2022 The assertion failure might be caused by a recent code change in the `test_calc.py` file, although the evidence does not provide information on recent changes. [evidence: Need revision history or diff of test_calc.py in the last commit]\n\n\n*Cited Evidence:*\n- Queries: get sre guidance\n\n\nTiming: 487s\n",
+  "problem_md": "# CI failed: test job on feature/fast-total\nPipeline: invoice-calc CI | Severity: high\n\nError: FAILED tests/test_calc.py::test_rounding - assert 21.98 == 21.99\n1 failed, 2 passed in 0.02s\nProcess completed with exit code 1.",
+  "root_cause": "Most likely: code_defect [evidence: failure log from test job]",
+  "is_noise": false
+}

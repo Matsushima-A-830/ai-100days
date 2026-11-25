@@ -1,0 +1,6 @@
+tag=q7-v1-r1 model=qwen2.5:7b-instruct alert=alert_v1_log.json rc=0 wall=451s
+tag=q7-v1-r2 model=qwen2.5:7b-instruct alert=alert_v1_log.json rc=0 wall=419s
+tag=q7-v2-r1 model=qwen2.5:7b-instruct alert=alert_v2_log_diff.json rc=0 wall=462s
+tag=q7-v2-r2 model=qwen2.5:7b-instruct alert=alert_v2_log_diff.json rc=0 wall=580s
+tag=q14-v1-r1 model=qwen2.5:14b-instruct alert=alert_v1_log.json rc=1 wall=1459s
+tag=q14-v2-r1 model=qwen2.5:14b-instruct alert=alert_v2_log_diff.json rc=1 wall=1016s
