@@ -1,0 +1,83 @@
+1
+00:00:00,000 --> 00:00:05,207
+Day 58: OpenSRE, a self-hosted agent that investigates CI
+
+2
+00:00:05,207 --> 00:00:09,044
+failures, tested without any paid API key.
+
+3
+00:00:09,494 --> 00:00:11,520
+OpenSRE reads failing CI logs,
+
+4
+00:00:11,520 --> 00:00:15,370
+figures out whether the pipeline or the code is at fault,
+
+5
+00:00:15,370 --> 00:00:18,341
+and can push a fix back to the pull request.
+
+6
+00:00:18,791 --> 00:00:23,150
+Before anything else, OpenSRE validates the configured LLM
+
+7
+00:00:23,150 --> 00:00:23,826
+provider.
+
+8
+00:00:23,826 --> 00:00:27,057
+With nothing set, it defaults to Anthropic.
+
+9
+00:00:27,507 --> 00:00:31,177
+Once validated, it builds a LangGraph state machine and
+
+10
+00:00:31,177 --> 00:00:33,846
+gathers evidence in a plan actions node.
+
+11
+00:00:34,296 --> 00:00:37,808
+That node asks an LLM client what to check next.
+
+12
+00:00:37,808 --> 00:00:42,271
+It can route to a local Ollama server instead of a cloud API,
+
+13
+00:00:42,271 --> 00:00:44,246
+so no paid key is required.
+
+14
+00:00:44,696 --> 00:00:48,563
+With no provider set, OpenSRE crashed on a raw Python
+
+15
+00:00:48,563 --> 00:00:52,285
+traceback, since it silently defaults to Anthropic.
+
+16
+00:00:52,285 --> 00:00:55,350
+Setting one variable, LLM_PROVIDER=ollama,
+
+17
+00:00:55,350 --> 00:00:59,874
+let it reach the real LangGraph pipeline before failing on the
+
+18
+00:00:59,874 --> 00:01:00,822
+network call.
+
+19
+00:01:01,272 --> 00:01:03,241
+Apache-2.0, self-hosted.
+
+20
+00:01:03,241 --> 00:01:08,082
+Full write-up, sources and the Ollama follow-up on Zenn and
+
+21
+00:01:08,082 --> 00:01:08,656
+GitHub.

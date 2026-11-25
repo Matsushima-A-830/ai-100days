@@ -1,0 +1,63 @@
+{
+  "day": 58,
+  "project": "OpenSRE",
+  "slug": "opensre",
+  "tagline": "A self-hosted AI agent that investigates CI/CD failures",
+  "source_url": "github.com/Tracer-Cloud/opensre",
+  "license": "Apache-2.0",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 58: OpenSRE, a self-hosted agent that investigates CI failures, tested without any paid API key."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "Reads CI logs to find the root cause of a failure",
+        "Separates CI-caused failures from code-caused ones",
+        "Can push a fix to the PR branch for review"
+      ],
+      "narration": "OpenSRE reads failing CI logs, figures out whether the pipeline or the code is at fault, and can push a fix back to the pull request."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {"id": "cli", "label": "CLI", "sub": "opensre investigate", "pos": [0, 0], "span": 2},
+        {"id": "settings", "label": "Config check", "sub": "LLMSettings.from_env()", "pos": [0, 1]},
+        {"id": "graph", "label": "Agent graph", "sub": "LangGraph state machine", "pos": [1, 1]},
+        {"id": "plan", "label": "Plan actions", "sub": "gathers evidence", "pos": [0, 2]},
+        {"id": "client", "label": "LLM client", "sub": "llm_client.py", "pos": [1, 2]},
+        {"id": "backend", "label": "Model backend", "sub": "Anthropic / OpenAI / Ollama", "pos": [0, 3], "span": 2}
+      ],
+      "edges": [
+        {"from": "cli", "to": "settings", "label": "validate"},
+        {"from": "settings", "to": "graph", "label": "provider ok"},
+        {"from": "graph", "to": "plan", "label": "step"},
+        {"from": "plan", "to": "client", "label": "ask"},
+        {"from": "client", "to": "backend", "label": "request"}
+      ],
+      "steps": [
+        {"focus": ["cli", "settings"], "narration": "Before anything else, OpenSRE validates the configured LLM provider. With nothing set, it defaults to Anthropic."},
+        {"focus": ["settings", "graph", "plan"], "narration": "Once validated, it builds a LangGraph state machine and gathers evidence in a plan actions node."},
+        {"focus": ["plan", "client", "backend"], "narration": "That node asks an LLM client what to check next. It can route to a local Ollama server instead of a cloud API, so no paid key is required."}
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "1 env var",
+      "caption": "Same command, same input. Setting LLM_PROVIDER=ollama was the only change.",
+      "lines": [
+        "no provider   -> raw crash",
+        "ollama set    -> reaches plan_actions"
+      ],
+      "narration": "With no provider set, OpenSRE crashed on a raw Python traceback, since it silently defaults to Anthropic. Setting one variable, LLM_PROVIDER=ollama, let it reach the real LangGraph pipeline before failing on the network call."
+    },
+    {
+      "type": "outro",
+      "narration": "Apache-2.0, self-hosted. Full write-up, sources and the Ollama follow-up on Zenn and GitHub."
+    }
+  ]
+}
