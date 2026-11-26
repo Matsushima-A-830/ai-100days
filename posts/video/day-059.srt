@@ -1,0 +1,83 @@
+1
+00:00:00,000 --> 00:00:04,356
+Day 59: Heretic, an open-source tool that removes a model's
+
+2
+00:00:04,356 --> 00:00:07,530
+refusal behavior with no retraining at all,
+
+3
+00:00:07,530 --> 00:00:09,671
+tested on a CPU-only machine.
+
+4
+00:00:10,121 --> 00:00:14,136
+Heretic finds the direction inside a model's activations that
+
+5
+00:00:14,136 --> 00:00:17,822
+triggers refusals, then lets Optuna tune how strongly to
+
+6
+00:00:17,822 --> 00:00:18,480
+remove it.
+
+7
+00:00:18,930 --> 00:00:21,985
+ARA compares harmless and harmful prompts and
+
+8
+00:00:21,985 --> 00:00:25,922
+extracts one residual-stream direction that corresponds to
+
+9
+00:00:25,922 --> 00:00:26,465
+refusal.
+
+10
+00:00:26,915 --> 00:00:29,668
+Optuna searches how strongly and in which
+
+11
+00:00:29,668 --> 00:00:31,816
+layers to remove that direction,
+
+12
+00:00:31,816 --> 00:00:34,032
+every trial running on plain CPU.
+
+13
+00:00:34,482 --> 00:00:36,938
+Each trial is scored on refusal rate and
+
+14
+00:00:36,938 --> 00:00:39,271
+KL divergence from the original model,
+
+15
+00:00:39,271 --> 00:00:42,156
+and the best trade-off becomes the final model.
+
+16
+00:00:42,606 --> 00:00:47,791
+On Qwen3-0.6B, baseline refusal rate was 6 out of 20.
+
+17
+00:00:47,791 --> 00:00:52,583
+After 12 Optuna trials, refusals dropped to zero,
+
+18
+00:00:52,583 --> 00:00:56,496
+with a reported KL divergence of 0.0000,
+
+19
+00:00:56,496 --> 00:00:58,942
+in twelve minutes on CPU.
+
+20
+00:00:59,392 --> 00:01:03,926
+Full numbers and reproduction steps are on Zenn and GitHub.
+
+21
+00:01:03,926 --> 00:01:05,464
+Heretic is AGPL-3.0.

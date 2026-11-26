@@ -1,0 +1,73 @@
+{
+  "day": 59,
+  "project": "Heretic",
+  "slug": "heretic-abliteration",
+  "tagline": "Training-free refusal removal for LLMs, tuned automatically by Optuna",
+  "source_url": "github.com/p-e-w/heretic",
+  "license": "AGPL-3.0-or-later",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 59: Heretic, an open-source tool that removes a model's refusal behavior with no retraining at all, tested on a CPU-only machine."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "Finds the direction that causes refusals",
+        "Optuna auto-tunes how strongly to remove it",
+        "No fine-tuning, no GPU required"
+      ],
+      "narration": "Heretic finds the direction inside a model's activations that triggers refusals, then lets Optuna tune how strongly to remove it."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {"id": "base", "label": "Base model", "sub": "Qwen3-0.6B", "pos": [0, 0]},
+        {"id": "prompts", "label": "Direction prompts", "sub": "harmless/harmful sets", "pos": [1, 0]},
+        {"id": "ara", "label": "ARA modifier", "sub": "rank-50 LoRA ablation", "pos": [0, 1], "span": 2},
+        {"id": "optuna", "label": "Optuna search", "sub": "TPE, 12 trials, CPU", "pos": [0, 2], "span": 2},
+        {"id": "scorers", "label": "Scorers", "sub": "KeywordRate + KLDivergence", "pos": [0, 3], "span": 2},
+        {"id": "selected", "label": "Selected model", "sub": "best trial, merged", "pos": [0, 4], "span": 2}
+      ],
+      "edges": [
+        {"from": "base", "to": "ara", "label": "weights"},
+        {"from": "prompts", "to": "ara", "label": "direction"},
+        {"from": "ara", "to": "optuna", "label": "params"},
+        {"from": "optuna", "to": "scorers", "label": "trial model"},
+        {"from": "scorers", "to": "selected", "label": "best score"}
+      ],
+      "steps": [
+        {
+          "focus": ["base", "prompts", "ara"],
+          "narration": "ARA compares harmless and harmful prompts and extracts one residual-stream direction that corresponds to refusal."
+        },
+        {
+          "focus": ["ara", "optuna"],
+          "narration": "Optuna searches how strongly and in which layers to remove that direction, every trial running on plain CPU."
+        },
+        {
+          "focus": ["optuna", "scorers", "selected"],
+          "narration": "Each trial is scored on refusal rate and KL divergence from the original model, and the best trade-off becomes the final model."
+        }
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "30% -> 0%",
+      "caption": "Refusal rate on 20 held-out harmful prompts, before and after. Selected trial's KL divergence: 0.0000.",
+      "lines": [
+        "baseline   6/20 refusals",
+        "trial 10   0/20 refusals",
+        "12 trials  12m 17s on CPU"
+      ],
+      "narration": "On Qwen3-0.6B, baseline refusal rate was 6 out of 20. After 12 Optuna trials, refusals dropped to zero, with a reported KL divergence of 0.0000, in twelve minutes on CPU."
+    },
+    {
+      "type": "outro",
+      "narration": "Full numbers and reproduction steps are on Zenn and GitHub. Heretic is AGPL-3.0."
+    }
+  ]
+}
