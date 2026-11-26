@@ -17,7 +17,7 @@
      100日シリーズの統一感を保つため変更しない。
   6. 完成したら実際にブラウザで開いて崩れていないか確認してからコミットする。
 -->
-<title>Day 059: heretic abliteration</title>
+<title>heretic: KL 0.0000の罠</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+JP:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -195,32 +195,47 @@
   </div>
 
   <div class="heading">
-    <h1>GPUなし・CPU12分で、拒否率が30%→0%に落ちた</h1>
-    <p><span class="src">heretic</span>(追加学習なしでLLMの拒否応答をOptunaで自動抑制するツール)を、GPU非搭載のCPU環境向けに縮小設定で実行。Qwen3-0.6Bで12 trialのOptuna探索を実測した。</p>
+    <h1>「KL 0.0000」は劣化ゼロではなかった</h1>
+    <p>LLMの拒否応答を追加学習なしで外す<span class="src">heretic</span>をQwen3-0.6Bで実行。拒否6/20→0/20・KL 0.0000と出たが、KLは応答の最初の1トークンだけを比べていて、そのトークンは毎回<code>&lt;think&gt;</code>だった。</p>
   </div>
 
   <div class="stat-row">
-    <div class="stat-number">6→0</div>
-    <div class="stat-caption">有害指示プロンプト<strong>20件中</strong>の拒否件数(heretic `KeywordRate` 集計値)。選択trialのKLダイバージェンスは報告値<strong>0.0000</strong>(無害な応答分布はほぼ無劣化)。</div>
+    <div class="stat-number">99.97%</div>
+    <div class="stat-caption">無害なプロンプト20件で、最初の1トークンが<strong>&lt;think&gt;</strong>になる確率の平均(20/20件で1位)。重みを書き換えてもここはほぼ動かず、KLは0に張り付く。</div>
   </div>
 
-  <!-- パターンA: 数値推移チャート -->
-  <section class="block">
-    <div class="block-label">Refusals per trial (0-20, harmful_behaviors test[:20])</div>
-    <div class="chart-wrap">
-      <svg class="chart" viewBox="0 0 580 220" role="img"
-           aria-label="Optunaのtrialを重ねるごとに拒否件数が6件から0件付近まで落ちていく様子">
-        <g id="grid"></g>
-        <g id="plot"></g>
-      </svg>
-      <div class="chart-tooltip" id="tooltip"></div>
+  <!-- ↓↓↓ パターンB: Before/After比較 -->
+  <section class="block compare">
+    <div class="block-label">同じ0.6B・12 trial、response_prefixだけ違う</div>
+    <div class="compare-grid">
+      <div class="compare-panel bad">
+        <div class="compare-title">✗ response_prefix = ""</div>
+        <pre class="compare-output">KL  0.0000 〜 1.1666
+中央値 0.0001
+選択trial: 0/20, KL 0.0000</pre>
+      </div>
+      <div class="compare-panel good">
+        <div class="compare-title">✓ 自動検出(既定)</div>
+        <pre class="compare-output">'&lt;think&gt;&lt;/think&gt;\nOkay,'
+KL  0.0031 〜 2.3147
+中央値 0.0243
+選択trial: 0/20, KL 0.0049</pre>
+      </div>
     </div>
   </section>
-  <!-- ↑↑↑ パターンAここまで -->
+  <!-- ↑↑↑ パターンBここまで -->
+
+  <div class="terminal">
+    <div class="term-row"><span class="term-tag">4B</span><span>Qwen3-4B-Instruct-2507 · 100 trial · 既定設定</span></div>
+    <div class="term-row"><span class="term-tag">BASE</span><span>Refusals 100/100</span></div>
+    <div class="term-row"><span class="term-tag">PICK</span><span>--trial-index 0 → 0/100, KL 8.7006</span></div>
+    <div class="term-row"><span class="term-tag">ALT</span><span>4/100, KL 0.0419(KL&lt;0.1で拒否最少)</span></div>
+    <div class="term-foot">拒否0/100の12 trialは <b>全てKL 8.70以上</b> / index 0 = 拒否最少のtrial</div>
+  </div>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>GPU非搭載環境での検証のため、対象モデル(Qwen3-0.6B)・Optuna trial数(12)・評価プロンプト数(各20件)はheretic既定値(4B級モデル・100 trial・各100件)から縮小している。個々の有害プロンプト・応答の文面は一度も表示・記録していない(集計スコアのみ)。</p>
+    <p>heretic-llm 2.1.0、RTX 5060 Ti。数値は<code>experiments/day-059/results.md</code>9章の集計値のみ。有害な指示への応答の文面は表示・記録しておらず、処理後のモデルも保存していない。</p>
   </div>
 
   <footer>
@@ -250,122 +265,6 @@
     grid.appendChild(frag);
   })();
 
-  // パターンAの折れ線チャート。data配列を実データ(x=パラメータ値, a/b=系列の数値)に差し替える。
-  // 系列が1つしかない場合は 'b' 関連の行(path/points/end-label)を削除してよい。
-  (function () {
-    var data = [
-      // experiments/day-059/results.md の表(baseline + 12 trial)そのまま。Refusals は20件中の件数。
-      { x: 'base', a: 6 },
-      { x: 1, a: 0 }, { x: 2, a: 0 }, { x: 3, a: 0 }, { x: 4, a: 1 },
-      { x: 5, a: 0 }, { x: 6, a: 0 }, { x: 7, a: 0 }, { x: 8, a: 1 },
-      { x: 9, a: 0 }, { x: 10, a: 0 }, { x: 11, a: 1 }, { x: 12, a: 0 }
-    ];
-    if (!data.length) return;
-
-    var W = 580, H = 220, padL = 30, padR = 78, padT = 10, padB = 28;
-    var plotW = W - padL - padR, plotH = H - padT - padB;
-    var yMax = 6; // baseline (6/20) が実データの最大値
-
-    function x(i) { return padL + (plotW * i) / (data.length - 1); }
-    function y(v) { return padT + plotH - (plotH * v) / yMax; }
-
-    var svgNS = 'http://www.w3.org/2000/svg';
-    var grid = document.getElementById('grid');
-    var plot = document.getElementById('plot');
-
-    [0, yMax / 3, (yMax * 2) / 3, yMax].forEach(function (v) {
-      var ly = y(v);
-      var line = document.createElementNS(svgNS, 'line');
-      line.setAttribute('x1', padL); line.setAttribute('x2', W - padR);
-      line.setAttribute('y1', ly); line.setAttribute('y2', ly);
-      line.setAttribute('class', 'chart-grid');
-      grid.appendChild(line);
-
-      var label = document.createElementNS(svgNS, 'text');
-      label.setAttribute('x', padL - 8); label.setAttribute('y', ly + 3);
-      label.setAttribute('text-anchor', 'end');
-      label.setAttribute('class', 'chart-axis-label');
-      label.textContent = Math.round(v) + '/20';
-      grid.appendChild(label);
-    });
-
-    data.forEach(function (d, i) {
-      var lbl = document.createElementNS(svgNS, 'text');
-      lbl.setAttribute('x', x(i)); lbl.setAttribute('y', H - 6);
-      lbl.setAttribute('text-anchor', 'middle');
-      lbl.setAttribute('class', 'chart-axis-label');
-      lbl.textContent = d.x;
-      grid.appendChild(lbl);
-    });
-
-    function buildPath(key) {
-      return data.map(function (d, i) {
-        return (i === 0 ? 'M' : 'L') + x(i) + ' ' + y(d[key]);
-      }).join(' ');
-    }
-
-    ['a', 'b'].forEach(function (key) {
-      if (data[0][key] === undefined) return;
-      var path = document.createElementNS(svgNS, 'path');
-      path.setAttribute('d', buildPath(key));
-      path.setAttribute('class', 'line-' + key);
-      plot.appendChild(path);
-    });
-
-    var tooltip = document.getElementById('tooltip');
-    var wrap = document.querySelector('.chart-wrap');
-
-    ['a', 'b'].forEach(function (key) {
-      if (data[0][key] === undefined) return;
-      data.forEach(function (d, i) {
-        var cx = x(i), cy = y(d[key]);
-
-        var halo = document.createElementNS(svgNS, 'circle');
-        halo.setAttribute('cx', cx); halo.setAttribute('cy', cy); halo.setAttribute('r', 5);
-        halo.setAttribute('class', 'pt-halo');
-        plot.appendChild(halo);
-
-        var pt = document.createElementNS(svgNS, 'circle');
-        pt.setAttribute('cx', cx); pt.setAttribute('cy', cy); pt.setAttribute('r', 3.5);
-        pt.setAttribute('class', 'pt-' + key);
-        plot.appendChild(pt);
-
-        var hit = document.createElementNS(svgNS, 'circle');
-        hit.setAttribute('cx', cx); hit.setAttribute('cy', cy); hit.setAttribute('r', 12);
-        hit.setAttribute('class', 'hit');
-        hit.addEventListener('pointerenter', function () {
-          var rect = wrap.getBoundingClientRect();
-          var scale = rect.width / W;
-          tooltip.style.left = (cx * scale) + 'px';
-          tooltip.style.top = (cy * scale) + 'px';
-          tooltip.textContent = 'trial ' + d.x + '  ' + d[key] + '/20 refusals';
-          tooltip.classList.add('show');
-        });
-        hit.addEventListener('pointerleave', function () {
-          tooltip.classList.remove('show');
-        });
-        plot.appendChild(hit);
-      });
-    });
-
-    var last = data[data.length - 1];
-    ['a', 'b'].forEach(function (key) {
-      if (last[key] === undefined) return;
-      var label = document.createElementNS(svgNS, 'text');
-      label.setAttribute('x', x(data.length - 1) + 10);
-      label.setAttribute('y', y(last[key]) - 4);
-      label.setAttribute('class', 'end-label ' + key);
-      label.textContent = last[key] + '/20';
-      plot.appendChild(label);
-
-      var name = document.createElementNS(svgNS, 'text');
-      name.setAttribute('x', x(data.length - 1) + 10);
-      name.setAttribute('y', y(last[key]) + 11);
-      name.setAttribute('class', 'series-name');
-      name.textContent = key === 'a' ? 'Refusals' : '';
-      plot.appendChild(name);
-    });
-  })();
 </script>
 
 <!--

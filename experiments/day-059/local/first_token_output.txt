@@ -1,0 +1,4 @@
+$ CUDA_VISIBLE_DEVICES= python first_token.py
+'' top1 tokens: ['<think>'] min top1 prob: 0.9996 mean: 0.9997
+'<think>\n\n</think>\n\n' top1 tokens: ['**', '1', 'A', 'Ah', 'Certainly', 'False', 'Four', 'One', 'Sure', 'To'] min top1 prob: 0.319 mean: 0.6894
+template tail: 'user\nhi<|im_end|>\n<|im_start|>assistant\n'

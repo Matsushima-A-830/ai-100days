@@ -50,3 +50,24 @@ rm -rf /tmp/heretic-day059-model
 - `baseline_responses_before.json` / `baseline_responses_after.json`: その生成結果
 - `heretic_run.log`: heretic実行時の標準出力(個々の有害プロンプト・応答は含まない。集計スコアのみ)
 - `results.md`: 詳細な結果・倫理面の方針・制約
+
+## ローカル検証(GPU)の再現手順
+
+`results.md` 9章。`local/` に設定・ログ(集計スコアのみ)・スクリプトがある。
+
+```bash
+WORK=$PWD/work; mkdir -p $WORK/{A,B,C}
+python3 -m venv $WORK/.venv && $WORK/.venv/bin/pip install heretic-llm==2.1.0
+cp local/config_A.toml $WORK/A/config.toml   # PRの設定そのまま
+cp local/config_B.toml $WORK/B/config.toml   # response_prefix を自動検出に戻したもの
+cp local/config_C.toml $WORK/C/config.toml   # 上書きなし(upstream既定)
+local/run.sh $WORK/A Qwen/Qwen3-0.6B
+local/run.sh $WORK/B Qwen/Qwen3-0.6B
+local/run.sh $WORK/C Qwen/Qwen3-4B-Instruct-2507
+
+# 最初の1トークンの分布(KL 0.0000 の原因の確認)
+$WORK/.venv/bin/python local/first_token.py
+```
+
+`local/run.sh` は `--export-strategy` を指定していないため、最適化の後に対話プロンプトで止まる(重みは保存されない)。
+スコアは全て最適化中にログへ出力される。

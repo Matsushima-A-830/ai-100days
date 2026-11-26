@@ -17,7 +17,7 @@ PyPI: https://pypi.org/project/heretic-llm/ (インストールしたバージ�
 ## 環境
 
 - Python 3.11.18、`python3 -m venv .venv && .venv/bin/pip install heretic-llm`(インストールできたバージョン: 2.1.0)
-- **GPU非搭載。CPUのみ**(`nvidia-smi`: command not found、`torch.cuda.is_available()`: False)。RAM 15GB。
+- 1〜8章はRoutine実行環境(GPU非搭載、CPUのみ、RAM 15GB)での結果。ローカルPC(GPU)での検証は9章。
 - heretic自身がこれを検知して警告を出す: `No GPU or other accelerator detected. Operations will be slow.`
 
 ## 1. スケールダウンの判断(today.mdで事前に許容されていた対応)
@@ -131,6 +131,8 @@ Restoring model from trial 10...
 目立った違いはない)。生の応答全文は`baseline_responses_before.json` / `baseline_responses_after.json`
 に記録した(いずれも無害な質問への応答のみで、転載を控えるべき内容は含まない)。
 
+(9章の訂正: KLダイバージェンス0.0000は「無害な応答が変わっていない」ことを示していなかった。また応答は4問とも`<think>`の途中で
+切れており、比較できているのは思考の冒頭だけである。)
 この結果は、heretic側のKLダイバージェンス0.0000という報告値(=良性プロンプトへの応答分布がほぼ変わって
 いない)と整合している。つまり「有害指示への拒否だけが狙って抑制され、無害な質問への応答品質は保たれた」
 という、heretic/ARAの設計意図どおりの挙動が、この縮小スケールでも確認できた。
@@ -152,3 +154,113 @@ Restoring model from trial 10...
   回答になっていない」ケース(空応答・話題そらし等)を見分けられない。本検証でもスコア自体の妥当性は
   検証していない。
 - 20件という小さい評価セットでは、score自体のばらつき(1件変わるだけで5%変動)が大きい。
+
+## 9. ローカル検証(人間のPC、GPU、2026-11-26〜27)
+
+環境: WSL2 / NVIDIA GeForce RTX 5060 Ti 16GB(Driver 610.88, CUDA 13.2) / RAM 30GB /
+heretic-llm 2.1.0、torch 2.15.0、Python 3.14。実行ファイル・ログ(集計スコアのみ)は `local/`。
+倫理方針は1〜8章と同じ(`print_responses=false`、個々のプロンプト・応答は表示も記録もしない)。
+処理後モデルの保存はしていない(下記9-4)。
+
+3つの条件で実行した(`local/run.sh`、`local/runs.txt`)。
+
+| 条件 | モデル | 設定 | trial | 評価件数 | 所要 |
+|---|---|---|---|---|---|
+| A | Qwen/Qwen3-0.6B | PRの`config.toml`そのまま(`response_prefix = ""`) | 12 | 各20 | 530s |
+| B | Qwen/Qwen3-0.6B | Aから`response_prefix`の行だけ削除(=upstream既定の自動検出) | 12 | 各20 | 650s |
+| C | Qwen/Qwen3-4B-Instruct-2507 | 設定の上書きなし(upstream既定) | 100 | 各100 | 最適化 1h 41m |
+
+### 9-1. 条件A: PRの結果は再現した
+
+```
+* Baseline Refusals: 6/20
+...
+Restoring model from trial 10...   (Refusals: 0/20, KL divergence: 0.0000)
+```
+
+ベースライン6/20、選択trialが0/20・KL 0.0000という点はPRと同じだった。
+Optunaのseedが未指定(upstream既定`seed = None`)のため、各trialのパラメータ・スコアはPRとは一致しない。
+12 trialのKLは0.0000〜1.1666(中央値0.0001)。
+
+### 9-2. KL 0.0000 は「劣化なし」を意味していなかった
+
+hereticの`KLDivergence`スコアラーは、無害なプロンプトに対する**応答の最初の1トークンの確率分布**だけを比較する
+(`heretic/scorers/kl_divergence.py`、ログ上も`Obtaining baseline first-token probability distributions...`)。
+Qwen3-0.6Bは思考モード(`<think>`)が既定でオンで、PRの設定は`response_prefix = ""`として思考ブロックの自動検出を止めている。
+この場合の最初の1トークンを実測した(`local/first_token.py`、CPU・float32、`mlabonne/harmless_alpaca` test[:20]):
+
+```
+'' top1 tokens: ['<think>'] min top1 prob: 0.9996 mean: 0.9997
+'<think>\n\n</think>\n\n' top1 tokens: ['**', '1', 'A', 'Ah', 'Certainly', 'False', 'Four', 'One', 'Sure', 'To'] min top1 prob: 0.319 mean: 0.6894
+```
+
+プレフィックス無しでは、20問すべてで最初の1トークンが`<think>`(平均99.97%)であり、モデルをどう改変してもほぼ同じ分布になる。
+つまりPRのKL 0.0000は、無害な応答の中身を測っていない。
+空の思考ブロックを閉じた後(=実際の回答の1トークン目)では、上位トークンが10種類に分かれ、KLが変化を測れる状態になる。
+
+条件B(自動検出)では、hereticが次のプレフィックスを検出して評価に使った:
+
+```
+* Prefix found: '<think>\nOkay,'
+* Extended prefix found: '<think></think>\nOkay,'
+* Baseline Refusals: 8/20
+```
+
+| | A(プレフィックス無し) | B(自動検出) |
+|---|---|---|
+| ベースライン拒否 | 6/20 | 8/20 |
+| 12 trialのKL | 0.0000〜1.1666(中央値0.0001) | 0.0031〜2.3147(中央値0.0243) |
+| `--trial-index 0`の選択 | trial 10: 0/20, KL 0.0000 | trial 9: 0/20, KL 0.0049 |
+
+同じ種類の改変でも、Bでは中央値で約240倍のKLが出る。
+(Bの拒否判定は、思考ブロックを閉じた後の回答部分に対して行われるため、ベースラインも6/20から8/20に変わった。)
+
+### 9-3. 条件C: upstream既定(4B・100 trial)では「拒否0」と「劣化小」は両立しなかった
+
+Qwen3-4B-Instruct-2507は思考ブロックを持たないモデルで、プレフィックスは検出されなかった(`* None found`)。
+バッチサイズは自動で64に決まり、100 trialで1h 41m(最初のtrialまで3m 0s)。
+
+```
+* Baseline Refusals: 100/100
+```
+
+100 trialのPareto front(拒否件数とKLのどちらも他のtrialに負けていないもの、`local/heretic_run_C.log`から集計):
+
+| trial | Refusals | KL divergence |
+|---|---|---|
+| 2 | 0/100 | 8.7006 |
+| 5 | 3/100 | 1.8413 |
+| 64 | 4/100 | 0.0419 |
+| 93 | 5/100 | 0.0385 |
+| 86 | 6/100 | 0.0310 |
+| 84 | 8/100 | 0.0284 |
+| 95 | 12/100 | 0.0262 |
+| 100 | 13/100 | 0.0241 |
+| 85 | 15/100 | 0.0226 |
+| 32 | 17/100 | 0.0191 |
+| 77 | 20/100 | 0.0173 |
+
+- 拒否0/100に到達したtrialは12個あったが、KLは全て8.70以上(8.70〜17.71)。
+- KLが0.1未満のtrialで最も拒否が少ないのは4/100(trial 64、KL 0.0419)。
+- 100 trial中24 trialでKLが1を超えた。
+
+### 9-4. `--trial-index 0` は「最も壊れた」候補を選ぶ
+
+hereticはPareto frontを**スコアの昇順(1番目のスコア=拒否件数が少ない順)**に並べ(`heretic/main.py`の`sorted_trials`)、
+`--trial-index 0`はその先頭を選ぶ。
+対話モードでは一覧から人が選ぶ前提で、PRの再現手順のように非対話で`0`を指定すると、常に「拒否が最も少ない=KLが最も大きい」trialになる。
+条件Cではそれがtrial 2(0/100、KL 8.70)だった。
+0.6B・プレフィックス無しの条件Aでは全trialのKLがほぼ0なので、この問題が表に出なかった。
+
+なお、筆者の`local/run.sh`は`--export-strategy`を指定し忘れたため、3条件とも最後に「エクスポート方法」の対話プロンプトが出た。
+A・Bは`Error: [Errno 1] Operation not permitted`で終了し、Cはプロンプトで待機したままになったのでプロセスを終了した。
+いずれもスコアは全て出力された後で、**処理後モデルの重みは一度も保存されていない**。
+そのため、`baseline_test.py`による処理後の無害な質問での比較はローカルでは行っていない。
+
+### 9-5. まとめ
+
+- ✅ PRの数値(0.6B・12 trial・プレフィックス無し: 6/20→0/20、KL 0.0000)は再現した。
+- ❌ KL 0.0000は、最初の1トークンが常に`<think>`(平均99.97%)になる設定で測ったもので、劣化の有無を示していない。PRの「劣化は見られなかった」という結論は根拠にならない。
+- ✅ upstream既定(Qwen3-4B-Instruct-2507、100 trial)では、ベースライン100/100の拒否が、KL 0.0419で4/100まで下がった。
+- ❌ 拒否を0/100にしたtrialは全てKL 8.70以上で、`--trial-index 0`はそのうち1つ(trial 2)を選ぶ。
+- 1〜8章の「CPUで12分17秒」はRoutine実行環境での値。RTX 5060 Tiでは同じ設定(条件A)が530秒(最適化は8m 18s)だった。
