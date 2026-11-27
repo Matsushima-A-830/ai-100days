@@ -1,0 +1,81 @@
+
+Search Results for "render":
+
+function    render_frame
+  tools/video/render.py:456
+  (spec, segs, i_seg, t, total, cap_text) -> Image.Image
+
+file        render.py
+  tools/video/render.py:1
+
+file        renderer.js
+  experiments/day-010/sample-app/renderer/renderer.js:1
+
+function    renderSignupForm
+  experiments/day-024/fixture-template/forms/signup.js:3
+  ()
+
+function    renderSignupForm
+  experiments/day-024/runs-cli/a-baseline/forms/signup.js:3
+  ()
+
+function    renderSignupForm
+  experiments/day-024/runs-cli/a-ponytail/forms/signup.js:3
+  ()
+
+function    renderSignupForm
+  experiments/day-024/runs-cli/b-baseline/forms/signup.js:3
+  ()
+
+function    renderSignupForm
+  experiments/day-024/runs-cli/b-ponytail/forms/signup.js:3
+  ()
+
+function    renderSignupForm
+  experiments/day-024/runs-cli/c-baseline/forms/signup.js:4
+  ()
+
+function    renderSignupForm
+  experiments/day-024/runs-cli/c-ponytail/forms/signup.js:3
+  ()
+
+function    renderSignupForm
+  experiments/day-024/runs-interactive/c-ponytail/forms/signup.js:3
+  ()
+
+function    renderSignupForm
+  experiments/day-024/runs/a-baseline/forms/signup.js:3
+  ()
+
+function    renderSignupForm
+  experiments/day-024/runs/a-ponytail/forms/signup.js:3
+  ()
+
+function    renderSignupForm
+  experiments/day-024/runs/b-baseline/forms/signup.js:3
+  ()
+
+function    renderSignupForm
+  experiments/day-024/runs/b-ponytail/forms/signup.js:3
+  ()
+
+function    renderSignupForm
+  experiments/day-024/runs/c-baseline/forms/signup.js:3
+  ()
+
+function    renderSignupForm
+  experiments/day-024/runs/c-ponytail/forms/signup.js:3
+  ()
+
+file        mcp_client_fix_camera_and_render.py
+  experiments/day-021/mcp_client_fix_camera_and_render.py:1
+
+function    check_dependencies
+  experiments/day-017/installed-skills/literature-review/scripts/generate_pdf.py:10
+  ()
+
+function    createStarRating
+  experiments/day-024/runs-cli/c-baseline/components/StarRating.js:2
+  ({ name, label, required = false, max = 5 })
+
+Results truncated at 20; pass --limit to widen.

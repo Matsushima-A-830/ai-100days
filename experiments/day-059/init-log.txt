@@ -1,0 +1,16 @@
+T  Initializing CodeGraph
+|
+*  Initialized in /home/user/ai-100days
+|
+Scanning files...
+Parsing code...
+Resolving refs...
+Linking dynamic dispatch...
+|
+*  Indexed 159 files
+|
+•  2,162 nodes, 4,700 edges in 2.6s
+codegraph collects anonymous usage stats (no code, paths, or names) — "codegraph telemetry off" or CODEGRAPH_TELEMETRY=0 disables. Details: https://github.com/colbymchenry/codegraph/blob/main/TELEMETRY.md
+|
+—  Done
+

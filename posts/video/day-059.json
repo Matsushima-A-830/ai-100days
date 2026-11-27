@@ -1,0 +1,96 @@
+{
+  "day": 59,
+  "project": "codegraph",
+  "slug": "codegraph",
+  "tagline": "A local call-graph index so coding agents query code instead of repeating grep and read",
+  "source_url": "github.com/colbymchenry/codegraph",
+  "license": "MIT",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 59: codegraph, a local call graph index that lets a coding agent query code in one shot instead of repeating grep and read."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "Indexes functions, classes and call edges into local SQLite",
+        "Serves lookups to agents over MCP or a CLI",
+        "No API key, no GPU, fully local"
+      ],
+      "narration": "Codegraph scans a repo, builds a call graph, and lets an agent ask one query instead of repeating grep and read."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {
+          "id": "init",
+          "label": "Init",
+          "sub": "codegraph init",
+          "pos": [0, 0]
+        },
+        {
+          "id": "parser",
+          "label": "Parser",
+          "sub": "tree-sitter per file",
+          "pos": [0, 1]
+        },
+        {
+          "id": "graph",
+          "label": "Graph store",
+          "sub": ".codegraph/codegraph.db",
+          "pos": [1, 1]
+        },
+        {
+          "id": "query",
+          "label": "Queries",
+          "sub": "callers / callees / impact",
+          "pos": [0, 2]
+        },
+        {
+          "id": "agent",
+          "label": "Coding agent",
+          "sub": "Claude Code, Cursor, Codex CLI",
+          "pos": [0, 3]
+        }
+      ],
+      "edges": [
+        {"from": "init", "to": "parser", "label": "scan"},
+        {"from": "parser", "to": "graph", "label": "nodes+edges"},
+        {"from": "graph", "to": "query", "label": "lookup"},
+        {"from": "query", "to": "agent", "label": "MCP / CLI"}
+      ],
+      "steps": [
+        {
+          "focus": ["init", "parser", "graph"],
+          "narration": "We ran this on our own 159 file repo. Init parsed every file and wrote 2,162 nodes and 4,700 edges to local SQLite in 2.6 seconds."
+        },
+        {
+          "focus": ["graph", "query"],
+          "narration": "Callers traced correctly across files, even through a renamed JavaScript export alias, something grep alone misses."
+        },
+        {
+          "focus": ["query", "agent"],
+          "narration": "But a query only matches the original declared name, and it only follows call edges, never meaning."
+        }
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "0 edges",
+      "caption": "Two functions with identical validation logic but no call relationship shared zero graph edges.",
+      "lines": [
+        "callers _q      -> main.js:22 (ok)",
+        "callers quote   -> not found",
+        "impact dup-fn   -> 0 related"
+      ],
+      "narration": "We wrote two functions with identical logic but no shared calls. Impact and callers found zero connection between them, confirming a real limit: duplicate logic is invisible without a call edge."
+    },
+    {
+      "type": "outro",
+      "narration": "Full write-up on Zenn in Japanese. Source and license below."
+    }
+  ]
+}
