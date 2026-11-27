@@ -1,0 +1,45 @@
+$ codegraph callers render_frame
+
+Callers of "render_frame" (1):
+
+function render_frame (python) — tools/video/render.py:456
+function    main
+  tools/video/render.py:525, 549
+
+
+$ codegraph callees render_frame
+
+Callees of "render_frame" (5):
+
+function render_frame (python) — tools/video/render.py:456
+function    chrome
+  tools/video/render.py:294
+
+function    scene_architecture
+  tools/video/render.py:369
+
+function    caption
+  tools/video/render.py:310
+
+variable    FADE [references]
+  tools/video/render.py:40
+
+variable    SCENES [references]
+  tools/video/render.py:453
+
+
+$ codegraph callers _q
+
+Callers of "_q" (2):
+
+function _q (javascript) — experiments/day-010/sample-app/lib/pricing.js:9
+file        main.js
+  experiments/day-010/sample-app/main.js:22
+
+file        pricing.js [references]
+  experiments/day-010/sample-app/lib/pricing.js:30
+
+
+$ codegraph callers quote
+ℹ Symbol "quote" not found — did you mean: cols, urllib.parse?
+

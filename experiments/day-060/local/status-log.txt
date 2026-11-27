@@ -1,0 +1,38 @@
+
+CodeGraph Status
+
+Project: $WORK
+
+Index Statistics:
+  Files:     163
+  Nodes:     2,198
+  Edges:     4,738
+  DB Size:   7.40 MB
+  Backend:   node:sqlite — built-in (full WAL)
+  Journal:   wal
+
+Nodes by Kind:
+  function        551
+  variable        535
+  import          485
+  method          209
+  file            160
+  constant        102
+  class           75
+  property        30
+  field           24
+  namespace       15
+  enum_member     8
+  enum            3
+  struct          1
+
+Files by Language:
+  python          101
+  javascript      40  (36 with symbols)
+  csharp          15
+  yaml            3
+  c               2
+  rust            2
+
+✓ Index is up to date
+

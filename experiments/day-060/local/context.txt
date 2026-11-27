@@ -1,0 +1,90 @@
+## Code Context
+
+**Query:** refactor email validation logic to share one implementation
+
+### Entry Points
+
+- **OnEnable** (method) - experiments/day-035/signal-lost-game/Scripts/UI/WinLossScreen.cs:76
+- **validate_email_signup** (function) - experiments/day-060/duplicate-test/a.py:1
+  `(email: str) -> bool`
+- **SpecError** (class) - tools/video/render.py:77
+
+### Related Symbols
+
+- experiments/day-035/signal-lost-game/Scripts/UI/WinLossScreen.cs: WinLossScreen:39, SetVisible:167, DismissButtonName:43, HandleDismissClicked:177
+- tools/video/render.py: load_spec:81
+
+### Code
+
+#### OnEnable (experiments/day-035/signal-lost-game/Scripts/UI/WinLossScreen.cs:76)
+
+```csharp
+        private void OnEnable()
+        {
+            // UIDocument builds its visual tree in its own OnEnable, and component
+            // execution order does not guarantee that runs before this OnEnable, so
+            // the root/Q<>() lookups and the button subscription live here rather
+            // than in Awake to avoid querying a null rootVisualElement.
+            VisualElement root = uiDocument.rootVisualElement;
+
+            messageLabel = root?.Q<Label>(MessageLabelName);
+            dismissButton = root?.Q<Button>(DismissButtonName);
+
+            if (dismissButton != null)
+            {
+                dismissButton.clicked += HandleDismissClicked;
+            }
+
+            SetVisible(IsRunOver);
+        }
+```
+
+#### validate_email_signup (experiments/day-060/duplicate-test/a.py:1)
+
+```python
+def validate_email_signup(email: str) -> bool:
+    if "@" not in email:
+        return False
+    local, _, domain = email.partition("@")
+    return bool(local) and "." in domain
+```
+
+#### SpecError (tools/video/render.py:77)
+
+```python
+class SpecError(Exception):
+    pass
+```
+
+#### SetVisible (experiments/day-035/signal-lost-game/Scripts/UI/WinLossScreen.cs:167)
+
+```csharp
+        private void SetVisible(bool visible)
+        {
+            VisualElement root = uiDocument != null ? uiDocument.rootVisualElement : null;
+
+            if (root != null)
+            {
+                root.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+            }
+        }
+```
+
+#### HandleDismissClicked (experiments/day-035/signal-lost-game/Scripts/UI/WinLossScreen.cs:177)
+
+```csharp
+        private void HandleDismissClicked()
+        {
+            DismissRequested?.Invoke();
+        }
+```
+
+
+### ⚠️ Low-confidence match
+
+This query matched mostly on common words, so the entry points above may be off-target — treat them as a starting point, not a complete answer. For a reliable result:
+- `codegraph_explore` with the **exact symbol names** you are after (class / function / method names), or
+- `codegraph_search <name>` for one specific symbol
+- `codegraph_files` a likely area: `experiments/day-035/signal-lost-game/Scripts/UI`, `experiments/day-060/duplicate-test`, `tools/video`
+
+Do not assume the list above is comprehensive.

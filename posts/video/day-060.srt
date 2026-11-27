@@ -1,83 +1,83 @@
 1
-00:00:00,000 --> 00:00:04,198
-Day 59: codegraph, a local call graph index that lets a coding
+00:00:00,000 --> 00:00:04,336
+Day 60: codegraph, a local call graph index that lets a coding
 
 2
-00:00:04,198 --> 00:00:08,125
+00:00:04,336 --> 00:00:08,393
 agent query code in one shot instead of repeating grep and
 
 3
-00:00:08,125 --> 00:00:08,464
+00:00:08,393 --> 00:00:08,742
 read.
 
 4
-00:00:08,914 --> 00:00:11,965
+00:00:09,192 --> 00:00:12,197
 Codegraph scans a repo, builds a call graph,
 
 5
-00:00:11,965 --> 00:00:16,195
+00:00:12,197 --> 00:00:16,363
 and lets an agent ask one query instead of repeating grep and
 
 6
-00:00:16,195 --> 00:00:16,541
+00:00:16,363 --> 00:00:16,704
 read.
 
 7
-00:00:16,991 --> 00:00:20,965
+00:00:17,154 --> 00:00:21,235
 We ran this on our own 159 file repo.
 
 8
-00:00:20,965 --> 00:00:26,120
+00:00:21,235 --> 00:00:26,529
 Init parsed every file and wrote 2,162 nodes and
 
 9
-00:00:26,120 --> 00:00:30,738
+00:00:26,529 --> 00:00:31,272
 4,700 edges to local SQLite in 2.6 seconds.
 
 10
-00:00:31,188 --> 00:00:33,921
+00:00:31,722 --> 00:00:34,521
 Callers traced correctly across files,
 
 11
-00:00:33,921 --> 00:00:37,301
+00:00:34,521 --> 00:00:37,983
 even through a renamed JavaScript export alias,
 
 12
-00:00:37,301 --> 00:00:39,315
+00:00:37,983 --> 00:00:40,046
 something grep alone misses.
 
 13
-00:00:39,765 --> 00:00:43,344
+00:00:40,496 --> 00:00:44,118
 But a query only matches the original declared name,
 
 14
-00:00:43,344 --> 00:00:46,510
+00:00:44,118 --> 00:00:47,323
 and it only follows call edges, never meaning.
 
 15
-00:00:46,960 --> 00:00:50,154
+00:00:47,773 --> 00:00:50,961
 We wrote two functions with identical logic but
 
 16
-00:00:50,154 --> 00:00:51,241
+00:00:50,961 --> 00:00:52,046
 no shared calls.
 
 17
-00:00:51,241 --> 00:00:54,910
+00:00:52,046 --> 00:00:55,708
 Impact and callers found zero connection between them,
 
 18
-00:00:54,910 --> 00:00:56,541
+00:00:55,708 --> 00:00:57,336
 confirming a real limit:
 
 19
-00:00:56,541 --> 00:00:59,870
+00:00:57,336 --> 00:01:00,660
 duplicate logic is invisible without a call edge.
 
 20
-00:01:00,320 --> 00:01:03,010
+00:01:01,110 --> 00:01:03,632
 Full write-up on Zenn in Japanese.
 
 21
-00:01:03,010 --> 00:01:04,988
+00:01:03,632 --> 00:01:05,487
 Source and license below.

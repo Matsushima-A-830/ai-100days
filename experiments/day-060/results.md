@@ -3,7 +3,7 @@
 - 出典: https://github.com/colbymchenry/codegraph (MIT License)
 - バージョン: 1.6.4 (`npx -y @colbymchenry/codegraph version`)
 - 検証対象: 本リポジトリ (ai-100days) 自身
-- 検証環境: Routineクラウド実行環境(GPUなし、ネットワーク制限あり。ただしnpm registryへの到達は可能だった)
+- 検証環境: 1〜5章はRoutineクラウド実行環境(GPUなし。npm registryへの到達は可能だった)。6章はローカルPC(WSL2 / Node.js v26.8.2 / npx 11.19.1)での再現
 
 ## 1. 導入とインデックス構築
 
@@ -164,3 +164,82 @@ $ npx -y @colbymchenry/codegraph context "refactor email validation logic to sha
 - 一方、宣言時の元の名前でしか検索できない(呼び出し側の名前`quote`では見つからない)という制約も確認した。
 - Qiita記事が報告した「独立に再実装された重複コードを検出できない」という限界は、自作の最小ケースで再現を確認した。これはグラフベース(呼び出し/参照関係)の設計に由来する本質的な限界であり、ツールのバグではない。
 - 汎用的なシンボル名(`main`)では無関係な結果が多数混入する。
+
+## 6. ローカル検証(人間のPC)
+
+- 日付: 2026-11-27
+- 環境: WSL2 (Linux 6.6.87.2) / Node.js v26.8.2 / npx 11.19.1 / codegraph 1.6.4(`npx -y @colbymchenry/codegraph@1.6.4`で版を固定)
+- 対象: Day 059(heretic)をマージした後のmainに本ブランチを取り込んだコミットを`git archive HEAD`で作業ディレクトリ(`$WORK`)に展開したもの。未追跡のローカルファイルを索引に混ぜないため
+- Day番号の変更: Day 059はhereticとしてPR #204でマージ済みのため、本検証をDay 060へ変更した(`experiments/day-059`→`experiments/day-060`など)。1〜5章のログ中のパス`experiments/day-059/...`も`day-060`に置換している
+- ログ: `local/`(作業ディレクトリのパスは`$WORK`に置換)
+
+### 6-1. 再現結果
+
+| 項目 | PR(1〜5章) | ローカル |
+|---|---|---|
+| `init` | 159ファイル、2,162ノード、4,700エッジ、2.6秒 | 163ファイル、2,198ノード、4,738エッジ、2.1秒(`real 0m8.882s`。初回の`npx`ダウンロード込み) |
+| `callers render_frame` | `main`(render.py:525, 549) | 同じ |
+| `callees render_frame` | chrome / scene_architecture / caption / FADE / SCENES | 同じ |
+| `callers _q` | main.js:22、pricing.js:30 | 同じ |
+| `callers quote` | `Symbol "quote" not found — did you mean: cols, urllib.parse?` | 同じ |
+| `impact` / `callers validate_email_signup` | a.py:1のみ / 0件 | 同じ(`impact check_email_format`もb.py:1のみ) |
+| `context "refactor email validation ..."` | validate_email_signup + day-035の`OnEnable`、`Low-confidence match` | 同じ |
+| `explore render_frame main` | day-021・day-025などの無関係な`main`が混入 | 同じ(531行) |
+
+ファイル数の差(159→163)は、PR作成後にDay 059(heretic)の成果物がmainに入ったため。DB 7.40 MB。
+
+ソースとの照合もローカルで行った。
+
+```
+$ grep -n "render_frame\|^def main" tools/video/render.py
+456:def render_frame(spec, segs, i_seg, t, total, cap_text) -> Image.Image:
+491:def main():
+525:            render_frame(spec, segs, i, t, total, frame_state(segs, t)[1]).save(args.stills / f"seg{i:02d}.png")
+549:            last_bytes = render_frame(spec, segs, i, t, total, cap).tobytes()
+$ grep -n quote experiments/day-010/sample-app/main.js
+4:const { quote, debugSnapshot } = require('./lib/pricing');
+22:  return quote(String(code || ''), Number(subtotal) || 0);
+```
+
+### 6-2. 追加確認: `query`/`node`でも呼び出し側の名前では引けない
+
+`callers`以外のシンボル検索でも`quote`を試した。
+
+```
+$ codegraph query quote
+Search Results for "quote":
+variable    cols
+  experiments/day-022/prepare_data.py:7
+import      urllib.parse
+  experiments/day-017/installed-skills/literature-review/scripts/verify_citations.py:14
+$ codegraph node quote
+**cols** (variable)
+**Location:** experiments/day-022/prepare_data.py:7
+```
+
+`query`は文字列`quote`を含む無関係なシンボル(`quote_volume`を含む配列、`from urllib.parse import quote`)を返し、`node`はその1件目(`cols`)を表示した。exportのalias名`quote`から`_q`に辿る手段はCLIには無かった。
+
+### 6-3. 追加確認: 利用統計(テレメトリ)が既定で有効
+
+初回の`init`で次の表示が出た(1章の`init-log.txt`にも同じ行がある)。
+
+```
+codegraph collects anonymous usage stats (no code, paths, or names) — "codegraph telemetry off" or CODEGRAPH_TELEMETRY=0 disables.
+```
+
+`~/.codegraph/telemetry.json`は`"enabled": true, "consent_source": "default-notice"`で、オプトアウト方式だった。`init`・`version`の2回を実行した時点の送信待ちキュー(`~/.codegraph/telemetry-queue.jsonl`)の中身は次の2行で、コマンド名と回数だけだった。
+
+```
+{"v":2,"d":"2026-11-27","k":"cli_command","n":"init","c":1,"e":0}
+{"v":2,"d":"2026-11-27","k":"cli_command","n":"version","c":1,"e":0}
+```
+
+`codegraph telemetry off`を実行すると`✓ Telemetry disabled. Buffered, unsent data was deleted.`と表示され、キューのファイルが消えた。以降のコマンドはすべて`CODEGRAPH_TELEMETRY=0`付きで実行した。送信先との通信そのもの(何がいつ送られたか)は観測していない。
+
+### 6-4. 追加確認: リポジトリへの書き込み
+
+`init`後に展開元(`git archive HEAD`)と作業ディレクトリを`diff -rq`で比べると、差分は`.codegraph/`だけだった(中に`*`と`!.gitignore`を書いた`.gitignore`が自動生成される)。`CLAUDE.md`や`.mcp.json`などの設定ファイルは`init`では作られなかった。ルートの`.gitignore`への`.codegraph/`追記は、自動生成の`.gitignore`があるため必須ではないが、害は無いので残した。
+
+### 6-5. まとめ
+
+PR(1〜5章)の結果は、インデックス規模の差(ファイル追加分)を除いてすべてローカルで再現した。追加で、(1) `query`/`node`でもalias名からは辿れないこと、(2) 匿名の利用統計がオプトアウト方式で既定有効であることを確認した。

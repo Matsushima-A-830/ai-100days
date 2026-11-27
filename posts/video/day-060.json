@@ -28,50 +28,91 @@
           "id": "init",
           "label": "Init",
           "sub": "codegraph init",
-          "pos": [0, 0]
+          "pos": [
+            0,
+            0
+          ]
         },
         {
           "id": "parser",
           "label": "Parser",
           "sub": "tree-sitter per file",
-          "pos": [0, 1]
+          "pos": [
+            0,
+            1
+          ]
         },
         {
           "id": "graph",
           "label": "Graph store",
           "sub": ".codegraph/codegraph.db",
-          "pos": [1, 1]
+          "pos": [
+            1,
+            1
+          ]
         },
         {
           "id": "query",
           "label": "Queries",
           "sub": "callers / callees / impact",
-          "pos": [0, 2]
+          "pos": [
+            0,
+            2
+          ]
         },
         {
           "id": "agent",
           "label": "Coding agent",
           "sub": "Claude Code, Cursor, Codex CLI",
-          "pos": [0, 3]
+          "pos": [
+            0,
+            3
+          ]
         }
       ],
       "edges": [
-        {"from": "init", "to": "parser", "label": "scan"},
-        {"from": "parser", "to": "graph", "label": "nodes+edges"},
-        {"from": "graph", "to": "query", "label": "lookup"},
-        {"from": "query", "to": "agent", "label": "MCP / CLI"}
+        {
+          "from": "init",
+          "to": "parser",
+          "label": "scan"
+        },
+        {
+          "from": "parser",
+          "to": "graph",
+          "label": "nodes+edges"
+        },
+        {
+          "from": "graph",
+          "to": "query",
+          "label": "lookup"
+        },
+        {
+          "from": "query",
+          "to": "agent",
+          "label": "MCP / CLI"
+        }
       ],
       "steps": [
         {
-          "focus": ["init", "parser", "graph"],
+          "focus": [
+            "init",
+            "parser",
+            "graph"
+          ],
           "narration": "We ran this on our own 159 file repo. Init parsed every file and wrote 2,162 nodes and 4,700 edges to local SQLite in 2.6 seconds."
         },
         {
-          "focus": ["graph", "query"],
+          "focus": [
+            "graph",
+            "query"
+          ],
           "narration": "Callers traced correctly across files, even through a renamed JavaScript export alias, something grep alone misses."
         },
         {
-          "focus": ["query", "agent"],
+          "focus": [
+            "query",
+            "agent"
+          ],
           "narration": "But a query only matches the original declared name, and it only follows call edges, never meaning."
         }
       ]
@@ -79,8 +120,8 @@
     {
       "type": "finding",
       "heading": "What we found",
-      "stat": "0 edges",
-      "caption": "Two functions with identical validation logic but no call relationship shared zero graph edges.",
+      "stat": "0 callers",
+      "caption": "Two functions with identical validation logic but no call relationship: no callers, no impact link.",
       "lines": [
         "callers _q      -> main.js:22 (ok)",
         "callers quote   -> not found",
