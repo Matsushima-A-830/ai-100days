@@ -1,0 +1,83 @@
+1
+00:00:00,000 --> 00:00:04,028
+Day 59: Heretic, a tool that removes a model's refusals
+
+2
+00:00:04,028 --> 00:00:05,420
+without retraining.
+
+3
+00:00:05,420 --> 00:00:07,984
+Its quality score said zero damage.
+
+4
+00:00:07,984 --> 00:00:09,961
+It wasn't measuring damage.
+
+5
+00:00:10,411 --> 00:00:12,913
+Heretic edits a model to stop refusing,
+
+6
+00:00:12,913 --> 00:00:16,762
+and uses KL divergence from the original model to check that
+
+7
+00:00:16,762 --> 00:00:17,981
+nothing else broke.
+
+8
+00:00:18,431 --> 00:00:22,013
+Each Optuna trial removes the refusal direction with different
+
+9
+00:00:22,013 --> 00:00:23,168
+strength and layers.
+
+10
+00:00:23,618 --> 00:00:25,142
+Then it scores refusals,
+
+11
+00:00:25,142 --> 00:00:28,761
+and KL divergence on just the first token of each answer.
+
+12
+00:00:29,211 --> 00:00:31,870
+Qwen3 always starts with a think tag.
+
+13
+00:00:31,870 --> 00:00:36,038
+Heretic normally skips it, but our config turned that off.
+
+14
+00:00:36,488 --> 00:00:39,791
+So KL stayed near zero in almost every trial.
+
+15
+00:00:39,791 --> 00:00:41,552
+With the prefix back on,
+
+16
+00:00:41,552 --> 00:00:44,341
+KL rose about two hundred forty times.
+
+17
+00:00:44,341 --> 00:00:48,524
+On the 4B model, every zero-refusal trial came with heavy
+
+18
+00:00:48,524 --> 00:00:49,038
+damage.
+
+19
+00:00:49,488 --> 00:00:52,314
+Only aggregate scores were recorded.
+
+20
+00:00:52,314 --> 00:00:55,140
+Full numbers are on Zenn and GitHub.
+
+21
+00:00:55,140 --> 00:00:56,710
+Heretic is AGPL-3.0.

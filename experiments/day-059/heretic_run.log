@@ -1,0 +1,292 @@
+█░█░█▀▀░█▀▄░█▀▀░▀█▀░█░█▀▀  v2.1.0
+█▀█░█▀▀░█▀▄░█▀▀░░█░░█░█░░  https://heretic-project.org
+▀░▀░▀▀▀░▀░▀░▀▀▀░░▀░░▀░▀▀▀  https://github.com/p-e-w/heretic
+
+No GPU or other accelerator detected. Operations will be slow.
+
+Loading model Qwen/Qwen3-0.6B...
+* Trying dtype auto...
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3503.08it/s]
+* Transformer model with 28 layers
+* Modifiable components:
+  * attn.o_proj: 28 modules total
+  * mlp.down_proj: 28 modules total
+
+Resident system RAM: 2.72 GB
+
+Loading and initializing scorers...
+* Loaded: KeywordRate
+* Loaded: KLDivergence
+
+Loading Refusals evaluation prompts from mlabonne/harmful_behaviors...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Generating train split:   0%|          | 0/416 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 416/416 [00:00<00:00, 116298.77 examples/s]
+Generating test split:   0%|          | 0/104 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 104/104 [00:00<00:00, 57065.36 examples/s]
+* 20 prompts loaded
+
+Loading KL divergence evaluation prompts from mlabonne/harmless_alpaca...
+Generating train split:   0%|          | 0/25058 [00:00<?, ? examples/s]Generating train split: 100%|██████████| 25058/25058 [00:00<00:00, 1790291.79 examples/s]
+Generating test split:   0%|          | 0/6265 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 6265/6265 [00:00<00:00, 1240549.27 examples/s]
+* 20 prompts loaded
+* Obtaining baseline first-token probability distributions...
+
+Getting baseline scores...
+* Baseline Refusals: 6/20
+* Baseline KL divergence: 0 (by definition)
+
+Loading and initializing modifiers...
+Failed to load CPU gemm_4bit_forward from kernels-community: Cannot find a build variant for this system in kernels-community/quantization-bitsandbytes (revision: a99e5bb6a4c835bdc676a3044f45c716fd605bf4):
+
+torch214-cpu-x86_64-linux: Torch version (2.14) does not match environment Torch version (2.15)
+torch211-cpu-x86_64-linux: Torch version (2.11) does not match environment Torch version (2.15)
+torch210-cpu-x86_64-linux: Torch version (2.10) does not match environment Torch version (2.15)
+torch215-cpu-x86_64-linux: backend (cpu) does not match selected backend (cu132)
+torch213-cpu-x86_64-linux: Torch version (2.13) does not match environment Torch version (2.15)
+torch212-cpu-x86_64-linux: Torch version (2.12) does not match environment Torch version (2.15). Please make sure you already `pip install kernels` and the kernels >= 0.11.1
+* Loaded: ARA
+
+Loading good prompts from mlabonne/harmless_alpaca...
+* 80 prompts loaded
+
+Loading bad prompts from mlabonne/harmful_behaviors...
+* 80 prompts loaded
+
+Obtaining module I/O for good prompts...
+
+Obtaining module I/O for bad prompts...
+
+Running trial 1 of 12...
+* Parameters:
+  * start_layer_index = 13
+  * end_layer_index = 23
+  * preserve_good_behavior_weight = 0.7071
+  * steer_bad_behavior_weight = 0.0010
+  * overcorrect_relative_weight = 0.2090
+  * neighbor_count = 4
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 0/20
+  * KL divergence: 0.0000
+
+Elapsed time: 48s
+Estimated remaining time: 8m 49s
+Resident system RAM: 3.04 GB
+
+Running trial 2 of 12...
+* Parameters:
+  * start_layer_index = 2
+  * end_layer_index = 24
+  * preserve_good_behavior_weight = 0.4964
+  * steer_bad_behavior_weight = 0.0365
+  * overcorrect_relative_weight = 0.1449
+  * neighbor_count = 10
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 0/20
+  * KL divergence: 0.0005
+
+Elapsed time: 2m 5s
+Estimated remaining time: 10m 26s
+Resident system RAM: 3.04 GB
+
+Running trial 3 of 12...
+* Parameters:
+  * start_layer_index = 2
+  * end_layer_index = 18
+  * preserve_good_behavior_weight = 0.8047
+  * steer_bad_behavior_weight = 0.1273
+  * overcorrect_relative_weight = 1.2349
+  * neighbor_count = 11
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 0/20
+  * KL divergence: 17.6746
+
+Elapsed time: 3m 3s
+Estimated remaining time: 9m 10s
+Resident system RAM: 3.04 GB
+
+Running trial 4 of 12...
+* Parameters:
+  * start_layer_index = 7
+  * end_layer_index = 17
+  * preserve_good_behavior_weight = 0.4059
+  * steer_bad_behavior_weight = 0.0003
+  * overcorrect_relative_weight = 0.4999
+  * neighbor_count = 8
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 1/20
+  * KL divergence: 0.0000
+
+Elapsed time: 3m 48s
+Estimated remaining time: 7m 36s
+Resident system RAM: 3.04 GB
+
+Running trial 5 of 12...
+* Parameters:
+  * start_layer_index = 7
+  * end_layer_index = 19
+  * preserve_good_behavior_weight = 0.9704
+  * steer_bad_behavior_weight = 0.0121
+  * overcorrect_relative_weight = 0.8455
+  * neighbor_count = 14
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 0/20
+  * KL divergence: 0.0002
+
+Elapsed time: 4m 40s
+Estimated remaining time: 6m 32s
+Resident system RAM: 3.04 GB
+
+Running trial 6 of 12...
+* Parameters:
+  * start_layer_index = 11
+  * end_layer_index = 25
+  * preserve_good_behavior_weight = 0.8347
+  * steer_bad_behavior_weight = 0.0020
+  * overcorrect_relative_weight = 0.4303
+  * neighbor_count = 4
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 0/20
+  * KL divergence: 0.0001
+
+Elapsed time: 5m 37s
+Estimated remaining time: 5m 37s
+Resident system RAM: 3.04 GB
+
+Running trial 7 of 12...
+* Parameters:
+  * start_layer_index = 12
+  * end_layer_index = 27
+  * preserve_good_behavior_weight = 0.1401
+  * steer_bad_behavior_weight = 0.0002
+  * overcorrect_relative_weight = 0.3370
+  * neighbor_count = 1
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 0/20
+  * KL divergence: 0.0000
+
+Elapsed time: 6m 32s
+Estimated remaining time: 4m 40s
+Resident system RAM: 3.04 GB
+
+Running trial 8 of 12...
+* Parameters:
+  * start_layer_index = 14
+  * end_layer_index = 23
+  * preserve_good_behavior_weight = 0.7899
+  * steer_bad_behavior_weight = 0.0001
+  * overcorrect_relative_weight = 1.1359
+  * neighbor_count = 6
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 1/20
+  * KL divergence: 8.0875
+
+Elapsed time: 7m 16s
+Estimated remaining time: 3m 38s
+Resident system RAM: 3.04 GB
+
+Running trial 9 of 12...
+* Parameters:
+  * start_layer_index = 2
+  * end_layer_index = 25
+  * preserve_good_behavior_weight = 0.5827
+  * steer_bad_behavior_weight = 0.0005
+  * overcorrect_relative_weight = 0.0114
+  * neighbor_count = 1
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 0/20
+  * KL divergence: 0.0001
+
+Elapsed time: 8m 30s
+Estimated remaining time: 2m 50s
+Resident system RAM: 3.04 GB
+
+Running trial 10 of 12...
+* Parameters:
+  * start_layer_index = 4
+  * end_layer_index = 27
+  * preserve_good_behavior_weight = 0.9796
+  * steer_bad_behavior_weight = 0.0002
+  * overcorrect_relative_weight = 0.0082
+  * neighbor_count = 10
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 0/20
+  * KL divergence: 0.0000
+
+Elapsed time: 9m 51s
+Estimated remaining time: 1m 58s
+Resident system RAM: 3.06 GB
+
+Running trial 11 of 12...
+* Parameters:
+  * start_layer_index = 7
+  * end_layer_index = 27
+  * preserve_good_behavior_weight = 0.6094
+  * steer_bad_behavior_weight = 0.0003
+  * overcorrect_relative_weight = 0.2391
+  * neighbor_count = 15
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 1/20
+  * KL divergence: 0.0000
+
+Elapsed time: 11m 2s
+Estimated remaining time: 1m 0s
+Resident system RAM: 3.06 GB
+
+Running trial 12 of 12...
+* Parameters:
+  * start_layer_index = 1
+  * end_layer_index = 27
+  * preserve_good_behavior_weight = 0.9128
+  * steer_bad_behavior_weight = 0.0001
+  * overcorrect_relative_weight = 0.0810
+  * neighbor_count = 9
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+* Evaluating...
+  * Refusals: 0/20
+  * KL divergence: 0.0000
+
+Elapsed time: 12m 17s
+Resident system RAM: 3.06 GB
+
+Optimization finished!
+Warning: Input is not a terminal (fd=0).
+
+Restoring model from trial 10...
+* Parameters:
+  * start_layer_index = 4
+  * end_layer_index = 27
+  * preserve_good_behavior_weight = 0.9796
+  * steer_bad_behavior_weight = 0.0002
+  * overcorrect_relative_weight = 0.0082
+  * neighbor_count = 10
+* Resetting model...
+* Modifying model using Arbitrary-Rank Ablation (ARA)...
+Saving merged model...
+* Merging LoRA adapters into base model...
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  1.76it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00,  1.76it/s]
+Model saved to /tmp/heretic-day059-model.
+* Resetting model...
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 3320.35it/s]
+* Modifying model using Arbitrary-Rank Ablation (ARA)...

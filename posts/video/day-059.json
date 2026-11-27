@@ -1,0 +1,153 @@
+{
+  "day": 59,
+  "project": "Heretic",
+  "slug": "heretic-abliteration",
+  "tagline": "Training-free refusal removal for LLMs, tuned automatically by Optuna",
+  "source_url": "github.com/p-e-w/heretic",
+  "license": "AGPL-3.0-or-later",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 59: Heretic, a tool that removes a model's refusals without retraining. Its quality score said zero damage. It wasn't measuring damage."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "Finds the direction behind refusals",
+        "Optuna tunes how hard to remove it",
+        "Scores refusals and KL divergence"
+      ],
+      "narration": "Heretic edits a model to stop refusing, and uses KL divergence from the original model to check that nothing else broke."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {
+          "id": "base",
+          "label": "Base model",
+          "sub": "Qwen3-0.6B",
+          "pos": [
+            0,
+            0
+          ]
+        },
+        {
+          "id": "ara",
+          "label": "ARA modifier",
+          "sub": "refusal direction",
+          "pos": [
+            1,
+            0
+          ]
+        },
+        {
+          "id": "optuna",
+          "label": "Optuna search",
+          "sub": "TPE, 12 trials",
+          "pos": [
+            0,
+            1
+          ],
+          "span": 2
+        },
+        {
+          "id": "refuse",
+          "label": "Refusal score",
+          "sub": "KeywordRate",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "id": "kl",
+          "label": "KL score",
+          "sub": "first token only",
+          "pos": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "prefix",
+          "label": "Response prefix",
+          "sub": "<think></think>",
+          "pos": [
+            1,
+            3
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "from": "base",
+          "to": "ara",
+          "label": "weights"
+        },
+        {
+          "from": "ara",
+          "to": "optuna",
+          "label": "params"
+        },
+        {
+          "from": "optuna",
+          "to": "refuse",
+          "label": "trial"
+        },
+        {
+          "from": "optuna",
+          "to": "kl",
+          "label": "trial"
+        },
+        {
+          "from": "prefix",
+          "to": "kl",
+          "label": "skips"
+        }
+      ],
+      "steps": [
+        {
+          "focus": [
+            "base",
+            "ara",
+            "optuna"
+          ],
+          "narration": "Each Optuna trial removes the refusal direction with different strength and layers."
+        },
+        {
+          "focus": [
+            "optuna",
+            "refuse",
+            "kl"
+          ],
+          "narration": "Then it scores refusals, and KL divergence on just the first token of each answer."
+        },
+        {
+          "focus": [
+            "kl",
+            "prefix"
+          ],
+          "narration": "Qwen3 always starts with a think tag. Heretic normally skips it, but our config turned that off."
+        }
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "99.97%",
+      "caption": "Chance the first token is <think>, on 20 harmless prompts.",
+      "lines": [
+        "prefix off   KL median 0.0001",
+        "prefix auto  KL median 0.0243",
+        "4B 0/100     KL 8.70 or more"
+      ],
+      "narration": "So KL stayed near zero in almost every trial. With the prefix back on, KL rose about two hundred forty times. On the 4B model, every zero-refusal trial came with heavy damage."
+    },
+    {
+      "type": "outro",
+      "narration": "Only aggregate scores were recorded. Full numbers are on Zenn and GitHub. Heretic is AGPL-3.0."
+    }
+  ]
+}
