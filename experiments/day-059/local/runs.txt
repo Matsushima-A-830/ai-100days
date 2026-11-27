@@ -1,0 +1,4 @@
+dir=$WORK/A model=Qwen/Qwen3-0.6B rc=0 wall=530s
+dir=$WORK/B model=Qwen/Qwen3-0.6B rc=0 wall=650s
+dir=$WORK/C model=Qwen/Qwen3-4B-Instruct-2507 rc=143 wall=40520s
+dir=$WORK/C model=Qwen/Qwen3-4B-Instruct-2507 optimization finished (Elapsed 1h 41m), then hung at the interactive export prompt (no --export-strategy); process killed, no weights saved
