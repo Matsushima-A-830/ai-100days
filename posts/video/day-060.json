@@ -1,5 +1,5 @@
 {
-  "day": 59,
+  "day": 60,
   "project": "codegraph",
   "slug": "codegraph",
   "tagline": "A local call-graph index so coding agents query code instead of repeating grep and read",
@@ -8,7 +8,7 @@
   "scenes": [
     {
       "type": "title",
-      "narration": "Day 59: codegraph, a local call graph index that lets a coding agent query code in one shot instead of repeating grep and read."
+      "narration": "Day 60: codegraph, a local call graph index that lets a coding agent query code in one shot instead of repeating grep and read."
     },
     {
       "type": "overview",
