@@ -1,0 +1,20 @@
+=== codegraph callers calculatePrice ===
+[i] Symbol "calculatePrice" not found
+
+=== codegraph callers of 'quote' (exported alias for _q in pricing.js) ===
+[i] Symbol "quote" not found — did you mean: cols, urllib.parse?
+
+=== codegraph callers of _q directly ===
+
+Callers of "_q" (2):
+
+function _q (javascript) — experiments/day-010/sample-app/lib/pricing.js:9
+file        main.js
+  experiments/day-010/sample-app/main.js:22
+
+file        pricing.js [references]
+  experiments/day-010/sample-app/lib/pricing.js:30
+
+
+=== grep equivalent (manual, cross-file, without knowing which file defines it) ===
+experiments/day-010/sample-app/main.js:4:const { quote, debugSnapshot } = require('./lib/pricing');

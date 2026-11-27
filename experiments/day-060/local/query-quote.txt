@@ -1,0 +1,29 @@
+$ codegraph query quote
+
+Search Results for "quote":
+
+variable    cols
+  experiments/day-022/prepare_data.py:7
+  = [
+    "open_time", "open", "high", "low", "close", "volume",
+    "close_time", "quote_volume", "num_...
+
+import      urllib.parse
+  experiments/day-017/installed-skills/literature-review/scripts/verify_citations.py:14
+  from urllib.parse import quote, unquote
+
+$ codegraph node quote
+**cols** (variable)
+
+**Location:** experiments/day-022/prepare_data.py:7
+**Signature:** `= [
+    "open_time", "open", "high", "low", "close", "volume",
+    "close_time", "quote_volume", "num_...`
+
+```python
+7	cols = [
+8	    "open_time", "open", "high", "low", "close", "volume",
+9	    "close_time", "quote_volume", "num_trades",
+10	    "taker_buy_base", "taker_buy_quote", "ignore",
+11	]
+```

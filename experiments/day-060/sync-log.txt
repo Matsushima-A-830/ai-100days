@@ -1,0 +1,13 @@
+T  Syncing CodeGraph
+|
+Scanning files...
+Parsing code...
+Resolving refs...
+Linking dynamic dispatch...
+|
+*  Synced 2 changed files
+|
+•  Added: 2 - 4 nodes in 446ms
+|
+—  Done
+

@@ -1,0 +1,34 @@
+$ codegraph sync .
+┌  Syncing CodeGraph
+│
+Scanning files...
+│
+●  Already up to date
+│
+└  Done
+
+$ codegraph impact validate_email_signup
+
+Impact of changing "validate_email_signup" — 1 affected symbols:
+
+function validate_email_signup (python) — experiments/day-060/duplicate-test/a.py:1
+experiments/day-060/duplicate-test/a.py
+  function    validate_email_signup:1
+
+
+$ codegraph callers validate_email_signup
+
+Callers of "validate_email_signup" (0):
+
+function validate_email_signup (python) — experiments/day-060/duplicate-test/a.py:1
+ℹ No callers found for "validate_email_signup"
+
+$ codegraph impact check_email_format
+
+Impact of changing "check_email_format" — 1 affected symbols:
+
+function check_email_format (python) — experiments/day-060/duplicate-test/b.py:1
+experiments/day-060/duplicate-test/b.py
+  function    check_email_format:1
+
+

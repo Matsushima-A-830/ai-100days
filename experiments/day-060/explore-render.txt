@@ -1,0 +1,531 @@
+**Exploration: render_frame main**
+
+Found 47 symbols across 5 files.
+
+**Blast radius — what depends on these (update/verify before editing)**
+
+- `render_frame` (tools/video/render.py:456) — 1 caller in `tools/video/render.py`; no tests found within 3 caller hops
+- `main` (experiments/day-021/mcp_client_build_room.py:69) — 1 caller in `experiments/day-021/mcp_client_build_room.py`; no tests found within 3 caller hops
+- `main` (experiments/day-021/mcp_client_fix_camera_and_render.py:57) — 1 caller in `experiments/day-021/mcp_client_fix_camera_and_render.py`; no tests found within 3 caller hops
+- `main` (experiments/day-021/mcp_client_scene_info.py:61) — 1 caller in `experiments/day-021/mcp_client_scene_info.py`; no tests found within 3 caller hops
+- `main` (experiments/day-025/akv_generate_check.py:60) — 1 caller in `experiments/day-025/akv_generate_check.py`; no tests found within 3 caller hops
+
+**Source Code**
+
+> The code below is the **verbatim, current on-disk source** of these files — re-read from disk on this call and line-numbered, byte-for-byte identical to what the Read tool returns. It is NOT a summary, outline, or stale cache. Treat each block as a Read you have already performed: do not Read a file shown here.
+
+**`tools/video/render.py`** — calls(calls), font(calls), wrap(calls), arrow(calls), FADE(variable), font(function), +43 more
+
+```python
+291	X0, CW = 90, W - 180
+292	
+293	
+294	def chrome(img, d, spec, t, total):
+295	    day = f"{int(spec['day']):03d}"
+296	    x = X0
+297	    for txt, col in [(f"$ day-{day}", C["muted"]), ("  /  ", C["faint"]),
+298	                     (spec.get("slug", spec["project"].lower()), C["accent"]), ("  /  ", C["faint"]),
+299	                     ("100 days of AI", C["muted"])]:
+300	        d.text((x, 110), txt, font=F["eyebrow"], fill=col)
+301	        x += d.textlength(txt, font=F["eyebrow"])
+302	    # progress bar + day counter
+303	    y = 1830
+304	    d.rounded_rectangle([X0, y, W - X0 - 170, y + 8], 4, fill=C["border"])
+305	    frac = min(1.0, t / total) if total else 0
+306	    d.rounded_rectangle([X0, y, X0 + int((W - 2 * X0 - 170) * frac), y + 8], 4, fill=C["accent"])
+307	    d.text((W - X0 - 140, y - 14), f"{day} / 100", font=F["small"], fill=C["faint"])
+308	
+309	
+310	def caption(d, text):
+311	    if not text:
+312	        return
+313	    lines = wrap(d, text, F["cap"], CW - 60)[:3]
+314	    lh = 62
+315	    h = lh * len(lines) + 44
+316	    y0 = CAP_Y + (230 - h) // 2
+317	    d.rounded_rectangle([X0 - 10, y0, W - X0 + 10, y0 + h], 22, fill=(0, 0, 0))
+318	    for i, ln in enumerate(lines):
+319	        tw = d.textlength(ln, font=F["cap"])
+320	        d.text(((W - tw) / 2, y0 + 22 + i * lh), ln, font=F["cap"], fill=(255, 255, 255))
+321	
+322	
+323	def heading(d, text, y=TOP):
+324	    return text_block(d, (X0, y), text, F["h"], C["ink"], CW, 1.15) + 30
+325	
+326	
+327	def scene_title(d, spec, sc, prog):
+328	    y = 420
+329	    d.text((X0, y), f"DAY {int(spec['day']):03d}", font=F["monob"], fill=C["accent"])
+330	    y = text_block(d, (X0, y + 70), spec["project"], F["title"], C["ink"], CW, 1.08) + 30
+331	    y = text_block(d, (X0, y), spec["tagline"], F["sub"], C["muted"], CW, 1.35) + 60
+332	    x = X0
+333	    for chip in [f"License: {spec['license']}", "Tested hands-on"]:
+334	        tw = d.textlength(chip, font=F["small"])
+
+... (gap) ...
+
+338	
+339	
+340	def scene_overview(d, spec, sc, prog):
+341	    y = heading(d, sc.get("heading", "What is it?"))
+342	    n = len(sc["bullets"])
+343	    shown = min(n, 1 + int(prog * n * 1.15))
+344	    for i, b in enumerate(sc["bullets"][:shown]):
+345	        d.rounded_rectangle([X0, y + 18, X0 + 18, y + 36], 4, fill=C["accent"])
+346	        y = text_block(d, (X0 + 50, y), b, F["body"], C["ink"], CW - 50, 1.3) + 34
+347	
+348	
+349	def node_geometry(nodes):
+
+... (gap) ...
+
+366	    return geo
+367	
+368	
+369	def scene_architecture(d, spec, sc, prog, step):
+370	    heading(d, sc.get("heading", "How it works"))
+371	    nodes, edges = sc["nodes"], sc.get("edges", [])
+372	    geo = node_geometry(nodes)
+373	    st = sc["steps"][step]
+374	    focus = set(st.get("focus", []))
+375	    center = {k: ((b[0] + b[2]) / 2, (b[1] + b[3]) / 2) for k, b in geo.items()}
+376	    for e in edges:
+377	        hot = e["from"] in focus and e["to"] in focus
+378	        col = C["accent"] if hot else C["faint"]
+379	        a, b = center[e["from"]], center[e["to"]]
+380	        p0, p1 = clip_to_box(a, b, geo[e["from"]]), clip_to_box(b, a, geo[e["to"]])
+381	        arrow(d, p0, p1, col, 6 if hot else 4)
+382	        if e.get("label"):
+383	            mx, my = (p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2
+384	            if abs(p1[1] - p0[1]) < 1:   # horizontal edge: label goes above the boxes (the gap is narrow)
+385	                my = min(geo[e["from"]][1], geo[e["to"]][1]) - 30
+386	            tw = d.textlength(e["label"], font=F["edge"])
+387	            d.rounded_rectangle([mx - tw / 2 - 12, my - 22, mx + tw / 2 + 12, my + 22], 10, fill=C["bg"])
+388	            d.text((mx - tw / 2, my - 17), e["label"], font=F["edge"], fill=C["accent"] if hot else C["muted"])
+389	    for n in nodes:
+390	        x0, y0, x1, y1 = geo[n["id"]]
+391	        hot = n["id"] in focus
+392	        d.rounded_rectangle([x0, y0, x1, y1], 22, fill=C["surface"],
+393	                            outline=C["accent"] if hot else C["border"], width=6 if hot else 3)
+394	        label_col = C["ink"] if hot or not focus else C["muted"]
+395	        lines = wrap(d, n["label"], F["node"], x1 - x0 - 40)[:2]
+396	        sub = n.get("sub")
+397	        th = len(lines) * 52 + (40 if sub else 0)
+398	        ty = (y0 + y1) / 2 - th / 2
+399	        for ln in lines:
+400	            tw = d.textlength(ln, font=F["node"])
+401	            d.text(((x0 + x1) / 2 - tw / 2, ty), ln, font=F["node"], fill=label_col)
+402	            ty += 52
+403	        if sub:
+404	            size = 28
+405	            while size > 20 and d.textlength(sub, font=font("IBMPlexMono-Regular", size)) > x1 - x0 - 30:
+406	                size -= 1
+407	            fs = font("IBMPlexMono-Regular", size)
+408	            tw = d.textlength(sub, font=fs)
+409	            d.text(((x0 + x1) / 2 - tw / 2, ty + 4), sub, font=fs, fill=C["accent"] if hot else C["faint"])
+410	    # step dots
+411	    for i in range(len(sc["steps"])):
+412	        x = W - X0 - (len(sc["steps"]) - i) * 34
+413	        d.ellipse([x, TOP + 100, x + 16, TOP + 116], fill=C["accent"] if i <= step else C["border"])
+414	
+415	
+416	def draw_stat(d, xy, stat):
+
+... (gap) ...
+
+420	    for i, part in enumerate(parts):
+421	        if i:
+422	            cy = y + 150
+423	            arrow(d, (x + 25, cy), (x + 135, cy), C["accent"], 14, 46)
+424	            x += 175
+425	        d.text((x, y), part, font=F["stat"], fill=C["accent"])
+426	        x += d.textlength(part, font=F["stat"]) + 10
+427	
+428	
+429	def scene_finding(d, spec, sc, prog):
+430	    y = heading(d, sc.get("heading", "What we found"))
+431	    draw_stat(d, (X0 - 8, y), sc["stat"])
+432	    y += 260
+433	    y = text_block(d, (X0, y), sc["caption"], F["body"], C["ink"], CW, 1.32) + 40
+
+... (gap) ...
+
+450	        y = text_block(d, (X0, y + 42), v, F["mono"], C["ink"], CW, 1.3) + 36
+451	
+452	
+453	SCENES = {"title": scene_title, "overview": scene_overview, "finding": scene_finding, "outro": scene_outro}
+454	
+455	
+456	def render_frame(spec, segs, i_seg, t, total, cap_text) -> Image.Image:
+457	    seg = segs[i_seg]
+458	    img = Image.new("RGB", (W, H), C["bg"])
+459	    d = ImageDraw.Draw(img)
+460	    prog = (t - seg.start) / seg.length if seg.length else 1
+461	    if seg.scene["type"] == "architecture":
+462	        scene_architecture(d, spec, seg.scene, prog, seg.step)
+463	    else:
+464	        SCENES[seg.scene["type"]](d, spec, seg.scene, prog)
+465	    # fade in at the first segment of each scene
+466	    first = i_seg == 0 or segs[i_seg - 1].scene is not seg.scene
+467	    if first and t - seg.start < FADE:
+468	        a = 1 - (t - seg.start) / FADE
+469	        img = Image.blend(img, Image.new("RGB", (W, H), C["bg"]), a)
+470	        d = ImageDraw.Draw(img)
+471	    chrome(img, d, spec, t, total)
+472	    caption(d, cap_text)
+473	    return img
+474	
+475	
+476	def frame_state(segs, t):
+477	    i = max(k for k, s in enumerate(segs) if s.start <= t + 1e-9)
+478	    seg = segs[i]
+479	    cap = next((c for a, b, c in seg.captions if a <= t < b), "")
+480	    return i, cap
+481	
+482	
+483	def ffmpeg_exe() -> str:
+484	    exe = shutil.which("ffmpeg")
+485	    if exe:
+486	        return exe
+487	    import imageio_ffmpeg
+488	    return imageio_ffmpeg.get_ffmpeg_exe()
+489	
+490	
+491	def main():
+492	    ap = argparse.ArgumentParser()
+493	    ap.add_argument("spec", type=Path)
+494	    ap.add_argument("--no-tts", action="store_true", help="silent video, timing estimated from word count")
+495	    ap.add_argument("--check", action="store_true", help="validate and print timing only")
+496	    ap.add_argument("--stills", type=Path, help="write one PNG per segment to this dir and exit")
+497	    ap.add_argument("--out", type=Path, help="output mp4 (default: next to the spec)")
+498	    args = ap.parse_args()
+499	
+500	    try:
+501	        spec = load_spec(args.spec)
+502	    except SpecError as e:
+503	        sys.exit(f"spec error: {e}")
+504	    segs = build_segments(spec)
+505	    tmp = Path(tempfile.mkdtemp(prefix="ai100video-"))
+506	    tts = not (args.no_tts or args.check or args.stills)
+507	    synth(segs, tmp, tts)
+508	    total = segs[-1].start + segs[-1].length
+509	    words = sum(len(s.narration.split()) for s in segs)
+510	    for s in segs:
+511	        print(f"  {s.start:5.1f}s  {s.scene['type']:<12} {s.length:4.1f}s  {s.narration[:60]}")
+512	    print(f"total {total:.1f}s, {words} words ({'measured' if tts else 'estimated'})")
+513	    if not MIN_TOTAL <= total <= MAX_TOTAL:
+514	        msg = f"total {total:.1f}s is outside {MIN_TOTAL:.0f}-{MAX_TOTAL:.0f}s: adjust narration length"
+515	        if tts:
+516	            sys.exit(msg)
+517	        print("WARNING: " + msg)
+518	    if args.check:
+519	        return
+520	
+521	    if args.stills:
+522	        args.stills.mkdir(parents=True, exist_ok=True)
+523	        for i, s in enumerate(segs):
+524	            t = s.start + s.length * 0.7
+525	            render_frame(spec, segs, i, t, total, frame_state(segs, t)[1]).save(args.stills / f"seg{i:02d}.png")
+526	        print(f"stills -> {args.stills}")
+527	        return
+528	
+529	    out = args.out or args.spec.with_suffix(".mp4")
+530	    cmd = [ffmpeg_exe(), "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
+531	           "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-"]
+532	    if tts:
+533	        wav = tmp / "narration.wav"
+534	        concat_audio(segs, wav)
+535	        cmd += ["-i", str(wav), "-c:a", "aac", "-b:a", "96k"]
+536	    cmd += ["-c:v", "libx264", "-preset", "medium", "-crf", "28", "-tune", "stillimage",
+537	            "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-t", f"{total:.2f}", str(out)]
+538	    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+539	    last_key, last_bytes = None, None
+540	    for f in range(int(math.ceil(total * FPS))):
+541	        t = f / FPS
+542	        i, cap = frame_state(segs, t)
+543	        seg = segs[i]
+544	        fading = (i == 0 or segs[i - 1].scene is not seg.scene) and t - seg.start < FADE
+545	        prog = (t - seg.start) / seg.length
+546	        key = (i, cap, round(t, 2) if fading else None, int(prog * 20) if seg.scene["type"] == "overview" else 0,
+547	               int(t * 2))  # progress bar moves every 0.5s
+548	        if key != last_key:
+549	            last_bytes = render_frame(spec, segs, i, t, total, cap).tobytes()
+550	            last_key = key
+551	        proc.stdin.write(last_bytes)
+552	    proc.stdin.close()
+553	    if proc.wait() != 0:
+554	        sys.exit("ffmpeg failed")
+555	    if tts:
+556	        write_srt(segs, out.with_suffix(".srt"))
+557	    print(f"wrote {out} ({out.stat().st_size / 1e6:.1f} MB)")
+558	    shutil.rmtree(tmp, ignore_errors=True)
+559	
+560	
+561	if __name__ == "__main__":
+```
+
+**`experiments/day-001/run_experiment.py`** — imports(imports), OUT_DIR(variable), NGRAM_SIZES(variable), MAX_COUNT_PER_SAMPLE(variable), NUM_MERGES(variable), CHECKPOINTS(variable), +8 more
+
+```python
+65	    return ngrams
+66	
+67	
+68	def main():
+69	    print("=== Step 1: train local base tokenizer (substitute for Qwen/QwQ-32B) ===")
+70	    base_tok = build_base_tokenizer(TRAIN_TRACES)
+71	    print(f"base vocab size: {base_tok.get_vocab_size()}")
+72	
+73	    train_ids = [base_tok.encode(t).ids for t in TRAIN_TRACES]
+74	    heldout_ids = [base_tok.encode(t).ids for t in HELD_OUT_TRACES]
+75	    print(f"train samples: {len(train_ids)}, held-out samples: {len(heldout_ids)}")
+76	    print(f"train base token counts: {[len(x) for x in train_ids]}")
+77	    print(f"held-out base token counts: {[len(x) for x in heldout_ids]}")
+78	
+79	    print("\n=== Step 2: count n-grams over the training traces (reastok.ngrams.count_ngrams) ===")
+80	    ngrams = aggregate_ngrams(train_ids)
+81	    for n in NGRAM_SIZES:
+82	        print(f"  n={n}: {len(ngrams[n])} distinct n-grams")
+83	
+84	    print(f"\n=== Step 3: discover {NUM_MERGES} BPE supertoken merges (scripts/bpe_from_ngrams.run_bpe, unmodified) ===")
+85	    merges = run_bpe(ngrams, base_tok, NUM_MERGES, filter_fn=None)
+86	    print(f"discovered {len(merges)} merges (requested {NUM_MERGES})")
+87	
+88	    tsv_path = OUT_DIR / "bpe_merges.tsv"
+89	    rows = ["id_a\tid_b\tid_merged\tfreq\ttok1\ttok2\tmerged"] + [
+90	        f"{a}\t{b}\t{c}\t{freq}\t{t1}\t{t2}\t{m}" for a, b, c, freq, t1, t2, m in merges
+91	    ]
+92	    tsv_path.write_text("\n".join(rows) + "\n")
+93	    print(f"wrote merge table to {tsv_path}")
+94	
+95	    print("\n=== Step 4: apply supertokens with reastok.merge_apply.SuperPostTokenizer ===")
+96	    super_tok = SuperPostTokenizer.from_tsv(tsv_path)
+97	
+98	    def compress_stats(id_lists, tag):
+99	        print(f"\n-- {tag} --")
+100	        results = []
+101	        for cp in CHECKPOINTS:
+102	            st = SuperPostTokenizer.from_tsv(tsv_path, num_merges=cp)
+103	            base_total = sum(len(ids) for ids in id_lists)
+104	            super_total = sum(len(st.post_encode(ids)) for ids in id_lists)
+105	            pct = 100.0 * (base_total - super_total) / base_total
+106	            results.append(
+107	                {
+108	                    "num_merges": cp,
+109	                    "base_tokens": base_total,
+110	                    "supertoken_tokens": super_total,
+111	                    "reduction_pct": round(pct, 2),
+112	                }
+113	            )
+114	            print(
+115	                f"  merges={cp:>4}  base={base_total:>5}  super={super_total:>5}  "
+116	                f"reduction={pct:5.2f}%"
+117	            )
+118	        return results
+119	
+120	    train_results = compress_stats(train_ids, "TRAIN (in-sample)")
+121	    heldout_results = compress_stats(heldout_ids, "HELD-OUT (unseen traces)")
+122	
+123	    summary = {
+124	        "base_vocab_size": base_tok.get_vocab_size(),
+125	        "num_train_samples": len(TRAIN_TRACES),
+126	        "num_heldout_samples": len(HELD_OUT_TRACES),
+127	        "ngram_sizes": NGRAM_SIZES,
+128	        "max_count_per_sample": MAX_COUNT_PER_SAMPLE,
+129	        "requested_merges": NUM_MERGES,
+130	        "discovered_merges": len(merges),
+131	        "train_results": train_results,
+132	        "heldout_results": heldout_results,
+133	        "example_top_merges": [
+134	            {"freq": freq, "tok1": t1, "tok2": t2, "merged": m}
+135	            for (_a, _b, _c, freq, t1, t2, m) in merges[:20]
+… lines 136-139 of `main` elided — codegraph_explore `experiments/day-001/run_experiment.py:136-139` returns them
+```
+
+**`experiments/day-021/mcp_client_build_room.py`** — BLENDER_CODE(variable), JAPANESE_INSTRUCTION(variable), main(calls), main(function)
+
+```python
+2	from mcp import ClientSession, StdioServerParameters
+3	from mcp.client.stdio import stdio_client
+4	
+5	JAPANESE_INSTRUCTION = "低ポリゴンのダンジョンシーンを作って。石の壁で囲まれた部屋と、中央に松明を1本置いて、カメラで部屋全体が見えるようにレンダリングして。"
+6	
+7	BLENDER_CODE = r'''
+8	import bpy, math
+
+... (gap) ...
+
+66	'''
+67	
+68	
+69	async def main():
+70	    server_params = StdioServerParameters(
+71	        command="uv",
+72	        args=["run", "mcp-for-blender"],
+73	        cwd="/tmp/claude-0/-home-user-ai-100days/58be72ad-8476-5973-a506-77a61791716d/scratchpad/day021/mcp-for-blender",
+74	    )
+75	    async with stdio_client(server_params) as (read, write):
+76	        async with ClientSession(read, write) as session:
+77	            await session.initialize()
+78	            exec_result = await session.call_tool(
+79	                "execute_blender_code",
+80	                {"code": BLENDER_CODE, "user_prompt": JAPANESE_INSTRUCTION},
+81	            )
+82	            print("--- execute_blender_code result ---")
+83	            for c in exec_result.content:
+84	                print(getattr(c, "text", c))
+85	
+86	            after = await session.call_tool("get_scene_info", {"user_prompt": JAPANESE_INSTRUCTION})
+87	            print("\n--- AFTER get_scene_info ---")
+88	            for c in after.content:
+89	                print(getattr(c, "text", c))
+90	
+91	
+92	if __name__ == "__main__":
+93	    asyncio.run(main())
+94	
+```
+
+**`experiments/day-021/mcp_client_fix_camera_and_render.py`** — main(function), FIX_CAMERA_CODE(variable), JAPANESE_INSTRUCTION(variable), mcp_client_fix_camera_and_render.py(file)
+
+```python
+1	import asyncio
+2	from mcp import ClientSession, StdioServerParameters
+3	from mcp.client.stdio import stdio_client
+4	
+5	JAPANESE_INSTRUCTION = "低ポリゴンのダンジョンシーンを作って。石の壁で囲まれた部屋と、中央に松明を1本置いて、カメラで部屋全体が見えるようにレンダリングして。"
+6	
+7	FIX_CAMERA_CODE = r'''
+8	import bpy, math
+9	
+10	cam = bpy.data.objects.get("RoomCamera")
+11	cam.location = (0, -7.0, 11.0)
+12	cam.rotation_euler = (0, 0, 0)
+13	cam.data.lens = 28
+14	
+15	target = bpy.data.objects.get("AimTarget")
+16	if target is None:
+17	    target = bpy.data.objects.new("AimTarget", None)
+18	    bpy.context.collection.objects.link(target)
+19	target.location = (0, 0, 1.0)
+20	
+21	for c in list(cam.constraints):
+22	    cam.constraints.remove(c)
+23	con = cam.constraints.new(type='TRACK_TO')
+24	con.target = target
+25	con.track_axis = 'TRACK_NEGATIVE_Z'
+26	con.up_axis = 'UP_Y'
+27	
+28	bpy.context.view_layer.update()
+29	
+30	light = bpy.data.objects.get("Torch_Flame_Light")
+31	if light:
+32	    light.data.energy = 200
+33	
+34	sun = bpy.data.objects.get("FillSun")
+35	if sun is None:
+36	    bpy.ops.object.light_add(type='SUN', location=(0, -4, 6))
+37	    sun = bpy.context.active_object
+38	    sun.name = "FillSun"
+39	    sun.data.energy = 1.5
+40	    sun.rotation_euler = (math.radians(45), 0, math.radians(20))
+41	
+42	scene = bpy.context.scene
+43	scene.camera = cam
+44	scene.render.resolution_x = 960
+45	scene.render.resolution_y = 540
+46	scene.render.filepath = "/home/user/ai-100days/experiments/day-021/after.png"
+47	bpy.ops.render.render(write_still=True)
+48	
+49	cam_info = {
+50	    "cam_loc": tuple(cam.location),
+51	    "cam_rot_euler_final": tuple(cam.matrix_world.to_euler()),
+52	}
+53	print("AFTER_RENDER_FIXED2:" + str(cam_info))
+54	'''
+55	
+56	
+57	async def main():
+58	    server_params = StdioServerParameters(
+59	        command="uv",
+60	        args=["run", "mcp-for-blender"],
+61	        cwd="/tmp/claude-0/-home-user-ai-100days/58be72ad-8476-5973-a506-77a61791716d/scratchpad/day021/mcp-for-blender",
+62	    )
+63	    async with stdio_client(server_params) as (read, write):
+64	        async with ClientSession(read, write) as session:
+65	            await session.initialize()
+66	            exec_result = await session.call_tool(
+67	                "execute_blender_code",
+68	                {"code": FIX_CAMERA_CODE, "user_prompt": JAPANESE_INSTRUCTION},
+69	            )
+70	            for c in exec_result.content:
+71	                print(getattr(c, "text", c))
+72	
+73	
+74	if __name__ == "__main__":
+75	    asyncio.run(main())
+```
+
+**`experiments/day-021/mcp_client_scene_info.py`** — BLENDER_CODE(variable), JAPANESE_INSTRUCTION(variable), main(calls), main(function)
+
+```python
+3	from mcp import ClientSession, StdioServerParameters
+4	from mcp.client.stdio import stdio_client
+5	
+6	JAPANESE_INSTRUCTION = "低ポリゴンのダンジョンシーンを作って。石の壁で囲まれた部屋と、中央に松明を1本置いて。"
+7	
+8	BLENDER_CODE = r'''
+9	import bpy, math
+
+... (gap) ...
+
+58	'''
+59	
+60	
+61	async def main():
+62	    server_params = StdioServerParameters(
+63	        command="uv",
+64	        args=["run", "mcp-for-blender"],
+65	        cwd="/tmp/claude-0/-home-user-ai-100days/58be72ad-8476-5973-a506-77a61791716d/scratchpad/day021/mcp-for-blender",
+66	    )
+67	    async with stdio_client(server_params) as (read, write):
+68	        async with ClientSession(read, write) as session:
+69	            await session.initialize()
+70	
+71	            tools = await session.list_tools()
+72	            tool_names = sorted(t.name for t in tools.tools)
+73	            print("AVAILABLE_TOOLS:", tool_names)
+74	
+75	            before = await session.call_tool("get_scene_info", {"user_prompt": JAPANESE_INSTRUCTION})
+76	            print("\n--- BEFORE get_scene_info ---")
+77	            for c in before.content:
+78	                print(getattr(c, "text", c))
+79	
+80	            exec_result = await session.call_tool(
+81	                "execute_blender_code",
+82	                {"code": BLENDER_CODE, "user_prompt": JAPANESE_INSTRUCTION},
+83	            )
+84	            print("\n--- execute_blender_code result ---")
+85	            for c in exec_result.content:
+86	                print(getattr(c, "text", c))
+87	
+88	            after = await session.call_tool("get_scene_info", {"user_prompt": JAPANESE_INSTRUCTION})
+89	            print("\n--- AFTER get_scene_info ---")
+90	            for c in after.content:
+91	                print(getattr(c, "text", c))
+92	
+93	
+94	if __name__ == "__main__":
+95	    asyncio.run(main())
+96	
+```
+
+**Not shown above — explore these names for their source**
+
+- experiments/day-025/akv_poc_gpu.py: cache_len:144, load:60, prefill:134, rotate_keys_by_delta:161, slice_out_span:148, build_transcript:68, +11 more
+- experiments/day-025/akv_poc.py: build_transcript:52, cache_len:128, slice_out_span:132, prefill:118, rotate_keys_by_delta:145, load:45, +8 more
+- experiments/day-002/rust/src/main.rs: main:17, hex_decode:5
+- experiments/day-025/akv_generate_check.py: main:60, generate:20, build_full_cache:43, akv_generate_check.py:1
+- experiments/day-025/akv_generate_check_gpu.py: main:63, build_full_cache:46, generate:23, akv_generate_check_gpu.py:1
+- experiments/day-002/rust/src/lib.rs: rle_decode:17, rejects_input_that_would_overflow_capacity:51, odd_trailing_byte_is_ignored_like_c_version:60, decodes_valid_input_within_capacity:43, CapacityExceeded:8
+
+> Some file sections were trimmed for size. Elided symbols are named inside gap markers as `name (file:line)` and preferred in the file header — run another `codegraph_explore` with those exact names for their source.

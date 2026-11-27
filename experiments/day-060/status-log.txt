@@ -1,0 +1,38 @@
+
+CodeGraph Status
+
+Project: /home/user/ai-100days
+
+Index Statistics:
+  Files:     159
+  Nodes:     2,162
+  Edges:     4,700
+  DB Size:   7.33 MB
+  Backend:   node:sqlite - built-in (full WAL)
+  Journal:   wal
+
+Nodes by Kind:
+  function        549
+  variable        513
+  import          477
+  method          209
+  file            156
+  constant        102
+  class           75
+  property        30
+  field           24
+  namespace       15
+  enum_member     8
+  enum            3
+  struct          1
+
+Files by Language:
+  python          97
+  javascript      40  (36 with symbols)
+  csharp          15
+  yaml            3
+  c               2
+  rust            2
+
+[OK] Index is up to date
+
