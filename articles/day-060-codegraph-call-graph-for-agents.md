@@ -109,7 +109,7 @@ $ npx -y @colbymchenry/codegraph callers quote
 Qiita記事が報告していた限界を、独立した最小ケースで再現した。ロジックが同一だが、明らかに別の人(別の意図)が書いたことを想定した2つの関数を用意した。
 
 ```python
-# experiments/day-059/duplicate-test/a.py
+# experiments/day-060/duplicate-test/a.py
 def validate_email_signup(email: str) -> bool:
     if "@" not in email:
         return False
@@ -118,7 +118,7 @@ def validate_email_signup(email: str) -> bool:
 ```
 
 ```python
-# experiments/day-059/duplicate-test/b.py
+# experiments/day-060/duplicate-test/b.py
 def check_email_format(address: str) -> bool:
     if "@" not in address:
         return False
@@ -131,7 +131,7 @@ def check_email_format(address: str) -> bool:
 ```
 $ npx -y @colbymchenry/codegraph impact validate_email_signup
 Impact of changing "validate_email_signup" — 1 affected symbols:
-function validate_email_signup (python) — experiments/day-059/duplicate-test/a.py:1
+function validate_email_signup (python) — experiments/day-060/duplicate-test/a.py:1
 
 $ npx -y @colbymchenry/codegraph callers validate_email_signup
 Callers of "validate_email_signup" (0):

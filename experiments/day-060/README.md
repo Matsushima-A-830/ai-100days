@@ -1,4 +1,4 @@
-# Day 059: colbymchenry/codegraph を検証する
+# Day 060: colbymchenry/codegraph を検証する
 
 ## 対象
 
@@ -25,7 +25,7 @@ npx -y @colbymchenry/codegraph callers _q      # 見つかる(実体の名前)
 npx -y @colbymchenry/codegraph callers quote   # 見つからない(呼び出し側の名前)
 
 # 5. 重複コード検出の限界を確認する最小ケース
-#    experiments/day-059/duplicate-test/a.py, b.py に
+#    experiments/day-060/duplicate-test/a.py, b.py に
 #    ロジックが同一だが独立実装(呼び出し関係なし)の2関数を用意済み
 npx -y @colbymchenry/codegraph sync .
 npx -y @colbymchenry/codegraph impact validate_email_signup

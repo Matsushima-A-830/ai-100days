@@ -2,8 +2,8 @@
 
 Impact of changing "validate_email_signup" — 1 affected symbols:
 
-function validate_email_signup (python) — experiments/day-059/duplicate-test/a.py:1
-experiments/day-059/duplicate-test/a.py
+function validate_email_signup (python) — experiments/day-060/duplicate-test/a.py:1
+experiments/day-060/duplicate-test/a.py
   function    validate_email_signup:1
 
 
@@ -11,7 +11,7 @@ experiments/day-059/duplicate-test/a.py
 
 Callers of "validate_email_signup" (0):
 
-function validate_email_signup (python) — experiments/day-059/duplicate-test/a.py:1
+function validate_email_signup (python) — experiments/day-060/duplicate-test/a.py:1
 [i] No callers found for "validate_email_signup"
 
 === query email ===
@@ -23,11 +23,11 @@ method      __init__
   (self, email: str = None)
 
 function    validate_email_signup
-  experiments/day-059/duplicate-test/a.py:1
+  experiments/day-060/duplicate-test/a.py:1
   (email: str) -> bool
 
 function    check_email_format
-  experiments/day-059/duplicate-test/b.py:1
+  experiments/day-060/duplicate-test/b.py:1
   (address: str) -> bool
 
 function    createInput
@@ -67,7 +67,7 @@ Results truncated at 10; pass --limit to widen.
 ### Entry Points
 
 - **OnEnable** (method) - experiments/day-035/signal-lost-game/Scripts/UI/WinLossScreen.cs:76
-- **validate_email_signup** (function) - experiments/day-059/duplicate-test/a.py:1
+- **validate_email_signup** (function) - experiments/day-060/duplicate-test/a.py:1
   `(email: str) -> bool`
 - **SpecError** (class) - tools/video/render.py:77
 
@@ -101,7 +101,7 @@ Results truncated at 10; pass --limit to widen.
         }
 ```
 
-#### validate_email_signup (experiments/day-059/duplicate-test/a.py:1)
+#### validate_email_signup (experiments/day-060/duplicate-test/a.py:1)
 
 ```python
 def validate_email_signup(email: str) -> bool:
@@ -147,7 +147,7 @@ class SpecError(Exception):
 This query matched mostly on common words, so the entry points above may be off-target — treat them as a starting point, not a complete answer. For a reliable result:
 - `codegraph_explore` with the **exact symbol names** you are after (class / function / method names), or
 - `codegraph_search <name>` for one specific symbol
-- `codegraph_files` a likely area: `experiments/day-035/signal-lost-game/Scripts/UI`, `experiments/day-059/duplicate-test`, `tools/video`
+- `codegraph_files` a likely area: `experiments/day-035/signal-lost-game/Scripts/UI`, `experiments/day-060/duplicate-test`, `tools/video`
 
 Do not assume the list above is comprehensive.
 === explore: how does render.py build video frames ===

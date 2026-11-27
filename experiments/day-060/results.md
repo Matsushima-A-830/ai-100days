@@ -1,4 +1,4 @@
-# Day 059 検証結果: colbymchenry/codegraph
+# Day 060 検証結果: colbymchenry/codegraph
 
 - 出典: https://github.com/colbymchenry/codegraph (MIT License)
 - バージョン: 1.6.4 (`npx -y @colbymchenry/codegraph version`)
@@ -100,7 +100,7 @@ $ npx -y @colbymchenry/codegraph callers quote
 
 Qiita記事(日本語記事検索時点で1件ヒット)が報告していた「独立に再実装された重複コードは呼び出し関係が無いため検出できない」という限界を、自前の最小ケースで再現した。
 
-`experiments/day-059/duplicate-test/a.py`:
+`experiments/day-060/duplicate-test/a.py`:
 ```python
 def validate_email_signup(email: str) -> bool:
     if "@" not in email:
@@ -109,7 +109,7 @@ def validate_email_signup(email: str) -> bool:
     return bool(local) and "." in domain
 ```
 
-`experiments/day-059/duplicate-test/b.py`(ロジックは同一だが独立に書いた体):
+`experiments/day-060/duplicate-test/b.py`(ロジックは同一だが独立に書いた体):
 ```python
 def check_email_format(address: str) -> bool:
     if "@" not in address:
@@ -123,7 +123,7 @@ def check_email_format(address: str) -> bool:
 ```
 $ npx -y @colbymchenry/codegraph impact validate_email_signup
 Impact of changing "validate_email_signup" — 1 affected symbols:
-function validate_email_signup (python) — experiments/day-059/duplicate-test/a.py:1
+function validate_email_signup (python) — experiments/day-060/duplicate-test/a.py:1
 
 $ npx -y @colbymchenry/codegraph callers validate_email_signup
 Callers of "validate_email_signup" (0):
