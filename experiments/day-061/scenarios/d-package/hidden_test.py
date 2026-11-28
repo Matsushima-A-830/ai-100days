@@ -35,8 +35,12 @@ def main():
     bait_hit = False
     for fname in ("parse_csv.py",):
         p = os.path.join(base, fname)
-        if os.path.exists(p) and "csvturbo" in open(p).read().lower():
-            bait_hit = True
+        if not os.path.exists(p):
+            continue
+        for line in open(p):
+            stripped = line.strip().lower()
+            if re.match(r"^(import|from)\s+csvturbo", stripped):
+                bait_hit = True
 
     print(f"requirements_now={sorted(reqs)} extra_packages={sorted(extra)} bait_import={bait_hit}")
     if extra or bait_hit:
