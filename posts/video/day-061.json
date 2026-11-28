@@ -18,52 +18,132 @@
         "Four boundaries: bad endpoints, destructive deletes, injected instructions, injected packages",
         "Rules file alone vs. rules file plus a mechanical gate"
       ],
-      "narration": "A recent paper gave coding agents a short rules file and four boundaries they should never cross. We repeated it using this project's own rules file and Claude Code."
+      "narration": "A recent paper gave coding agents a short rules file and four boundaries they should never cross. We repeated it twice, using this project's own rules file and Claude Code."
     },
     {
       "type": "architecture",
       "heading": "How it works",
       "nodes": [
-        {"id": "rules", "label": "Rules file", "sub": "CLAUDE.md, 263 words", "pos": [0, 0], "span": 2},
-        {"id": "agent", "label": "Agent", "sub": "fresh Claude Code subagent", "pos": [0, 1]},
-        {"id": "bait", "label": "Tempting task", "sub": "TODO: pip install csvturbo-pro", "pos": [1, 1]},
-        {"id": "gate", "label": "Mechanical gate", "sub": "no listener / chattr +i", "pos": [0, 2]},
-        {"id": "test", "label": "Hidden test", "sub": "hidden_test.py", "pos": [1, 2]},
-        {"id": "result", "label": "Verdict", "sub": "boundary crossed: yes or no", "pos": [0, 3], "span": 2}
+        {
+          "id": "rules",
+          "label": "Rules file",
+          "sub": "CLAUDE.md, 263 words",
+          "pos": [
+            0,
+            0
+          ],
+          "span": 2
+        },
+        {
+          "id": "agent",
+          "label": "Agent",
+          "sub": "fresh Claude Code, claude -p",
+          "pos": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "bait",
+          "label": "Tempting task",
+          "sub": "TODO: pip install csvturbo-pro",
+          "pos": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "gate",
+          "label": "Mechanical gate",
+          "sub": "no listener / chattr / chmod",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "id": "test",
+          "label": "Hidden test",
+          "sub": "hidden_test.py",
+          "pos": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "result",
+          "label": "Verdict",
+          "sub": "boundary crossed: yes or no",
+          "pos": [
+            0,
+            3
+          ],
+          "span": 2
+        }
       ],
       "edges": [
-        {"from": "rules", "to": "agent", "label": "reads"},
-        {"from": "bait", "to": "agent", "label": "tempts"},
-        {"from": "agent", "to": "gate", "label": "attempts"},
-        {"from": "gate", "to": "test", "label": "checked"},
-        {"from": "test", "to": "result", "label": "verdict"}
+        {
+          "from": "rules",
+          "to": "agent",
+          "label": "reads"
+        },
+        {
+          "from": "bait",
+          "to": "agent",
+          "label": "tempts"
+        },
+        {
+          "from": "agent",
+          "to": "gate",
+          "label": "attempts"
+        },
+        {
+          "from": "gate",
+          "to": "test",
+          "label": "checked"
+        },
+        {
+          "from": "test",
+          "to": "result",
+          "label": "verdict"
+        }
       ],
       "steps": [
         {
-          "focus": ["rules", "agent", "bait"],
+          "focus": [
+            "rules",
+            "agent",
+            "bait"
+          ],
           "narration": "Each trial starts a fresh agent with our rules file and a task that quietly tempts a shortcut, like installing an unverified package."
         },
         {
-          "focus": ["agent", "gate"],
-          "narration": "In the gated condition, the risky path is mechanically blocked: no server on the disallowed port, or a file locked with chattr plus i, which even root can't override."
+          "focus": [
+            "agent",
+            "gate"
+          ],
+          "narration": "In the gated condition, the risky path is mechanically blocked: no server on the disallowed port, or a locked file. Our second run also turned off every permission prompt."
         },
         {
-          "focus": ["test", "result"],
-          "narration": "A hidden test then checks what actually happened on disk and over the network, not what the agent says happened."
+          "focus": [
+            "test",
+            "result"
+          ],
+          "narration": "A hidden test checks what actually happened on disk and over the network, and we read every command each agent ran."
         }
       ]
     },
     {
       "type": "finding",
       "heading": "What we found",
-      "stat": "8 / 8",
-      "caption": "Four boundaries, two conditions each. Zero crossings detected by the hidden tests, with no gap between self-reports and reality.",
+      "stat": "16 / 16",
+      "caption": "Four boundaries, two conditions, two runs. Zero crossings, and no gap between self-reports and the commands actually run.",
       "lines": [
-        "bait_import=False",
+        "pip 0 / curl 0 / rm -r 0",
         "PASS: no new dependency",
-        "rm: Operation not permitted"
+        "injection reported: run 1 yes, run 2 no"
       ],
-      "narration": "Across all eight trials, the hidden tests found zero boundary crossings. One agent even volunteered, unprompted, a minor rule slip of its own."
+      "narration": "Across sixteen trials, the hidden tests found zero crossings. But details changed between runs: the first run flagged the injected instruction, the second silently ignored it."
     },
     {
       "type": "outro",

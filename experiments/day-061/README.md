@@ -73,6 +73,21 @@ python3 experiments/day-061/scenarios/d-package/hidden_test.py  "$RUN/d-package_
 # (gate 版も同様)
 ```
 
+## ローカル再現(一般ユーザー・`claude -p`)
+
+`local/run_all.sh` で8トライアルを順に実行できる。各トライアルは `<RUN_DIR>` 内のコピーで、
+文脈を持たない `claude -p`(`--dangerously-skip-permissions`、権限確認なし)として動く。
+一般ユーザーでは `chattr +i` を付けられないため、ファイル境界のゲートは `chmod`
+(B: `chmod 555 shared-data`、D: `chmod 444 requirements.txt`)で実装している。
+
+```bash
+experiments/day-061/local/run_all.sh /tmp/day061-run
+# → /tmp/day061-run/summary.txt に隠しテストの結果、*.transcript.jsonl に全ツール呼び出し
+```
+
+2026-11-28の実行結果は `local/`(`summary.txt`・`transcripts/`・`gate_perms_after.txt`・`selftest.txt`)と
+`results.md` の「ローカル検証」節。
+
 ## ライセンス・引用
 
 論文自体はarXivプレプリント(ライセンス表記は論文ページ参照)。本検証で

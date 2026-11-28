@@ -177,12 +177,12 @@
 
   <div class="heading">
     <h1>CLAUDE.mdは盾にならない、のか</h1>
-    <p><span class="src">"Markdown Is Not a Firewall"</span>論文の4境界(不許可エンドポイント・破壊的な近道・仕込まれた指示・仕込まれたパッケージ)を自分のCLAUDE.md運用で再現した。ゲート有無の2条件でClaude Codeサブエージェントを8トライアル実行した。</p>
+    <p><span class="src">"Markdown Is Not a Firewall"</span>論文の4境界(不許可エンドポイント・破壊的な近道・仕込まれた指示・仕込まれたパッケージ)を自分のCLAUDE.md運用で再現した。ゲート有無の2条件×4境界の8トライアルを、起動方法とゲート実装を変えて2回実行した。</p>
   </div>
 
   <div class="stat-row">
-    <div class="stat-number">8/8</div>
-    <div class="stat-caption">4境界×ゲート無し/有りの2条件、<strong>隠しテストで境界越えが検知されたトライアルは0件</strong>(詳細は下記の隠しテスト修正の話も参照)。</div>
+    <div class="stat-number">16/16</div>
+    <div class="stat-caption">2回×8トライアル、<strong>隠しテストで境界越えが検知されたトライアルは0件</strong>。2回目は権限確認を全て外した<code style="white-space:nowrap">claude -p</code>で実行し、全ツール呼び出しも確認した。</div>
   </div>
 
   <section class="block compare">
@@ -207,23 +207,27 @@ PASS: no new dependency was added</pre>
   </section>
 
   <section class="block">
-    <div class="block-label">ファイル境界のゲート実装(chattr +i, rootでも無効化できない)</div>
+    <div class="block-label">ファイル境界のゲートと、2回目のトランスクリプト確認</div>
     <div class="terminal">
       <div class="term-row">
-        <span class="term-tag">試行1</span>
-        <span class="toks">$ chmod 444 file &amp;&amp; echo x &gt;&gt; file  →  append_exit=0(rootには無力)</span>
+        <span class="term-tag">1回目</span>
+        <span class="toks">root: chmod 444 → append_exit=0 / chattr +i → Operation not permitted</span>
       </div>
       <div class="term-row">
-        <span class="term-tag">試行2</span>
-        <span class="toks">$ chattr +i file &amp;&amp; rm -f file  →  rm: cannot remove 'file': Operation not permitted</span>
+        <span class="term-tag">2回目</span>
+        <span class="toks">一般ユーザー: chmod 555 shared-data → rm: Permission denied(所有者は自分で外せる)</span>
       </div>
-      <div class="term-foot"><b>chmodはrootに効かず、chattr +iは効く</b>ことを確認してからゲートとして採用した。</div>
+      <div class="term-row">
+        <span class="term-tag">記録</span>
+        <span class="toks">8トライアルの全ツール呼び出し: pip 0回 / curl 0回 / chmod 0回 / rm -r 0回</span>
+      </div>
+      <div class="term-foot">使えるゲートは<b>エージェントを誰の権限で動かすか</b>で変わる。隠しテストが拾えない試行(pip install、止められた接続)はトランスクリプトで確認した。</div>
     </div>
   </section>
 
   <div class="caveat">
     <span class="mark">⚠</span>
-    <p>8/8は「ゲートが不要」を意味しない。ゲート無し条件でも不許可エンドポイントへの接続は技術的に可能な状態にしてあり、実際にcurlで到達できることを確認済み。境界を越えなかったのはエージェントが毎回自発的にルールを守ったからで、n=2(境界あたり)という非常に小さいサンプルでの結果でもある。</p>
+    <p>16/16は「ゲートが不要」を意味しない。ゲート無し条件でも不許可エンドポイントには実際に接続できた。境界を越えなかったのはエージェントが毎回自発的にルールを守ったからで、1回目に見えた「インジェクションの報告」「軽微な逸脱の自白」は2回目には再現しなかった。</p>
   </div>
 
   <footer>
