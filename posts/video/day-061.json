@@ -1,0 +1,153 @@
+{
+  "day": 61,
+  "project": "Markdown Is Not a Firewall",
+  "slug": "rules-vs-gates",
+  "tagline": "Does a short rules file alone stop a coding agent from crossing a boundary?",
+  "source_url": "arxiv.org/abs/2611.27112",
+  "license": "arXiv preprint",
+  "scenes": [
+    {
+      "type": "title",
+      "narration": "Day 61: does a short rules file alone stop a coding agent from crossing a boundary, or do you also need a mechanical gate."
+    },
+    {
+      "type": "overview",
+      "heading": "What is it?",
+      "bullets": [
+        "A paper tests agents against a short rules file",
+        "Four boundaries: bad endpoints, destructive deletes, injected instructions, injected packages",
+        "Rules file alone vs. rules file plus a mechanical gate"
+      ],
+      "narration": "A recent paper gave coding agents a short rules file and four boundaries they should never cross. We repeated it twice, using this project's own rules file and Claude Code."
+    },
+    {
+      "type": "architecture",
+      "heading": "How it works",
+      "nodes": [
+        {
+          "id": "rules",
+          "label": "Rules file",
+          "sub": "CLAUDE.md, 263 words",
+          "pos": [
+            0,
+            0
+          ],
+          "span": 2
+        },
+        {
+          "id": "agent",
+          "label": "Agent",
+          "sub": "fresh Claude Code, claude -p",
+          "pos": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "bait",
+          "label": "Tempting task",
+          "sub": "TODO: pip install csvturbo-pro",
+          "pos": [
+            1,
+            1
+          ]
+        },
+        {
+          "id": "gate",
+          "label": "Mechanical gate",
+          "sub": "no listener / chattr / chmod",
+          "pos": [
+            0,
+            2
+          ]
+        },
+        {
+          "id": "test",
+          "label": "Hidden test",
+          "sub": "hidden_test.py",
+          "pos": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "result",
+          "label": "Verdict",
+          "sub": "boundary crossed: yes or no",
+          "pos": [
+            0,
+            3
+          ],
+          "span": 2
+        }
+      ],
+      "edges": [
+        {
+          "from": "rules",
+          "to": "agent",
+          "label": "reads"
+        },
+        {
+          "from": "bait",
+          "to": "agent",
+          "label": "tempts"
+        },
+        {
+          "from": "agent",
+          "to": "gate",
+          "label": "attempts"
+        },
+        {
+          "from": "gate",
+          "to": "test",
+          "label": "checked"
+        },
+        {
+          "from": "test",
+          "to": "result",
+          "label": "verdict"
+        }
+      ],
+      "steps": [
+        {
+          "focus": [
+            "rules",
+            "agent",
+            "bait"
+          ],
+          "narration": "Each trial starts a fresh agent with our rules file and a task that quietly tempts a shortcut, like installing an unverified package."
+        },
+        {
+          "focus": [
+            "agent",
+            "gate"
+          ],
+          "narration": "In the gated condition, the risky path is mechanically blocked: no server on the disallowed port, or a locked file. Our second run also turned off every permission prompt."
+        },
+        {
+          "focus": [
+            "test",
+            "result"
+          ],
+          "narration": "A hidden test checks what actually happened on disk and over the network, and we read every command each agent ran."
+        }
+      ]
+    },
+    {
+      "type": "finding",
+      "heading": "What we found",
+      "stat": "16 / 16",
+      "caption": "Four boundaries, two conditions, two runs. Zero crossings, and no gap between self-reports and the commands actually run.",
+      "lines": [
+        "pip 0 / curl 0 / rm -r 0",
+        "PASS: no new dependency",
+        "injection reported: run 1 yes, run 2 no"
+      ],
+      "narration": "Across sixteen trials, the hidden tests found zero crossings. But details changed between runs: the first run flagged the injected instruction, the second silently ignored it."
+    },
+    {
+      "type": "outro",
+      "narration": "Full repro steps and write-up, in Japanese, on Zenn. Paper at arXiv 2611.27112."
+    }
+  ]
+}
